@@ -1,14 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 # Listar los discos disponibles
 echo "Discos disponibles:"
 lsblk -d -o name,size,type | grep "disk"
 
 # Pedir al usuario que seleccione un disco para formatear
-read -p "Introduce el nombre del disco que quieres formatear (ejemplo: sda): " disk
+read -pr "Introduce el nombre del disco que quieres formatear (ejemplo: sda): " disk
 
 # Confirmar los cambios
-read -p "Estás seguro de que quieres formatear $disk? (s/n): " confirm
+read -pr "Estás seguro de que quieres formatear $disk? (s/n): " confirm
 if [ "$confirm" != "s" ]; then
     echo "Operación cancelada."
     exit 1
@@ -27,17 +27,20 @@ fi
 # de si estamos en un sistema UEFI o no
 if [ "$part_type" == "dos" ]; then
 	# BIOS -> MBR
-	parted -s /dev/$disk mklabel $part_type mkpart primary ext4 1MiB 513MiB set 1 boot on
-	[ "$disk" == "nvme*" ] && disk = "$disk"p
-	fi
-	mkfs.ext4 /dev/${disk}1
-	boot_partition="/dev/${disk}1"
+	parted -s "/dev/$disk" mklabel $part_type mkpart primary ext4 1MiB 513MiB set 1 boot on
+	case "$disk" in
+	*"nvme"*)
+		disk="$disk"p ;;
+	esac
+	mkfs.ext4 "/dev/${disk}1"
 else
 	# EUFI -> GPT
-	parted -s /dev/$disk mklabel $part_type mkpart primary fat32 1MiB 513MiB set 1 boot on
-	[ "$disk" == "nvme*" ] && disk = "$disk"p
-	mkfs.fat -F32 /dev/${disk}1
-	boot_partition="/dev/${disk}1"
+	parted -s "/dev/$disk" mklabel $part_type mkpart primary fat32 1MiB 513MiB set 1 boot on
+	case "$disk" in
+	*"nvme"*)
+		disk="$disk"p ;;
+	esac
+	mkfs.fat -F32 "/dev/${disk}1"
 fi
 
 # Crear partición swap de 4GB
