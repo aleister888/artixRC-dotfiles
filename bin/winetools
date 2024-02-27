@@ -1,0 +1,11 @@
+#!/bin/sh
+
+WINEPREFIX=/home/aleister/.config/winetools/
+
+firejail	--noprofile \
+		--noroot \
+		--env=LD_PRELOAD='/usr/lib/libhardened_malloc.so' \
+		--env=XAUTHORITY=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/winetools \
+		/usr/bin/wine "$1"

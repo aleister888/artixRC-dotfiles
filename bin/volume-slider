@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Obtiene el nombre de la tarjeta de sonido predeterminada
+card=$(amixer -D default scontrols | awk -F"'" 'NR==1 {print $2}')
+dev=default
+
+# Muestra la ventana de control de volumen con YAD
+yad --title="Volume Control" --width=400 \
+--no-buttons --horizontal --on-top --scale --print-partial \
+--value=$(amixer -M get Master | awk -F"[[%]" '/%/ {print $2}') | \
+while read line; do
+	amixer -D $dev sset "$card" ${line}%
+	sleep 0.01
+done &

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Constante para el número de caracteres a mostrar
+FACT=30
+
+# Obtener el título del track desde el servidor y mostrar solo los últimos FACT-3 caracteres
+title=$(playerctl metadata --player=tauon title)
+if [ "$(echo "$title" | wc -c)" -gt "$FACT" ]; then
+    echo " ...$(echo "$title" | awk -v last_chars="$(($FACT-3))" '{print substr($0, length($0) - last_chars + 1)}')"
+else
+	[ -z "$title" ] || echo " $title"
+fi

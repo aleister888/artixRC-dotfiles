@@ -1,0 +1,40 @@
+#!/bin/sh
+
+NAME="$(date +"%e%m%Y_%H%M%S").jpg"
+FILE="$HOME/Pictures/Screenshots/$NAME"
+
+all_clip(){
+	dunstctl close-all; \
+	import -window root jpg:- | xclip -selection clipboard -t image/png; \
+	notify-send -i applets-screenshooter 'Captura copiada al Portapapeles'
+}
+
+selection_clip(){
+	dunstctl close-all; \
+	import png:- | xclip -selection clipboard -t image/png; \
+	notify-send -i applets-screenshooter 'Captura copiada al Portapapeles'
+}
+
+all_save(){
+	dunstctl close-all; \
+	import -window root "$FILE"; \
+	notify-send -i applets-screenshooter "$NAME"
+}
+
+selection_save(){
+	dunstctl close-all; \
+	import "$FILE"; \
+	notify-send -i applets-screenshooter "$NAME"
+}
+
+if [ "$1" = all_clip ]; then
+	all_clip;
+elif [ "$1" = selection_clip ]; then
+	selection_clip;
+elif [ "$1" = all_save ]; then
+	all_save;
+elif [ "$1" = selection_save ]; then
+	selection_save;
+else
+	exit 0
+fi

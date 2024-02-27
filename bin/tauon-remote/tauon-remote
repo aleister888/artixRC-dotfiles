@@ -1,0 +1,183 @@
+#!/usr/bin/zsh
+
+rm /tmp/lyrics.txt >/dev/null 2>&1
+dunstctl close-all
+
+IP=$1
+
+# Terminal emulator
+TERMINAL=/usr/bin/kitty
+# Flag for window title
+TFLAG=--title
+# Window title
+TNAME=scratchpad
+
+getinfo() {
+# Get song ID, Title and Playlist
+TRACK_ID=$(echo "$(curl -s "http://$IP:7814/api1/status" | sed 's/,/\\n/g')" | grep '"id"' | awk '{print $2}' | head -1)
+TRACK_TITLE=$(echo "$(curl -s "http://$IP:7814/api1/status" | sed 's/,/\\n/g')" | grep '"title"' | head -1 | sed -e 's/ "title": "//g' -e 's/"//g')
+PLAYLIST_ID=$(echo "$(curl -s "http://$IP:7814/api1/status" | sed 's/,/\\n/g')" | grep '"playlist"' | awk '{print $2}' | sed 's/"//g')
+# Save them in a file
+echo $TRACK_TITLE | sed 's/ /_/g' > /tmp/track_title
+echo $PLAYLIST_ID > /tmp/playlist_id
+}
+
+getpic() {
+curl -s "http://$IP:7814/api1/pic/medium/$TRACK_ID" --output /tmp/cover.jpg
+}
+
+playpause() {
+# If song is paused, resume playing
+if [ "$(curl -s "http://$IP:7814/api1/status" | grep -c paused 2>&1)" = "0" ]; then
+	curl "http://$IP:7814/api1/pause"
+	notify-send "Playing Paused"
+# If song is playing, pause playing
+else
+	curl "http://$IP:7814/api1/play"
+	notify-send "Playing Resumed"
+fi
+}
+
+playpausenn() {
+# If song is paused, resume playing
+if [ "$(curl -s "http://$IP:7814/api1/status" | grep -c paused 2>&1)" = "0" ]; then
+	curl "http://$IP:7814/api1/pause"
+# If song is playing, pause playing
+else
+	curl "http://$IP:7814/api1/play"
+fi
+}
+
+getlyrics() {
+# Get Lyrics
+	echo "$(curl -s "http://$IP:7814/api1/lyrics/$TRACK_ID")" > /tmp/lyrics.txt
+# Removes beginning info
+	echo "$(cat /tmp/lyrics.txt | sed -e "s/${TRACK_ID}//g" -e 's/{"track_id": , "lyrics_text": "//g' -e '$d')" > /tmp/lyrics.txt
+# Displays lyrics
+	if [ "$(cat /tmp/lyrics.txt 2>&1)" = "" ]; then
+# If lyrics file is empty, display this:
+		notify-send "This Song Has No Lyrics"
+	else
+# If song has lyrics, display them
+		$TERMINAL $TFLAG $TNAME \
+		bat --file-name $(cat /tmp/track_title) \
+		--paging always /tmp/lyrics.txt &
+	fi
+}
+
+setalbum() {
+	$TERMINAL $TFLAG $TNAME \
+	bash -c 'read -p "Type Album Line Number: " ANS && echo $ANS > /tmp/ANS' && \
+	SELECTION=$(head -`cat /tmp/ANS` /tmp/albums_position.txt | tail -1)
+	curl http://$IP:7814/api1/start/$PLAYLIST_ID/$SELECTION
+}
+
+albums() {
+# Make text file with albums and artists side to side
+	echo "$(curl -s "http://$IP:7814/api1/albums/$PLAYLIST_ID" | sed 's/,/\\n/g')" | grep '"album"\|"position"' > /tmp/albums.txt
+	echo "$(cat /tmp/albums.txt | sed 's/"//g')" | grep album | sed 's/ album: //g' > /tmp/albums_names.txt
+	echo "$(cat /tmp/albums.txt | sed 's/"//g')" | grep position | sed 's/ position: //g' > /tmp/albums_position.txt
+	echo "$(curl -s "http://$IP:7814/api1/albums/$PLAYLIST_ID" | sed 's/,/\\n/g')" | grep '"artist"' > /tmp/albums_artists.txt
+	sed -i 's/"//g' /tmp/albums_artists.txt && sed -i 's/ artist: //g' /tmp/albums_artists.txt
+	paste /tmp/albums_names.txt /tmp/albums_artists.txt | pr -t -e30 > /tmp/albums_formatted.txt
+# Display such file in terminal with line numbers
+# Line nubers represent the album ID
+	$TERMINAL $TFLAG $TNAME \
+	bat --file-name Albums_List \
+	--paging always /tmp/albums_formatted.txt
+# Select album by ID
+	setalbum
+}
+
+setplaylist() {
+	$TERMINAL $TFLAG $TNAME \
+	bash -c 'read -p "Type Playlist Line Number: " ANS && echo $ANS > /tmp/ANS' && \
+	SELECTION=$(head -`cat /tmp/ANS` /tmp/playlists_id.txt | tail -1)
+	curl http://$IP:7814/api1/start/$SELECTION/0
+}
+
+playlists() {
+	# Get playlists ID's
+	echo "$(curl -s "http://$IP:7814/api1/playlists" | sed 's/,/\\n/g')" | grep '"name"\|"id"' > /tmp/playlists.txt
+	echo "$(cat /tmp/playlists.txt | sed -e 's/\[/\\n/g' -e 's/"//g' )" | grep name | awk '{print $2}' > /tmp/playlists_formatted.txt
+	echo "$(cat /tmp/playlists.txt | sed -e 's/\[/\\n/g' -e 's/"//g' )" | grep "id:" | awk '{print $2}' > /tmp/playlists_id.txt
+
+	# Display them
+	$TERMINAL $TFLAG $TNAME \
+	bat --file-name Playlists_List \
+	--paging always /tmp/playlists_formatted.txt
+
+	# Select playlist
+	setplaylist
+}
+
+toggle() {
+	curl -s "http://$IP:7814/api1/$1"
+	if [ "$(echo "$(curl -s "http://$IP:7814/api1/status" | sed 's/,/\\n/g')" | grep $1 | awk '{print $2}')" = "false" ]; then
+		notify-send "`echo $1 | sed -e 's/^./\U&/'` Deactivated"
+	else
+		notify-send "`echo $1 | sed -e 's/^./\U&/'` Activated"
+	fi
+}
+
+volume() {
+	$TERMINAL $TFLAG $TNAME \
+	bash -c 'read -p "Set Volume Value: " ANS && echo $ANS > /tmp/ANS' && \
+	curl http://$IP:7814/api1/setvolume/`cat /tmp/ANS`
+}
+
+case "$2" in
+	cover)
+		getinfo
+		getpic
+		;;
+	play-pause)
+		playpause
+		getinfo
+		getpic
+		notify-send -i /tmp/cover.jpg " $TRACK_TITLE "
+		;;
+	next)
+		curl "http://$IP:7814/api1/next"
+		getinfo
+		getpic
+		notify-send -i /tmp/cover.jpg " $TRACK_TITLE "
+		;;
+	previous)
+		curl "http://$IP:7814/api1/back"
+		getinfo
+		getpic
+		notify-send -i /tmp/cover.jpg " $TRACK_TITLE "
+		;;
+	lyrics)
+		getinfo
+		getlyrics
+		;;
+	album)
+		getinfo
+		albums
+		getinfo
+		getpic
+		notify-send -i /tmp/cover.jpg " $TRACK_TITLE "
+		;;
+	playlist)
+		getinfo
+		playlists
+		getinfo
+		getpic
+		notify-send -i /tmp/cover.jpg " $TRACK_TITLE "
+		;;
+	volume)
+		volume
+		;;
+	shuffle|repeat)
+		toggle "$2"
+		;;
+	play-pausenn)
+		playpausenn
+		;;
+	*)
+		echo "Opción inválida: $2"
+		;;
+esac
+

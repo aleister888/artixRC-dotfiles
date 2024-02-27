@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#!/bin/sh
+ln -s ~/Documents/Notes ~/Notebooks
+
+firejail	--noprofile \
+		--env=XAUTHORITY=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/zim \
+		--whitelist=$HOME/.config/gtk-3.0 \
+		--whitelist=$HOME/.cache/zim \
+		--whitelist=$HOME/Notebooks \
+		--whitelist=$HOME/Documents/Notes \
+		--whitelist=$HOME/.config/dconf \
+		--env=LD_PRELOAD='/usr/lib/libhardened_malloc.so' \
+		/usr/bin/zim &
+
+while true; do
+	firejail --list | grep zim >/dev/null 2>&1 || sh -c "/usr/bin/rm "$HOME/Notebooks" && pkill zim"
+	sleep 1;
+done

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Cambia los permisos de todos los directorios a 700
+
+find ~ -type d -exec chmod 700 {} \;
+
+# En directorios que no contienen binarios o scripts, establece el modo
+# de los archivos no ejecutables en 600, y para ejecutables, etc. en 700
+# ( Excluir ~/.local/opt/tor-browser )
+
+find ~ -type f \
+	! \( -path "$HOME/.local/bin/*" -o -path "$HOME/.local/scripts/*" -o -path "$HOME/.local/share/*" \
+	-o -path "$HOME/.cache/*" -o -path "$HOME/.vst*/*" -o -path "$HOME/.local/opt/tor-browser/*" \) \
+	! \( -name "*.bin" -o -path "*\/bin\/*" -o -name "*.exe" -o -name "*.dll" \
+	-o -name "*.so" -o -name "*.sh" -o -name "*.vst*" -o -name "lf_kitty_*" \) \
+	-exec chmod 600 {} \;
+
+find ~ -type f \
+	! \( -path "$HOME/.local/bin/*" -o -path "$HOME/.local/scripts/*" -o -path "$HOME/.local/share/*" \
+	-o -path "$HOME/.cache/*" -o -path "$HOME/.vst*/*" -o -path "$HOME/.local/opt/tor-browser/*" \) \
+	\( -name "*.bin" -o -path "*\/bin\/*" -o -name "*.exe" -o -name "*.dll" \
+	-o -name "*.so" -o -name "*.sh" -o -name "*.vst*" -o -name "lf_kitty_*" \) \
+	-exec chmod 700 {} \;
+
+# Set cache, scripts, audio plugins and bin files to 700
+
+find ~/.config -type f -name "lf_kitty_*" -exec chmod 700 {} +
+find ~ \( -path "$HOME/.local/bin/*" -o -path "$HOME/.local/scripts/*" -o -path "$HOME/.cache/*" -o -path "$HOME/.vst/*" \) -type f -exec chmod 700 {} +
+
+# Establecer binarios y scripts en ~/.local/share con modo 700
+# y archivos de texto, etcétera, con modo 600
+find ~/.local/ -type f \( -name "*.bin" -o -name "*.exe" -o -name "*.dll" \
+-o -name "*.so" -o -name "*.sh" -o -name "*.vst*" -o -path "*\/bin\/*" \) -exec chmod 700 {} \; \
+-o -type f -exec chmod 600 {} \;
+
+# Establece el modo en 600 a los archivos que no necesitan ser ejecutables
+find ~/.local/ -type f \( -name "*.tar" -o -name "*.zip" \) -exec chmod 600 {} \;
+find ~/.cache/ -type f \( -name "*.txt" -o -name "thumb.*" -o -name "*.log" -o -name "*.json" -o -name "*.jpg" \) -exec chmod 600 {} \;
+
+# Establece permisos en multimedia y archivos específicos
+find ~/ -type f \( -name "*.mkv" -o -name "*.mp4" -o -name "*.avi" -o -name "*.srt" -o -name "*.vtt" -o -name "*.VOB" -o -name "*.iso" \) -exec chmod 600 {} \;
+
+# Establece permisos para las carpetas de /opt
+directorios=(
+	"/opt/wine_backups"
+	"/opt/Sync"
+	"/opt/MP3"
+	"/opt/M4A"
+)
+for dir in "${directorios[@]}"; do
+    chmod 700 "$dir"
+done
+
+# Establecer permisos para archivos en directorios específicos
+establecer_permisos_archivos() {
+	local directorio="$1"
+	find "$directorio" -type f -exec chmod 600 {} +
+}
+
+# Establecer permisos para archivos en cada directorio específico
+for dir in "${directorios[@]}"; do
+	establecer_permisos_archivos "$dir"
+done

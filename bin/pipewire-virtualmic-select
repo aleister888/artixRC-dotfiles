@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Script para vincular microfonos a un microfono virtual para compartir audio
+
+# Icono para las notificaciones
+ICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
+
+# Vincular dispositivo con el micrófono virtual
+device_add(){
+devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
+# Elegir fuente desde dmenu
+selected_device=$(echo "$devices" | dmenu -p "Select an input device to add:" -l 14 )
+[ -z "$selected_device" ] && exit 255
+local sink1=my-combined-sink:playback_FL
+local sink2=my-combined-sink:playback_FR
+action=$( echo "$sink1\n$sink2\nBoth" | dmenu -p "Select an virtual-sink:" -l 3 )
+[ -z "$action" ] && exit 255
+if [ "$action" = "Both" ]; then
+	pw-link "$selected_device" "$sink1" && \
+	pw-link "$selected_device" "$sink2" && \
+	notify-send -i "$ICON" "Añadido correctamente"
+else
+	pw-link "$selected_device" "$action" && \
+	notify-send -i "$ICON" "Añadido correctamente"
+fi
+}
+
+# Desvincular dispositivo con el micrófono virtual
+device_remove(){
+devices=$(pw-link -l | grep "my-combined-sink" -B 1 | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | sed 's/[[:space:]]*|[[:space:]]*<-[[:space:]]*//g' | sort | uniq)
+[ -z "$devices" ] && exit 255
+selected_device=$(echo "$devices" | dmenu -p "Select an input device to remove:" -l 4 )
+[ -z "$selected_device" ] && exit 255
+$(pw-link -d "$selected_device" my-combined-sink:playback_FR 2>/dev/null;
+pw-link -d "$selected_device" my-combined-sink:playback_FL 2>/dev/null) && \
+notify-send -i $ICON "Borrado correctamente"
+}
+
+# Elegir si borrar conexión ya existente o vincular nuevo micrófono
+chosen=$(echo "Add Input to Audio-Sharing\nDelete Input from Audio-Sharing" | dmenu -l 10)
+[ -z "$chosen" ] && exit 255
+if [ "$chosen" = "Add Input to Audio-Sharing" ]; then
+	device_add
+else
+	device_remove
+fi

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+geticon() {
+    # Define los iconos
+    muted_icon="󰖁"
+    unmuted_icon="󰕾"
+
+    # Verifica si el volumen está silenciado
+    if [ "$(pamixer --get-volume-human)" = "muted" ]; then
+        echo "$muted_icon"
+    else
+        echo "$unmuted_icon"
+    fi
+}
+
+# Llama a la función geticon y muestra el icono
+geticon

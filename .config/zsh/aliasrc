@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# Limpiar $HOME
+alias wget='wget --hsts-file="$XDG_CONFIG_HOME"/wget-hsts'
+
+# Abreviaturas
+alias \
+	v='nvim' \
+	d='devour' \
+	c='/bin/clear' \
+	dmk='doas make install'
+
+# Flags y opciones
+alias \
+	cp='cp -iv' \
+	cat='bat -p' \
+	bat='bat -p' \
+	ls='exa -lagH --group-directories-first --smart-group' \
+	grep='grep --color=auto'
+
+# Moverse rápidamente entre directorios
+alias \
+	..='cd ..' \
+	...='cd ../..'
+
+# Herramientas
+alias \
+	xdotool_table='xmodmap -pk' \
+	push='git add . && git commit && git push' \
+	du='BLOCKSIZE=1073741824 du -s * | sort -rnk 1' \
+	"grub-update"='sudo grub-mkconfig -o /boot/grub/grub.cfg' \
+	screen_record="ffmpeg -y -video_size `xrandr | grep " connected" | awk '{print $4}' | cut -d+ -f1` -framerate 24 -f x11grab -i :0.0 -f pulse -i `pactl list short sources | grep "alsa_output.pci" | awk '{print $1}'` -sample_rate 48000 -ac 1 a.mp4"
+
+# Limpiar dependencias innecesarias
+alias cleanup='yay -Rcns $(yay -Qdtq) 2>/dev/null'
+alias deepcleanup='yay -Rcns $(pacman -Qqdn | pacman -Rsu --print-format %n -) 2>/dev/null'
+
+# Reinstalar paquetes
+function reinstall {
+	yay -S `pacman -Q | grep -vx "$( pacman -Qm )" | awk '{print $1}'`
+}
+
+# Encontrar enlaces simbólicos rotos
+alias brokenlink='find / -xtype l -print 2>/dev/null'
+
+# Encontrar archivos propiedad de usuarios no existentes
+alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/null'
+
+# Encontrar archivos no reclamados por paquetes
+alias lostfiles='doas lostfiles | grep -v "theme\|opt\|NerdFonts"'
+
+# Encontrar archivos pac de pacman
+alias pac="find /etc -name '*.pacnew' -o -name '*.pacsave' 2> >(grep -v 'Permission\|Permiso' >&2)"
+
+# Opciones para conectarse con SSH
+alias \
+	ssh_home='ssh "$(cat /opt/Sync/Arch\ IP)"' \
+	ssh_vnc='ssh "$(cat /opt/Sync/Arch\ IP)" -L 5900:localhost:5900' \
+	ssh_komga='ssh "$(cat /opt/Sync/Arch\ IP)" -L 8443:localhost:8443' \
+
+function wininfo {
+xprop | awk '
+	/^WM_CLASS/{sub(/.* =/, "instancia:"); sub(/,/, "\nclase:"); print}
+	/^WM_NAME/{sub(/.* =/, "título:"); print}'
+}
+
+function dotfiles_stow() {
+	sh -c "cd $HOME && stow --target="${HOME}/.config/" .dotfiles/"
+	find ~/.config -type l ! -exec test -e {} \; -delete
+}

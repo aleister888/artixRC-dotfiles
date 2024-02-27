@@ -1,0 +1,58 @@
+#!/bin/sh
+# Script para cambiar de micrófono y altavoces
+
+OUTICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-speakers.svg"
+INICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
+
+# Imprime dispositivos usados (Salida, Entrada y Vídeo)
+getdefaults(){
+wpctl status | grep "*" | sed 's/.*[0-9]\{1,\}\. //' | sed 's/ \[vol: [0-9]\{1\}\.[0-9]\{2\}\]//g'
+}
+
+# Imprime todos los dispositivos de salida
+getout(){
+pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | sed 's/Name: //' | sed 's/^.//' | grep output
+}
+
+# Imprime todos los dispositivos
+getsources(){
+pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | sed 's/Name: //' | sed 's/^.//'
+}
+
+if [ "$1" = "out" ]; then
+	dunstctl close-all
+	# Si el dispositivo de salida por defecto es nuestra tarjeta de audio el
+	# if será verdadero y cambiaremos a los altavoces, en el caso inverso
+	# cambiamos el dispositivo de salida a nuestra tarjeta de audio
+	if getdefaults | sed -n '1p' | grep -q Scarlett; then
+		notify-send -i "$OUTICON" "Cambiando a altavoces"
+		pactl set-default-sink "$(getout | awk '/analog-stereo/ {print $1}')"
+	else
+		notify-send -i "$OUTICON" "Cambiando a auriculares"
+		pactl set-default-sink "$(getout | awk '/USB/ {print $1}')"
+	fi
+fi
+
+if [ "$1" = "in" ]; then
+	dunstctl close-all
+	# Si el dispositivo de entrada por defecto es nuestra tarjeta de audio el if
+	# será verdadero y cambiaremos al Sink virtual que tenemos para compartir audio
+	# (Ver ~/.local/bin/pipewire-virtualmic), en el caso contrario cambiamos el
+	# dispositivo de entrada a nuestra tarjeta de audio Focusrite Scarlett USB
+	if getdefaults | sed -n '2p' | grep -q Scarlett; then
+		notify-send -i "$INICON" "Switching a Micrófono"
+		pactl set-default-source "$(getsources | awk '/virtualmic/ {print $1}')"
+	else
+		notify-send -i "$INICON" "Switching a Tarjeta"
+		pactl set-default-source "$(getsources | awk '/USB_0_0/ {print $1}')"
+	fi
+fi
+
+if [ "$1" = "get" ]; then
+	dunstctl close-all
+	notify-send -i "$INICON" "$(getdefaults | sed -n '2p')"
+fi
+
+if [ "$1" = "print" ]; then
+	getdefaults
+fi

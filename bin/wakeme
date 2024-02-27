@@ -1,0 +1,53 @@
+#!/bin/bash
+# Script de alarma
+
+export LC_TIME=en_US.UTF-8
+
+DAY=$(date +%A)
+
+if [ "$DAY" == "Saturday" ] || [ "$DAY" == "Sunday" ]; then
+	echo "It's $DAY, time to rest! Exiting the script."
+	exit 0
+fi
+
+ALARMA="/home/aleister/Music/Library/Mestís/2015 - Polysemy/06. Paloma.flac"
+
+# Imprime dispositivos usados (Salida, Entrada y Vídeo)
+getdefaults(){
+wpctl status | grep "*" | sed 's/.*[0-9]\{1,\}\. //' | sed 's/ \[vol: [0-9]\{1\}\.[0-9]\{2\}\]//g'
+}
+
+# Imprime todos los dispositivos de salida
+getout(){
+pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | sed 's/Name: //' | sed 's/^.//' | grep output
+}
+
+# Función para hacer sonar la alarma hasta que la apage
+# Vamos a guardar el volúmen que tenia el dispostivo de audio, para poner la alarma
+# con un volumen alto y luego restaurar el nivel de volumen previo
+wakeme(){
+	# Guardamos el volumen original y ponemos el volumen al 70%
+	local VOL="$(pamixer --get-volume)"
+	pactl set-sink-volume @DEFAULT_SINK@ 70%
+	# Hacer sonar alarma
+	ffplay -nodisp -autoexit "$ALARMA" &
+
+	# Esperar a que cierre este menu para cerrar el proceso que esta haciendo sonar la alarma
+	yad --title "Cerrar Alarma" --button="Apagar Alarma"
+
+	# Una vez que el usuario interactúa con el menú se detiene la reproducción de la alarma
+	pkill ffplay
+	pactl set-sink-volume @DEFAULT_SINK@ "$VOL"%
+}
+
+
+# Si el dispositivo de audio no son los altavoces, cambiar a estos antes de reproducir la alarma
+if getdefaults | sed -n '1p' | grep -q Scarlett; then
+	# Cambiamos a altavoces
+	pactl set-default-sink "$(getout | awk '/analog-stereo/ {print $1}')"
+	# Hacer sonar la alarma
+	wakeme
+	pactl set-default-sink "$(getout | awk '/USB/ {print $1}')"
+else
+	wakeme
+fi

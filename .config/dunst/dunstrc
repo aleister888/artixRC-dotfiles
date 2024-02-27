@@ -1,0 +1,51 @@
+[global]
+shrink = yes
+font = Iosevka Nerd Font Bold 14
+max_icon_size = 32
+history_length = 20
+always_run_script = true
+format = "%s"
+notification_limit = 2
+alignment = center
+follow = mouse
+icon_position = left
+idle_threshold = 0
+ignore_newline = no
+indicate_hidden = yes
+separator_height = 0
+ellipsize = middle
+show_age_threshold = -1
+origin = top-right
+offset = 36x88
+show_indicators = no
+sort = yes
+stack_duplicates = true
+sticky_history = no
+word_wrap = yes
+line_height = 0
+markup = full
+frame_width = 0
+browser = /usr/local/bin/librewolf
+dmenu = /usr/local/bin/dmenu
+icon_path = /usr/share/icons/Papirus-Dark/128x128/apps/
+
+title = Dunst
+class = Dunst
+
+[urgency_low]
+    background = "#222222"
+    foreground = "#bbbbbb"
+    frame_color = "#222222"
+    timeout = 2
+
+[urgency_normal]
+    background = "#222222"
+    foreground = "#bbbbbb"
+    frame_color = "#222222"
+   timeout = 2
+
+[urgency_critical]
+    background = "#222222"
+    foreground = "#bbbbbb"
+    frame_color = "#222222"
+   timeout = 0

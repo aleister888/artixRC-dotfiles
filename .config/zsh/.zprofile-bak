@@ -1,0 +1,221 @@
+#!/bin/zsh
+# set keyboard -> spanish
+# doas loadkeys es
+
+# XDG
+export XDG_CURRENT_DESKTOP=X-Generic
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# App Settings
+export EDITOR="nvim"
+export TERMINAL="kitty"
+export BROWSER="firefox"
+export _JAVA_AWT_WM_NONREPARENTING=1
+export QT_QPA_PLATFORMTHEME="qt5ct"
+
+# ~/ Clean Up
+export PYENV_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/pyenv"
+export GNUPGHOME="${XDG_DATA_HOME:-$HOME/.local/share}/gnupg"
+export CUDA_CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/nv"
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$HOME/.config/java"
+export XAUTHORITY="${XDG_CONFIG_HOME:-$HOME/.config}/Xauthority"
+export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc"
+export WINEPREFIX="${XDG_CONFIG_HOME:-$HOME/.config}/wineprefixes"
+export LESSHISTFILE="-"
+export TERMINFO_DIRS="${XDG_CONFIG_HOME:-$HOME/.config}/terminfo:/usr/share/terminfo"
+export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
+export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
+
+# lf Icons
+export LF_ICONS="di=📁:\
+fi=📃:\
+tw=🤝:\
+ow=📁:\
+ex=🎯:\
+ln=📁:\
+or=❌:\
+*.dll=🪟:\
+*.vst3=🪟:\
+*.exe=🎯:\
+*.txt=📜:\
+*.ms=📜:\
+*.tex=📜:\
+*.markdown=📜:\
+*.vim=📜:\
+*.png=📸::\
+*.webp=📸::\
+*.ico=📸::\
+*.jpg=📸:\
+*.jpe=📸:\
+*.jpeg=📸:\
+*.JPG=📸:\
+*.gif=📸:\
+*.svg=📸:\
+*.tif=📸:\
+*.tiff=📸:\
+*.xcf=📸:\
+*.eps=📸:\
+*.html=🌎:\
+*.xml=📰:\
+*.gpg=🔒:\
+*.css=🎨:\
+*.kra=🎨:\
+*.pdf=📚:\
+*.docx=📚:\
+*.djvu=📚:\
+*.epub=📚:\
+*.cbr=📚:\
+*.cbz=📚:\
+*.csv=📓:\
+*.xlsx=📓:\
+*.md=📘:\
+*README=📘:\
+*LICENSE=📘:\
+*.r=📊:\
+*.R=📊:\
+*.rmd=📊:\
+*.Rmd=📊:\
+*.m=📊:\
+*.mp3=🎵:\
+*.opus=🎵:\
+*.ogg=🎵:\
+*.m4a=🎵:\
+*.flac=🎵:\
+*.ape=🎵:\
+*.wav=🎵:\
+*.cue=📋:\
+*cover.jpg=💽:\
+*cover.jpeg=💽:\
+*cover.png=💽:\
+*.tg=🎼:\
+*.gp=🎼:\
+*.gp3=🎼:\
+*.gp4=🎼:\
+*.gp5=🎼:\
+*.gpx=🎼:\
+*Missing-Tabs=🛒:\
+*.vst3=🔮:\
+*.so=🔮:\
+*.mid=🎹:\
+*.mkv=🎥:\
+*.mp4=🎥:\
+*.m4v=🎥:\
+*.webm=🎥:\
+*.mpeg=🎥:\
+*.avi=🎥:\
+*.mov=🎥:\
+*.mpg=🎥:\
+*.wmv=🎥:\
+*.m4b=🎥:\
+*.flv=🎥:\
+*.MOV=🎥:\
+*.kdenlive=🎬:\
+*.zip=📦:\
+*.rar=📦:\
+*.7z=📦:\
+*.gz=📦:\
+*.xz=📦:\
+*.xnb=📦:\
+*.z64=🎮:\
+*.v64=🎮:\
+*.n64=🎮:\
+*.gba=🎮:\
+*.nes=🎮:\
+*.gdi=🎮:\
+*.log=📙:\
+*.reg=📙:\
+*.aux=📙:\
+*.toc=📙:\
+*.iso=📀:\
+*.img=💿:\
+*.bib=🎓:\
+*.ged=👪:\
+*.part=💔:\
+*.torrent=🔽:\
+*.kdbx=🔑:\
+*.jar=☕:\
+*.java=☕:\
+*.js=☕:\
+*.RPP=🎺:\
+*.RPP-bak=🎺:\
+*.rpp=🎺:\
+*.rpp-bak=🎺:\
+*.rpp-PROX=🎺:\
+*.reapeaks=🎸:\
+*other.wav=🎸:\
+*.psarc=🎸:\
+*vocals.wav=🎤:\
+*bass.wav=🎶:\
+*drums.wav=🎶:\
+*.vtt=🧾:\
+*.srt=🧾:\
+*.desktop=🔄:\
+*.lnk=🔄:\
+*.conf=🔧:\
+*.cfg=🔧:\
+*.vdf=🔧:\
+*.dmx=🔧:\
+*.toml=🔧:\
+*config.h=🔧:\
+*config.def.h=🔧:\
+*.json=🔧:\
+*.ini=🔧:\
+*.yml=🔧:\
+*PKGBUILD=🔩:\
+*Makefile=🔩:\
+*Makefile.inc=🔩:\
+*.mk=🔩:\
+*.c=🔨:\
+*.o=🔨:\
+*.h=🔨:\
+*.go=🔨:\
+*.cache=⌛:\
+*.tmp=⌛:\
+*.history=⌛:\
+*.mask=👺:\
+*Dockerfile=🐳:\
+*.vader=🧥:\
+*.sh=🏄:\
+*.py=🐍:\
+*.blend=🧊:\
+"
+
+# lf colors
+
+export LF_COLORS="~/.config/=01;32:\
+~/.local/=01;32:\
+~/.local/share=33:\
+~/.local/src=33:\
+~/.local/scripts=33:\
+~/.config/lf/lfrc=31:\
+.git/=33:.git*=32:\
+.github/=33:.git*=32:\
+ln=01;36:\
+or=31;01:\
+tw=01;34:\
+ow=01;34:\
+st=01;34:\
+di=01;34:\
+pi=33:\
+so=01;35:\
+bd=33;01:\
+cd=33;01:\
+su=01;32:\
+sg=01;32:\
+ex=01;32:\
+fi=00:\
+"
+
+# start dwm
+if [[ "$(tty)" = "/dev/tty1" ]]; then
+        startx /home/aleister/.config/xinit/dwm
+fi
+if [[ "$(tty)" = "/dev/tty1" ]]; then
+trap '. $HOME/.config/logout; exit' 0
+fi
+if [[ "$(tty)" = "/dev/tty1" ]]; then
+exit 0
+fi

@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# @requires: pactl
+
+percentage () {
+	local val=$(echo $1 | tr '%' ' ' | awk '{print $1}')
+	local icon1=$2
+	local icon2=$3
+	local icon3=$4
+	local icon4=$5
+	if [ "$val" -le 15 ]; then
+		echo $icon1
+	elif [ "$val" -le 30 ]; then
+		echo $icon2
+	elif [ "$val" -le 60 ]; then
+		echo $icon3
+	else
+		echo $icon4
+	fi
+}
+
+is_muted () {
+	if [ "$(pamixer --get-volume-human)" = "muted" ]; then
+		echo "yes"
+	else
+		echo "no"
+	fi
+}
+
+get_percentage () {
+	local muted=$(is_muted)
+	if [[ $muted == 'yes' ]]; then
+		echo 0%
+	else
+		echo "$(pamixer --get-volume)%"
+	fi
+}
+
+get_icon () {
+	local vol=$(get_percentage)
+	if [[ $vol == "0%" ]]; then
+		echo "󰖁"
+	else
+		echo $(percentage "$vol" "󰖁" "󰕿" "󰖀" "󰕾")
+	fi
+}
+
+get_vol () {
+	local percent=$(get_percentage)
+	echo $percent | tr -d '%'
+}
+
+set_vol () {
+	val=$(echo $1 | tr '.' ' ' | awk '{print $1}')
+	if test $val -gt 100; then
+		val=100
+	fi
+	pactl set-sink-volume @DEFAULT_SINK@ $val%
+}
+
+case $1 in
+	"icon") get_icon ;;
+	"vol") get_vol ;;
+	"muted") is_muted ;;
+	"set") set_vol $2 ;;
+	*) echo "Comando no reconocido" ;;
+esac
+

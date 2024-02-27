@@ -1,0 +1,13 @@
+#!/bin/sh
+
+firejail	--noprofile \
+		--whitelist=$HOME/Downloads \
+		--whitelist=$HOME/Documents \
+		--env=XAUTHORITY=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/zathura \
+		--whitelist=$HOME/.config/gtk-3.0 \
+		--whitelist=$HOME/.local/share/zathura \
+		--whitelist=$HOME/.config/dconf \
+		--env=LD_PRELOAD='/usr/lib/libhardened_malloc.so' \
+		/usr/bin/zathura "$1"

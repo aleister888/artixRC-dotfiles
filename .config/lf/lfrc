@@ -1,0 +1,264 @@
+#       _      _     _              _  __                    __ _
+#  __ _| | ___(_)___| |_ ___ _ __  | |/ _|   ___ ___  _ __  / _(_) __ _
+# / _` | |/ _ \ / __| __/ _ \ '__| | | |_   / __/ _ \| '_ \| |_| |/ _` |
+#| (_| | |  __/ \__ \ ||  __/ |    | |  _| | (_| (_) | | | |  _| | (_| |
+# \__,_|_|\___|_|___/\__\___|_|    |_|_|    \___\___/|_| |_|_| |_|\__, |
+#                                                                 |___/
+# Dependencies (Arch Linux):
+# [SOME OF THIS PACKAGES COME FROM THE AUR]
+# imagemagick bat cdrtools ffmpegthumbnailer poppler
+# ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep
+# sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop
+# mpv vlc keepassxc
+# IF NOT RUNNING ANY Desktop Enviroment, perl-file-mimeinfo
+# is required, as well as setting
+# XDG_CURRENT_DESKTOP=X-Generic variable, in order for
+# xdg-utils to work properlly
+
+set shell zsh
+set shellopts '-euy'
+set ifs "\n"
+set filesep "\n"
+set scrolloff 10
+set icons
+set period 1
+
+set cleaner '~/.config/lf/cleaner'
+set previewer '~/.config/lf/scope'
+
+set info size:time
+# Relación entre columnas
+set ratios 1:1:1
+# Definir Archivos Ocultos
+set hiddenfiles ".*:*.aux:*.toc:*timeshift:*.reapeaks"
+
+# Renombrar/Copiar/Mover Archivos
+map p paste
+map r rename
+map <c-r> bulk-rename
+# Buscar Archivos
+map / :fzf_jump
+map <c-_> :fzf_search
+# Borrar Archivos
+map S delete
+map D trash
+map <c-d> clean-trash
+map <a-d> restore-trash
+# volver a $HOME
+map Z home
+# Extraer y comprimir Archivos
+map E extract
+map <a-e> compress
+# Limpiar pantalla
+map R :reload; clean
+# Abrir Archivos
+cmd open-with %export ; "$@" "$fx"
+map <enter> push :open-with<space>
+map o &mimeopen "$f"
+map O $mimeopen --ask $f
+# Mostrar/Ocultar Archivos Ocultos
+map h set hidden!
+# Editar Archivo
+map V push :!nvim<space>$f
+# Copiar al porta-papeles la ruta del archivo
+map Y $printf "%s" "$fx" | xclip -selection clipboard
+# Poder arrastar archivo gráficamente
+map <c-z> $setsid -f dragon-drop -a -x $fx
+# Imprimr tamaño de la Carpeta/s o archivo(s)
+map P size
+# Ejecutar comandos
+map s shell
+
+cmd on-cd &{{
+    # '&' commands run silently in background (which is what we want here),
+    # but are not connected to stdout.
+    # To make sure our escape sequence still reaches stdout we pipe it to /dev/tty
+    printf "\033]0;$(pwd | sed "s|$HOME|~|")\007" >/dev/tty
+}}
+
+# Imprimir como título de ventana nuestro CWD
+on-cd
+
+# Comandos
+
+cmd clean ${{
+	clear
+}}
+
+cmd compress ${{
+	clear; tput bold
+	set -f
+	echo "COMPRESS EVERYTHING:"
+	echo "  INSIDE => $(echo $f |sed 's#/[^/]*$##')"
+	echo "  INTO   => $(echo $PWD | sed 's/\//\_/g').tar"
+	trash-list
+	printf "Compress? [y/N]"
+	read ans
+	[ $ans = "y" ] && cd $PWD && tar -C . -cvf $(echo $PWD | sed 's/\//\_/g').tar * && printf "done"
+	read ans
+}}
+
+cmd size &{{
+  dunstctl close-all
+  notify-send "📚 Size is $(/usr/bin/du -chs $fx | grep total | awk {'print $1'})"
+}}
+
+cmd home :cd ~/
+
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    if [ -n "$fs" ]; then
+        fs="$(basename $fs)"
+    else
+        fs="$(ls)"
+    fi
+    printf '%s\n' "$fs" >"$old"
+    printf '%s\n' "$fs" >"$new"
+    $EDITOR "$new"
+    [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
+    paste "$old" "$new" | while IFS= read -r names; do
+        src="$(printf '%s' "$names" | cut -f1)"
+        dst="$(printf '%s' "$names" | cut -f2)"
+        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+            continue
+        fi
+        mv -- "$src" "$dst"
+    done
+    rm -- "$old" "$new"
+    /usr/bin/lf -remote "send $id unselect"
+}}
+
+cmd fzf_search ${{
+    RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+    res="$(
+        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+            --ansi --layout=reverse --header 'Search in files' \
+            | cut -d':' -f1 | sed 's/\\/\\\\/g;s/"/\\"/g'
+    )"
+    [ -n "$res" ] && /usr/bin/lf -remote "send $id select \"$res\""
+}}
+
+cmd fzf_jump ${{
+    res="$(find . -maxdepth 1 | fzf --reverse --header='Jump to location')"
+    if [ -n "$res" ]; then
+        if [ -d "$res" ]; then
+            cmd="cd"
+        else
+            cmd="select"
+        fi
+        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+        /usr/bin/lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+
+cmd open ${{
+    case $(xdg-mime query filetype "$(readlink -f $f)") in
+	image/svg+xml) display -- $f ;;
+	application/vnd.oasis.opendocument.spreadsheet) libreoffice "$fx" ;;
+	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) libreoffice "$fx" ;;
+	application/vnd.oasis.opendocument.text) libreoffice "$fx" ;;
+	application/pdf) zathura "$f" ;;
+	text/*|application/json|inode/x-empty) $EDITOR $fx ;;
+	application/x-shellscript) $EDITOR $fx ;;
+	image/*) $HOME/.local/bin/rotdir $f | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" |
+		nsxiv -aio | while read -r file; do
+			[ -z "$file" ] && continue
+			/usr/bin/lf -remote "send select \"$file\""
+			/usr/bin/lf -remote "send toggle"
+		done &
+		;;
+	audio/*) /usr/bin/mpv --audio-display=no "$f" ;;
+	video/*) /usr/bin/mpv "$f" ;;
+	application/pdf|application/vnd*|application/epub*) zathura "$f" ;;
+	application/pgp-encrypted) $EDITOR $fx ;;
+	application/x-keepass2) keepassxc "$f" ;;
+	application/x-reaper-project) reaper "$f" ;;
+	application/x-reaper-project-backup) reaper "$f" ;;
+	audio/x-tuxguitar) tuxguitar "$fx" ;;
+	application/gpx+xml) tuxguitar "$fx" ;;
+	application/x-gnuplot) tuxguitar "$fx" ;;
+	application/x-gtp) tuxguitar "$fx" ;;
+	application/x-openzim) zim "$fx" ;;
+	application/zip) xdg-open $fx ;;
+        *) for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done;;
+    esac
+}}
+
+cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
+
+cmd extract ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "%s\n\t" "$fx"
+	printf "extract $f?[y/N]"
+	read ans
+	[ $ans = "y" ] && aunpack $f && printf "done"
+	read ans
+}}
+
+cmd paste &{{
+    set -- $(cat ~/.local/share/lf/files)
+    mode="$1"
+    shift
+    case "$mode" in
+        copy)
+            rsync -av --ignore-existing --progress -- "$@" . |
+            stdbuf -i0 -o0 -e0 tr '\r' '\n' |
+            while IFS= read -r line; do
+                /usr/bin/lf -remote "send $id echo $line"
+            done && notify-send '📋 File(s) copied.'
+            ;;
+        move) mv -n -- "$@" . && notify-send '📋 File(s) copied.';;
+    esac
+    rm ~/.local/share/lf/files
+    /usr/bin/lf -remote "send clear"
+}}
+
+cmd delete ${{
+  clear; tput bold
+  set -f
+  printf "%s\n\n" "$fx"
+  printf "¿Borrar archivo(s)? [y/N] "
+  read ans
+  [ $ans = "y" ] && rm -rf -- $fx && \
+  notify-send -i \
+  /usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+  "Archivos borrados"
+}}
+
+cmd trash ${{
+  clear; tput bold
+  set -f
+  printf "%s\n\n" "$fx"
+  printf "¿Mover archivo(s) a la papelera? [y/N] "
+  read ans
+  [ $ans = "y" ] && trash-put $fx &&
+  notify-send -i \
+  /usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+  "Archivos movidos a la papelera"
+}}
+
+cmd clean-trash ${{
+  clear; tput bold
+  set -f
+  printf "Contenidos de la papelera:\n"
+  trash-list
+  printf "¿Vaciar papelera? [y/N] "
+  read ans
+  [ $ans = "y" ] && trash-empty -f && \
+  notify-send -i \
+  /usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+  "Archivos borrados"
+}}
+
+cmd restore-trash ${{
+  clear; tput bold
+  set -f
+  printf "Contenidos de la papelera:\n"
+  trash-list
+  printf "¿Restaurar papelera? [y/N] "
+  read ans
+  [ $ans = "y" ] && trash-restore && printf "done"
+}}

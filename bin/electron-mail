@@ -1,0 +1,14 @@
+#!/bin/sh
+
+firejail	--noprofile \
+		--whitelist=$HOME/.config/electron-mail \
+		--whitelist=/opt/ElectronMail \
+		--env=XAUTHORITY=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/Xauthority \
+		--whitelist=$HOME/.config/dconf \
+		--whitelist=$HOME/.config/gtk-2.0 \
+		--whitelist=$HOME/.config/gtk-3.0 \
+		--whitelist=$HOME/.config/gtk-4.0 \
+		--dns=192.168.0.186 \
+		--env=LD_PRELOAD='/usr/lib/libhardened_malloc.so' \
+		/usr/local/bin/electron-mail

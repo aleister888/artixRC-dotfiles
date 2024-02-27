@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+OUTICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-speakers.svg"
+INICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
+PRINTICON="/usr/share/icons/Papirus-Dark/128x128/devices/printer.svg"
+
+cat <<EOF | xmenu -r | /bin/sh &
+IMG:$OUTICON	Switch Output	~/.local/bin/switchaudio out
+IMG:$INICON	Switch Input	~/.local/bin/switchaudio in
+IMG:$PRINTICON	Print Input	~/.local/bin/switchaudio get
+EOF

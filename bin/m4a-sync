@@ -1,0 +1,19 @@
+#!/bin/sh
+
+MOUNT_POINT="/run/media/aleister/WALKMAN"
+SOURCE_DIR="/opt/M4A"
+DEST_DIR="$MOUNT_POINT/MUSIC"
+
+# Verificar si el punto de montaje está disponible
+if [ -d "$MOUNT_POINT" ]; then
+	# Sincronizar si el punto de montaje está disponible
+	rsync -vraAX --inplace --update --existing --delete "$SOURCE_DIR" "$DEST_DIR"
+	# Verificar el código de salida de rsync
+	if [ $? -eq 0 ]; then
+		echo "Sincronización completada correctamente."
+	else
+		echo "Error durante la sincronización."
+	fi
+else
+	echo "El punto de montaje $MOUNT_POINT no está disponible."
+fi
