@@ -28,11 +28,14 @@ fi
 if [ "$part_type" == "dos" ]; then
 	# BIOS -> MBR
 	parted -s /dev/$disk mklabel $part_type mkpart primary ext4 1MiB 513MiB set 1 boot on
+	[ "$disk" == "nvme*" ] && disk = "$disk"p
+	fi
 	mkfs.ext4 /dev/${disk}1
 	boot_partition="/dev/${disk}1"
 else
 	# EUFI -> GPT
 	parted -s /dev/$disk mklabel $part_type mkpart primary fat32 1MiB 513MiB set 1 boot on
+	[ "$disk" == "nvme*" ] && disk = "$disk"p
 	mkfs.fat -F32 /dev/${disk}1
 	boot_partition="/dev/${disk}1"
 fi
@@ -66,5 +69,5 @@ echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/et
 
 echo "$disk" > /mnt/tmp/diskid
 
-echo -e "\n\n\n Vamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
+echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
 artix-chroot /mnt bash
