@@ -67,4 +67,8 @@ basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim
 echo "Generando fstab con fstabgen..."
 fstabgen -U /mnt >> /mnt/etc/fstab
 
+echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
+
+echo -e "\n\n\n Vamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
+artix-chroot /mnt bash
