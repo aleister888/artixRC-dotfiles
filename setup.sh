@@ -14,28 +14,26 @@ if [ "$confirm" != "s" ]; then
     exit 1
 fi
 
-
 # Formatear el disco seleccionado
 echo "Formateando disco $disk..."
-
 
 # Creamos una partición /boot o /boot/efi dependiendo
 # de si estamos en un sistema UEFI o no
 if [ ! -d /sys/firmware/efi ]; then
-    parted /dev/$disk mklabel gpt mkpart primary ext4 1MiB 513MiB set 1 boot on
-    mkfs.ext4 /dev/${disk}1
-    boot_partition="/dev/${disk}1"
+	parted /dev/$disk mklabel gpt mkpart primary ext4 1MiB 513MiB set 1 boot on
+	mkfs.ext4 /dev/${disk}1
+	boot_partition="/dev/${disk}1"
 else
-    parted /dev/$disk mklabel gpt mkpart primary fat32 1MiB 513MiB set 1 boot on
-    mkfs.fat -F32 /dev/${disk}1
-    boot_partition="/dev/${disk}1"
+	parted /dev/$disk mklabel gpt mkpart primary fat32 1MiB 513MiB set 1 boot on
+	mkfs.fat -F32 /dev/${disk}1
+	boot_partition="/dev/${disk}1"
 fi
 
-# Partición primaria / BTRFS con volumen root y @home
+# Partición primaria / BTRFS
 parted /dev/$disk mkpart primary btrfs 513MiB 100%
 mkfs.btrfs /dev/${disk}2
 
-# Crear subvolúmenes para root y @home
+# Crear subvolúmenes para / y /home
 mount /dev/${disk}2 /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
@@ -46,16 +44,24 @@ mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
 mkdir -p /mnt/home
 mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
 
-# Crear y activar la partición de intercambio (swap)
-parted /dev/$disk mkpart primary linux-swap 4G 100%
-mkswap /dev/${disk}3
-swapon /dev/${disk}3
+# Crear subvolumen para swap
+btrfs subvolume create /mnt/@swap
+
+# Desmontar el sistema de archivos
+umount /mnt
+
+# Montar subvolúmenes y activar la partición de intercambio (swap)
+mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
+mkdir -p /mnt/home
+mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
+mkswap -L swap /dev/${disk}2
+swapon /dev/${disk}2
 
 echo "Formateo completado."
 
 # Instalar paquetes con basestrap
 echo "Instalando paquetes con basestrap..."
-basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim opendoas
+basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
 
 # Generar fstab
 echo "Generando fstab con fstabgen..."
