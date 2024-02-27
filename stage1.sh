@@ -44,9 +44,6 @@ mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
 mkdir -p /mnt/home
 mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
 
-# Crear subvolumen para swap
-btrfs subvolume create /mnt/@swap
-
 # Desmontar el sistema de archivos
 umount /mnt
 
@@ -54,18 +51,12 @@ umount /mnt
 mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
 mkdir -p /mnt/home
 mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
-mkswap -L swap /dev/${disk}2
-swapon /dev/${disk}2
 
 echo "Formateo completado."
 
-# Instalar paquetes con basestrap
+# Instalar paquetes con basestrap (fstab se genera automaticamente)
 echo "Instalando paquetes con basestrap..."
 basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
-
-# Generar fstab
-echo "Generando fstab con fstabgen..."
-fstabgen -U /mnt >> /mnt/etc/fstab
 
 echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
