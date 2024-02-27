@@ -17,40 +17,43 @@ fi
 # Formatear el disco seleccionado
 echo "Formateando disco $disk..."
 
+if [ ! -d /sys/firmware/efi ]; then
+	part_type='dos' # MBR para BIOS
+else
+	part_type='gpt' # GPT para UEFI
+fi
+
 # Creamos una partición /boot o /boot/efi dependiendo
 # de si estamos en un sistema UEFI o no
-if [ ! -d /sys/firmware/efi ]; then
-	parted /dev/$disk mklabel gpt mkpart primary ext4 1MiB 513MiB set 1 boot on
+if [ "$part_type" == "dos" ]; then
+	# BIOS -> MBR
+	parted -s /dev/$disk mklabel $part_type mkpart primary ext4 1MiB 513MiB set 1 boot on
 	mkfs.ext4 /dev/${disk}1
 	boot_partition="/dev/${disk}1"
 else
-	parted /dev/$disk mklabel gpt mkpart primary fat32 1MiB 513MiB set 1 boot on
+	# EUFI -> GPT
+	parted -s /dev/$disk mklabel $part_type mkpart primary fat32 1MiB 513MiB set 1 boot on
 	mkfs.fat -F32 /dev/${disk}1
 	boot_partition="/dev/${disk}1"
 fi
 
+# Crear partición swap de 4GB
+parted -s /dev/$disk mkpart primary linux-swap 513MiB 4.5GB
+
 # Partición primaria / BTRFS
-parted /dev/$disk mkpart primary btrfs 513MiB 100%
-mkfs.btrfs /dev/${disk}2
+parted -s /dev/$disk mkpart primary btrfs 4.5GB 100%
+mkfs.btrfs /dev/${disk}3
 
 # Crear subvolúmenes para / y /home
-mount /dev/${disk}2 /mnt
+mount /dev/${disk}3 /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
 umount /mnt
 
 # Montar subvolúmenes
-mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
+mount -o noatime,compress=zstd,subvol=@ /dev/${disk}3 /mnt
 mkdir -p /mnt/home
-mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
-
-# Desmontar el sistema de archivos
-umount /mnt
-
-# Montar subvolúmenes y activar la partición de intercambio (swap)
-mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
-mkdir -p /mnt/home
-mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
+mount -o noatime,compress=zstd,subvol=@home /dev/${disk}3 /mnt/home
 
 echo "Formateo completado."
 
@@ -60,6 +63,8 @@ basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim
 
 echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
+
+echo "$disk" > /mnt/tmp/diskid
 
 echo -e "\n\n\n Vamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
 artix-chroot /mnt bash

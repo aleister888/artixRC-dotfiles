@@ -6,10 +6,10 @@ manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}'
 # Instalar el microcódigo correspondiente
 if [ "$manufacturer" == "GenuineIntel" ]; then
 	echo "Detectado procesador Intel."
-	pacman -S --noconfirm intel-ucode
+	pacman -S --noconfirm linux-headers intel-ucode
 elif [ "$manufacturer" == "AuthenticAMD" ]; then
 	echo "Detectado procesador AMD."
-	pacman -S --noconfirm amd-ucode
+	pacman -S --noconfirm linux-headers amd-ucode
 else
 	echo "No se pudo detectar el fabricante del procesador."
 fi
@@ -84,23 +84,18 @@ if [ -d /sys/firmware/efi ]; then
 fi
 
 # Instalar paquetes comunes
-pacman -S --noconfirm grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools linux-headers bluez-openrc bluez-utils cups cups-openrc world/freetype2 world/libjpeg-turbo
+pacman -S --noconfirm grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc world/freetype2 world/libjpeg-turbo
 
 # Vamos a instalar ahora grub
 # Verificar si el sistema es EFI
 if [ -d /sys/firmware/efi ]; then
 	echo "Sistema EFI detectado. Instalando GRUB para EFI..."
-	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "GRUB instalado correctamente para EFI."
 else
-	disk=$(lsblk -no pkname $(mount | grep 'on / ' | awk '{print $1}' | sort | uniq))
-		if [ -z "$DISK" ]; then
-			echo "No se pudo determinar el disco. Abortando."
-			exit 1
-		fi
 	echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-	grub-install --target=i386-pc /dev/$DISK
+	grub-install --target=i386-pc /dev/$(cat /tmp/diskid) --boot-directory=/boot
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "GRUB instalado correctamente para BIOS."
 fi
@@ -109,3 +104,5 @@ fi
 rc-update add NetworkManager default
 rc-update add bluetoothd default
 rc-update cupsd default
+
+# TODO Activar repositorios de Arch y cachyos, instalar tpl, realtime privileges, y crear usuario
