@@ -1,14 +1,64 @@
 #!/bin/sh
 
-# Nos aseguramos que los paquetes necesarios están instalados
-doas pacman -S --noconfirm --needed base autoconf automake binutils bison fakeroot file git \
-findutils flex gawk gcc gettext grep gzip libtool m4 make patch pkgconf sed opendoas texinfo >/dev/null
+# Listar los discos disponibles
+echo "Discos disponibles:"
+lsblk -d -o name,size,type | grep "disk"
 
-ln -s /usr/bin/doas /usr/bin/sudo
+# Pedir al usuario que seleccione un disco para formatear
+read -p "Introduce el nombre del disco que quieres formatear (ejemplo: sda): " disk
 
-echo "# Wheel users
-permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel
+# Confirmar los cambios
+read -p "Estás seguro de que quieres formatear $disk? (s/n): " confirm
+if [ "$confirm" != "s" ]; then
+    echo "Operación cancelada."
+    exit 1
+fi
 
-permit nopass :wheel as root cmd pacman
-permit nopass :wheel as root cmd cat
-permit nopass :wheel as root cmd /usr/bin/grub-mkconfig" > /etc/doas.conf
+
+# Formatear el disco seleccionado
+echo "Formateando disco $disk..."
+
+
+# Creamos una partición /boot o /boot/efi dependiendo
+# de si estamos en un sistema UEFI o no
+if [ ! -d /sys/firmware/efi ]; then
+    parted /dev/$disk mklabel gpt mkpart primary ext4 1MiB 513MiB set 1 boot on
+    mkfs.ext4 /dev/${disk}1
+    boot_partition="/dev/${disk}1"
+else
+    parted /dev/$disk mklabel gpt mkpart primary fat32 1MiB 513MiB set 1 boot on
+    mkfs.fat -F32 /dev/${disk}1
+    boot_partition="/dev/${disk}1"
+fi
+
+# Partición primaria / BTRFS con volumen root y @home
+parted /dev/$disk mkpart primary btrfs 513MiB 100%
+mkfs.btrfs /dev/${disk}2
+
+# Crear subvolúmenes para root y @home
+mount /dev/${disk}2 /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+umount /mnt
+
+# Montar subvolúmenes
+mount -o noatime,compress=zstd,subvol=@ /dev/${disk}2 /mnt
+mkdir -p /mnt/home
+mount -o noatime,compress=zstd,subvol=@home /dev/${disk}2 /mnt/home
+
+# Crear y activar la partición de intercambio (swap)
+parted /dev/$disk mkpart primary linux-swap 4G 100%
+mkswap /dev/${disk}3
+swapon /dev/${disk}3
+
+echo "Formateo completado."
+
+# Instalar paquetes con basestrap
+echo "Instalando paquetes con basestrap..."
+basestrap /mnt base base-devel openrc linux linux-firmware neovim opendoas
+
+# Generar fstab
+echo "Generando fstab con fstabgen..."
+fstabgen -U /mnt >> /mnt/etc/fstab
+
+echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf

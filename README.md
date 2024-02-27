@@ -5,10 +5,7 @@ Configuración de `Artix` y auto-instalador
 ## Steps to Install
 
 - Fase 1 (Instalación Base):
-    - Particiona tu disco según desees
-    - Monta las particiones acordemente: `/` en `/mnt`, `/boot/efi` en `/mnt/boot/efi`, etc.
-    - Haz el basestrap con: `basestrap /mnt base openrc linux linux-firmware wget`
-    - Genera tu fstab con: `fstabgen -u /mnt >> /mnt/etc/fstab`
+    - Instala wget en la instalación live con `pacman -Sy wget`
     - Chroot `/mnt` , cd `/tmp`, descarga el script `wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/setup.sh`
     - Ejecuta tu script desde la cuenta root _Todavía no hemos configurado el usuaio regular_
 - Stage 2 (Software & Config Installation):
