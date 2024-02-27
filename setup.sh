@@ -55,7 +55,7 @@ echo "Formateo completado."
 
 # Instalar paquetes con basestrap
 echo "Instalando paquetes con basestrap..."
-basestrap /mnt base base-devel openrc linux linux-firmware neovim opendoas
+basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim opendoas
 
 # Generar fstab
 echo "Generando fstab con fstabgen..."
