@@ -5,10 +5,10 @@ echo "Discos disponibles:"
 lsblk -d -o name,size,type | grep "disk"
 
 # Pedir al usuario que seleccione un disco para formatear
-read -pr "Introduce el nombre del disco que quieres formatear (ejemplo: sda): " disk
+read -p "Introduce el nombre del disco que quieres formatear (ejemplo: sda): " disk
 
 # Confirmar los cambios
-read -pr "Estás seguro de que quieres formatear $disk? (s/n): " confirm
+read -p "Estás seguro de que quieres formatear $disk? (s/n): " confirm
 if [ "$confirm" != "s" ]; then
     echo "Operación cancelada."
     exit 1
