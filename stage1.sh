@@ -82,16 +82,16 @@ else
 fi
 mkdir -p "$boot_part"
 mount "/dev/$part1" "$boot_part"
-genfstab -U /mnt >> /mnt/etc/fstab
+fstabgen -U /mnt >> /mnt/etc/fstab
 
-echo "Formateo completado."
+whiptail --title "Formateo completado" --msgbox "El formateo ha sido completado con éxito." 10 60
 
 # Instalar paquetes con basestrap (fstab se genera automaticamente)
-echo "Instalando paquetes con basestrap..."
 basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
+whiptail --title "Instalación de paquetes" --msgbox "Los paquetes han sido instalados con éxito utilizando basestrap." 10 60
 
-echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
+whiptail --title "Configuración de Opendoas" --msgbox "Opendoas ha sido configurado correctamente." 10 60
 
 echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
 artix-chroot /mnt bash -c "pacman -Sy --noconfirm wget && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
