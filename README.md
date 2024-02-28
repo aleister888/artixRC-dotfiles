@@ -2,14 +2,11 @@
 
 Configuración de `Artix` y auto-instalador
 
-## Steps to Install
+## Instalación
 
-- Fase 1 (Instalación Base):
-    - Inicia sesión como root e instala wget y parted desde la ISO con `pacman -Sy wget parted`
-    - Descarga la 1a parte del script con: `wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh`. Y ejecutalo
-- Stage 2 (Software & Config Installation):
-    - Ya estas dentro de tu instalación de Artix como root!
-    - Instala wget con `pacman -S wget`
-    - Descarga la 2a parte del script con: `wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh`. Y ejecutala
+- Inicia sesión como root e instala wget y parted desde el entorno live con:
+    - `pacman -Sy wget parted`
+- Descarga el script y ejecutalo>
+        - `wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh`
 
 ## WORK IN PROGRESS, DO NOT USE
