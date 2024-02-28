@@ -28,10 +28,10 @@ case $graphic_driver in
 	optimus)
 		bumblebee_install ;;
 esac && \
-whiptail --title "Drivers" --msgbox "Los drivers de video se instalaron correctamente"
+whiptail --title "Drivers" --msgbox "Los drivers de video se instalaron correctamente" 10 60
 
 # Instalar los paquetes básicos para gráficos acelerados
-sudo pacman -S mesa mesa-libgl xorg xorg-xinit xorg-server xorg-server-utils
+sudo pacman -S --noconfirm mesa mesa-libgl xorg xorg-xinit xorg-server xorg-server-utils
 
 # Instalar escritorio
 
@@ -45,20 +45,20 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 gnome_install(){
 doas pacman -S --noconfirm xorg gnome gnome-extra gdm gdm-openrc && \
 rc-update add gdm default && \
-whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente"
+whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
 
 kde_install(){
 doas pacman -S --noconfirm xorg sddm plasma kde-applications sddm-openrc && \
 rc-update add sddm default && \
-whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente"
+whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 }
 
 xfce_install(){
 doas pacman -S --noconfirm xfce4 xfce4-goodies lightdm lightdm-gtk-greeter lightdm-openrc && \
 rc-update add lightdm
 doas sed -i 's/^#greeter-session=.*/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
-whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente"
+whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
 
 case $desktop_choice in
