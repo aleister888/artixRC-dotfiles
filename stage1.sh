@@ -50,10 +50,11 @@ else
 fi
 
 # Crear partición swap de 4GB
-parted -s "/dev/$part2" mkpart primary linux-swap 513MiB 4.5GB
+parted -s "/dev/$disk" mkpart primary linux-swap 513MiB 4.5GB
+mkswap "/dev/$part2"
 
 # Partición primaria / BTRFS
-parted -s "/dev/$part3" mkpart primary btrfs 4.5GB 100%
+parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
 mkfs.btrfs "/dev/$part3"
 
 # Crear subvolúmenes para / y /home
