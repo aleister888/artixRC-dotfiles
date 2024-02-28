@@ -126,7 +126,7 @@ pacman -Sy --noconfirm
 pacman-key --populate archlinux >/dev/null 2>&1
 
 # Instalar paquetes
-pacman -S tlp tlp-openrc cronie cronie-openrc realtime-privileges
+pacman -S tlp tlp-openrc cronie cronie-openrc realtime-privileges git
 
 # Activar servicios
 rc-update add NetworkManager default
@@ -170,3 +170,8 @@ useradd -m -G "$groups" "$username"
 echo "$username:$password" | chpasswd
 
 echo "El usuario $username ha sido creado exitosamente."
+
+ln -s /usr/bin/doas /usr/bin/sudo
+
+su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
