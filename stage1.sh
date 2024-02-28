@@ -110,4 +110,12 @@ whiptail --title "Configuración de Opendoas" --msgbox "Opendoas ha sido configu
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 
+# Montar directorios importantes para el chroot
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
+mount --bind /dev /mnt/dev
+mount --bind /dev/pts /mnt/dev/pts
+mount --bind /dev/shm /mnt/dev/shm
+mount --bind /run /mnt/run
+
 artix-chroot /mnt bash -c "pacman -Sy --noconfirm wget && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
