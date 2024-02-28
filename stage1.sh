@@ -44,11 +44,11 @@ esac
 # de si estamos en un sistema UEFI o no
 if [ "$part_type" == "dos" ]; then
 	# BIOS -> MBR
-	parted -s "/dev/$disk" mklabel $part_type mkpart primary ext4 1MiB 513MiB set 1 boot on
+	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/$disk
 	mkfs.ext4 "/dev/$part1"
 else
 	# EUFI -> GPT
-	parted -s "/dev/$disk" mklabel $part_type mkpart primary fat32 1MiB 513MiB set 1 boot on
+	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/$disk
 	mkfs.fat -F32 "/dev/$part1"
 fi
 
@@ -58,7 +58,7 @@ mkswap "/dev/$part2"
 
 # Partición primaria / BTRFS
 parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
-mkfs.btrfs "/dev/$part3"
+mkfs.btrfs -f "/dev/$part3"
 
 # Crear subvolúmenes para / y /home
 mount "/dev/$part3" /mnt
@@ -89,5 +89,3 @@ echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/et
 
 echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
 artix-chroot /mnt bash
-
-ls

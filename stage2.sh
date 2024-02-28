@@ -100,7 +100,7 @@ if [ -d /sys/firmware/efi ]; then
 	echo "GRUB instalado correctamente para EFI."
 else
 	echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-	grub-install --target=i386-pc $(df /boot --output=source | tail -n 1) --boot-directory=/boot
+	grub-install --target=i386-pc $(df /boot --output=source | tail -n 1)
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "GRUB instalado correctamente para BIOS."
 fi
@@ -108,6 +108,6 @@ fi
 # Activar serivicios
 rc-update add NetworkManager default
 rc-update add bluetoothd default
-rc-update cupsd default
+rc-update add cupsd default
 
 # TODO Activar repositorios de Arch y cachyos, instalar tpl, realtime privileges, y crear usuario
