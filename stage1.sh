@@ -1,21 +1,25 @@
 #!/bin/bash
 
-# Listar los discos disponibles
-echo "Discos disponibles:"
-lsblk -d -o name,size,type | grep "disk"
+# Instalr whiptail y parted
+pacman -Sy --noconfirm --needed parted newt >/dev/null 2>&1
 
-# Pedir al usuario que seleccione un disco para formatear
-read -p "Introduce el nombre del disco que quieres formatear (ejemplo: sda): " disk
+# Listar los discos disponibles
+disk=$(whiptail --title "Selecciona un disco para formatear" --menu "Discos disponibles:" 15 60 4 $(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | tr '\n' ' ') 3>&1 1>&2 2>&3)
 
 # Confirmar los cambios
-read -p "Estás seguro de que quieres formatear $disk? (s/n): " confirm
-if [ "$confirm" != "s" ]; then
-    echo "Operación cancelada."
-    exit 1
+if [ $? -ne 0 ]; then
+	whiptail --title "Operación cancelada" --msgbox "No se ha seleccionado ningún disco. La operación ha sido cancelada." 10 60
+	exit 1
+fi
+
+# Confirmar con Whiptail los cambios
+if ! whiptail --title "Confirmar formateo" --yesno "Estás seguro de que quieres formatear $disk?" 10 60; then
+	whiptail --title "Operación cancelada" --msgbox "El formateo ha sido cancelado." 10 60
+	exit 1
 fi
 
 # Formatear el disco seleccionado
-echo "Formateando disco $disk..."
+whiptail --title "Formateando disco" --infobox "Formateando disco $disk..." 10 60
 
 if [ ! -d /sys/firmware/efi ]; then
 	part_type='msdos' # MBR para BIOS
