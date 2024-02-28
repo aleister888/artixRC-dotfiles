@@ -43,7 +43,7 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 "${desktops[@]}" 3>&1 1>&2 2>&3)
 
 gnome_install(){
-	doas pacman -S --noconfirm xorg gnome gnome-extra gdm gdm-openrc && \
+	doas pacman -S --noconfirm xorg gnome gdm gdm-openrc && \
 	doas rc-update add gdm default && \
 	whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
