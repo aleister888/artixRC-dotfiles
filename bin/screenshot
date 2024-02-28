@@ -1,7 +1,12 @@
 #!/bin/sh
 
 NAME="$(date +"%e%m%Y_%H%M%S").jpg"
-FILE="$HOME/Pictures/Screenshots/$NAME"
+SCRENDIR="$HOME/Pictures/Screenshots"
+FILE="$SCRENDIR/$NAME"
+
+if [ ! -d $SCRENDIR ]; then
+	mkdir -p $SCRENDIR
+fi
 
 all_clip(){
 	dunstctl close-all; \

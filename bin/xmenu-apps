@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Script para tener un menú de aplicaciones con xmenu
+# Menú de aplicaciones con xmenu
 
 # Prefijo de wine para los plugins de audio
 WINEDRIVE=~/.config/wineprefixes/drive_c
@@ -14,13 +14,12 @@ RADIOFLAG="-t scratchpad mpv"
 cat <<EOF | xmenu -r | /bin/sh &
 IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/librewolf.svg				Librewolf		librewolf
-	IMG:$ICONPATH/apps/tor-browser.svg				Tor-Browser		/usr/bin/tor-browser
+	IMG:$ICONPATH/apps/tor-browser.svg				Tor-Browser		tor-browser
 	IMG:$ICONPATH/apps/discord.svg					Webcord			webcord
-	IMG:$ICONPATH/apps/revolt.svg					Revolt			revolt-desktop
 	IMG:$ICONPATH/apps/electron-mail.svg				Electronmail		electron-mail
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
-	IMG:$ICONPATH/apps/telegram.svg					Telegram		/usr/bin/telegram-desktop
+	IMG:$ICONPATH/apps/telegram.svg					Telegram		telegram-desktop
 
 IMG:$ICONPATH/apps/wine.svg						Wine Apps
 	IMG:$ICONPATH/places/folder-red-wine.svg			Plugins Folder		$TERMINAL lf $WINEDRIVE
@@ -40,7 +39,6 @@ IMG:$ICONPATH/apps/multimedia.svg					Sound & Video
 	IMG:$ICONPATH/apps/fr.handbrake.ghb.svg				HandBrake		ghb
 	IMG:$ICONPATH/apps/easytag.svg					EasyTAG			easytag
 	IMG:$ICONPATH/apps/picard.svg					Picard			picard --stand-alone-instance
-	IMG:$ICONPATH/apps/carla.svg					Carla			/usr/loocal/bin/carla
 
 IMG:$ICONPATH/apps/radiotray.svg					Radio
 	Your Classical - Relax	 					$TERMINAL $RADIOFLAG "http://relax.stream.publicradio.org/relax.mp3"
@@ -89,7 +87,7 @@ IMG:$ICONPATH/apps/applications-utilities.svg				Utilities
 	IMG:$ICONPATH/apps/rustdesk.svg					Remote Desktop		rustdesk
 	IMG:$ICONPATH/apps/timeshift.svg				Timeshift		timeshift-launcher
 	IMG:$ICONPATH/apps/monero.svg					Monero GUI		monero-wallet-gui
-	IMG:$ICONPATH/apps/cheese.svg					Webcam Preview		/usr/bin/mpv /dev/video0
+	IMG:$ICONPATH/apps/cheese.svg					Webcam Preview		mpv /dev/video0
 	IMG:/usr/share/pixmaps/czkawka-gui.png				Czkawka			czkawka-gui
 	IMG:$ICONPATH/apps/baobab.svg					Baobab			export GTK_THEME=Gruvbox-Dark-B; baobab
 	IMG:$ICONPATH/apps/preferences-system-windows.svg		Settings
@@ -116,5 +114,5 @@ IMG:$ICONPATH/apps/system-shutdown.svg					Power
 	IMG:$ICONPATH/apps/system-suspend.svg				Suspend			loginctl suspend
 	IMG:$ICONPATH/apps/system-reboot.svg				Reboot			pkexec openrc-shutdown -r now
 	IMG:$ICONPATH/apps/system-shutdown.svg				Shutdown		pkexec openrc-shutdown -p now
-	IMG:$ICONPATH/apps/system-suspend-hibernate.svg			Wake	pkexec wake
+	IMG:$ICONPATH/apps/system-suspend-hibernate.svg			Wake			pkexec wake
 EOF

@@ -1,7 +1,7 @@
 #!/bin/bash
-# Script para comprobar la corrupción de los archivos flac de un directorio
+# Script para comprobar y corregir la corrupción de los archivos flac de un directorio
 
-OG_DIR="$HOME/Music/Library" # Directorio a Verificar
+OG_DIR="$1" # Directorio a Verificar
 LOG_FILE="/tmp/corruption.log" # Fichero donde guardar los errores
 TMP_LOG_FILE="/tmp/check.log" # Fichero temporal para comprobar los errores
 FINAL_LOG="/tmp/flac_corrupted.log" # Fichero donde guardar los nombres de archivos corruptos

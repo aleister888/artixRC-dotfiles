@@ -1,6 +1,6 @@
 #!/bin/bash
-OG_DIR="/home/aleister/Music/Library"
-BK_DIR="/opt/M4A"
+OG_DIR="$1"
+BK_DIR="$2"
 TMP_DIR="/tmp"
 
 # Crear archivos temporales

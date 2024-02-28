@@ -1,7 +1,7 @@
 #!/bin/sh
 # Script for unmounting android devices
 
-user="aleister"
+user="$(whoami)"
 
 # Definir la ruta completa del directorio de inicio del usuario
 HOME_DIR="/home/$user"

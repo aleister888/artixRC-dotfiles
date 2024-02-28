@@ -10,7 +10,7 @@ if [ "$DAY" == "Saturday" ] || [ "$DAY" == "Sunday" ]; then
 	exit 0
 fi
 
-ALARMA="/home/aleister/Music/Library/Mestís/2015 - Polysemy/06. Paloma.flac"
+ALARMA="$1"
 
 # Imprime dispositivos usados (Salida, Entrada y Vídeo)
 getdefaults(){

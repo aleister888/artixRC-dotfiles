@@ -1,8 +1,0 @@
-#!/bin/sh
-
-firejail	--noprofile \
-		--env=XAUTHORITY=$HOME/.config/Xauthority \
-		--whitelist=$HOME/.config/Xauthority \
-		--whitelist=$HOME/.config/gtk-3.0 \
-		--noroot \
-		/usr/local/bin/gmetronome

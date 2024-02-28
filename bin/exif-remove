@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directorio de imágenes
-image_dir="/home/aleister/Pictures"
+image_dir="$1"
 
 # Verificar si el directorio existe
 if [ ! -d "$image_dir" ]; then

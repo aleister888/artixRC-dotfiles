@@ -15,21 +15,6 @@ if [ "$1" = Tauon ]; then
 	fi
 fi
 
-if [ "$1" = Spotify ]; then
-	if [ "$(pw-link --links -I | grep spotify | wc -l)" -gt "5" ]; then
-		pw-link -d spotify:output_FL my-combined-sink:playback_FL
-		pw-link -d spotify:output_FR my-combined-sink:playback_FR
-		notify-send -i spotify "Spotify Disconnected from Voice"
-	else
-		pw-link -P spotify:output_FL my-combined-sink:playback_FL
-		if pw-link -P spotify:output_FR my-combined-sink:playback_FR; then
-			notify-send -i spotify "Spotify Connected to Voice"
-		else
-			notify-send -i spotify "Spotify Couldn't connect to Voice"
-		fi
-	fi
-fi
-
 if [ "$1" = Librewolf ]; then
 	if [ "$(pw-link --links -I | grep LibreWolf | wc -l)" -gt "5" ]; then
 		pw-link -d LibreWolf:output_FL my-combined-sink:playback_FL
