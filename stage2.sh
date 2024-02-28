@@ -114,11 +114,6 @@ else
 	echo "GRUB instalado correctamente para BIOS."
 fi
 
-# Activar serivicios
-rc-update add NetworkManager default
-rc-update add bluetoothd default
-rc-update add cupsd default
-
 # Activar repositorios de arch
 pacman --noconfirm --needed -S artix-keyring artix-archlinux-support >/dev/null 2>&1
 grep -q "^\[extra\]" /etc/pacman.conf || \
@@ -126,12 +121,52 @@ echo "[extra]
 Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
-Include = /etc/pacman.d/mirrorlist-arch
-
-[cachyos]
-Server = https://mirror.cachyos.org/repo/$arch/$repo
-Server = https://aur.cachyos.org/repo/$arch/$repo" >>/etc/pacman.conf
+Include = /etc/pacman.d/mirrorlist-arch" >>/etc/pacman.conf
 pacman -Sy --noconfirm
 pacman-key --populate archlinux >/dev/null 2>&1
 
-# TODO: Instalar tpl, realtime privileges, y crear usuario
+# Instalar paquetes
+pacman -S tlp tlp-openrc cronie cronie-openrc realtime-privileges
+
+# Activar servicios
+rc-update add NetworkManager default
+rc-update add bluetoothd default
+rc-update add cupsd default
+rc-update add cronie default
+rc-update add tlp default
+
+# Crear usuario
+
+# Elegir nombre de usuario
+while true; do
+	read -p "Ingrese el nombre de usuario: " username
+	read -p "Confirme el nombre de usuario: " username_confirm
+	if [ "$username" = "$username_confirm" ]; then
+		break
+	else
+		echo "Los nombres no coinciden. Inténtelo de nuevo."
+	fi
+done
+
+# Elegir contraseña
+
+while true; do
+	read -s -p "Ingrese la contraseña: " password
+	echo
+	read -s -p "Confirme la contraseña: " password_confirm
+	echo
+	if [ "$password" = "$password_confirm" ]; then
+		break
+	else
+		echo "Las contraseñas no coinciden. Inténtelo de nuevo."
+	fi
+done
+
+# Definimos los grupos
+groups="wheel,lp,audio"
+
+useradd -m -G "$groups" "$username"
+
+echo "$username:$password" | chpasswd
+
+echo "El usuario $username ha sido creado exitosamente."
