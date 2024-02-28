@@ -55,6 +55,7 @@ fi
 # Crear partición swap de 4GB
 parted -s "/dev/$disk" mkpart primary linux-swap 513MiB 4.5GB
 mkswap "/dev/$part2"
+swapon "/dev/$part2"
 
 # Partición primaria / BTRFS
 parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
@@ -77,6 +78,7 @@ else
 fi
 mkdir -p "$boot_part"
 mount "/dev/$part1" "$boot_part"
+genfstab -U /mnt > /mnt/etc/fstab
 
 echo "Formateo completado."
 
@@ -88,4 +90,4 @@ echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
 echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
-artix-chroot /mnt bash
+artix-chroot /mnt bash -c "pacman -Sy && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"

@@ -91,6 +91,15 @@ fi
 # Instalar paquetes comunes
 pacman -S --noconfirm grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc world/freetype2 world/libjpeg-turbo
 
+boot_part=$(df / --output=source | tail -n1)
+
+case "$boot_part" in
+*"nvme"*)
+        boot_part=$(echo $boot_part | sed 's/p[0-9]*$//')
+*)
+        boot_part=$(echo $boot_part | sed 's/[0-9]*$//')
+esac
+
 # Vamos a instalar ahora grub
 # Verificar si el sistema es EFI
 if [ -d /sys/firmware/efi ]; then
@@ -100,7 +109,7 @@ if [ -d /sys/firmware/efi ]; then
 	echo "GRUB instalado correctamente para EFI."
 else
 	echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-	grub-install --boot-directory=/boot $(df /boot --output=source | tail -n 1)
+	grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "GRUB instalado correctamente para BIOS."
 fi
@@ -122,7 +131,7 @@ Include = /etc/pacman.d/mirrorlist-arch
 [cachyos]
 Server = https://mirror.cachyos.org/repo/$arch/$repo
 Server = https://aur.cachyos.org/repo/$arch/$repo" >>/etc/pacman.conf
-pacman -Sy --noconfirm >/dev/null 2>&1
+pacman -Sy --noconfirm
 pacman-key --populate archlinux >/dev/null 2>&1
 
 # TODO: Instalar tpl, realtime privileges, y crear usuario
