@@ -3,6 +3,9 @@
 # Instalr whiptail y parted
 pacman -Sy --noconfirm --needed parted libnewt >/dev/null 2>&1
 
+# Elegir el tipo de partición
+fs_type=$(whiptail --title "Selecciona el sistema de archivos" --menu "Selecciona el sistema de archivos para formatear los discos:" 15 60 2 "ext4" "Ext4" "btrfs" "Btrfs" 3>&1 1>&2 2>&3)
+
 # Listar los discos disponibles
 disk=$(whiptail --title "Selecciona un disco para formatear" --menu "Discos disponibles:" 15 60 4 $(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | tr '\n' ' ') 3>&1 1>&2 2>&3)
 
@@ -61,20 +64,28 @@ parted -s "/dev/$disk" mkpart primary linux-swap 513MiB 4.5GB
 mkswap "/dev/$part2"
 swapon "/dev/$part2"
 
-# Partición primaria / BTRFS
-parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
-mkfs.btrfs -f "/dev/$part3"
+# Crear partición /
+if [ "$fs_type" = "ext4" ]; then
+	parted -s "/dev/$disk" mkpart primary ext4 4.5GB 100%
+	mkfs.ext4 "/dev/$part3"
+	mount -o noatime "/dev/$part3" /mnt
+elif [ "$fs_type" = "btrfs" ]; then
+	# Partición primaria / BTRFS
+	parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
+	mkfs.btrfs -f "/dev/$part3"
+	
+	# Crear subvolúmenes para / y /home
+	mount "/dev/$part3" /mnt
+	btrfs subvolume create /mnt/@
+	btrfs subvolume create /mnt/@home
+	umount /mnt
+	
+	# Montar subvolúmenes
+	mount -o noatime,compress=zstd,subvol=@ "/dev/$part3" /mnt
+	mkdir -p /mnt/home
+	mount -o noatime,compress=zstd,subvol=@home "/dev/$part3" /mnt/home
+fi
 
-# Crear subvolúmenes para / y /home
-mount "/dev/$part3" /mnt
-btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@home
-umount /mnt
-
-# Montar subvolúmenes
-mount -o noatime,compress=zstd,subvol=@ "/dev/$part3" /mnt
-mkdir -p /mnt/home
-mount -o noatime,compress=zstd,subvol=@home "/dev/$part3" /mnt/home
 if [ "$part_type" == "msdos" ]; then
 	boot_part="/mnt/boot"
 else
