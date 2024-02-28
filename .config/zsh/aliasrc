@@ -23,6 +23,9 @@ alias \
 	..='cd ..' \
 	...='cd ../..'
 
+# Actualizar sistema
+alias update='yay -Syuu'
+
 # Herramientas
 alias \
 	xdotool_table='xmodmap -pk' \
@@ -52,19 +55,8 @@ alias lostfiles='doas lostfiles | grep -v "theme\|opt\|NerdFonts"'
 # Encontrar archivos pac de pacman
 alias pac="find /etc -name '*.pacnew' -o -name '*.pacsave' 2> >(grep -v 'Permission\|Permiso' >&2)"
 
-# Opciones para conectarse con SSH
-alias \
-	ssh_home='ssh "$(cat /opt/Sync/Arch\ IP)"' \
-	ssh_vnc='ssh "$(cat /opt/Sync/Arch\ IP)" -L 5900:localhost:5900' \
-	ssh_komga='ssh "$(cat /opt/Sync/Arch\ IP)" -L 8443:localhost:8443' \
-
 function wininfo {
 xprop | awk '
 	/^WM_CLASS/{sub(/.* =/, "instancia:"); sub(/,/, "\nclase:"); print}
 	/^WM_NAME/{sub(/.* =/, "título:"); print}'
-}
-
-function dotfiles_stow() {
-	sh -c "cd $HOME && stow --target="${HOME}/.config/" .dotfiles/"
-	find ~/.config -type l ! -exec test -e {} \; -delete
 }

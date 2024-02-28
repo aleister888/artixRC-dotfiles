@@ -100,7 +100,7 @@ if [ -d /sys/firmware/efi ]; then
 	echo "GRUB instalado correctamente para EFI."
 else
 	echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-	grub-install --target=i386-pc $(df /boot --output=source | tail -n 1)
+	grub-install --boot-directory=/boot $(df /boot --output=source | tail -n 1)
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "GRUB instalado correctamente para BIOS."
 fi
@@ -110,4 +110,19 @@ rc-update add NetworkManager default
 rc-update add bluetoothd default
 rc-update add cupsd default
 
-# TODO Activar repositorios de Arch y cachyos, instalar tpl, realtime privileges, y crear usuario
+# Activar repositorios de arch
+pacman --noconfirm --needed -S artix-keyring artix-archlinux-support >/dev/null 2>&1
+grep -q "^\[extra\]" /etc/pacman.conf || \
+echo "[extra]
+Include = /etc/pacman.d/mirrorlist-arch
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist-arch
+
+[cachyos]
+Server = https://mirror.cachyos.org/repo/$arch/$repo
+Server = https://aur.cachyos.org/repo/$arch/$repo" >>/etc/pacman.conf
+pacman -Sy --noconfirm >/dev/null 2>&1
+pacman-key --populate archlinux >/dev/null 2>&1
+
+# TODO: Instalar tpl, realtime privileges, y crear usuario
