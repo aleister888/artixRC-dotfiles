@@ -18,10 +18,13 @@ fi
 echo "Formateando disco $disk..."
 
 if [ ! -d /sys/firmware/efi ]; then
-	part_type='dos' # MBR para BIOS
+	part_type='msdos' # MBR para BIOS
 else
 	part_type='gpt' # GPT para UEFI
 fi
+
+# The idea for defining partitions like this was taken from:
+# https://github.com/Zaechus/artix-installer/blob/main/install.sh
 
 # Definimos nuestras particiones
 case "$disk" in
@@ -67,17 +70,24 @@ umount /mnt
 mount -o noatime,compress=zstd,subvol=@ "/dev/$part3" /mnt
 mkdir -p /mnt/home
 mount -o noatime,compress=zstd,subvol=@home "/dev/$part3" /mnt/home
+if [ "$part_type" == "msdos" ]; then
+	boot_part="/mnt/boot"
+else
+	boot_part="/mnt/boot/efi"
+fi
+mkdir -p "$boot_part"
+mount "/dev/$part1" "$boot_part"
 
 echo "Formateo completado."
 
 # Instalar paquetes con basestrap (fstab se genera automaticamente)
 echo "Instalando paquetes con basestrap..."
-basestrap /mnt base base-devel elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
+basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
 
 echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
-echo "$disk" > /mnt/tmp/diskid
-
 echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
 artix-chroot /mnt bash
+
+ls

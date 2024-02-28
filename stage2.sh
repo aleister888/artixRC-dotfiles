@@ -3,15 +3,20 @@
 # Detectar el fabricante del procesador
 manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
 
-# Instalar el microcódigo correspondiente
+# Vamos a instalar los paquetes en base-devel manualmente
+# para poder prescindir de sudo y tener solo doas instalado
+base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
+
+# Instalar el microcódigo correspondiente y paquetes de base-devel
 if [ "$manufacturer" == "GenuineIntel" ]; then
 	echo "Detectado procesador Intel."
-	pacman -S --noconfirm linux-headers intel-ucode
+	pacman -S --noconfirm linux-headers intel-ucode $base_devel_doas
 elif [ "$manufacturer" == "AuthenticAMD" ]; then
 	echo "Detectado procesador AMD."
-	pacman -S --noconfirm linux-headers amd-ucode
+	pacman -S --noconfirm linux-headers amd-ucode $base_devel_doas
 else
 	echo "No se pudo detectar el fabricante del procesador."
+	pacman -S --noconfirm $base_devel_doas
 fi
 
 valid_timezone=false
@@ -95,7 +100,7 @@ if [ -d /sys/firmware/efi ]; then
 	echo "GRUB instalado correctamente para EFI."
 else
 	echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-	grub-install --target=i386-pc /dev/$(cat /tmp/diskid) --boot-directory=/boot
+	grub-install --target=i386-pc $(df /boot --output=source | tail -n 1) --boot-directory=/boot
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "GRUB instalado correctamente para BIOS."
 fi
