@@ -244,7 +244,7 @@ groups="wheel,lp,audio"
 
 useradd -m -G "$groups" "$username"
 
-echo "$username:$password" | chpasswd
+echo "$username:$user_password" | chpasswd
 
 whiptail --title "$username" --msgbox "El usuario $username ha sido creado exitosamente." 10 60
 
