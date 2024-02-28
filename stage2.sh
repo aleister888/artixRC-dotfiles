@@ -159,8 +159,21 @@ fi
 
 # Configurar pacman.conf
 
-# Activar repositorios de arch
 pacman --noconfirm --needed -S artix-keyring artix-archlinux-support pacman-contrib rsync
+
+# Activar lib32
+sed -i 's/#\[lib32\]/\[lib32\]/g; s/#Include = \/etc\/pacman.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist/g' /etc/pacman.conf
+
+# Escoger mirrors más rápidos
+sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
+
+# Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
+if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
+	sed -i '/^[^#]*Include = \/etc\/pacman\.d\/mirrorlist/s//Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
+	/etc/pacman.conf
+fi
+
+# Activar repositorios de arch
 grep -q "^\[extra\]" /etc/pacman.conf || \
 echo "[extra]
 Include = /etc/pacman.d/mirrorlist-arch
@@ -168,8 +181,7 @@ Include = /etc/pacman.d/mirrorlist-arch
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch" >>/etc/pacman.conf
 
-# Activar lib32
-sed -i 's/#\[lib32\]/\[lib32\]/g; s/#Include = \/etc\/pacman.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist/g' /etc/pacman.conf && \
+# Actualizar cambios
 pacman -Sy --noconfirm && \
 pacman-key --populate archlinux && \
 whiptail --title "Pacman" --msgbox "Los repositorios de Arch fueron activados" 10 60
@@ -178,13 +190,6 @@ pacman -S --noconfirm reflector
 
 # Escoger mirrors más rápidos
 reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch # Arch
-sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
-
-# Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
-if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
-	sed -i '/^[^#]*Include = \/etc\/pacman\.d\/mirrorlist$/s/^Include = \/etc\/pacman\.d\/mirrorlist$/Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
-	/etc/pacman.conf
-fi
 
 # Instalar paquetes
 pacman --noconfirm --needed -S tlp tlp-openrc cronie cronie-openrc realtime-privileges git
