@@ -53,11 +53,11 @@ else
 fi
 
 # Crear partición swap de 4GB
-echo -e "start=513MiB, size=4G, type=82\n" | sfdisk /dev/$disk
+parted -s "/dev/$disk" mkpart primary linux-swap 513MiB 4.5GB
 mkswap "/dev/$part2"
 
 # Partición primaria / BTRFS
-echo -e "start=4.5G, type=83\n" | sfdisk /dev/$disk
+parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
 mkfs.btrfs -f "/dev/$part3"
 
 # Crear subvolúmenes para / y /home
