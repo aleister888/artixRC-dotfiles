@@ -182,7 +182,7 @@ sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirr
 
 # Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
 if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
-	sed -i '/^#.*Include = \/etc\/pacman\.d\/mirrorlist/s//Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
+	sed -i '/^[^#]*Include = \/etc\/pacman\.d\/mirrorlist/s//Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
 	/etc/pacman.conf
 fi
 
