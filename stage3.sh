@@ -36,7 +36,7 @@ doas pacman -S --noconfirm mesa mesa-libgl xorg xorg-xinit xorg-server
 # Instalar escritorio
 
 # Diferentes escritorios a elegir
-desktops=(gnome "GNOME" kde "KDE Plasma" xfce "Xfce" dotfiles "Dotfiles")
+desktops=(gnome "GNOME" kde "KDE Plasma" xfce "Xfce" dotfiles "dwm")
 
 # Mostrar el menú de selección con whiptail
 desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
