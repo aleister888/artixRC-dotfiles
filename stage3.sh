@@ -49,13 +49,13 @@ whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
 
 kde_install(){
-doas pacman -S --noconfirm xorg sddm plasma kde-applications sddm-openrc && \
+doas pacman -S --noconfirm xorg plasma kde-applications sddm sddm-openrc && \
 doas rc-update add sddm default && \
 whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 }
 
 xfce_install(){
-doas pacman -S --noconfirm xfce4 xfce4-goodies lightdm lightdm-openrc && \
+doas pacman -S --noconfirm xfce4 xfce4-goodies sddm sddm-openrc && \
 doas rc-update add lightdm
 whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
