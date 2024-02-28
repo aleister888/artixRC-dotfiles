@@ -49,7 +49,7 @@ gnome_install(){
 }
 
 kde_install(){
-	doas pacman -S --noconfirm xorg plasma kde-applications sddm sddm-openrc && \
+	doas pacman -S --noconfirm xorg plasma sddm sddm-openrc && \
 	doas rc-update add sddm default && \
 	whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 }
