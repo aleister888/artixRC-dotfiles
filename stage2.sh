@@ -23,14 +23,10 @@ valid_timezone=false
 
 while [ "$valid_timezone" == false ]; do
 	# Obtener la lista de regiones disponibles
-	regions=$(find /usr/share/zoneinfo -mindepth 1 -type d -exec basename {} \; | sort | uniq)
-	regions_array=()
-	for region in $regions; do
-		regions_array+=("$region" "")
-	done
+	regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort | uniq)
 	
 	# Utilizar Whiptail para presentar las opciones de región al usuario
-	region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+	region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions[@]} 3>&1 1>&2 2>&3)
 	
 	# Verificar si el usuario canceló la selección
 	if [ $? -ne 0 ]; then
