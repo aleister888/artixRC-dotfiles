@@ -162,7 +162,7 @@ fi
 pacman --noconfirm --needed -S artix-keyring artix-archlinux-support pacman-contrib rsync
 
 # Activar lib32
-sed -i 's/#\[lib32\]/\[lib32\]/g; s/#Include = \/etc\/pacman.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist/g' /etc/pacman.conf
+sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
 
 # Escoger mirrors más rápidos
 sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
