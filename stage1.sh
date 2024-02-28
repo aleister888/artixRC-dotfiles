@@ -90,4 +90,4 @@ echo "Configurando Opendoas..."
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
 echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
-artix-chroot /mnt bash -c "pacman -Sy && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
+artix-chroot /mnt bash -c "pacman -Sy wget && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
