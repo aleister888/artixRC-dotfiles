@@ -160,7 +160,7 @@ fi
 # Configurar pacman.conf
 
 # Activar repositorios de arch
-pacman --noconfirm --needed -S artix-keyring artix-archlinux-support pacman-contrib
+pacman --noconfirm --needed -S artix-keyring artix-archlinux-support pacman-contrib rsync
 grep -q "^\[extra\]" /etc/pacman.conf || \
 echo "[extra]
 Include = /etc/pacman.d/mirrorlist-arch
@@ -178,7 +178,7 @@ pacman -S --noconfirm reflector
 
 # Escoger mirrors más rápidos
 reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch # Arch
-sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v "#" > /etc/pacman.d/mirrorlist-artix' # Artix
+sh -c 'rankmirrors /etc/pacman.d/mirrorlist > /etc/pacman.d/mirrorlist-artix' # Artix
 
 # Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
 if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
@@ -206,27 +206,36 @@ whiptail --title "Cronie" --msgbox "Cronie fue configurado correctamente" 10 60
 # Crear usuario
 
 # Elegir nombre de usuario
-while true; do
-	read -p "Ingrese el nombre de usuario: " username
-	read -p "Confirme el nombre de usuario: " username_confirm
-	if [ "$username" = "$username_confirm" ]; then
-		break
-	else
-		echo "Los nombres no coinciden. Inténtelo de nuevo."
-	fi
-done
+username=$(whiptail --inputbox "Por favor, ingresa el nombre de usuario:" 10 60 3>&1 1>&2 2>&3)
 
 # Elegir contraseña
 
-while true; do
-	read -s -p "Ingrese la contraseña: " password
-	echo
-	read -s -p "Confirme la contraseña: " password_confirm
-	echo
-	if [ "$password" = "$password_confirm" ]; then
-		break
+# Definimos nuestras variables
+user_password=""
+user_password_confirm=""
+match=false
+
+# Bucle para pedir al usuario que ingrese la contraseña dos veces
+while [ "$match" == false ]; do
+	# Pedir al usuario que ingrese la contraseña
+	user_password=$(whiptail --title "Configuración de Contraseña" --passwordbox "Por favor, ingresa la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
+	# Verificar si el usuario canceló la operación
+	if [ $? -ne 0 ]; then
+		whiptail --title "Operación cancelada" --msgbox "La configuración de la contraseña ha sido cancelada." 10 60
+		exit 1
+	fi
+	# Pedir al usuario que confirme la contraseña
+	user_password_confirm=$(whiptail --title "Confirmar Contraseña" --passwordbox "Por favor, confirma la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
+	# Verificar si el usuario canceló la operación
+	if [ $? -ne 0 ]; then
+		whiptail --title "Operación cancelada" --msgbox "La configuración de la contraseña ha sido cancelada." 10 60
+		exit 1
+	fi
+	# Verificar si las contraseñas coinciden
+	if [ "$user_password" == "$user_password_confirm" ]; then
+		match=true
 	else
-		echo "Las contraseñas no coinciden. Inténtelo de nuevo."
+		whiptail --title "Error" --msgbox "Las contraseñas no coinciden. Por favor, inténtalo de nuevo." 10 60
 	fi
 done
 
@@ -237,7 +246,7 @@ useradd -m -G "$groups" "$username"
 
 echo "$username:$password" | chpasswd
 
-echo "El usuario $username ha sido creado exitosamente."
+whiptail --title "$username" --msgbox "El usuario $username ha sido creado exitosamente." 10 60
 
 ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
