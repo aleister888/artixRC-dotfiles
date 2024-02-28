@@ -58,59 +58,77 @@ while [ "$valid_timezone" == false ]; do
 	fi
 done
 
-# Configurar la zona horaria del sistema
-ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
-
-# Mostrar un mensaje de confirmación
+# Configurar la zona horaria del sistema y mostrar un mensaje de confirmación
+ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime && \
 whiptail --title "Zona horaria configurada" --msgbox "La zona horaria ha sido configurada como $region/$timezone." 10 60
 
+# Sincronizar reloj del hardware con la zona horaria
 hwclock --systohc
 
 # Descomentar las entradas en_US.UTF-8 UTF-8 y es_ES.UTF-8 en /etc/locale.gen
 sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen && \
 sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen && \
-echo "Las entradas en_US.UTF-8 UTF-8 y es_ES.UTF-8 UTF-8 han sido descomentadas en /etc/locale.gen"
+whiptail --title "Configuración de locales" --msgbox "Las entradas en_US.UTF-8 UTF-8 y es_ES.UTF-8 UTF-8 han sido descomentadas en /etc/locale.gen." 10 60
 
 locale-gen
 
 echo "LANG=es_ES.UTF-8" > /etc/locale.conf
-echo "artix" > /etc/hostname
+
+# Definir el nombre de nuestra máquina
+hostname=$(whiptail --title "Configuración de Hostname" --inputbox "Por favor, introduce el nombre que deseas para tu host:" 10 60 3>&1 1>&2 2>&3)
+
+echo "$hostname" > /etc/hostname
 
 # Descargar archivo hosts con bloqueo de sitios indeseados
 curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
 
-echo "127.0.0.1 localhost"			| tee -a /etc/hosts
-echo "127.0.0.1 artix.localdomain artix"	| tee -a /etc/hosts
-echo "127.0.0.1 localhost.localdomain"		| tee -a /etc/hosts
-echo "127.0.0.1 local"				| tee -a /etc/hosts
+echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
+echo "127.0.0.1 $hostname.localdomain $hostname" | tee -a /etc/hosts && \
+echo "127.0.0.1 localhost.localdomain"           | tee -a /etc/hosts && \
+echo "127.0.0.1 local"                           | tee -a /etc/hosts && \
+whiptail --title "/etc/hosts" --msgbox "El archivo /etc/hosts fue configurado correctamente" 10 60
 
-# Establecer la contraseña del usuario root
-while true; do
-		read -sp "Introduce la contraseña para el usuario root: " password
-		echo ""
+# Definimos nuestras variables
+password=""
+password_confirm=""
+match=false
 
-		read -sp "Confirma la contraseña: " password_confirm
-		echo ""
-
-		# Verificar si las contraseñas coinciden
-		if [ "$password" = "$password_confirm" ]; then
-				break
-		else
-				echo "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
-		fi
+# Bucle para pedir al usuario que ingrese la contraseña dos veces
+while [ "$match" == false ]; do
+	# Pedir al usuario que ingrese la contraseña
+	password=$(whiptail --title "Configuración de Contraseña de Root" --passwordbox "Por favor, ingresa la contraseña para el usuario root:" 10 60 3>&1 1>&2 2>&3)
+	# Verificar si el usuario canceló la operación
+	if [ $? -ne 0 ]; then
+		whiptail --title "Operación cancelada" --msgbox "La configuración de la contraseña de root ha sido cancelada." 10 60
+		exit 1
+	fi
+	# Pedir al usuario que confirme la contraseña
+	password_confirm=$(whiptail --title "Confirmar Contraseña de Root" --passwordbox "Por favor, confirma la contraseña para el usuario root:" 10 60 3>&1 1>&2 2>&3)
+	# Verificar si el usuario canceló la operación
+	if [ $? -ne 0 ]; then
+		whiptail --title "Operación cancelada" --msgbox "La confirmación de la contraseña de root ha sido cancelada." 10 60
+		exit 1
+	fi
+	# Verificar si las contraseñas coinciden
+	if [ "$password" == "$password_confirm" ]; then
+		match=true
+	else
+		whiptail --title "Error" --msgbox "Las contraseñas no coinciden. Por favor, inténtalo de nuevo." 10 60
+	fi
 done
 
 # Establecer la contraseña del usuario root
 echo "root:$password" | chpasswd
 
-echo "La contraseña del usuario root establecida."
+# Mostrar un mensaje de confirmación
+whiptail --title "Contraseña de Root Establecida" --msgbox "La contraseña del usuario root ha sido establecida correctamente." 10 60
 
 # Vamos a instalar ahora algunos paquetes esenciales
 
 # Instalamos efibootmgr en función de si nuestro sistema es UEFI o no
 if [ -d /sys/firmware/efi ]; then
 	pacman -S --noconfirm efibootmgr
-	echo "Sistema EFI detectado. Se ha instalado efibootmgr."
+	whiptail --title "Sistema EFI" --msgbox "Sistema EFI detectado. Se ha instalado efibootmgr." 10 60
 fi
 
 # Instalar paquetes comunes
@@ -129,14 +147,14 @@ esac
 # Verificar si el sistema es EFI
 if [ -d /sys/firmware/efi ]; then
 	echo "Sistema EFI detectado. Instalando GRUB para EFI..."
-	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
-	grub-mkconfig -o /boot/grub/grub.cfg
-	echo "GRUB instalado correctamente para EFI."
+	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
+	grub-mkconfig -o /boot/grub/grub.cfg && \
+	whiptail --title "GRUB" --msgbox "GRUB fue instalado correctamente (EFI)." 10 60
 else
 	echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-	grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable
-	grub-mkconfig -o /boot/grub/grub.cfg
-	echo "GRUB instalado correctamente para BIOS."
+	grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
+	grub-mkconfig -o /boot/grub/grub.cfg && \
+	whiptail --title "GRUB" --msgbox "GRUB fue instalado correctamente (BIOS)." 10 60
 fi
 
 # Activar repositorios de arch
