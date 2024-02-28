@@ -22,30 +22,30 @@ fi
 valid_timezone=false
 
 while [ "$valid_timezone" == false ]; do
-    # Obtener la lista de regiones disponibles
-    regions=$(find /usr/share/zoneinfo -mindepth 1 -type d -exec basename {} \;)
-
-    # Utilizar Whiptail para presentar las opciones de región al usuario
-    region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions[@]} 3>&1 1>&2 2>&3)
-
-    # Verificar si el usuario canceló la selección
-    if [ $? -ne 0 ]; then
-        whiptail --title "Operación cancelada" --msgbox "No se ha seleccionado ninguna región. La operación ha sido cancelada." 10 60
-        exit 1
-    fi
-
-    # Obtener la lista de zonas horarias disponibles para la región seleccionada
-    timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||")
-
-    # Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
-    timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones[@]} 3>&1 1>&2 2>&3)
-
-    # Verificar si la zona horaria seleccionada es válida
-    if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
-        valid_timezone=true
-    else
-        whiptail --title "Zona horaria no válida" --msgbox "Zona horaria no válida. Asegúrate de elegir una zona horaria válida." 10 60
-    fi
+	# Obtener la lista de regiones disponibles
+	regions=$(find /usr/share/zoneinfo -mindepth 1 -type d -exec basename {} \;)
+	
+	# Utilizar Whiptail para presentar las opciones de región al usuario
+	region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions[@]} 3>&1 1>&2 2>&3)
+	
+	# Verificar si el usuario canceló la selección
+	if [ $? -ne 0 ]; then
+		whiptail --title "Operación cancelada" --msgbox "No se ha seleccionado ninguna región. La operación ha sido cancelada." 10 60
+		exit 1
+	fi
+	
+	# Obtener la lista de zonas horarias disponibles para la región seleccionada
+	timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||")
+	
+	# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
+	timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones[@]} 3>&1 1>&2 2>&3)
+	
+	# Verificar si la zona horaria seleccionada es válida
+	if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+		valid_timezone=true
+	else
+		whiptail --title "Zona horaria no válida" --msgbox "Zona horaria no válida. Asegúrate de elegir una zona horaria válida." 10 60
+	fi
 done
 
 # Configurar la zona horaria del sistema
