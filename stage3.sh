@@ -56,7 +56,7 @@ whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 
 xfce_install(){
 doas pacman -S --noconfirm xfce4 xfce4-goodies sddm sddm-openrc && \
-doas rc-update add lightdm
+doas rc-update add sddm default && \
 whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
 
