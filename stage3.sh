@@ -24,7 +24,7 @@ case $graphic_driver in
 	intel)
 		doas pacman -S --noconfirm xf86-video-intel ;;
 	virtual)
-		echo "Estás utilizando una máquina virtual, no se requieren controladores adicionales."
+		echo "Estás utilizando una máquina virtual, no se requieren controladores adicionales." ;;
 	optimus)
 		bumblebee_install ;;
 esac && \
