@@ -43,30 +43,39 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 "${desktops[@]}" 3>&1 1>&2 2>&3)
 
 gnome_install(){
-doas pacman -S --noconfirm xorg gnome gnome-extra gdm gdm-openrc && \
-doas rc-update add gdm default && \
-whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
+	doas pacman -S --noconfirm xorg gnome gnome-extra gdm gdm-openrc && \
+	doas rc-update add gdm default && \
+	whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
 
 kde_install(){
-doas pacman -S --noconfirm xorg plasma kde-applications sddm sddm-openrc && \
-doas rc-update add sddm default && \
-whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
+	doas pacman -S --noconfirm xorg plasma kde-applications sddm sddm-openrc && \
+	doas rc-update add sddm default && \
+	whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 }
 
 xfce_install(){
-doas pacman -S --noconfirm xfce4 xfce4-goodies sddm sddm-openrc && \
-doas rc-update add sddm default && \
-whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
+	doas pacman -S --noconfirm xfce4 xfce4-goodies sddm sddm-openrc && \
+	doas rc-update add sddm default && \
+	whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
+}
+
+yay_install(){
+	whiptail --title "AUR" --msgbox "El ayudante del AUR: yay; se va a instalar. El instalador le pedirá su contraseña" 10 60
+	yay_tmp_dir="/tmp/yay_install_temp"
+	mkdir -p "$yay_tmp_dir"
+	git clone https://aur.archlinux.org/yay.git "$yay_tmp_dir"
+	sh -c "cd $yay_tmp_dir && makepkg -si --noconfirm" &&
+	rm -rf "$yay_tmp_dir"
 }
 
 case $desktop_choice in
 	gnome)
-		gnome_install ;;
+		yay_install; gnome_install ;;
 	kde)
-		kde_install ;;
+		yay_install; kde_install ;;
 	xfce)
-		xfce_install ;;
+		yay_install; xfce_install ;;
 	dotfiles)
 		exit 1 ;;
 esac

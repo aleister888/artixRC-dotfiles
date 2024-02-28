@@ -13,17 +13,6 @@ withSafe() {
 	fi
 }
 
-# Función para pausar o reanudar la reproducción
-togglePlayPause() {
-	local isPaused
-	isPaused="$(curl -s "http://localhost:7814/api1/status" | grep -c paused 2>&1)"
-	if [ "$isPaused" -eq 0 ]; then
-		curl "http://localhost:7814/api1/pause"
-	else
-		curl "http://localhost:7814/api1/play"
-	fi
-}
-
 # Función para obtener la ruta de la carátula del álbum o una imagen de marcador de posición
 getCover() {
 	tauon-remote localhost cover
@@ -37,19 +26,19 @@ getCover() {
 # Acciones basadas en el argumento pasado
 case $1 in
 	play-pause)
-		togglePlayPause
+		playerctl -p tauon play-pause
 		;;
 	get)
 		getCover
 		;;
 	status)
-		echo "$(curl -s "http://localhost:7814/api1/status" | sed 's/,/\\n/g')" | grep status | sed -e 's/{"status": //g' -e 's/"//g' -e 's/\b\w/\U&/'
+		playerctl -p tauon status
 		;;
 	artist)
-		withSafe "$(echo "$(curl -s "http://localhost:7814/api1/status" | sed 's/,/\\n/g')" | grep '"artist"' | head -1 | sed -e 's/ "artist": "//g' -e 's/"//g' | cut -c1-22)" "Cannot detect artist"
+		withSafe "$(playerctl -p tauon metadata artist)" "Cannot detect artist"
 		;;
 	title)
-		withSafe "$(echo "$(curl -s "http://localhost:7814/api1/status" | sed 's/,/\\n/g')" | grep '"title"' | head -1 | sed -e 's/ "title": "//g' -e 's/"//g' | cut -c1-15)" "Player Stopped"
+		withSafe "$(playerctl -p tauon metadata title)" "Player Stopped"
 		;;
 	*)
 		echo "Usage: $0 {play-pause|get}"
