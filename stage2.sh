@@ -28,7 +28,7 @@ while [ "$valid_timezone" == false ]; do
 	# Vamos a hacer un array para solo mostrar nuestra región
 	regions_array=()
 	for region in $regions; do
-		regions_array+=("$region" " ") # Agregar un espacio en blanco como placeholder
+		regions_array+=("$region" "$region")
 	done
 	
 	# Utilizar Whiptail para presentar las opciones de región al usuario
@@ -42,9 +42,13 @@ while [ "$valid_timezone" == false ]; do
 	
 	# Obtener la lista de zonas horarias disponibles para la región seleccionada
 	timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
+	timezones_array=()
+	for timezone in $timezones; do
+		timezones_array+=("$timezone" "$timezone")
+	done
 	
 	# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
-	timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones[@]} 3>&1 1>&2 2>&3)
+	timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
 	
 	# Verificar si la zona horaria seleccionada es válida
 	if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
