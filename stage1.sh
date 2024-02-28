@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Instalr whiptail y parted
-pacman -Sy --noconfirm --needed parted newt >/dev/null 2>&1
+pacman -Sy --noconfirm --needed parted libnewt >/dev/null 2>&1
 
 # Listar los discos disponibles
 disk=$(whiptail --title "Selecciona un disco para formatear" --menu "Discos disponibles:" 15 60 4 $(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | tr '\n' ' ') 3>&1 1>&2 2>&3)
