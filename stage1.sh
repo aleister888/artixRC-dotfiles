@@ -82,7 +82,6 @@ else
 fi
 mkdir -p "$boot_part"
 mount "/dev/$part1" "$boot_part"
-fstabgen -U /mnt >> /mnt/etc/fstab
 
 whiptail --title "Formateo completado" --msgbox "El formateo ha sido completado con éxito." 10 60
 
@@ -93,5 +92,6 @@ whiptail --title "Instalación de paquetes" --msgbox "Los paquetes han sido inst
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 whiptail --title "Configuración de Opendoas" --msgbox "Opendoas ha sido configurado correctamente." 10 60
 
-echo -e "\n\n\nVamos a acceder a nuestra instalación, sigue ahora los pasos para Stage 2"
+fstabgen -U /mnt >> /mnt/etc/fstab
+
 artix-chroot /mnt bash -c "pacman -Sy --noconfirm wget && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
