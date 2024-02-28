@@ -95,9 +95,9 @@ boot_part=$(df / --output=source | tail -n1)
 
 case "$boot_part" in
 *"nvme"*)
-        boot_part=$(echo $boot_part | sed 's/p[0-9]*$//')
+        boot_part=$(echo $boot_part | sed 's/p[0-9]*$//') ;;
 *)
-        boot_part=$(echo $boot_part | sed 's/[0-9]*$//')
+        boot_part=$(echo $boot_part | sed 's/[0-9]*$//') ;;
 esac
 
 # Vamos a instalar ahora grub
