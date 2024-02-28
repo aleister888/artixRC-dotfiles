@@ -178,11 +178,11 @@ pacman -S --noconfirm reflector
 
 # Escoger mirrors más rápidos
 reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch # Arch
-sh -c 'rankmirrors /etc/pacman.d/mirrorlist > /etc/pacman.d/mirrorlist-artix' # Artix
+sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
 
 # Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
 if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
-	sed -i 's/^Include = \/etc\/pacman\.d\/mirrorlist$/Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
+	sed -i '/^#.*Include = \/etc\/pacman\.d\/mirrorlist/s//Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
 	/etc/pacman.conf
 fi
 
