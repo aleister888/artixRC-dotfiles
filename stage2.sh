@@ -22,22 +22,37 @@ fi
 valid_timezone=false
 
 while [ "$valid_timezone" == false ]; do
-	# Preguntar al usuario por la zona horaria
-	echo "Por favor, introduce tu zona horaria (por ejemplo, Europe/Madrid):"
-	read timezone
-	
-	# Verificar si la zona horaria es válida
-	if [ -f "/usr/share/zoneinfo/$timezone" ]; then
-		valid_timezone=true
-	else
-		echo "Zona horaria no válida. Asegúrate de ingresar una zona horaria válida."
-	fi
+    # Obtener la lista de regiones disponibles
+    regions=$(find /usr/share/zoneinfo -mindepth 1 -type d -exec basename {} \;)
+
+    # Utilizar Whiptail para presentar las opciones de región al usuario
+    region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions[@]} 3>&1 1>&2 2>&3)
+
+    # Verificar si el usuario canceló la selección
+    if [ $? -ne 0 ]; then
+        whiptail --title "Operación cancelada" --msgbox "No se ha seleccionado ninguna región. La operación ha sido cancelada." 10 60
+        exit 1
+    fi
+
+    # Obtener la lista de zonas horarias disponibles para la región seleccionada
+    timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||")
+
+    # Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
+    timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones[@]} 3>&1 1>&2 2>&3)
+
+    # Verificar si la zona horaria seleccionada es válida
+    if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+        valid_timezone=true
+    else
+        whiptail --title "Zona horaria no válida" --msgbox "Zona horaria no válida. Asegúrate de elegir una zona horaria válida." 10 60
+    fi
 done
 
 # Configurar la zona horaria del sistema
-ln -sf "/usr/share/zoneinfo/$timezone" /etc/localtime
+ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
 
-echo "Zona horaria configurada correctamente a $timezone."
+# Mostrar un mensaje de confirmación
+whiptail --title "Zona horaria configurada" --msgbox "La zona horaria ha sido configurada como $region/$timezone." 10 60
 
 hwclock --systohc
 
