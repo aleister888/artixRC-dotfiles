@@ -157,26 +157,49 @@ else
 	whiptail --title "GRUB" --msgbox "GRUB fue instalado correctamente (BIOS)." 10 60
 fi
 
+# Configurar pacman.conf
+
 # Activar repositorios de arch
-pacman --noconfirm --needed -S artix-keyring artix-archlinux-support >/dev/null 2>&1
+pacman --noconfirm --needed -S artix-keyring artix-archlinux-support reflector pacman-contrib
 grep -q "^\[extra\]" /etc/pacman.conf || \
 echo "[extra]
 Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch" >>/etc/pacman.conf
-pacman -Sy --noconfirm
-pacman-key --populate archlinux >/dev/null 2>&1
+
+# Activar lib32
+sed -i '/^\[lib32\]/,/^Include = \/etc\/pacman.d\/mirrorlist/s/^#//' /etc/pacman.conf && \
+pacman -Sy --noconfirm && \
+pacman-key --populate archlinux && \
+whiptail --title "Pacman" --msgbox "Los repositorios de Arch fueron activados" 10 60
+
+# Escoger mirrors más rápidos
+reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch # Arch
+sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v "#" > /etc/pacman.d/mirrorlist-artix' # Artix
+
+# Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
+if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
+	sed -i 's/^Include = \/etc\/pacman\.d\/mirrorlist\n$/Include = \/etc\/pacman\.d\/mirrorlist-artix\n/' \
+	/etc/pacman.conf
+fi
 
 # Instalar paquetes
 pacman --noconfirm --needed -S tlp tlp-openrc cronie cronie-openrc realtime-privileges git
 
 # Activar servicios
-rc-update add NetworkManager default
-rc-update add bluetoothd default
-rc-update add cupsd default
-rc-update add cronie default
-rc-update add tlp default
+rc-update add NetworkManager default && \
+rc-update add bluetoothd default && \
+rc-update add cupsd default && \
+rc-update add cronie default && \
+rc-update add tlp default && \
+whiptail --title "OpenRC" --msgbox "Los servicios fueron activados correctamente" 10 60
+
+if ! grep "rankmirrors" /etc/crontab; then
+	echo "0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" | sudo tee -a /etc/crontab
+	echo "5 8 * * * root sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix'" | sudo tee -a /etc/crontab
+fi && \
+whiptail --title "Cronie" --msgbox "Cronie fue configurado correctamente" 10 60
 
 # Crear usuario
 
