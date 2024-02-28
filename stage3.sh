@@ -13,7 +13,7 @@ graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige
 bumblebee_install(){
 	doas pacman -S --noconfirm nvidia nvidia-utils bumblebee bumblebee-openrc
 	doas gpasswd -a $USER bumblebee
-	doas rc-update add bumblebeed default
+	doas rc-update add bumblebee default
 }
 
 case $graphic_driver in
@@ -55,9 +55,8 @@ whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 }
 
 xfce_install(){
-doas pacman -S --noconfirm xfce4 xfce4-goodies lightdm lightdm-gtk-greeter lightdm-openrc && \
+doas pacman -S --noconfirm xfce4 xfce4-goodies lightdm lightdm-openrc && \
 doas rc-update add lightdm
-doas sed -i 's/^#greeter-session=.*/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
 whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
 
