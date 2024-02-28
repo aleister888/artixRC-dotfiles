@@ -42,7 +42,7 @@ esac
 
 # Creamos una partición /boot o /boot/efi dependiendo
 # de si estamos en un sistema UEFI o no
-if [ "$part_type" == "dos" ]; then
+if [ "$part_type" == "msdos" ]; then
 	# BIOS -> MBR
 	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/$disk
 	mkfs.ext4 "/dev/$part1"
