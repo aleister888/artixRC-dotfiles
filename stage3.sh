@@ -81,6 +81,8 @@ esac
 
 whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es probable que necesites ingresar tu contraseña durante el proceso de instalación." 10 60
 
+aur_install
+
 # TODO: install extensions like larbs.sh Luke script
 
 # basicos
@@ -102,15 +104,15 @@ hiptail --title "Tauon" --yesno "¿Deseas instalar aplicaciones que promueven pl
 yay -S --noconfirm --needed $privacy_conc
 
 # Instalar y configurar tauon
-tauon-music-box_install(){
+tauon_install(){
 	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk"
 	yay -S --noconfirm --needed $music_packages
 }
-whiptail --title "Tauon" --yesno "¿Deseas instalar el reproductor de música tauon y herramientas de audio?" 10 60 && tauon-music-box_install
+whiptail --title "Tauon" --yesno "¿Deseas instalar el reproductor de música tauon y herramientas de audio?" 10 60 && tauon_install
 
 wine_packages="wine wine-mono wine-gecko winetricks"
 whiptail --title "Wine" --yesno "¿Deseas instalar wine?" 10 60 && \
-doas pacman -S --needed $wine_packages
+doas pacman -S --needed --noconfirm $wine_packages
 
 daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo wine wine-mono wine-gecko winetricks"
 whiptail --title "Wine" --yesno "¿Deseas instalar herramientas para músicos?" 10 60 && \
@@ -121,8 +123,6 @@ virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manag
 doas pacman -S $virtual_packages
 }
 whiptail --title "Wine" --yesno "¿Planeas en usar maquinas virtuales?" 10 60 && virt_install
-
-aur_install
 
 user_packages="irqbalance-openrc unzip librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
 
