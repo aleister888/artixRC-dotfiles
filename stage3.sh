@@ -42,7 +42,7 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 "${desktops[@]}" 3>&1 1>&2 2>&3)
 
 gnome_install(){
-	yay -S --noconfirm xorg gnome gdm gdm-openrc librewolf-extension-gnome-shell-integration && \
+	doas pacman -S --noconfirm xorg gnome gdm gdm-openrc && \
 	doas rc-update add gdm default && \
 	whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
@@ -68,7 +68,7 @@ aur_install(){
 
 case $desktop_choice in
 	gnome)
-		aur_install; gnome_install ;;
+		gnome_install ;;
 	kde)
 		kde_install ;;
 	xfce)
