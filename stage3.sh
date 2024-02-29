@@ -116,7 +116,7 @@ tauon_install(){
 # Instalar Virt-Manager y configurar la virtualización
 virt_install(){
 	# Instalar paquetes para virtualización
-	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager"
+	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager qemu-full"
 	yay -S --noconfirm --needed $virtual_packages
 	# Configurar QEMU para usar el usuario actual
 	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf

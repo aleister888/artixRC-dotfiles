@@ -4,7 +4,7 @@
 # Directorio con los iconos de las aplicaciones
 ICONPATH="/usr/share/icons/Papirus-Dark/128x128"
 # Programa para escuchar streams de audio
-RADIOFLAG="-t scratchpad mpv"
+RADIOFLAG="$TERMTITLE scratchpad mpv"
 
 #	Icono								Nombre			Comando
 cat <<EOF | xmenu -r | /bin/sh &

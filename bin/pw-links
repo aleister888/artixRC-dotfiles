@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: No usar wc -l para no hacer el script dependiente del setup que estes usando
+
 if [ "$1" = Tauon ]; then
 	if [ "$(pw-link --links -I | grep tauon | wc -l)" -gt "7" ]; then
 		pw-link -d tauon.py:output_FL my-combined-sink:playback_FL
