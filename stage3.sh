@@ -82,5 +82,3 @@ doas ufw enable
 doas rc-update add ufw default
 doas rc-update add irqbalance default
 doas rc-update add syslog-ng default
-
-echo $choice
