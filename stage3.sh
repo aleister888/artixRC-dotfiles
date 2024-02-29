@@ -48,19 +48,19 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 "${desktops[@]}" 3>&1 1>&2 2>&3)
 
 gnome_install(){
-	doas pacman -S --noconfirm --needed gnome gdm gdm-openrc "$pipewire_packages" && \
+	doas pacman -S --noconfirm --needed gnome gdm gdm-openrc $pipewire_packages && \
 	doas rc-update add gdm default && \
 	whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
 
 kde_install(){
-	doas pacman -S --noconfirm --needed plasma sddm sddm-openrc konsole "$pipewire_packages" && \
+	doas pacman -S --noconfirm --needed plasma sddm sddm-openrc konsole $pipewire_packages && \
 	doas rc-update add sddm default && \
 	whiptail --title "KDE" --msgbox "Kde Plasma se instaló correctamente" 10 60
 }
 
 xfce_install(){
-	doas pacman -S --noconfirm --needed xfce4 xfce4-goodies sddm sddm-openrc pavucontrol "$pipewire_packages" && \
+	doas pacman -S --noconfirm --needed xfce4 xfce4-goodies sddm sddm-openrc pavucontrol $pipewire_packages && \
 	doas rc-update add sddm default && \
 	whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
@@ -139,7 +139,7 @@ aur_install(){
 
 # Basicos
 base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles"
-yay -S --noconfirm --needed "$base_pkgs"
+yay -S --noconfirm --needed $base_pkgs
 
 # Aplicaciones que puedes o no querer
 # bleachbit handbrake gimp keepassxc 
@@ -149,11 +149,11 @@ yay -S --noconfirm --needed "$base_pkgs"
 
 # eww
 
-#lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
+lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
 
 privacy_conc="webcord-bin electronmail-bin telegram-desktop"
-whiptail --title "Tauon" --yesno "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord, Telegram y Protonmail)?" 10 60 && \
-yay -S --noconfirm --needed "$privacy_conc"
+whiptail --title "Tauon" --yesno "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord, Telegram y Protonmail)?" && \
+yay -S --noconfirm --needed $privacy_conc
 
 ###############################
 # Instalar y configurar tauon #
@@ -161,7 +161,7 @@ yay -S --noconfirm --needed "$privacy_conc"
 
 tauon_install(){
 	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk atool"
-	yay -S --noconfirm --needed "$music_packages"
+	yay -S --noconfirm --needed $music_packages
 	"$HOME"/.dotfiles/tauon-config.sh
 }
 
@@ -173,7 +173,7 @@ whiptail --title "Tauon" --yesno "¿Deseas instalar el reproductor de música ta
 
 wine_packages="wine wine-mono wine-gecko winetricks"
 whiptail --title "Wine" --yesno "¿Deseas instalar wine?" 10 60 && \
-doas pacman -S --needed --noconfirm "$wine_packages"
+doas pacman -S --needed --noconfirm $wine_packages
 
 ####################
 # Audio Production #
@@ -181,7 +181,7 @@ doas pacman -S --needed --noconfirm "$wine_packages"
 
 daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo wine wine-mono wine-gecko winetricks"
 whiptail --title "Wine" --yesno "¿Deseas instalar herramientas para músicos?" 10 60 && \
-yay -S --needed --noconfirm "$daw_packages"
+yay -S --needed --noconfirm $daw_packages
 
 ################
 # Virt-Manager #
@@ -190,7 +190,7 @@ yay -S --needed --noconfirm "$daw_packages"
 virt_install(){
 	# Instalar paquetes para virtualización
 	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager"
-	yay -S --noconfirm --needed "$virtual_packages"
+	yay -S --noconfirm --needed $virtual_packages
 	# Configurar QEMU para usar el usuario actual
 	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
 	doas sed -i "s/^group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
@@ -213,7 +213,7 @@ whiptail --title "Wine" --yesno "¿Planeas en usar maquinas virtuales?" 10 60 &&
 
 office_packages="thunderbird thunderbird-dark-reader zim libreoffice"
 whiptail --title "Oficina" --yesno "¿Deseas instalar software de ofimática?" 10 60 && \
-doas pacman -S --noconfirm --needed "$office_packages"
+doas pacman -S --noconfirm --needed $office_packages
 
 #############################
 # Instalar paquetes básicos #
@@ -221,7 +221,7 @@ doas pacman -S --noconfirm --needed "$office_packages"
 
 user_packages="tar gzip unzip librewolf-bin syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc"
 
-yay -S --noconfirm --needed "$user_packages"
+yay -S --noconfirm --needed $user_packages
 
 # Activar servicios
 doas rc-update add irqbalance default
