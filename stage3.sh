@@ -86,7 +86,7 @@ user_packages="librewolf-extension-darkreader-bin librewolf-extension-violentmon
 
 aur_install
 
-yay -S $user_packages
+yay -S --noconfirm $user_packages
 
 # Activar servicios
 doas rc-update add irqbalance default
