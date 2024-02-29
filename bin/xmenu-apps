@@ -1,35 +1,22 @@
 #!/bin/zsh
 # Menú de aplicaciones con xmenu
 
-# Prefijo de wine para los plugins de audio
-WINEDRIVE=~/.config/wineprefixes/drive_c
-# Prefijo de wine para herramientas
-TOOLDRIVE=~/.config/winetools/drive_c
 # Directorio con los iconos de las aplicaciones
 ICONPATH="/usr/share/icons/Papirus-Dark/128x128"
 # Programa para escuchar streams de audio
 RADIOFLAG="-t scratchpad mpv"
 
-#	ICON					NAME		EXEC
+#	Icono								Nombre			Comando
 cat <<EOF | xmenu -r | /bin/sh &
 IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/librewolf.svg				Librewolf		librewolf
 	IMG:$ICONPATH/apps/tor-browser.svg				Tor-Browser		tor-browser
 	IMG:$ICONPATH/apps/discord.svg					Webcord			webcord
-	IMG:$ICONPATH/apps/electron-mail.svg				Electronmail		electron-mail
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
 	IMG:$ICONPATH/apps/telegram.svg					Telegram		telegram-desktop
 
-IMG:$ICONPATH/apps/wine.svg						Wine Apps
-	IMG:$ICONPATH/places/folder-red-wine.svg			Plugins Folder		$TERMINAL lf $WINEDRIVE
-	IMG:$ICONPATH/places/folder-blue-wine.svg			Tools Folder		$TERMINAL lf $TOOLDRIVE
-	IMG:$ICONPATH/devices/media-floppy.svg				Switch Army Knife	winetools $TOOLDRIVE/Program\ Files/SAK_64bit/SAK.exe
-	IMG:$ICONPATH/apps/dconf-editor.svg				MHXX Save Editor	winetools $TOOLDRIVE/Program\ Files/MHXXSaveEditor.exe
-
-
-IMG:$ICONPATH/apps/multimedia.svg					Sound & Video
-	IMG:$ICONPATH/devices/laptop.svg				Laptop Stream		st -t scratchpad mpv "http://192.168.0.169:8000/stream.ogg"
+IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon			tauon
 	IMG:$ICONPATH/apps/krdc.svg					Tauon Remote		tauon-yad 192.168.0.169
 	IMG:$ICONPATH/apps/LyricsFinder.svg				LrcGet			lrcget
@@ -45,64 +32,55 @@ IMG:$ICONPATH/apps/radiotray.svg					Radio
 	Adroit Jazz Underground	 					$TERMINAL $RADIOFLAG "https://icecast.walmradio.com:8443/jazz"
 	KCSM Jazz 91.1 FM						$TERMINAL $RADIOFLAG "http://ice7.securenetsystems.net/KCSM2"
 	Deep House Radio						$TERMINAL $RADIOFLAG "http://62.210.105.16:7000/stream"
-	Progulus (Prog Rock)						$TERMINAL $RADIOFLAG "http://centova.radioservers.biz:8063/stream.ogg"
 	TEKNO1								$TERMINAL $RADIOFLAG "http://cressida.shoutca.st:8591/stream/1/"
 	Radio Schizoid - Dub Techno					$TERMINAL $RADIOFLAG "http://94.130.113.214:8000/dubtechno"
 	RNE								$TERMINAL $RADIOFLAG "https://rtvelivestream.akamaized.net/rtvesec/rne/rne_r1_main.m3u8"
-	Onda Cero							$TERMINAL $RADIOFLAG "https://livefastly-webs.ondacero.es/almeria-pull/audio/master.m3u8"
 	Cadena SER							$TERMINAL $RADIOFLAG "http://21223.live.streamtheworld.com:80/CADENASER.mp3"
-	MSNBC								$TERMINAL $RADIOFLAG "https://tunein.streamguys1.com/msnbc-tesla"
 	BBC								$TERMINAL $RADIOFLAG "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service"
 
-IMG:$ICONPATH/apps/bridge-constructor.svg				Audio Share
-	IMG:$ICONPATH/devices/audio-input-microphone.svg		Add/Remove Microphone	pipewire-virtualmic-select
+IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
+	IMG:$ICONPATH/devices/audio-input-microphone.svg		Añadir/Quitar Micrófono	pipewire-virtualmic-select
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		pw-links Tauon
 	IMG:$ICONPATH/apps/librewolf.svg				Librewolf	pw-links Librewolf
 	IMG:$ICONPATH/apps/discord.svg					Discord		pw-links Discord
 	IMG:$ICONPATH/apps/mpv.svg					mpv		pw-links mpv
 	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		pw-links REAPER
 	IMG:$ICONPATH/apps/tuxguitar.svg				Tuxguitar	pw-links tuxguitar
-	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	Virtual Machine	pw-links lookingglass
+	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	Máquina Virtual	pw-links lookingglass
 
-IMG:$ICONPATH/apps/preferences-desktop-color.svg			Creative
+IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
 	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar		tuxguitar
 	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER			reaper
 	IMG:$ICONPATH/apps/metronome.svg				Metronome		gmetronome
 	IMG:$ICONPATH/apps/gimp.svg					GIMP			gimp
 	IMG:$ICONPATH/apps/krita.svg					Krita			krita
-	IMG:$ICONPATH/apps/cs-tablet.svg				Map Huion Tablet	xinput map-to-output "$(xinput | grep "Tablet Monitor Pen Pen (0)" | \
-									awk '{print $8}' | sed 's/[^0-9]//g')" HDMI-A-0 && \
-									notify-send "🖊️ Tablet Mapped"
 
-IMG:$ICONPATH/apps/applications-office.svg				Office
+IMG:$ICONPATH/apps/applications-office.svg				Oficina
 	IMG:$ICONPATH/apps/zim.svg					Zim			zim
-	IMG:$ICONPATH/apps/packet-tracer.svg				PacketTracer		packettracer
 	IMG:$ICONPATH/apps/libreoffice-writer.svg			LibreOffice Writer	libreoffice --writer
 	IMG:$ICONPATH/apps/libreoffice-calc.svg				LibreOffice Calc	libreoffice --calc
 	IMG:$ICONPATH/apps/libreoffice-draw.svg				LibreOffice Draw	libreoffice --draw
 	IMG:$ICONPATH/apps/libreoffice-impress.svg			LibreOffice Impress	libreoffice --impress
 	IMG:$ICONPATH/apps/libreoffice-math.svg				LibreOffice Math	libreoffice --math
 
-IMG:$ICONPATH/apps/applications-utilities.svg				Utilities
-	IMG:$ICONPATH/apps/rustdesk.svg					Remote Desktop		rustdesk
-	IMG:$ICONPATH/apps/timeshift.svg				Timeshift		timeshift-launcher
+IMG:$ICONPATH/apps/applications-utilities.svg				Utilidades
+	IMG:$ICONPATH/apps/rustdesk.svg					Escritrio Remoto	rustdesk
+	IMG:$ICONPATH/apps/timeshift.svg				Copias de seguridad	timeshift-launcher
 	IMG:$ICONPATH/apps/monero.svg					Monero GUI		monero-wallet-gui
-	IMG:$ICONPATH/apps/cheese.svg					Webcam Preview		mpv /dev/video0
+	IMG:$ICONPATH/apps/cheese.svg					Visualizar Webcam	mpv /dev/video0
 	IMG:/usr/share/pixmaps/czkawka-gui.png				Czkawka			czkawka-gui
-	IMG:$ICONPATH/apps/baobab.svg					Baobab			export GTK_THEME=Gruvbox-Dark-B; baobab
-	IMG:$ICONPATH/apps/preferences-system-windows.svg		Settings
-		IMG:$ICONPATH/apps/cups.svg				Cups			xdg-open http://localhost:631/
-		IMG:$ICONPATH/apps/preferences-system-bluetooth.svg	Bluetooth		blueman-manager
-		IMG:$ICONPATH/apps/grandr.svg				Display Settings	arandr
-		IMG:$ICONPATH/apps/gtk-theme-config.svg			Gtk Settings		lxappearance
-		IMG:$ICONPATH/apps/qt5ct.svg				QT5 Settings		qt5ct
+	IMG:$ICONPATH/apps/preferences-system-windows.svg		Ajustes
+		IMG:$ICONPATH/apps/cups.svg				Ajuste de impresión	xdg-open http://localhost:631/
+		IMG:$ICONPATH/apps/preferences-system-bluetooth.svg	Dispositivos bluetooth	blueman-manager
+		IMG:$ICONPATH/apps/grandr.svg				Ajustes de pantalla	arandr
+		IMG:$ICONPATH/apps/gtk-theme-config.svg			Ajustes de Gtk		lxappearance
+		IMG:$ICONPATH/apps/qt5ct.svg				Ajustes de QT5		qt5ct
 
-IMG:$ICONPATH/apps/system-file-manager.svg				File-Manager		$TERMINAL -e lf
-IMG:$ICONPATH/apps/st.svg						st			st
-IMG:$ICONPATH/apps/virt-manager.svg					Virt Manager		virt-manager
-IMG:$ICONPATH/apps/multimc.svg						MultiMC			multimc
-IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg		Looking Glass		looking-glass-client
-IMG:$ICONPATH/apps/kopete.svg						llama2 AI		$TERMINAL ollama run llama2-uncensored:latest
+IMG:$ICONPATH/apps/system-file-manager.svg				Archivos		$TERMINAL -e lf
+IMG:$ICONPATH/apps/st.svg						STerminal	st
+IMG:$ICONPATH/apps/virt-manager.svg					Máq. Virtuales		virt-manager
+IMG:$ICONPATH/apps/multimc.svg						Minecraft		multimc
+IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg		Looking Glass		looking-glass-client win:forceAspect no -p 5910 -f /dev/shm/looking-glass-windows win:showFPS yes -S no -r no spice:alwaysShowCursor yes win:noScreensaver yes input:rawMouse yes
 
 IMG:$ICONPATH/apps/fluxgui.svg	Redshift
 	Start								pgrep redshift || sh -c "redshift -l $(cat /tmp/location) -t 5000:4000 & notify-send '💡 Blue Light Filter Enabled'"

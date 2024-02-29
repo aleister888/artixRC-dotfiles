@@ -1,6 +1,9 @@
 " Plugins
 call plug#begin('~/.local/share/nvim/plugged')
 
+" Sintaxis para BASH
+Plug 'vim-scripts/bash-support.vim'
+
 " Árbol de ficheros
 Plug 'preservim/nerdtree'
 
