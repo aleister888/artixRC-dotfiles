@@ -1,6 +1,6 @@
 #!/bin/bash
 
-doas pacman -Syu --noconfirm
+doas pacman -Syuu --noconfirm trizen
 
 # Instalar drivers de video
 
@@ -43,7 +43,7 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 "${desktops[@]}" 3>&1 1>&2 2>&3)
 
 gnome_install(){
-	doas pacman -S --noconfirm xorg gnome gdm gdm-openrc && \
+	doas pacman -S --noconfirm xorg gnome gdm gdm-openrc librewolf-extension-gnome-shell-integration && \
 	doas rc-update add gdm default && \
 	whiptail --title "GNOME" --msgbox "Gnome se instaló correctamente" 10 60
 }
@@ -55,29 +55,32 @@ kde_install(){
 }
 
 xfce_install(){
-	doas pacman -S --noconfirm xfce4 xfce4-goodies sddm sddm-openrc && \
+	doas pacman -S --noconfirm xfce4 xfce4-goodies sddm sddm-openrc pavucontrol && \
 	doas rc-update add sddm default && \
 	whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
 
-yay_install(){
-	whiptail --title "AUR" --msgbox "El ayudante del AUR: yay; se va a instalar. El instalador le pedirá su contraseña" 10 60
-	yay_tmp_dir="/tmp/yay_install_temp"
-	mkdir -p "$yay_tmp_dir"
-	git clone https://aur.archlinux.org/yay.git "$yay_tmp_dir"
-	sh -c "cd $yay_tmp_dir && makepkg -si --noconfirm" &&
-	rm -rf "$yay_tmp_dir"
-}
-
 case $desktop_choice in
 	gnome)
-		yay_install; gnome_install ;;
+		gnome_install ;;
 	kde)
-		yay_install; kde_install ;;
+		kde_install ;;
 	xfce)
-		yay_install; xfce_install ;;
+		xfce_install ;;
 	dotfiles)
 		exit 1 ;;
 esac
+
+# Install packages
+
+user_packages="librewolf-bin librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin ufw ufw-openrc irqbalance irqbalance-openrc syslog-ng syslog-ng-openrc webcord electronmail-bin thunderbird thunderbird-dark-reader qbittorrent-qt5 telegram-desktop tauon-music-box"
+
+trizen -S --noconfirm $user_packages
+
+# Activar servicios
+doas ufw enable
+doas rc-update add ufw default
+doas rc-update add irqbalance default
+doas rc-update add syslog-ng default
 
 echo $choice

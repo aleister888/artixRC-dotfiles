@@ -105,17 +105,18 @@ permit nopass :wheel as root cmd pacman
 permit nopass :wheel as root cmd vim
 permit nopass :wheel as root cmd cat
 permit nopass :wheel as root cmd rc-update
+permit nopass :wheel as root cmd gpasswd
 permit nopass :wheel as root cmd /usr/bin/grub-mkconfig" > /mnt/etc/doas.conf && \
 whiptail --title "Configuración de Opendoas" --msgbox "Opendoas ha sido configurado correctamente." 10 60
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 
 # Montar directorios importantes para el chroot
-mount --bind /proc /mnt/proc
+mount -t proc proc /mnt/proc
 mount --bind /sys /mnt/sys
 mount --bind /dev /mnt/dev
 mount --bind /dev/pts /mnt/dev/pts
 mount --bind /dev/shm /mnt/dev/shm
 mount --bind /run /mnt/run
 
-artix-chroot /mnt bash -c "pacman -Sy --noconfirm wget && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
+chroot /mnt bash -c "pacman -Sy --noconfirm wget && wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"

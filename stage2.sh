@@ -173,13 +173,18 @@ if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
 	/etc/pacman.conf
 fi
 
-# Activar repositorios de arch
+# Activar repositorios de arch y repositorio omniverse
 grep -q "^\[extra\]" /etc/pacman.conf || \
-echo "[extra]
+echo '[extra]
 Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
-Include = /etc/pacman.d/mirrorlist-arch" >>/etc/pacman.conf
+Include = /etc/pacman.d/mirrorlist-arch
+
+[omniverse]
+Server = https://artix.sakamoto.pl/omniverse/$arch
+Server = https://eu-mirror.artixlinux.org/omniverse/$arch
+Server = https://omniverse.artixlinux.org/$arch' >>/etc/pacman.conf
 
 # Actualizar cambios
 pacman -Sy --noconfirm && \
