@@ -124,7 +124,7 @@ whiptail --title "Wine" --yesno "¿Planeas en usar maquinas virtuales?" 10 60 &&
 
 aur_install
 
-user_packages="irqbalance-openrc unizp librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
+user_packages="irqbalance-openrc unzip librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
 
 yay -S --noconfirm $user_packages
 
