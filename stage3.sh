@@ -12,7 +12,7 @@ graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige
 
 bumblebee_install(){
 	doas pacman -S --noconfirm nvidia nvidia-utils bumblebee bumblebee-openrc
-	doas gpasswd -a $USER bumblebee
+	doas gpasswd -a "$USER" bumblebee
 	doas rc-update add bumblebee default
 }
 
@@ -75,7 +75,7 @@ esac
 
 user_packages="librewolf-bin librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin ufw ufw-openrc irqbalance irqbalance-openrc syslog-ng syslog-ng-openrc webcord electronmail-bin thunderbird thunderbird-dark-reader qbittorrent-qt5 telegram-desktop tauon-music-box"
 
-trizen -S --noconfirm $user_packages
+trizen -S --noconfirm "$user_packages"
 
 # Activar servicios
 doas ufw enable
