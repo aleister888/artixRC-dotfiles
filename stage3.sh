@@ -64,7 +64,7 @@ aur_install(){
 	tmp_dir="/tmp/yay_install_temp"
 	mkdir -p "$tmp_dir"
 	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
-	sh "cd $tmp_dir && makepkg -si --noconfirm"
+	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 }
 
 case $desktop_choice in
