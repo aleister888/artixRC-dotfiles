@@ -107,6 +107,7 @@ yay -S --noconfirm --needed $privacy_conc
 tauon_install(){
 	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk"
 	yay -S --noconfirm --needed $music_packages
+	$HOME/.dotfiles/tauon-config.sh
 }
 whiptail --title "Tauon" --yesno "¿Deseas instalar el reproductor de música tauon y herramientas de audio?" 10 60 && tauon_install
 
@@ -116,21 +117,47 @@ doas pacman -S --needed --noconfirm $wine_packages
 
 daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo wine wine-mono wine-gecko winetricks"
 whiptail --title "Wine" --yesno "¿Deseas instalar herramientas para músicos?" 10 60 && \
-doas pacman -S --needed $daw_packages
+yay -S --needed --noconfirm $daw_packages
+
+################
+# Virt-Manager #
+################
 
 virt_install(){
-virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager"
-doas pacman -S $virtual_packages
+	# Instalar paquetes para virtualización
+	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager"
+	doas pacman -S --noconfirm --needed $virtual_packages
+	# Configurar QEMU para usar el usuario actual
+	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
+	doas sed -i "s/^group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
+	# Configurar libvirt
+	doas sed -i "s/^unix_sock_group = .*/unix_sock_group = \"$USER\"/" /etc/libvirt/libvirtd.conf
+	doas sed -i "s/^unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
+	# Agregar el usuario al grupo libvirt
+	doas usermod -aG libvirt $USER
+	# Activar sericios necesarios
+	doas rc-update add libvirtd default
+	doas rc-update add virtlogd default
+	# Autoinciar red virtual
+	doas virsh net-autostart default
 }
 whiptail --title "Wine" --yesno "¿Planeas en usar maquinas virtuales?" 10 60 && virt_install
 
-user_packages="irqbalance-openrc unzip librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
+#############################
+# Instalar paquetes básicos #
+#############################
 
-yay -S --noconfirm $user_packages
+user_packages="irqbalance-openrc tar gzip unzip librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
+
+yay -S --noconfirm -needed $user_packages
 
 # Activar servicios
 doas rc-update add irqbalance default
 doas rc-update add syslog-ng default
+
+########################
+# Configurar Librewolf #
+########################
 
 # Código modificado procedente de: larbs.xyz/larbs.sh
 # https://github.com/LukeSmithxyz/voidrice
@@ -158,12 +185,11 @@ librewolf_configure(){
 	profilesini="$browserdir/profiles.ini"
 	librewolf --headless >/dev/null 2>&1 &
 	sleep 1
-	profile="$(grep -o "Default=.." $profilesini | sed 's/Default=//')"
+	profile="$(grep "Default=.." $profilesini | sed 's/Default=//')"
 	pdir="$browserdir/$profile"
 	[ -d "$pdir" ] && installffaddons
 	killall librewolf
 }
 
-whiptail --title "Librewolf" --msgbox "Va a configurarse el navegador. Se descargarán las extensiones recomendadas." 10 60
-
+whiptail --title "Librewolf" --yesno "¿Desea autoconfigurar el navegador?" 10 60 && \
 librewolf_configure
