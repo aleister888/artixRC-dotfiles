@@ -80,11 +80,12 @@ esac
 
 # Instalar paquetes del AUR
 
+whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es probable que necesites ingresar tu contraseña durante el proceso de instalación." 10 60
+
 user_packages="librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin webcord-bin electronmail-bin irqbalance-openrc transmission-gtk librewolf syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop tauon-music-box"
 
 aur_install
 
-whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es probable que necesites ingresar tu contraseña durante el proceso de instalación." 10 60
 yay -S $user_packages
 
 # Activar servicios
