@@ -100,13 +100,7 @@ whiptail --title "Formateo completado" --msgbox "El formateo ha sido completado.
 basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio && \
 whiptail --title "Instalación de paquetes" --msgbox "Los paquetes han sido instalados con éxito utilizando basestrap." 10 60
 
-echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel
-permit nopass :wheel as root cmd pacman
-permit nopass :wheel as root cmd vim
-permit nopass :wheel as root cmd cat
-permit nopass :wheel as root cmd rc-update
-permit nopass :wheel as root cmd gpasswd
-permit nopass :wheel as root cmd /usr/bin/grub-mkconfig" > /mnt/etc/doas.conf && \
+echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf && \
 whiptail --title "Configuración de Opendoas" --msgbox "Opendoas ha sido configurado correctamente." 10 60
 
 fstabgen -U /mnt >> /mnt/etc/fstab
