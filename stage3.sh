@@ -76,10 +76,10 @@ esac
 user_packages="ufw ufw-openrc syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop"
 aur_packages="librewolf-bin librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin webcord electronmail-bin qbittorrent-qt5 tauon-music-box irqbalance-openrc"
 
-doas pacman -S $user_packages
+doas pacman -S --noconfirm $user_packages
 
 whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Se te pedirá que ingreses tu contraseña durante el proceso de instalación." 10 60
-trizen -S --noconfirm $aur_packages
+trizen -S --noconfirm --skippgpcheck $aur_packages
 
 # Activar servicios
 doas ufw enable
