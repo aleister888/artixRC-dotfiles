@@ -38,7 +38,7 @@ sed -i 's/theme-name = ".*"/theme-name = "aleister-gruvbox"/g' "$CONF"
 
 # Ccambiar las fuentes usadas
 sed -i 's/use-custom-fonts = false/use-custom-fonts = true/g' "$CONF"
-sed -i 's/font-main-standard = ".*"/font-main-standard = "Iosevka Nerd Font Mono"/g' "$CONF"
+sed -i 's/font-main-standard = ".*"/font-main-standard = "Iosevka Nerd Font"/g' "$CONF"
 sed -i 's/font-main-medium = ".*"/font-main-medium = "Iosevka Nerd Font Medium"/g' "$CONF"
 sed -i 's/font-main-bold = ".*"/font-main-bold = "Iosevka Nerd Font Bold"/g' "$CONF"
 sed -i 's/font-main-condensed = ".*"/font-main-condensed = "Iosevka Nerd Font"/g' "$CONF"
