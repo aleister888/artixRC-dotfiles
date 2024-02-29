@@ -105,7 +105,7 @@ yay -S --noconfirm --needed $privacy_conc
 
 # Instalar y configurar tauon
 tauon_install(){
-	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk"
+	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk atool"
 	yay -S --noconfirm --needed $music_packages
 	$HOME/.dotfiles/tauon-config.sh
 }
@@ -126,7 +126,7 @@ yay -S --needed --noconfirm $daw_packages
 virt_install(){
 	# Instalar paquetes para virtualización
 	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager"
-	doas pacman -S --noconfirm --needed $virtual_packages
+	yay -S --noconfirm --needed $virtual_packages
 	# Configurar QEMU para usar el usuario actual
 	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
 	doas sed -i "s/^group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
@@ -143,13 +143,23 @@ virt_install(){
 }
 whiptail --title "Wine" --yesno "¿Planeas en usar maquinas virtuales?" 10 60 && virt_install
 
+########################
+# Paquetes de oficinia #
+########################
+
+office_packages="thunderbird thunderbird-dark-reader zim libreoffice"
+whiptail --title "Oficina" --yesno "¿Deseas instalar software de ofimática?" 10 60 && \
+doas pacman -S --noconfirm --needed $office_packages
+
 #############################
 # Instalar paquetes básicos #
 #############################
 
-user_packages="irqbalance-openrc tar gzip unzip librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
+user_packages="tar gzip unzip librewolf-bin syslog-ng syslog-ng-openrc mpv handbrake gimp timeshift irqbalance-openrc"
 
-yay -S --noconfirm -needed $user_packages
+yay -S --noconfirm --needed $user_packages
+
+yay -S --noconfirm --needed
 
 # Activar servicios
 doas rc-update add irqbalance default
