@@ -76,13 +76,13 @@ suckless_install(){
 
 # Iniciar dwm con xinit
 xinit_configure(){
-echo "#!/bin/sh
+echo '#!/bin/sh
 
-[ -f \$HOME/.config/Xresources ] && xrdb \$HOME/.config/Xresources
+[ -f $HOME/.config/Xresources ] && xrdb $HOME/.config/Xresources
 
 while true; do
     /usr/local/bin/dwm 2>/dev/null
-done" | doas tee /etc/X11/xinit/xinitrc >/dev/null &&
+done' | doas tee /etc/X11/xinit/xinitrc >/dev/null &&
 }
 
 gruvbox_install() {
