@@ -80,7 +80,7 @@ dotfiles_install(){
 # Definir la distribución de teclado
 kb_layout(){
 	# Hacer un array con las diferentes distribuciones posibles
-	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f | sed 's|/usr/share/X11/xkb/symbols/||' | sort | uniq | grep -v ...)
+	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f | sed 's|/usr/share/X11/xkb/symbols/||' | sort | sed -n '/^.\{1,3\}$/p')
 	keyboard_array=()
 	for key_layout in $key_layouts; do
 		keyboard_array+=("$key_layout" "$key_layout")
