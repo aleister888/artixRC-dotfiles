@@ -60,6 +60,13 @@ xfce_install(){
 	whiptail --title "XFCE" --msgbox "Xfce se instaló correctamente" 10 60
 }
 
+aur_install(){
+	tmp_dir="/tmp/yay_install_temp"
+	mkdir -p "$tmp_dir"
+	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
+	sh "cd $tmp_dir && makepkg -si --noconfirm"
+}
+
 case $desktop_choice in
 	gnome)
 		gnome_install ;;
@@ -73,13 +80,10 @@ esac
 
 # Instalar paquetes del AUR
 
-user_packages="transmission-gtk librewolf syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop"
-aur_packages="librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin webcord-bin electronmail-bin tauon-music-box irqbalance-openrc"
+user_packages="librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin webcord-bin electronmail-bin irqbalance-openrc transmission-gtk librewolf syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop tauon-music-box"
 
-doas pacman -S --noconfirm $user_packages
-
-whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Se te pedirá que ingreses tu contraseña durante el proceso de instalación." 10 60
-trizen -S --noconfirm --skippgpcheck $aur_packages
+whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es probable que necesites ingresar tu contraseña durante el proceso de instalación." 10 60
+yay -S $user_packages
 
 # Activar servicios
 doas rc-update add irqbalance default
