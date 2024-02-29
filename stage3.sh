@@ -84,7 +84,11 @@ whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es 
 
 # TODO: install extensions like larbs.sh Luke script
 
-user_packages="librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin webcord-bin electronmail-bin irqbalance-openrc transmission-gtk librewolf syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop tauon-music-box"
+user_packages="webcord-bin electronmail-bin irqbalance-openrc transmission-gtk librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop tauon-music-box lrcget-bin mpv pavucontrol handbrake easytag picard gimp zim libreoffice-fresh timeshift libreoffice-fresh multimc-bin wine wine-mono wine-gecko"
+
+daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome"
+
+virtual_packages="looking-glass"
 
 aur_install
 
@@ -93,3 +97,39 @@ yay -S --noconfirm $user_packages
 # Activar servicios
 doas rc-update add irqbalance default
 doas rc-update add syslog-ng default
+
+# Código modificado procedente de: larbs.xyz/larbs.sh
+# https://github.com/LukeSmithxyz/voidrice
+
+installffaddons(){
+	addonlist="decentraleyes istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser"
+	addontmp="$(mktemp -d)"
+	trap "rm -fr $addontmp" HUP INT QUIT TERM PWR EXIT
+	IFS=' '
+	sudo -u "$USER" mkdir -p "$pdir/extensions/"
+	for addon in $addonlist; do
+		addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
+		file="${addonurl##*/}"
+		curl -LOs "$addonurl" > "$addontmp/$file"
+		id="$(unzip -p "$file" manifest.json | grep "\"id\"")"
+		id="${id%\"*}"
+		id="${id##*\"}"
+		mv "$file" "$pdir/extensions/$id.xpi"
+	done
+	chown -R "$USER:$USER" "$pdir/extensions"
+}
+
+librewolf_configure(){
+	browserdir="/home/$USER/.librewolf"
+	profilesini="$browserdir/profiles.ini"
+	librewolf --headless >/dev/null 2>&1 &
+	sleep 1
+	profile="$(grep -o "Default=.*\.default-release" $profilesini | sed 's/Default=//')"
+	pdir="$browserdir/$profile"
+	[ -d "$pdir" ] && installffaddons
+	killall librewolf
+}
+
+whiptail --title "Librewolf" --msgbox "Va a configurarse el navegador. Se descargarán las extensiones:\ndecentraleyes istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser" 10 60
+
+librewolf_configure
