@@ -272,7 +272,6 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button3,        layoutmenu,     {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkRootWin,           0,              Button2,        spawn,          SHCMD("xmenu-sinks") },
-	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xmenu-apps") },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

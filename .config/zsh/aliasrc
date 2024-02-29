@@ -1,62 +1,49 @@
 #!/bin/sh
 
-# Limpiar $HOME
+# Alias para herramientas comunes
 alias wget='wget --hsts-file="$XDG_CONFIG_HOME"/wget-hsts'
+alias yarn='yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config'
+alias gpg2='gpg2 --homedir "$XDG_DATA_HOME"/gnupg'
+alias svn='svn --config-dir $XDG_CONFIG_HOME/subversion'
+alias monerod='monerod --data-dir "$XDG_DATA_HOME"/bitmonero'
 
-# Abreviaturas
-alias \
-	v='nvim' \
-	d='devour' \
-	c='/bin/clear' \
-	dmk='doas make install'
+# Alias de comandos básicos
+alias v='nvim'
+alias d='devour'
+alias c='/bin/clear'
+alias dmk='doas make install'
+alias cp='cp -iv'
+alias cat='bat -p'
+alias ls='exa -lagH --group-directories-first --smart-group'
+alias grep='grep --color=auto'
 
-# Flags y opciones
-alias \
-	cp='cp -iv' \
-	cat='bat -p' \
-	bat='bat -p' \
-	ls='exa -lagH --group-directories-first --smart-group' \
-	grep='grep --color=auto'
+# Alias para moverse rápidamente entre directorios
+alias ..='cd ..'
+alias ...='cd ../..'
 
-# Moverse rápidamente entre directorios
-alias \
-	..='cd ..' \
-	...='cd ../..'
-
-# Actualizar sistema
+# Actualizar el sistema
 alias update='yay -Syuu'
 
 # Herramientas
-alias \
-	xdotool_table='xmodmap -pk' \
-	push='git add . && git commit && git push' \
-	du='BLOCKSIZE=1073741824 du -s * | sort -rnk 1' \
-	"grub-update"='sudo grub-mkconfig -o /boot/grub/grub.cfg' \
-	screen_record="ffmpeg -y -video_size `xrandr | grep " connected" | awk '{print $4}' | cut -d+ -f1` -framerate 24 -f x11grab -i :0.0 -f pulse -i `pactl list short sources | grep "alsa_output.pci" | awk '{print $1}'` -sample_rate 48000 -ac 1 a.mp4"
+alias xdotool_table='xmodmap -pk'
+alias push='git add . && git commit && git push'
+alias du='BLOCKSIZE=1073741824 du -s * | sort -rnk 1'
+alias grub-update='sudo grub-mkconfig -o /boot/grub/grub.cfg'
+alias screen_record='ffmpeg -y -video_size `xrandr | grep " connected" | awk "{print $4}" | cut -d+ -f1` -framerate 24 -f x11grab -i :0.0 -f pulse -i `pactl list short sources | grep "alsa_output.pci" | awk "{print $1}"` -sample_rate 48000 -ac 1 a.mp4'
 
 # Limpiar dependencias innecesarias
 alias cleanup='yay -Rcns $(yay -Qdtq) 2>/dev/null'
 alias deepcleanup='yay -Rcns $(pacman -Qqdn | pacman -Rsu --print-format %n -) 2>/dev/null'
 
-# Reinstalar paquetes
-function reinstall {
-	yay -S `pacman -Q | grep -vx "$( pacman -Qm )" | awk '{print $1}'`
+# Función para reinstalar paquetes
+reinstall() {
+	yay -S `pacman -Q | grep -vx "$(pacman -Qm)" | awk '{print $1}'`
 }
 
-# Encontrar enlaces simbólicos rotos
+# Alias para encontrar enlaces simbólicos rotos y archivos no reclamados
 alias brokenlink='find / -xtype l -print 2>/dev/null'
-
-# Encontrar archivos propiedad de usuarios no existentes
 alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/null'
+alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
 
-# Encontrar archivos no reclamados por paquetes
-alias lostfiles='doas lostfiles | grep -v "theme\|opt\|NerdFonts"'
-
-# Encontrar archivos pac de pacman
-alias pac="find /etc -name '*.pacnew' -o -name '*.pacsave' 2> >(grep -v 'Permission\|Permiso' >&2)"
-
-function wininfo {
-xprop | awk '
-	/^WM_CLASS/{sub(/.* =/, "instancia:"); sub(/,/, "\nclase:"); print}
-	/^WM_NAME/{sub(/.* =/, "título:"); print}'
-}
+# Alias para encontrar archivos pac de pacman
+alias pac='find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)'

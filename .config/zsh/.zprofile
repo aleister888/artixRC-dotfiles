@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 if [ -d "$HOME/.local/bin" ] ; then
 	PATH="$HOME/.local/bin:$PATH"
@@ -10,6 +10,19 @@ fi
 
 if [ -d "$HOME/.local/bin/sb" ] ; then
 	PATH="$HOME/.local/bin/sb:$PATH"
+fi
+
+# Definir localización para ser usada por Redshift
+#
+# Verificar si $LOCATION está definida:
+if [ -z "$LOCATION" ]; then
+	# Verificar la conexión a internet
+	if ping -q -c 1 -W 1 google.com >/dev/null; then
+		# Si hay conexión a internet, asignar el valor utilizando curl y jq
+		export LOCATION=$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"' &)
+	else
+		echo "No se pudo establecer conexión a internet."
+	fi
 fi
 
 export PATH="$PATH:$HOME/.local/share/yabridge"
@@ -56,7 +69,7 @@ export KODI_DATA="$XDG_DATA_HOME"/kodi
 export DVDCSS_CACHE="$XDG_DATA_HOME"/dvdcss
 export GNUPGHOME="${XDG_DATA_HOME:-$HOME/.local/share}/gnupg"
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/nv"
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$HOME/.config/java"
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$HOME/.config"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc:${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkfilechooser.ini"
 export WINEPREFIX="${XDG_CONFIG_HOME:-$HOME/.config}/wineprefixes"
 export TERMINFO_DIRS="${XDG_CONFIG_HOME:-$HOME/.config}/terminfo:/usr/share/terminfo"
@@ -65,11 +78,9 @@ export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
 export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
-alias wget='wget --hsts-file="$XDG_CONFIG_HOME"/wget-hsts'
-alias yarn='yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config'
-alias gpg2='gpg2 --homedir "$XDG_DATA_HOME"/gnupg'
-alias svn='svn --config-dir $XDG_CONFIG_HOME/subversion'
-alias monerod=monerod --data-dir "$XDG_DATA_HOME"/bitmonero
+
+# Abreviaciones
+source "$XDG_CONFIG_HOME/zsh/aliasrc"
 
 # lf Icons
 export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=:or=:\
@@ -130,7 +141,7 @@ fi=00"
 
 # start dwm
 if [[ "$(tty)" = "/dev/tty1" ]]; then
-	if [ "$(pgrep -a dbus | wc -l)" -lt 4 ]; then
+	if [ "$(pgrep -c dbus)" -lt 5 ]; then
 		export $(dbus-launch) && dbus-update-activation-environment --all &
         	startx
 	else

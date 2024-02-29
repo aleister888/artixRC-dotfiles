@@ -1,14 +1,12 @@
 # Plugins
-source ~/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ~/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.config/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
-source ~/.config/zsh/zsh-you-should-use/you-should-use.plugin.zsh
-source ~/.config/zsh/ohmyzsh/dirhistory.plugin.zsh
+source $XDG_CONFIG_HOME/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $XDG_CONFIG_HOME/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
+source $XDG_CONFIG_HOME/zsh/zsh-you-should-use/you-should-use.plugin.zsh
+source $XDG_CONFIG_HOME/zsh/ohmyzsh/dirhistory.plugin.zsh
+source $XDG_CONFIG_HOME/zsh/aliasrc
 
 bindkey -e
-
-# Aliases
-source $HOME/.config/zsh/aliasrc
 
 # Autocompletación con TAB
 autoload -U compinit

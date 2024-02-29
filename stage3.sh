@@ -21,6 +21,8 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
+
+
 # Instalar bumblee para portatiles con graficas NVIDIA
 bumblebee_install(){
 	pacinstall nvidia nvidia-utils bumblebee bumblebee-openrc libva-vdpau-driver
@@ -49,23 +51,7 @@ xfce_install(){
 	whip_msg "XFCE" "Xfce se instaló correctamente"
 }
 
-# Instalar mi entorno de trabajo Suckless
-suckless_install(){
-	# Instalar software suckless
-	whip_msg "suckless.org" "Compilando software suckless"
-	doas make install --directory "$HOME/aleister/.dotfiles/dwm" >/dev/null 2>&1
-	doas make install --directory "$HOME/aleister/.dotfiles/dmenu" >/dev/null 2>&1
-	doas make install --directory "$HOME/aleister/.dotfiles/dwmblocks" >/dev/null 2>&1
-	doas make install --directory "$HOME/aleister/.dotfiles/st" >/dev/null 2>&1
-	# Iniciar dwm con xinit
-echo "#!/bin/sh
 
-[ -f \$HOME/.config/Xresources ] && xrdb \$HOME/.config/Xresources
-
-while true; do
-    /usr/local/bin/dwm 2>/dev/null
-done" | doas tee /etc/X11/xinit/xinitrc >/dev/null
-}
 
 # Instalar mis archivos de configuración
 dotfiles_install(){
@@ -75,7 +61,80 @@ dotfiles_install(){
 	git clone https://github.com/zsh-users/zsh-autosuggestions.git "$HOME/.dotfiles/.config/zsh/zsh-autosuggestions" >/dev/null
 	# Instalar archivos de configuración
 	"$HOME"/.dotfiles/update.sh
+	echo 'ZDOTDIR=$HOME/.config/zsh' | sudo tee /etc/zsh/zshenv
 }
+
+# Instalar mi software suckless
+suckless_install(){
+	# Instalar software suckless
+	whip_msg "suckless.org" "Compilando software suckless..."
+	doas make install --directory "$HOME/aleister/.dotfiles/dwm" >/dev/null
+	doas make install --directory "$HOME/aleister/.dotfiles/dmenu" >/dev/null
+	doas make install --directory "$HOME/aleister/.dotfiles/dwmblocks" >/dev/null
+	doas make install --directory "$HOME/aleister/.dotfiles/st" >/dev/null
+}
+
+# Iniciar dwm con xinit
+xinit_configure(){
+echo "#!/bin/sh
+
+[ -f \$HOME/.config/Xresources ] && xrdb \$HOME/.config/Xresources
+
+while true; do
+    /usr/local/bin/dwm 2>/dev/null
+done" | doas tee /etc/X11/xinit/xinitrc >/dev/null &&
+}
+
+gruvbox_install() {
+	local THEME_DIR="/usr/share/themes"
+	local ICON_DIR="/usr/share/icons"
+	# Clonar el repositorio gruvbox-dark-icons-gtk en /usr/local/share/icons/
+	doas git clone https://github.com/jmattheis/gruvbox-dark-icons-gtk.git $ICON_DIR/gruvbox-dark-icons-gtk >/dev/null
+	# Clonar el repositorio gruvbox-dark-gtk en /usr/local/share/themes/
+	doas git clone https://github.com/jmattheis/gruvbox-dark-gtk.git $THEME_DIR/gruvbox-dark-gtk >/dev/null
+	# Clona el tema de gtk4
+	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
+	# Copia el tema deseado a la carpeta de temas
+	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
+}
+
+gtk_config() {
+	# Verificar si el directorio ~/.dotfiles/.config/gtk-4.0 no existe y crearlo si es necesario
+	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.config/gtk-4.0"
+	# Crear el archivo de configuración de GTK
+	echo "[Settings]
+	gtk-theme-name=Gruvbox-Dark-B
+	gtk-icon-theme-name=gruvbox-dark-icons-gtk" > "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
+	# Aplicar configuraciones utilizando stow
+	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
+}
+
+lf_install(){
+	lf_packages="imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
+	yayinstall $lf_packages
+}
+
+qt_config(){
+	echo "[Appearance]
+color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
+custom_palette=true
+icon_theme=gruvbox-dark-icons-gtk
+standard_dialogs=default
+style=Fusion" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
+}
+
+# Instalar mi entorno Sukless
+full_setup(){
+	dotfiles_install;
+	suckless_install;
+	xinit_configure;
+	gruvbox_install;
+	gtk_config;
+	lf_install;
+	qt_config;
+}
+
+
 
 # Definir la distribución de teclado
 kb_layout(){
@@ -98,6 +157,8 @@ echo "Section \"InputClass\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 }
 
+
+
 # Instalar yay para poder instalar paquetes del AUR
 aur_install(){
 	tmp_dir="/tmp/yay_install_temp"
@@ -105,6 +166,8 @@ aur_install(){
 	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
 	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 }
+
+
 
 # Instalar y configurar Tauon Music Box
 tauon_install(){
@@ -132,6 +195,8 @@ virt_install(){
 	# Autoinciar red virtual
 	doas virsh net-autostart default
 }
+
+
 
 # Descargar nuestras fuentes
 fontdownload() {
@@ -164,6 +229,8 @@ fontdownload() {
 	fi
 }
 
+
+
 # Instalar nuestras extensiones de navegador
 # Código extraido de larbs.xyz/larbs.sh
 # Créditos para: <luke@lukesmith.xyz>
@@ -194,6 +261,8 @@ librewolf_configure(){
 	[ -d "$pdir" ] && installffaddons
 	killall librewolf
 }
+
+
 
 ##########################
 # Instalar Drivers y X11 #
