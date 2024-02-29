@@ -231,13 +231,13 @@ desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "
 
 case $desktop_choice in
 	gnome)
-		kb_layout; exit 1; gnome_install ;;
+		gnome_install; kb_layout ;;
 	kde)
-		kb_layout; exit 1; kde_install ;;
+		kde_install; kb_layout ;;
 	xfce)
-		kb_layout; exit 1; xfce_install ;;
+		xfce_install; kb_layout ;;
 	dotfiles)
-		kb_layout; exit 1 ;;
+		kb_layout ;;
 esac
 
 #############################
