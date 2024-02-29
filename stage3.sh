@@ -68,7 +68,7 @@ aur_install(){
 
 case $desktop_choice in
 	gnome)
-		gnome_install ;;
+		aur_install; gnome_install ;;
 	kde)
 		kde_install ;;
 	xfce)
@@ -81,7 +81,7 @@ esac
 
 whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es probable que necesites ingresar tu contraseña durante el proceso de instalación." 10 60
 
-aur_install
+[ ! -f /usr/bin/yay ] && aur_install
 
 # TODO: install extensions like larbs.sh Luke script
 
