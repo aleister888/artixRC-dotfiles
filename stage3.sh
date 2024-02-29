@@ -155,6 +155,43 @@ yay -S --noconfirm -needed $user_packages
 doas rc-update add irqbalance default
 doas rc-update add syslog-ng default
 
+###########
+# Fuentes #
+###########
+
+fontdownload() {
+	# Definir las URLs de descarga y los nombres de archivo
+	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
+	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
+	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
+	AGAVE_ZIP="/tmp/Agave.zip"
+	SYMBOLS_ZIP="/tmp/Symbols.zip"
+	IOSEVKA_ZIP="/tmp/Iosevka.zip"
+	# Definir directorios de destino
+	AGAVE_DIR="/usr/share/fonts/Agave"
+	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
+	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
+	# Descargar fuentes
+	echo "Descargando fuentes..."
+	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
+	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
+	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
+	# Extraer fuentes
+	echo "Extrayendo fuentes..."
+	doas unzip -q "$AGAVE_ZIP" -d "$AGAVE_DIR"
+	doas unzip -q "$SYMBOLS_ZIP" -d "$SYMBOLS_DIR"
+	doas unzip -q "$IOSEVKA_ZIP" -d "$IOSEVKA_DIR"
+	#
+	if [ ! -d "$HOME/.local/share/fonts" ]; then
+		mkdir -p "$HOME/.local/share/fonts"
+		ln -s /usr/local/share/fonts/Iosevka "$HOME/.local/share/fonts/Iosevka"
+		ln -s /usr/local/share/fonts/Agave "$HOME/.local/share/fonts/Agave"
+	fi
+}
+
+whiptail --title "Awesome Fonts" --msgbox "Se van a instalar las fuentes necesarias." 10 60 && \
+fontdownload
+
 ########################
 # Configurar Librewolf #
 ########################
