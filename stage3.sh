@@ -71,10 +71,11 @@ case $desktop_choice in
 		exit 1 ;;
 esac
 
-# Install packages
+# Instalar paquetes del AUR
 
 user_packages="librewolf-bin librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin ufw ufw-openrc irqbalance irqbalance-openrc syslog-ng syslog-ng-openrc webcord electronmail-bin thunderbird thunderbird-dark-reader qbittorrent-qt5 telegram-desktop tauon-music-box"
 
+whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Se te pedirá que ingreses tu contraseña durante el proceso de instalación." 10 60
 trizen -S --noconfirm "$user_packages"
 
 # Activar servicios
