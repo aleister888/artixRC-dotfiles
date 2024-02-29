@@ -149,10 +149,10 @@ yay -S --noconfirm --needed "$base_pkgs"
 
 # eww
 
-lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
+#lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
 
 privacy_conc="webcord-bin electronmail-bin telegram-desktop"
-whiptail --title "Tauon" --yesno "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord, Telegram y Protonmail)?" && \
+whiptail --title "Tauon" --yesno "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord, Telegram y Protonmail)?" 10 60 && \
 yay -S --noconfirm --needed "$privacy_conc"
 
 ###############################
