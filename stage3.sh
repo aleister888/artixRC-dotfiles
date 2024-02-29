@@ -87,7 +87,7 @@ kb_layout(){
 	done
 
 	# Elegir layout con whiptail
-	final_layout=$(whiptail --title "Teclado" --menu "Por favor, elige una distribución de teclado:" 20 70 10 "${keyboard_array[@]}" 3>&1 1>&2 2>&3)
+	final_layout=$(whiptail --title "Teclado" --menu "Por favor, elige una distribución de teclado:" 20 70 10 ${keyboard_array[@]} 3>&1 1>&2 2>&3)
 	# Configurar el layout de teclado para Xorg
 echo "Section \"InputClass\"
         Identifier \"system-keyboard\"
