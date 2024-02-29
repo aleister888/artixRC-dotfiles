@@ -73,7 +73,7 @@ esac
 
 # Instalar paquetes del AUR
 
-user_packages="transmission-gtk librewolf ufw ufw-openrc syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop"
+user_packages="transmission-gtk librewolf syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop"
 aur_packages="librewolf-extension-darkreader-bin librewolf-extension-violentmonkey-bin webcord-bin electronmail-bin tauon-music-box irqbalance-openrc"
 
 doas pacman -S --noconfirm $user_packages
@@ -82,7 +82,5 @@ whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Se 
 trizen -S --noconfirm --skippgpcheck $aur_packages
 
 # Activar servicios
-doas ufw enable
-doas rc-update add ufw default
 doas rc-update add irqbalance default
 doas rc-update add syslog-ng default
