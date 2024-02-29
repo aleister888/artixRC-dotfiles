@@ -1,7 +1,5 @@
 #!/bin/bash
 
-doas pacman -Syuu --noconfirm trizen
-
 # Instalar drivers de video
 
 # Diferentes opciones a elegir
@@ -11,18 +9,19 @@ graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige
 "${driver_options[@]}" 3>&1 1>&2 2>&3)
 
 bumblebee_install(){
-	doas pacman -S --noconfirm nvidia nvidia-utils bumblebee bumblebee-openrc
+	doas pacman -S --noconfirm nvidia nvidia-utils \
+	bumblebee bumblebee-openrc libva-vdpau-driver
 	doas gpasswd -a "$USER" bumblebee
 	doas rc-update add bumblebee default
 }
 
 case $graphic_driver in
 	amd)
-		doas pacman -S --noconfirm xf86-video-amdgpu ;;
+		doas pacman -S --noconfirm xf86-video-amdgpu libva-mesa-driver;;
 	nvidia)
-		doas pacman -S --noconfirm nvidia nvidia-utils ;;
+		doas pacman -S --noconfirm nvidia nvidia-utils libva-vdpau-driver;;
 	intel)
-		doas pacman -S --noconfirm xf86-video-intel ;;
+		doas pacman -S --noconfirm xf86-video-intel libva-intel-driver;;
 	virtual)
 		echo "Estás utilizando una máquina virtual, no se requieren controladores adicionales." ;;
 	optimus)
@@ -31,7 +30,7 @@ esac && \
 whiptail --title "Drivers" --msgbox "Los drivers de video se instalaron correctamente" 10 60
 
 # Instalar los paquetes básicos para gráficos acelerados
-doas pacman -S --noconfirm mesa mesa-libgl xorg xorg-xinit xorg-server
+doas pacman -S --noconfirm --needed mesa mesa-utils mesa-vdpau mesa-libgl xorg xorg-xinit xorg-server
 
 # Instalar escritorio
 
@@ -84,13 +83,48 @@ whiptail --title "Advertencia" --msgbox "Se van a instalar paquetes del AUR. Es 
 
 # TODO: install extensions like larbs.sh Luke script
 
-user_packages="webcord-bin electronmail-bin irqbalance-openrc transmission-gtk librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader telegram-desktop tauon-music-box lrcget-bin mpv pavucontrol handbrake easytag picard gimp zim libreoffice-fresh timeshift libreoffice-fresh multimc-bin wine wine-mono wine-gecko"
+# basicos
+# alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa
+# github-cli lostfiles 
 
-daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome"
+# Aplicaciones que puedes o no querer
+# bleachbit
 
-virtual_packages="looking-glass"
+# dwm
+# breeze-snow-cursor dragon-drop dunst eww-x11 font-manager galculator gcolor2 gnome-keyring gruvbox-dark-gtk gtk-layer-shell i3lock-fancy-git irqbalance-openrc lxappearance redshift xdg-xmenu-git ttf-dejavu ttf-linux-libertine ttf-opensans otf-font-awesome
+
+# eww
+
+lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
+
+privacy_conc="webcord-bin electronmail-bin telegram-desktop"
+hiptail --title "Tauon" --yesno "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord, Telegram y Protonmail)?" && \
+yay -S --noconfirm --needed $privacy_conc
+
+# Instalar y configurar tauon
+tauon-music-box_install(){
+	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk"
+	yay -S --noconfirm --needed $music_packages
+}
+whiptail --title "Tauon" --yesno "¿Deseas instalar el reproductor de música tauon y herramientas de audio?" 10 60 && tauon-music-box_install
+
+wine_packages="wine wine-mono wine-gecko winetricks"
+whiptail --title "Wine" --yesno "¿Deseas instalar wine?" 10 60 && \
+doas pacman -S --needed $wine_packages
+
+daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo wine wine-mono wine-gecko winetricks"
+whiptail --title "Wine" --yesno "¿Deseas instalar herramientas para músicos?" 10 60 && \
+doas pacman -S --needed $daw_packages
+
+virt_install(){
+virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager"
+doas pacman -S $virtual_packages
+}
+whiptail --title "Wine" --yesno "¿Planeas en usar maquinas virtuales?" 10 60 && virt_install
 
 aur_install
+
+user_packages="irqbalance-openrc librewolf-bin syslog-ng syslog-ng-openrc thunderbird thunderbird-dark-reader mpv handbrake gimp zim libreoffice-fresh timeshift libreoffice-fresh"
 
 yay -S --noconfirm $user_packages
 
@@ -124,12 +158,12 @@ librewolf_configure(){
 	profilesini="$browserdir/profiles.ini"
 	librewolf --headless >/dev/null 2>&1 &
 	sleep 1
-	profile="$(grep -o "Default=.*\.default-release" $profilesini | sed 's/Default=//')"
+	profile="$(grep -o "Default=.." $profilesini | sed 's/Default=//')"
 	pdir="$browserdir/$profile"
 	[ -d "$pdir" ] && installffaddons
 	killall librewolf
 }
 
-whiptail --title "Librewolf" --msgbox "Va a configurarse el navegador. Se descargarán las extensiones:\ndecentraleyes istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser" 10 60
+whiptail --title "Librewolf" --msgbox "Va a configurarse el navegador. Se descargarán las extensiones recomendadas." 10 60
 
 librewolf_configure
