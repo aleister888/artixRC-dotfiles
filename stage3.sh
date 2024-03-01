@@ -72,8 +72,8 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 }
 
 dotfiles_packages(){
-	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill"
-	pacinstall $PACKAGES
+	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill pfetch net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk"
+	yayinstall $PACKAGES $pipewire_packages
 }
 
 # Instalar mis archivos de configuración
@@ -111,9 +111,6 @@ done' | doas tee /etc/X11/xinit/xinitrc
 
 gruvbox_install() {
 	local THEME_DIR="/usr/share/themes"
-	local ICON_DIR="/usr/share/icons"
-	# Clonar el repositorio gruvbox-dark-icons-gtk en /usr/local/share/icons/
-	doas git clone https://github.com/jmattheis/gruvbox-dark-icons-gtk.git $ICON_DIR/gruvbox-dark-icons-gtk >/dev/null
 	# Clonar el repositorio gruvbox-dark-gtk en /usr/local/share/themes/
 	doas git clone https://github.com/jmattheis/gruvbox-dark-gtk.git $THEME_DIR/gruvbox-dark-gtk >/dev/null
 	# Clona el tema de gtk4
@@ -124,7 +121,7 @@ gruvbox_install() {
 
 gtk_config() {
 	# Verificar si el directorio ~/.dotfiles/.config/gtk-4.0 no existe y crearlo si es necesario
-	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.config/gtk-4.0"
+	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.con"fig/gtk-4.0""
 	# Crear el archivo de configuración de GTK
 	echo "[Settings]
 	gtk-theme-name=Gruvbox-Dark-B
@@ -134,7 +131,7 @@ gtk_config() {
 }
 
 lf_install(){
-	lf_packages="imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-poppler man-db atool dragon-drop mpv vlc keepassxc"
+	lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-poppler man-db atool dragon-drop mpv vlc keepassxc"
 	yayinstall $lf_packages
 }
 
@@ -153,6 +150,7 @@ general=\"Iosevka Nerd Font,12,-1,5,63,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/
 
 # Instalar mi entorno Sukless
 full_setup(){
+	aur_install
 	dotfiles_packages
 	dotfiles_install
 	suckless_install
@@ -298,7 +296,7 @@ librewolf_configure(){
 # Instalar Drivers y X11 #
 ##########################
 
-pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire"
+pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber"
 driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
 "${driver_options[@]}" 3>&1 1>&2 2>&3)
