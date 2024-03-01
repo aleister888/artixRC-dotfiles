@@ -63,6 +63,5 @@ case $1 in
 	"vol") get_vol ;;
 	"muted") is_muted ;;
 	"set") set_vol $2 ;;
-	*) echo "Comando no reconocido" ;;
 esac
 

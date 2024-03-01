@@ -71,6 +71,7 @@ pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
 pgrep dunst		|| dunst &
 pgrep xautolock		|| xautolock -time 5 -locker dvdbounce &
+pgrep nm-applet		|| nm-applet &
 
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
 virtualmic &

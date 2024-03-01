@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 
-MAX=16
+MAX=12
 
 # Función para imprimir $2 si $1 es un texto vacío
 withSafe() {
@@ -15,35 +15,12 @@ withSafe() {
 	fi
 }
 
-# Función para obtener la ruta de la carátula del álbum o una imagen de marcador de posición
-getCover() {
-	tauon-remote localhost cover
-	if [ -e "/tmp/cover.jpg" ]; then
-		echo "/tmp/cover.jpg"
-	else
-		echo "$HOME/.local/bin/eww/placeholder.png"
-	fi
-}
-
 # Acciones basadas en el argumento pasado
 case $1 in
-	play-pause)
-		playerctl -p tauon play-pause
-		;;
-	get)
-		getCover
-		;;
-	status)
-		playerctl -p tauon status
-		;;
 	artist)
 		withSafe "$(playerctl -p tauon metadata artist | cut -c 1-$MAX)" "Cannot detect artist"
 		;;
 	title)
 		withSafe "$(playerctl -p tauon metadata title | cut -c 1-$MAX)" "Player Stopped"
-		;;
-	*)
-		echo "Usage: $0 {play-pause|get}"
-		exit 1
 		;;
 esac

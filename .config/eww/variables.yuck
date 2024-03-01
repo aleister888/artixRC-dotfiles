@@ -1,17 +1,16 @@
 (defpoll music_title :interval "1s" "music title")
 (defpoll music_artist :interval "1s" "music artist")
-(defpoll music_art_url :interval "1s" "music get")
-(defpoll music_status :interval "1s" "music status")
+(defpoll music_art_url :interval "1s" "songart echo")
+(defpoll music_art :interval "1s" "songart get")
+(defpoll music_status :interval "1s" "playerctl -p tauon status")
 
-(defpoll disk :interval "1s" "disk")
+(defpoll disk :interval "1s" "df --output=pcent / | tail -n 1 | tr -d '%' | xargs")
 
 (defpoll volume_icon :interval "1s" "volume icon")
-(defpoll volume :interval "1s" "volume percentage")
 (defpoll volume_value :interval "1s" "volume vol")
 (defpoll is_muted :interval "1s" "volume muted")
 
-(defpoll mic_status :interval "1s" "mic status")
-(defpoll mic_value :interval "1s" "mic vol")
+(defpoll mic_value :interval "1s" "pamixer --default-source --get-volume")
 
 (defpoll hostname :interval "60s" "cat /etc/hostname")
 (defpoll uptime :interval "30s" "uptime -p")

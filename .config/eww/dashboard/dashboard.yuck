@@ -33,6 +33,7 @@
       (box :class "picture"
            :orientation "v"
            :style "background-image: url('${music_art_url}');"
+	   music_art
       )
     )
     (box :class "lastcol"
@@ -52,9 +53,9 @@
       (box :class "music-controls"
            :spacing 6
            :halign "center"
-        (button :onclick "curl 'http://localhost:7814/api1/back' && kill -54 $(pidof dwmblocks)" "")
-        (button :class "pause" :onclick "~/.local/bin/eww/music play-pause" "${music_status == 'Playing' ? '' : ''}")
-        (button :onclick "curl 'http://localhost:7814/api1/next' && kill -54 $(pidof dwmblocks)" "")
+        (button :onclick "playerctl -p tauon previous && kill -54 $(pidof dwmblocks)" "")
+        (button :class "pause" :onclick "playerctl -p tauon play-pause" "${music_status == 'Playing' ? '' : ''}")
+        (button :onclick "playerctl -p tauon next && kill -54 $(pidof dwmblocks)" "")
       )
     )
   )
@@ -98,18 +99,16 @@
               volume_icon
         )
         (scale :value volume_value
-               :onchange "~/.local/bin/eww/volume set {} && kill -44 $(pidof dwmblocks)"
+               :onchange "volume set {} && kill -44 $(pidof dwmblocks)"
                :min 0
                :max 101)
       )
       (box :orientation "h"
            :space-evenly "false"
            :class "mic-slider"
-          (box :class "mic-label"
-            (button :onclick "~/.local/bin/eww/mic toggle-muted" "${mic_status == 'true' ? '' : ''}")
-          )
+          (box :class "mic-label" "" )
         (scale :value mic_value
-               :onchange "~/.local/bin/eww/mic set {}"
+               :onchange "pamixer --default-source --set-volume {}"
                :min 0
                :max 101)
       )

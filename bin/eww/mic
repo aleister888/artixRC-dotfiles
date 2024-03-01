@@ -1,37 +1,12 @@
 #!/bin/bash
 
-# Función para imprimir el microfono seleccionado
-getmic(){
-wpctl status | grep "*" | sed 's/.*[0-9]\{1,\}\. //' | sed 's/ \[vol: [0-9]\{1\}\.[0-9]\{2\}\]//g' | sed -n '2p'
-}
-
-toggle_mute() {
-	# Si el microfono por defecto es la tarjeta de audio no hacer nada.
-	if getmic | grep -q Scarlett; then
-		exit 1
-	# Si el microfono seleccionado no es la tarjeta de audio, conmutar el silenciado
-	else
-		pamixer --default-source -t
-	fi
-}
-
 # Ejecutar comandos en función del argumento con el que se ejecuta el script
 case $1 in
 	vol)
 		pamixer --default-source --get-volume
 	;;
-	status)
-		pamixer --default-source --get-mute
-	;;
-	toggle-muted)
-		toggle_mute
-	;;
 	set)
 		pamixer --default-source --set-volume "$2"
 	;;
-	*)
-		echo "Usage: $0 {vol|status|toggle-muted|set}"
-		exit 1
-		;;
 esac
 
