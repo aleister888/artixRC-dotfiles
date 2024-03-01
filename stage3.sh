@@ -111,7 +111,7 @@ gtk_config() {
 }
 
 lf_install(){
-	lf_packages="imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-mupdf man-db atool dragon-drop mpv vlc keepassxc"
+	lf_packages="imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-poppler man-db atool dragon-drop mpv vlc keepassxc"
 	yayinstall $lf_packages
 }
 
