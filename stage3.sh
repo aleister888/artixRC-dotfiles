@@ -67,6 +67,7 @@ dotfiles_install(){
 # Instalar mi software suckless
 suckless_install(){
 	# Instalar software suckless
+	pacinstall libx11 libxft libxinerama ttf-dejavu ttf-liberation
 	whip_msg "suckless.org" "Compilando software suckless..."
 	doas make install --directory "$HOME/.dotfiles/dwm" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/dmenu" >/dev/null
