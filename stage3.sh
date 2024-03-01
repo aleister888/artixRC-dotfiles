@@ -306,7 +306,7 @@ case $desktop_choice in
 	xfce)
 		xfce_install; kb_layout ;;
 	dotfiles)
-		kb_layout ;;
+		full_setup; kb_layout ;;
 esac
 
 #############################
