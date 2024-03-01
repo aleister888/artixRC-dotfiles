@@ -26,14 +26,6 @@ service_add(){
 pacinstall zsh dash stow
 doas chsh -s /bin/zsh "$(whoami)"
 
-# Instalar bumblee para portatiles con graficas NVIDIA
-bumblebee_install(){
-	pacinstall nvidia nvidia-utils bumblebee bumblebee-openrc libva-vdpau-driver
-	doas gpasswd -a "$USER" bumblebee
-	service_add bumblebee
-	dotfiles_install
-}
-
 # Instalar el entorno de escritorio GNOME
 gnome_install(){
 	pacinstall gnome gdm gdm-openrc $pipewire_packages && \
@@ -416,18 +408,22 @@ pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-
 driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
 "${driver_options[@]}" 3>&1 1>&2 2>&3)
+nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver"
 
 case $graphic_driver in
 	amd)
-		pacinstall xf86-video-amdgpu libva-mesa-driver;;
+		pacinstall mesa xf86-video-amdgpu libva-mesa-driver ;;
 	nvidia)
-		pacinstall nvidia nvidia-utils libva-vdpau-driver;;
+		pacinstall mesa $nvidia_drivers ;;
 	intel)
-		pacinstall xf86-video-intel libva-intel-driver;;
+		pacinstall mesa xf86-video-intel libva-intel-driver ;;
 	virtual)
-		echo "Estás utilizando una máquina virtual, no se requieren controladores adicionales." ;;
+		pacinstall mesa xf86-video-vmware xf86-input-vmmouse ;;
 	optimus)
-		bumblebee_install ;;
+		pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
+		doas gpasswd -a "$USER" bumblebee
+		service_add bumblebee
+		;;
 esac && \
 whip_msg "Drivers" "Los drivers de video se instalaron correctamente"
 
