@@ -1,4 +1,6 @@
-#!/usr/bin/zsh
+#!/bin/bash
+
+source "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 # Cerrar instancias previas del script
 INSTANCIAS="$(pgrep -c -x "$(basename "$0")")"
@@ -65,7 +67,7 @@ pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
 pgrep redshift		|| redshift -l "$LOCATION" -t 5000:4000 &
-pgrep syncthing		|| syncthing &
+pgrep syncthing		|| syncthing --no-browser &
 pgrep picom		|| picom &
 pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
