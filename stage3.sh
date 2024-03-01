@@ -139,7 +139,7 @@ Xcursor.size: 64
 *color15: #A89984
 
 xmenu.foreground: #D5C4A1
-xmenu.background: #1D2021' > $XRES_FILE
+xmenu.background: #1D2021' > "$XRES_FILE"
 
 # Mostrar diálogo de selección de resolución y tamaño del monitor
 resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" 15 60 4 \
@@ -162,7 +162,7 @@ rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc)
 # Mostrar el DPI calculado
 whiptail --title "DPI Calculado" --msgbox "El DPI de su pantalla es: $rounded_dpi" 10 50
 
-echo "Xft.dpi:$rounded_dpi" >> $XRES_FILE
+echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 }
 
 
@@ -233,6 +233,13 @@ gtk_config() {
 	gtk-icon-theme-name=gruvbox-dark-icons-gtk" > "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
 	# Aplicar configuraciones utilizando stow
 	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
+
+echo "file:///home/$(whoami)
+file:///home/$(whoami)/Downloads
+file:///home/$(whoami)/Documents
+file:///home/$(whoami)/Pictures
+file:///home/$(whoami)/Videos
+file:///home/$(whoami)/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 }
 
 lf_install(){
