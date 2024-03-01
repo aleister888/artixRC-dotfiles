@@ -8,14 +8,14 @@
 
 // Constantes
 static const unsigned int gappx          = 32;      // Separación entre las ventanas
-static const unsigned int borderpx       = gappx/3; // Borde en pixeles de las ventanas
+static const unsigned int borderpx       = gappx/4+4; // Borde en pixeles de las ventanas
 static const int vertpad                 = gappx;   // Separación vertical de la barra
 static const int sidepad                 = gappx;   // Separación horizontal de la barra
 static const int user_bh                 = gappx;   // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;       // Pixeles de cercanía para pegarse al borde (0 = desactivado)
 static const unsigned int systraypinning = 0;       // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayonleft  = 0;       // Posición de la barra de tareas (0: Esquina derecha, >0 Izquierda del estado)
-static const unsigned int systrayspacing = gappx/2; // Espaciado de la barra de tareas
+static const unsigned int systrayspacing = gappx/2+2; // Espaciado de la barra de tareas
 static const int systraypinningfailfirst = 1;       // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
 static const int showsystray             = 1;       // ¿Barra de tareas? (0: Desactivada)
 static const int swallowfloating         = 0;       // 1 Significa tragarse nuevas ventanas por defecto
@@ -26,8 +26,8 @@ static const float mfact                 = 0.45;    // Factor de escalado de la 
 static const int nmaster                 = 1;       // Número de clientes en la zona principal
 static const int resizehints             = 1;       // 1 ¿Respetar pistas de dibujado al redimensionar ventanas no-flotantes?
 static const int lockfullscreen          = 1;       // 1 Fuerza el foco en las ventanas en pantalla completa
-static const char dmenufont[]            = "Iosevka Nerd Font:bold:pixelsize=38"; // Fuentes
-static const char *fonts[]               = { "Symbols Nerd Font:pixelsize=44","Iosevka Nerd Font:bold:pixelsize=38" };
+static const char dmenufont[]            = "Iosevka Nerd Font:bold:pixelsize=36"; // Fuentes
+static const char *fonts[]               = { "Symbols Nerd Font:pixelsize=38","Iosevka Nerd Font:bold:pixelsize=36" };
 static const char background[]           = "#1D2021";
 static const char background_sel[]       = "#282828";
 static const char foreground[]           = "#EBDBB2";
