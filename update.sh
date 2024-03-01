@@ -10,8 +10,8 @@ find "$HOME/.local/bin" -type l ! -exec test -e {} \; -delete
 find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
 
 # Enlazar nuestro script de inicio
-[ ! -d "$HOME/.local/share" ] && mkdir -p "$HOME/.local/share"
-ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm 2>/dev/null
+[ ! -d "$HOME/.local/share/dwm" ] && mkdir -p "$HOME/.local/share/dwm"
+ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
 
 # Actualizar plugins de zsh
 sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull"
