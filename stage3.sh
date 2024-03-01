@@ -22,12 +22,15 @@ service_add(){
 }
 
 
+# Instalar paquetes clave
+pacinstall zsh dash stow
 
 # Instalar bumblee para portatiles con graficas NVIDIA
 bumblebee_install(){
 	pacinstall nvidia nvidia-utils bumblebee bumblebee-openrc libva-vdpau-driver
 	doas gpasswd -a "$USER" bumblebee
 	service_add bumblebee
+	dotfiles_install
 }
 
 # Instalar el entorno de escritorio GNOME
@@ -35,6 +38,7 @@ gnome_install(){
 	pacinstall gnome gdm gdm-openrc $pipewire_packages && \
 	service_add gdm && \
 	whip_msg "GNOME" "Gnome se instaló correctamente"
+	dotfiles_install
 }
 
 # Instalar el entorno de escritorio KDE
@@ -42,6 +46,7 @@ kde_install(){
 	pacinstall plasma sddm sddm-openrc konsole $pipewire_packages && \
 	service_add sddm && \
 	whip_msg "KDE" "Kde Plasma se instaló correctamente"
+	dotfiles_install
 }
 
 # Instalar el entorno de escritorio Xfce
@@ -49,12 +54,24 @@ xfce_install(){
 	pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol $pipewire_packages && \
 	service_add sddm && \
 	whip_msg "XFCE" "Xfce se instaló correctamente"
+	dotfiles_install
 }
 
 
 
+# Configurar nitrogen
+nitrogen_configure() {
+# Crear el directorio ~/.config/nitrogen si no existe
+mkdir -p "$HOME/.config/nitrogen"
+# Crear el archivo de configuración bg-saved.cfg
+echo "[xin_-1]
+file=$HOME/.dotfiles/assets/wallpaper.png
+mode=5
+bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
+}
+
 dotfiles_packages(){
-	local PACKAGES="stow polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock"
+	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock"
 	pacinstall $pipewire_packages
 }
 
@@ -139,6 +156,7 @@ full_setup(){
 	gtk_config
 	lf_install
 	qt_config
+	nitrogen_configure
 }
 
 
@@ -326,7 +344,7 @@ whip_msg "Advertencia" "Se van a instalar paquetes del AUR."
 [ ! -f /usr/bin/yay ] && aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing dashbinsh"
 yayinstall $base_pkgs
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad
