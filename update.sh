@@ -17,3 +17,4 @@ ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull"
 sh -c "cd $HOME/.config/zsh/zsh-history-substring-search && git pull"
 sh -c "cd $HOME/.config/zsh/zsh-syntax-highlighting && git pull"
+sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull"

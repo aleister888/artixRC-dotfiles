@@ -189,6 +189,7 @@ dotfiles_install(){
 	git clone https://github.com/zsh-users/zsh-history-substring-search.git "$HOME/.dotfiles/.config/zsh/zsh-history-substring-search" >/dev/null
 	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.dotfiles/.config/zsh/zsh-syntax-highlighting" >/dev/null
 	git clone https://github.com/zsh-users/zsh-autosuggestions.git "$HOME/.dotfiles/.config/zsh/zsh-autosuggestions" >/dev/null
+	git clone https://github.com/MichaelAquilina/zsh-you-should-use.git "$HOME/.dotfiles/.config/zsh/zsh-you-should-use" >/dev/null
 	# Instalar archivos de configuración
 	"$HOME/.dotfiles/update.sh"
 	echo 'ZDOTDIR=$HOME/.config/zsh' | doas tee /etc/zsh/zshenv
