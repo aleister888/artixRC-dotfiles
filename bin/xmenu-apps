@@ -80,7 +80,7 @@ IMG:$ICONPATH/apps/system-file-manager.svg				Archivos		$TERMINAL -e lf
 IMG:$ICONPATH/apps/st.svg						STerminal	st
 IMG:$ICONPATH/apps/virt-manager.svg					Máq. Virtuales		virt-manager
 IMG:$ICONPATH/apps/multimc.svg						Minecraft		multimc
-IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg		Looking Glass		looking-glass-client win:forceAspect no -p 5910 -f /dev/shm/looking-glass-windows win:showFPS yes -S no -r no spice:alwaysShowCursor yes win:noScreensaver yes input:rawMouse yes
+IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg		Looking Glass		looking-glass-client win:forceAspect no -f /dev/shm/looking-glass-windows win:showFPS yes -S no -r no spice:alwaysShowCursor yes win:noScreensaver yes input:rawMouse yes -p 5905
 
 IMG:$ICONPATH/apps/fluxgui.svg	Redshift
 	Start								pgrep redshift || sh -c "redshift -l $LOCATION -t 5000:4000 & notify-send '💡 Blue Light Filter Enabled'"

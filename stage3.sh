@@ -10,11 +10,11 @@ whip_yes(){
 }
 
 pacinstall() {
-    doas pacman -S --noconfirm --needed "$@"
+    doas pacman -Sy --noconfirm --needed "$@"
 }
 
 yayinstall() {
-    yay -S --noconfirm --needed "$@"
+    yay -Sy --noconfirm --needed "$@"
 }
 
 service_add(){
@@ -52,6 +52,11 @@ xfce_install(){
 }
 
 
+
+dotfiles_packages(){
+	local PACKAGES="stow polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock"
+	pacinstall $pipewire_packages
+}
 
 # Instalar mis archivos de configuración
 dotfiles_install(){
@@ -126,13 +131,14 @@ style=Fusion" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
 
 # Instalar mi entorno Sukless
 full_setup(){
-	dotfiles_install;
-	suckless_install;
-	xinit_make;
-	gruvbox_install;
-	gtk_config;
-	lf_install;
-	qt_config;
+	suckless_packages
+	dotfiles_install
+	suckless_install
+	xinit_make
+	gruvbox_install
+	gtk_config
+	lf_install
+	qt_config
 }
 
 
@@ -320,7 +326,7 @@ whip_msg "Advertencia" "Se van a instalar paquetes del AUR."
 [ ! -f /usr/bin/yay ] && aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing"
 yayinstall $base_pkgs
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad

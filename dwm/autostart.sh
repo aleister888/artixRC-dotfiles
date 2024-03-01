@@ -69,14 +69,8 @@ pgrep syncthing		|| syncthing &
 pgrep picom		|| picom &
 pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
-pgrep http-server	|| npx http-server ~/.local/share/startpage/ 8080 &
 pgrep dunst		|| dunst &
 pgrep xautolock		|| xautolock -time 5 -locker dvdbounce &
-pgrep pomodorino	|| pomodorino &
-pgrep xclickroot	|| xclickroot -r xmenu-apps &
-
-#pgrep -a java | grep komga || komga --server.port=8443 --komga.config-dir=".local/share/komga" &
-#pgrep sunshine || sunshine &
 
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
 virtualmic &
