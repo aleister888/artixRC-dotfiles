@@ -60,8 +60,8 @@ dotfiles_install(){
 	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.dotfiles/.config/zsh/zsh-syntax-highlighting" >/dev/null
 	git clone https://github.com/zsh-users/zsh-autosuggestions.git "$HOME/.dotfiles/.config/zsh/zsh-autosuggestions" >/dev/null
 	# Instalar archivos de configuración
-	"$HOME"/.dotfiles/update.sh
-	echo 'ZDOTDIR=$HOME/.config/zsh' | sudo tee /etc/zsh/zshenv
+	"$HOME/.dotfiles/update.sh"
+	echo 'ZDOTDIR=$HOME/.config/zsh' | doas tee /etc/zsh/zshenv
 }
 
 # Instalar mi software suckless

@@ -1,5 +1,7 @@
 #!/usr/bin/zsh
 
+MAX=16
+
 # Función para imprimir $2 si $1 es un texto vacío
 withSafe() {
 	local txt="$1"
@@ -35,10 +37,10 @@ case $1 in
 		playerctl -p tauon status
 		;;
 	artist)
-		withSafe "$(playerctl -p tauon metadata artist)" "Cannot detect artist"
+		withSafe "$(playerctl -p tauon metadata artist | cut -c 1-$MAX)" "Cannot detect artist"
 		;;
 	title)
-		withSafe "$(playerctl -p tauon metadata title)" "Player Stopped"
+		withSafe "$(playerctl -p tauon metadata title | cut -c 1-$MAX)" "Player Stopped"
 		;;
 	*)
 		echo "Usage: $0 {play-pause|get}"
