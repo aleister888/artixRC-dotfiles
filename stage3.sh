@@ -179,7 +179,7 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 }
 
 dotfiles_packages(){
-	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill pfetch net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu"
+	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill pfetch net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu bc"
 	yayinstall $PACKAGES $pipewire_packages
 }
 
@@ -218,8 +218,6 @@ done' | doas tee /etc/X11/xinit/xinitrc
 
 gruvbox_install() {
 	local THEME_DIR="/usr/share/themes"
-	# Clonar el repositorio gruvbox-dark-gtk en /usr/local/share/themes/
-	doas git clone https://github.com/jmattheis/gruvbox-dark-gtk.git $THEME_DIR/gruvbox-dark-gtk >/dev/null
 	# Clona el tema de gtk4
 	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
 	# Copia el tema deseado a la carpeta de temas
@@ -263,11 +261,11 @@ full_setup(){
 	suckless_install
 	xinit_make
 	gruvbox_install
-	xresources_config
 	gtk_config
 	lf_install
 	qt_config
 	nitrogen_configure
+	xresources_config
 }
 
 
@@ -453,7 +451,7 @@ whip_msg "Advertencia" "Se van a instalar paquetes del AUR."
 [ ! -f /usr/bin/yay ] && aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing dashbinsh jq bc"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing dashbinsh jq"
 yayinstall $base_pkgs
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad
