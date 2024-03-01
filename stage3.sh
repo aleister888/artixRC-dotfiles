@@ -71,7 +71,7 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 }
 
 dotfiles_packages(){
-	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock"
+	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill"
 	pacinstall $pipewire_packages
 }
 
