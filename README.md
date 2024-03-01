@@ -1,6 +1,6 @@
 ## Artix (OpenRC) Dotfiles
 
-Configuración de `Artix` y auto-instalador
+Configuración de `Artix Linux` y auto-instalador
 
 ## Instalación
 
