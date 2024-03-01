@@ -9,7 +9,7 @@ RADIOFLAG="$TERMTITLE scratchpad mpv"
 #	Icono								Nombre			Comando
 cat <<EOF | xmenu -r | /bin/sh &
 IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
-	IMG:$ICONPATH/apps/librewolf.svg				Librewolf		librewolf
+	IMG:$ICONPATH/apps/$BROWSER.svg					$(echo $BROWSER | sed 's/^\(.\)/\U\1/')	$BROWSER
 	IMG:$ICONPATH/apps/tor-browser.svg				Tor-Browser		tor-browser
 	IMG:$ICONPATH/apps/discord.svg					Webcord			webcord
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
@@ -18,7 +18,6 @@ IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 
 IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon			tauon
-	IMG:$ICONPATH/apps/krdc.svg					Tauon Remote		tauon-yad 192.168.0.169
 	IMG:$ICONPATH/apps/LyricsFinder.svg				LrcGet			lrcget
 	IMG:$ICONPATH/apps/mpv.svg					mpv			mpv --player-operation-mode=pseudo-gui
 	IMG:$ICONPATH/apps/kodi.svg					Kodi			kodi
