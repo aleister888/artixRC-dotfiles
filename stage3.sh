@@ -179,7 +179,7 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 }
 
 dotfiles_packages(){
-	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill pfetch net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu bc xdg-desktop-portal-gtk"
+	local PACKAGES="polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu bc xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility"
 	yayinstall $PACKAGES $pipewire_packages
 }
 
@@ -243,7 +243,7 @@ file:///home/$(whoami)/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 }
 
 lf_install(){
-	lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv zathura zathura-pdf-poppler man-db atool dragon-drop mpv vlc keepassxc"
+	lf_packages="lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv"
 	yayinstall $lf_packages
 }
 
@@ -312,7 +312,7 @@ aur_install(){
 
 # Instalar y configurar Tauon Music Box
 tauon_install(){
-	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk atool"
+	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk atool flacon cuetools"
 	yay -S --noconfirm --needed $music_packages
 	"$HOME"/.dotfiles/tauon-config.sh
 }
@@ -457,8 +457,10 @@ whip_msg "Advertencia" "Se van a instalar paquetes del AUR."
 # Instalar el ayudante del AUR: yay
 [ ! -f /usr/bin/yay ] && aur_install
 
+# TODO: Instalar wpa_supplicant si se va a usar en un portátil
+
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing dashbinsh jq"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils"
 yayinstall $base_pkgs
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad
