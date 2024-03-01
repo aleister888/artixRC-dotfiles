@@ -58,6 +58,113 @@ xfce_install(){
 	dotfiles_install
 }
 
+calculate_dpi() {
+	resolution=$1
+	size=$2
+	case $resolution in
+		"720p")
+			width=1280
+			height=720
+			;;
+		"1080p")
+			width=1920
+			height=1080
+			;;
+		"1440p")
+			width=2560
+			height=1440
+			;;
+		"4K")
+			width=3840
+			height=2160
+			;;
+	esac
+
+	case $size in
+		"14")
+			diagonal=14
+			;;
+		"15.6")
+			diagonal=15.6
+			;;
+		"17")
+			diagonal=17
+			;;
+		"24")
+			diagonal=24
+			;;
+		"27")
+			diagonal=27
+			;;
+	esac
+
+	diagonal_inch=$(echo "scale=2; sqrt($width^2 + $height^2)" | bc)
+	display_dpi=$(echo "scale=2; sqrt($width^2 + $height^2) / $diagonal" | bc)
+}
+
+# Configurar Xresources teniendo en cuenta el dpi
+xresources_config(){
+$XRES_FILE="$HOME/.config/Xresources"
+
+echo 'Xcursor.theme: Breeze_Snow
+Xcursor.size: 64
+
+! hard contrast: *background: #1d2021
+*background: #282828
+! soft contrast: *background: #32302f
+*foreground: #ebdbb2
+! Black + DarkGrey
+*color0:  #665C54
+*color8:  #665C54
+! DarkRed + Red
+*color1:  #CC241D
+*color9:  #FB4934
+! DarkGreen + Green
+*color2:  #98971A
+*color10: #B8BB26
+! DarkYellow + Yellow
+*color3:  #D79921
+*color11: #FABD2F
+! DarkBlue + Blue
+*color4:  #458588
+*color12: #83A598
+! DarkMagenta + Magenta
+*color5:  #B16286
+*color13: #D3869B
+! DarkCyan + Cyan
+*color6:  #689D6A
+*color14: #8EC07C
+! LightGrey + White
+*color7:  #A89984
+*color15: #A89984
+
+xmenu.foreground: #D5C4A1
+xmenu.background: #1D2021' > $XRES_FILE
+
+# Mostrar diálogo de selección de resolución y tamaño del monitor
+resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" 15 60 4 \
+	"720p" "" \
+	"1080p" "" \
+	"1440p" "" \
+	"4K" "" 3>&1 1>&2 2>&3)
+
+size=$(whiptail --title "Tamaño del Monitor" --menu "Seleccione el tamaño de su monitor (en pulgadas):" 15 60 5 \
+	"14" "" \
+	"15.6" "" \
+	"17" "" \
+	"24" "" \
+	"27" "" 3>&1 1>&2 2>&3)
+
+# Calcular DPI
+calculate_dpi "$resolution" "$size"
+rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc)
+
+# Mostrar el DPI calculado
+whiptail --title "DPI Calculado" --msgbox "El DPI de su pantalla es: $rounded_dpi" 10 50
+
+echo "Xft.dpi:$rounded_dpi" >> $XRES_FILE
+}
+
 
 
 # Configurar nitrogen
@@ -156,6 +263,7 @@ full_setup(){
 	suckless_install
 	xinit_make
 	gruvbox_install
+	xresources_config
 	gtk_config
 	lf_install
 	qt_config
@@ -290,8 +398,6 @@ librewolf_configure(){
 	killall librewolf
 }
 
-
-
 ##########################
 # Instalar Drivers y X11 #
 ##########################
@@ -347,7 +453,7 @@ whip_msg "Advertencia" "Se van a instalar paquetes del AUR."
 [ ! -f /usr/bin/yay ] && aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing dashbinsh"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh exa github-cli lostfiles syncthing dashbinsh jq bc"
 yayinstall $base_pkgs
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad
