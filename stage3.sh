@@ -143,7 +143,11 @@ color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
 custom_palette=true
 icon_theme=gruvbox-dark-icons-gtk
 standard_dialogs=default
-style=Fusion" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
+style=Fusion
+
+[Fonts]
+fixed=\"Iosevka Nerd Font Mono,12,-1,5,50,0,0,0,0,0,Bold\"
+general=\"Iosevka Nerd Font,12,-1,5,63,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
 }
 
 # Instalar mi entorno Sukless
