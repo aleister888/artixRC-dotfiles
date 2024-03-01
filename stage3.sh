@@ -131,7 +131,7 @@ style=Fusion" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
 
 # Instalar mi entorno Sukless
 full_setup(){
-	suckless_packages
+	dotfiles_packages
 	dotfiles_install
 	suckless_install
 	xinit_make
