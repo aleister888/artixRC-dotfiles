@@ -68,10 +68,10 @@ dotfiles_install(){
 suckless_install(){
 	# Instalar software suckless
 	whip_msg "suckless.org" "Compilando software suckless..."
-	doas make install --directory "$HOME/aleister/.dotfiles/dwm" >/dev/null
-	doas make install --directory "$HOME/aleister/.dotfiles/dmenu" >/dev/null
-	doas make install --directory "$HOME/aleister/.dotfiles/dwmblocks" >/dev/null
-	doas make install --directory "$HOME/aleister/.dotfiles/st" >/dev/null
+	doas make install --directory "$HOME/.dotfiles/dwm" >/dev/null
+	doas make install --directory "$HOME/.dotfiles/dmenu" >/dev/null
+	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
+	doas make install --directory "$HOME/.dotfiles/st" >/dev/null
 }
 
 # Iniciar dwm con xinit
