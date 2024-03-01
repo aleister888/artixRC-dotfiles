@@ -24,6 +24,7 @@ service_add(){
 
 # Instalar paquetes clave
 pacinstall zsh dash stow
+chsh -s /bin/zsh "$(whoami)"
 
 # Instalar bumblee para portatiles con graficas NVIDIA
 bumblebee_install(){
