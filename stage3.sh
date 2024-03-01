@@ -376,13 +376,17 @@ fontdownload() {
 # Código extraido de larbs.xyz/larbs.sh
 # Créditos para: <luke@lukesmith.xyz>
 installffaddons(){
-	addonlist="decentraleyes istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser"
+	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser"
 	addontmp="$(mktemp -d)"
 	trap "rm -fr $addontmp" HUP INT QUIT TERM PWR EXIT
 	IFS=' '
-	sudo -u "$USER" mkdir -p "$pdir/extensions/"
+	mkdir -p "$pdir/extensions/"
 	for addon in $addonlist; do
-		addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
+		if [ "$addon" = "ublock-origin" ]; then
+			addonurl="$(curl -sL https://api.github.com/repos/gorhill/uBlock/releases/latest | grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4)"
+		else
+			addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
+		fi
 		file="${addonurl##*/}"
 		curl -LOs "$addonurl" > "$addontmp/$file"
 		id="$(unzip -p "$file" manifest.json | grep "\"id\"")"
@@ -392,15 +396,15 @@ installffaddons(){
 	done
 	chown -R "$USER:$USER" "$pdir/extensions"
 }
-librewolf_configure(){
-	browserdir="/home/$USER/.librewolf"
+firefox_configure(){
+	browserdir="/home/$USER/.mozilla/firefox"
 	profilesini="$browserdir/profiles.ini"
-	librewolf --headless >/dev/null 2>&1 &
+	firefox --headless >/dev/null 2>&1 &
 	sleep 1
 	profile="$(grep "Default=.." "$profilesini" | sed 's/Default=//')"
 	pdir="$browserdir/$profile"
 	[ -d "$pdir" ] && installffaddons
-	killall librewolf
+	killall firefox
 }
 
 ##########################
@@ -502,7 +506,7 @@ whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $of
 # Instalar paquetes básicas #
 #############################
 
-user_packages="tar gzip unzip librewolf-bin syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc"
+user_packages="tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc"
 yayinstall $user_packages
 
 # Activar servicios
@@ -515,8 +519,8 @@ service_add syslog-ng
 
 whip_msg "Awesome Fonts" "Se van a instalar las fuentes necesarias." && fontdownload
 
-############################
-# Autoconfigurar Librewolf #
-############################
+##########################
+# Autoconfigurar Firefox #
+##########################
 
-whip_yes "Librewolf" "¿Desea autoconfigurar el navegador?" && librewolf_configure
+whip_yes "Firefox" "¿Desea autoconfigurar el navegador?" && firefox_configure

@@ -4,7 +4,7 @@
 #define TERM   "st" // Terminal
 #define TERMT  "-t" // Flag usada para determinar el título de la terminal
 #define TERMC  "st-256color" // Clase de ventana de la terminal
-#define BROWSER "librewolf" // Navegador Web
+#define BROWSER "firefox" // Navegador Web
 
 // Constantes
 static const unsigned int gappx          = 32;      // Separación entre las ventanas
