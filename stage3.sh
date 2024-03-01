@@ -83,7 +83,7 @@ echo '#!/bin/sh
 
 while true; do
 	/usr/local/bin/dwm >/dev/null 2>&1
-done' > /etc/X11/xinit/xinitrc
+done' | doas tee /etc/X11/xinit/xinitrc
 }
 
 gruvbox_install() {
