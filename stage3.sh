@@ -408,7 +408,7 @@ pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-
 driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
 "${driver_options[@]}" 3>&1 1>&2 2>&3)
-nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver"
+nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 
 case $graphic_driver in
 	amd)

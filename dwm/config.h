@@ -7,7 +7,7 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Constantes
-static const unsigned int gappx          = 32;      // Separación entre las ventanas
+static const unsigned int gappx          = 24;      // Separación entre las ventanas
 static const unsigned int borderpx       = gappx/4+4; // Borde en pixeles de las ventanas
 static const int vertpad                 = gappx;   // Separación vertical de la barra
 static const int sidepad                 = gappx;   // Separación horizontal de la barra
@@ -61,7 +61,7 @@ static const int taglayouts[]	= {   0,   0,   0,   0,   2,   2,   0,   0,   2,  
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
-	// Clase Instancia Título Espacio Flotante Terminal -Tragado Monitor Tecla Scratch
+	// Clase      Instancia Título          Espacio Flotante Terminal -Tragado Monitor Scratch
 	// Terminal
 	{ TERMC,		NULL,	NULL,	0,	0,	1,	0,	-1,     0},
 	// Ventanas flotantes
@@ -89,6 +89,8 @@ static const Rule rules[] = {
 	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "MultiMC",		NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
 	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
+	{ "steam",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
+	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
 	// Espacio 7: Guitarra/Producción MusicAudioPlayal
 	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
@@ -121,7 +123,7 @@ static const Rule rules[] = {
 	{ NULL,	NULL,"scratchpad",              0,      1,      1,      1,      -1,     's'},
 };
 
-#include "layouts.c" // Archivo con los layouts adicionales
+#include "layouts.c" // Archivo con los layouts
 
 static const Layout layouts[] = {
 	{ "[]=",      tile },           // Layout por defecto

@@ -2,13 +2,13 @@
 
 # Define las opciones con iconos
 options=(
-	"  Lock"
-	"󰒲  Suspend"
-	"  Logout"
-	"  Reboot"
-	"  Shutdown"
-	"  Restart dwm"
-	"  Wake at 7:00"
+	"  Bloquear"
+	"󰒲  Suspender"
+	"  Cerrar sesión"
+	"  Reinciar"
+	"  Apagar"
+	"  Reinciar dwm"
+	"  Despertarse 7:00"
 )
 
 # Presenta las opciones usando dmenu

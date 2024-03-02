@@ -1,12 +1,6 @@
 " Plugins
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Sintaxis para BASH
-Plug 'vim-scripts/bash-support.vim'
-
-" Árbol de ficheros
-Plug 'preservim/nerdtree'
-
 " Auto-cerrar llaves, paréntesis, ...
 Plug 'LunarWatcher/auto-pairs'
 function! MoveCursorLeftIfNeeded()
@@ -28,18 +22,11 @@ nnoremap <leader>\ :s/\%#\([^[:space:]]\+\)/\\(\1\\)/g<CR>:noh<CR>
 nnoremap <leader>[ :s/\%#\([^[:space:]]\+\)/[\1]/g<CR>:noh<CR>
 nnoremap <leader>{ :s/\%#\([^[:space:]]\+\)/{\1}/g<CR>:noh<CR>
 
-" Tema de colores
-Plug 'ellisonleao/gruvbox.nvim'
-
 " Pre-visualización de colores
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 let g:Hexokinase_highlighters = [
-\   'sign_column',
 \   'backgroundfull',
 \ ]
-
-" Ejecutar comandos de forma asíncrona
-Plug 'skywind3000/asyncrun.vim'
 
 " Sugerencias de entrada
 Plug 'lervag/vimtex'
@@ -54,9 +41,6 @@ syntax enable
 set title
 set clipboard+=unnamedplus
 set number relativenumber
-set smarttab
-set breakindent
-set splitbelow splitright
 set hidden
 set ttimeoutlen=0
 set ic
@@ -64,7 +48,6 @@ set ignorecase
 set smartcase
 set mouse=a
 set noshowmode
-set t_Co=256
 set encoding=utf-8
 set wildmode=longest,list,full
 set autochdir
@@ -73,21 +56,9 @@ set incsearch
 set scrolloff=10
 set list
 
-" Tema de colores
-set background=dark
-set termguicolors
-colorscheme gruvbox
-hi Normal guibg=NONE ctermbg=NONE
-if !has('gui_running')
-  set t_Co=256
-endif
-
 " Activar/Desactivar sugerencias de entrada
 inoremap <F1> <C-O>:call CocToggle()<CR>
 nnoremap <F1> :call CocToggle()<CR>
-" Abrir/Cerrar árbol de ficheros
-inoremap <F2> <C-O>:call NERDTreeToggleInCurDir()<CR>
-nnoremap <F2> :call NERDTreeToggleInCurDir()<CR>
 " Comprobar ortografía
 inoremap <F3> <C-O>:setlocal spell! spelllang=es_es<CR>
 inoremap <F4> <C-O>:setlocal spell! spelllang=en_us<CR>
@@ -110,26 +81,6 @@ function! CocToggle()
     endif
 endfunction
 
-" Árbol de ficheros (Configuración)
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-if has('nvim')
-        let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
-else
-        let NERDTreeBookmarksFile = '~/.vim' . '/NERDTreeBookmarks'
-endif
-function! NERDTreeToggleInCurDir()
-  " If NERDTree is open in the current buffer
-  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
-    exe ":NERDTreeClose"
-  else
-    if (expand("%:t") != '')
-      exe ":NERDTreeFind"
-    else
-      exe ":NERDTreeToggle"
-    endif
-  endif
-endfunction
-
 " Automatizar tareas cuando se escribe en un archivo
 autocmd BufWritePost ~/.dotfiles/dwmblocks/blocks.h !$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c 'cd ~/.dotfiles/dwmblocks/; doas make install' && pkill dwmblocks; dwmblocks &
 autocmd BufWritePost ~/.dotfiles/dwm/config.h !$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c 'cd ~/.dotfiles/dwm/; doas make install'
@@ -139,7 +90,7 @@ autocmd BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 
 " LaTeX
 " Compilar archivo de texto a PDF
-autocmd Filetype tex map <M-g> :AsyncRun! arara % && notify-send "Document Compiled" <CR><CR>
+autocmd Filetype tex map <M-g> :! arara % && notify-send "Document Compiled" <CR><CR>
 autocmd Filetype tex map <M-S-g> :! xelatex % <CR>
 " Abrir PDF resultante en un visór de documentos
 autocmd Filetype tex map <M-h> :! setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
@@ -154,7 +105,7 @@ autocmd Filetype groff map <C-g> :! pic % \| groff -ms -Tpdf > $(echo % \| sed '
 " Pre-procesar con pic y compilar documento Groff en un PDF (Con imágenes)
 autocmd Filetype groff map <C-S-g> :! pic % \|  groff -ms -Tps > $(echo % \| sed 's/ms$/ps/'); time ps2pdf $(echo % \| sed 's/ms$/ps/') <CR>
 " Abrir PDF resultante en un visór de documentos
-autocmd Filetype groff map <M-w> :AsyncRun $(echo % \| sed 's/ms$/pdf/') <CR><CR>
+autocmd Filetype groff map <M-w> :! $(echo % \| sed 's/ms$/pdf/') <CR><CR>
 
 " C
 autocmd Filetype c map <M-g> :! gcc % -o $(echo % \| sed 's/.c$//') -lm <CR>

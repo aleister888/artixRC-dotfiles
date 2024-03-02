@@ -29,7 +29,6 @@ alias xdotool_table='xmodmap -pk'
 alias push='git add . && git commit && git push'
 alias du='BLOCKSIZE=1073741824 du -s * | sort -rnk 1'
 alias grub-update='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-alias screen_record='ffmpeg -y -video_size `xrandr | grep " connected" | awk "{print $4}" | cut -d+ -f1` -framerate 24 -f x11grab -i :0.0 -f pulse -i `pactl list short sources | grep "alsa_output.pci" | awk "{print $1}"` -sample_rate 48000 -ac 1 a.mp4'
 
 # Limpiar dependencias innecesarias
 alias cleanup='yay -Rcns $(yay -Qdtq) 2>/dev/null'
@@ -46,4 +45,4 @@ alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/
 alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
 
 # Alias para encontrar archivos pac de pacman
-alias pac='find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)'
+alias pac='find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
