@@ -1,9 +1,9 @@
 #!/bin/sh
 
-SONGART=$(playerctl -p tauon metadata mpris:artUrl 2>/dev/null | sed 's|file://||')
+SONGART=$(playerctl -p tauon metadata mpris:artUrl 2>/dev/null)
 
 if [ -z "$SONGART" ]; then
 	echo $XDG_CONFIG_HOME/eww/placeholder.png
 else
-	echo $SONGART
+	echo $SONGART | sed 's|file://||'
 fi
