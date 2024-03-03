@@ -19,8 +19,8 @@ case $chosen in
 	"${options[0]}") sleep 0.5; i3lock-fancy;;
 	"${options[1]}") loginctl suspend;;
 	"${options[2]}") pkill xinit;;
-	"${options[3]}") pkexec openrc-shutdown -r now;;
-	"${options[4]}") pkexec openrc-shutdown -p now;;
+	"${options[3]}") doas openrc-shutdown -r now;;
+	"${options[4]}") doas openrc-shutdown -p now;;
 	"${options[5]}") pkill dwm;;
-	"${options[6]}") pkexec wake;;
+	"${options[6]}") doas wake;;
 esac
