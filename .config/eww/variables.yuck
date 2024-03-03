@@ -1,7 +1,6 @@
 (defpoll music_title :interval "1s" "music title")
 (defpoll music_artist :interval "1s" "music artist")
-(defpoll music_art_url :interval "1s" "songart echo")
-(defpoll music_art :interval "1s" "songart get")
+(defpoll music_art_url :interval "1s" "songart")
 (defpoll music_status :interval "1s" "playerctl -p tauon status")
 
 (defpoll disk :interval "1s" "df --output=pcent / | tail -n 1 | tr -d '%' | xargs")

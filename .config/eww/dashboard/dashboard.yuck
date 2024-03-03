@@ -33,7 +33,6 @@
       (box :class "picture"
            :orientation "v"
            :style "background-image: url('${music_art_url}');"
-	   music_art
       )
     )
     (box :class "lastcol"
