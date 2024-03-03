@@ -38,13 +38,13 @@ IMG:$ICONPATH/apps/radiotray.svg					Radio
 
 IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
 	IMG:$ICONPATH/devices/audio-input-microphone.svg		Añadir/Quitar Micrófono	pipewire-virtualmic-select
-	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		pw-links Tauon
-	IMG:$ICONPATH/apps/librewolf.svg				Librewolf	pw-links Librewolf
-	IMG:$ICONPATH/apps/discord.svg					Discord		pw-links Discord
+	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		pw-links tauon
+	IMG:$ICONPATH/apps/firefox.svg					Firefox		pw-links firefox
+	IMG:$ICONPATH/apps/discord.svg					Discord		pw-links discord
 	IMG:$ICONPATH/apps/mpv.svg					mpv		pw-links mpv
-	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		pw-links REAPER
+	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		pw-links reaper
 	IMG:$ICONPATH/apps/tuxguitar.svg				Tuxguitar	pw-links tuxguitar
-	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	Máquina Virtual	pw-links lookingglass
+	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	Máquina Virtual	pw-links qemu
 
 IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
 	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar		tuxguitar

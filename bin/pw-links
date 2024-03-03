@@ -1,108 +1,37 @@
 #!/bin/sh
 
-# TODO: No usar wc -l para no hacer el script dependiente del setup que estes usando
-
-if [ "$1" = Tauon ]; then
-	if [ "$(pw-link --links -I | grep tauon | wc -l)" -gt "7" ]; then
-		pw-link -d tauon.py:output_FL my-combined-sink:playback_FL
-		pw-link -d tauon.py:output_FR my-combined-sink:playback_FR
-		notify-send -i tauonmb "Tauon Disconnected from Voice"
+share_toggle(){
+	case "$3" in
+		out)
+			out1="out1"
+			out2="out2" ;;
+		*)
+			out1="output_FL"
+			out2="output_FR" ;;
+	esac
+	if pw-link -P $1:$out1 my-combined-sink:playback_FL; then
+		pw-link -P $1:$out2 my-combined-sink:playback_FR
+		notify-send -i $2 "$1 conectado a voz"
 	else
-		pw-link tauon.py:output_FL my-combined-sink:playback_FL
-		if pw-link tauon.py:output_FR my-combined-sink:playback_FR; then
-			notify-send -i tauonmb "Tauon Connected to Voice"
-		else
-			notify-send -i tauonmb "Tauon Couldn't connect to Voice"
-		fi
+		pw-link -d $1:$out1 my-combined-sink:playback_FL
+		pw-link -d $1:$out2 my-combined-sink:playback_FR
+		notify-send -i $2 "$1 desconectado de voz"
 	fi
-fi
+}
 
-if [ "$1" = Librewolf ]; then
-	if [ "$(pw-link --links -I | grep LibreWolf | wc -l)" -gt "5" ]; then
-		pw-link -d LibreWolf:output_FL my-combined-sink:playback_FL
-		pw-link -d LibreWolf:output_FR my-combined-sink:playback_FR
-		notify-send -i librewolf "Librewolf Disonnected from Voice"
-	else
-		pw-link -P LibreWolf:output_FL my-combined-sink:playback_FL
-		if pw-link -P LibreWolf:output_FR my-combined-sink:playback_FR; then
-			notify-send -i librewolf "Librewolf Connected to Voice"
-		else
-			notify-send -i librewolf "Librewolf Couldn't connect to Voice"
-		fi
-	fi
-fi
-
-if [ "$1" = mpv ]; then
-	if [ "$(pw-link --links -I | grep mpv | wc -l)" -gt "5" ]; then
-		pw-link -d mpv:output_FL my-combined-sink:playback_FL
-		pw-link -d mpv:output_FR my-combined-sink:playback_FR
-		notify-send -i mpv "Mpv Disconnected from Voice"
-	else
-		pw-link -P mpv:output_FL my-combined-sink:playback_FL
-		if pw-link -P mpv:output_FR my-combined-sink:playback_FR; then
-			notify-send -i mpv "Mpv Connected to Voice"
-		else
-			notify-send -i mpv "Mpv Couldn't connect to Voice"
-		fi
-	fi
-fi
-
-if [ "$1" = REAPER ]; then
-	if [ "$(pw-link --links -I | grep REAPER | wc -l)" -gt "9" ]; then
-		pw-link -d REAPER:out1 my-combined-sink:playback_FL
-		pw-link -d REAPER:out2 my-combined-sink:playback_FR
-		notify-send -i cockos-reaper "REAPER Disconnected from Voice"
-	else
-		pw-link -P REAPER:out1 my-combined-sink:playback_FL
-		if pw-link -P REAPER:out2 my-combined-sink:playback_FR; then
-			notify-send -i cockos-reaper "REAPER Connected to Voice"
-		else
-			notify-send -i cockos-reaper "REAPER Couldn't connect to Voice"
-		fi
-	fi
-fi
-
-if [ "$1" = Discord ]; then
-	if [ "$(pw-link --links -I | grep Chromium | wc -l)" -gt "9" ]; then
-		pw-link -d Chromium:output_FL my-combined-sink:playback_FL
-		pw-link -d Chromium:output_FR my-combined-sink:playback_FR
-		notify-send -i discord "Discord Disconnected from Voice"
-	else
-		pw-link Chromium:output_FL my-combined-sink:playback_FL
-		if pw-link -P Chromium:output_FR my-combined-sink:playback_FR; then
-			notify-send -i discord "Discord Connected to Voice"
-		else
-			notify-send -i discord "Discord Couldn't connect to Voice"
-		fi
-	fi
-fi
-
-if [ "$1" = tuxguitar ]; then
-	if [ "$(pw-link --links -I | grep Java | wc -l)" -gt "5" ]; then
-		pw-link -d Java:output_FL my-combined-sink:playback_FL
-		pw-link -d Java:output_FR my-combined-sink:playback_FR
-		notify-send -i tuxguitar "Tuxguitar Disconnected from Voice"
-	else
-		pw-link -P Java:output_FL my-combined-sink:playback_FL
-		if pw-link -P Java:output_FR my-combined-sink:playback_FR; then
-			notify-send -i tuxguitar "Tuxguitar Connected to Voice"
-		else
-			notify-send -i tuxguitar "Tuxguitar Couldn't connect to Voice"
-		fi
-	fi
-fi
-
-if [ "$1" = lookingglass ]; then
-	if [ "$(pw-link --links -I | grep "Looking Glass" | wc -l)" -gt "5" ]; then
-		pw-link -d Looking\ Glass:output_FL my-combined-sink:playback_FL
-		pw-link -d Looking\ Glass:output_FR my-combined-sink:playback_FR
-		notify-send -i preferences-desktop-remote-desktop "Virtual Machine Disconnected from Voice"
-	else
-		pw-link -P Looking\ Glass:output_FL my-combined-sink:playback_FL
-		if pw-link -P Looking\ Glass:output_FR my-combined-sink:playback_FR; then
-			notify-send -i preferences-desktop-remote-desktop "Virtual Machine Connected to Voice"
-		else
-			notify-send -i preferences-desktop-remote-desktop "Tuxguitar Couldn't connect to Voice"
-		fi
-	fi
-fi
+case "$1" in
+  firefox)
+    share_toggle Firefox firefox ;;
+  tauon)
+    share_toggle tauon.py tauonmb ;;
+  discord)
+    share_toggle Chromium discord ;;
+  tuxguitar)
+    share_toggle Java tuxguitar ;;
+  mpv)
+    share_toggle mpv mpv ;;
+  qemu)
+    share_toggle win10 preferences-desktop-remote-desktop ;;
+  reaper)
+    share_toggle REAPER cockos-reaper out ;;
+esac
