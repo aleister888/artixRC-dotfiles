@@ -80,10 +80,9 @@ static const Rule rules[] = {
 	{ "Zim",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,   's'},
 	{ "Soffice",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,     0},
 	// Espacio 5: Chats
-	{ "WebCord",		NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
+	{ "discord",		NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
 	{ "TelegramDesktop",	NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
 	{ "TelegramDesktop","telegram-desktop","Media viewer",1 << 4,1,0,0,	-1,     0},
-	{ "revolt-desktop",	NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
 	// Espacio 6: Gaming y Virtualización
 	{ "Virt-manager",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},

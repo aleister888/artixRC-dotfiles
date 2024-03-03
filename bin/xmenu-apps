@@ -10,7 +10,7 @@ RADIOFLAG="$TERMTITLE scratchpad mpv"
 cat <<EOF | xmenu -r | /bin/sh &
 IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/$BROWSER.svg					$(echo $BROWSER | sed 's/^\(.\)/\U\1/')	$BROWSER
-	IMG:$ICONPATH/apps/discord.svg					Webcord			webcord
+	IMG:$ICONPATH/apps/discord.svg					Discord			discord
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
 	IMG:$ICONPATH/apps/telegram.svg					Telegram		Forkgram
@@ -45,6 +45,7 @@ IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
 	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		pw-links reaper
 	IMG:$ICONPATH/apps/tuxguitar.svg				Tuxguitar	pw-links tuxguitar
 	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	Máquina Virtual	pw-links qemu
+	IMG:$ICONPATH/apps/telegram.svg					Telegram	pw-links telegram
 
 IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
 	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar		tuxguitar

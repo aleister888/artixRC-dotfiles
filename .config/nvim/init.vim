@@ -22,6 +22,9 @@ nnoremap <leader>\ :s/\%#\([^[:space:]]\+\)/\\(\1\\)/g<CR>:noh<CR>
 nnoremap <leader>[ :s/\%#\([^[:space:]]\+\)/[\1]/g<CR>:noh<CR>
 nnoremap <leader>{ :s/\%#\([^[:space:]]\+\)/{\1}/g<CR>:noh<CR>
 
+" Tema de colores
+Plug 'morhetz/gruvbox'
+
 " Pre-visualización de colores
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 let g:Hexokinase_highlighters = [
@@ -55,6 +58,15 @@ set cursorline
 set incsearch
 set scrolloff=10
 set list
+
+" Tema de colores
+set background=dark
+set termguicolors
+colorscheme gruvbox
+hi Normal guibg=NONE ctermbg=NONE
+if !has('gui_running')
+  set t_Co=256
+endif
 
 " Activar/Desactivar sugerencias de entrada
 inoremap <F1> <C-O>:call CocToggle()<CR>
