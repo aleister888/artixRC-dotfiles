@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Obtener hora actual
+
+if [ $(date +%H) -ge 7 ]; then
+	day=tomorrow
+else
+	day=today
+fi
+
+[ "$(virsh list | wc -l)" -lt "4" ] && rtcwake -m mem -l -t "$(date -d "$day 07:00:00" '+%s')"
