@@ -40,7 +40,6 @@ IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
 	IMG:$ICONPATH/devices/audio-input-microphone.svg		Ajustar Mic.	pipewire-virtualmic-select
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		pw-links tauon
 	IMG:$ICONPATH/apps/firefox.svg					Firefox		pw-links firefox
-	IMG:$ICONPATH/apps/discord.svg					Discord		pw-links discord
 	IMG:$ICONPATH/apps/mpv.svg					mpv		pw-links mpv
 	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		pw-links reaper
 	IMG:$ICONPATH/apps/tuxguitar.svg				Tuxguitar	pw-links tuxguitar

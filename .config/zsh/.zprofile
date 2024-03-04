@@ -17,7 +17,7 @@ fi
 # Verificar si $LOCATION está definida:
 if [ -z "$LOCATION" ]; then
 	# Verificar la conexión a internet
-	if ping -q -c 1 -W 1 google.com >/dev/null; then
+	if ping -q -c 1 -W 1 gnu.org >/dev/null; then
 		# Si hay conexión a internet, asignar el valor utilizando curl y jq
 		export LOCATION=$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"' &)
 	else

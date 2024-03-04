@@ -22,8 +22,6 @@ case "$1" in
     share_toggle Firefox firefox ;;
   tauon)
     share_toggle tauon.py tauonmb ;;
-  discord)
-    share_toggle Chromium discord ;;
   tuxguitar)
     share_toggle Java tuxguitar ;;
   mpv)
