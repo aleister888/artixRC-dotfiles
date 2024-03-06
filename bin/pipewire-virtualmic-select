@@ -7,33 +7,32 @@ ICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
 
 # Vincular dispositivo con el micrófono virtual
 device_add(){
+local sink1=my-combined-sink:playback_FL
+local sink2=my-combined-sink:playback_FR
 devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
 # Elegir fuente desde dmenu
 selected_device=$(echo "$devices" | dmenu -p "Select an input device to add:" -l 14 )
 [ -z "$selected_device" ] && exit 255
-local sink1=my-combined-sink:playback_FL
-local sink2=my-combined-sink:playback_FR
-action=$( echo "$sink1\n$sink2\nBoth" | dmenu -p "Select an virtual-sink:" -l 3 )
-[ -z "$action" ] && exit 255
-if [ "$action" = "Both" ]; then
-	pw-link "$selected_device" "$sink1" && \
-	pw-link "$selected_device" "$sink2" && \
-	notify-send -i "$ICON" "Añadido correctamente"
+pw-link "$selected_device" "$sink1"
+sink1_code=$?
+pw-link "$selected_device" "$sink2"
+sink2_code=$?
+if [ $sink1_code -eq 0 ] && [ $sink2_code -eq 0 ]; then
+notify-send -i "$ICON" "Dispositivo añadido correctamente"
 else
-	pw-link "$selected_device" "$action" && \
-	notify-send -i "$ICON" "Añadido correctamente"
+notify-send -i "$ICON" "Hubo un fallo al añadir el dispositivo"
 fi
 }
 
 # Desvincular dispositivo con el micrófono virtual
 device_remove(){
-devices=$(pw-link -l | grep "my-combined-sink" -B 1 | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | sed 's/[[:space:]]*|[[:space:]]*<-[[:space:]]*//g' | sort | uniq)
+devices=$(pw-link -l | grep "my-combined-sink" -A 1 | grep -e '<-' | awk '{print $2}' | grep -v "my-combined-sink" | sort -u)
 [ -z "$devices" ] && exit 255
 selected_device=$(echo "$devices" | dmenu -p "Select an input device to remove:" -l 4 )
 [ -z "$selected_device" ] && exit 255
 $(pw-link -d "$selected_device" my-combined-sink:playback_FR 2>/dev/null;
 pw-link -d "$selected_device" my-combined-sink:playback_FL 2>/dev/null) && \
-notify-send -i $ICON "Borrado correctamente"
+notify-send -i $ICON "Dispositivo borrado correctamente"
 }
 
 # Elegir si borrar conexión ya existente o vincular nuevo micrófono

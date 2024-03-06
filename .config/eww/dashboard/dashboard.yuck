@@ -149,10 +149,10 @@
 )
 
 (defwindow dashboard
-  :geometry (geometry :x "32px"
-                      :y "140px"
-                      :width "600px"
-                      :anchor "top left")
+  :geometry (geometry :width "12.5%"
+                      :height "70%"
+                      :x "2.5%"
+                      :anchor "center left")
   :wm-ignore true
   :type "normal"
   (dashboard))
