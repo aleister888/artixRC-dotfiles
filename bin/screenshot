@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME="$(date +"%e%m%Y_%H%M%S").jpg"
+NAME="$(date +"%d%m%Y_%H%M%S").jpg"
 SCRENDIR="$HOME/Pictures/Screenshots"
 FILE="$SCRENDIR/$NAME"
 

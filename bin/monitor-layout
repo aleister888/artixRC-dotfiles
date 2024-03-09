@@ -1,39 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-XRANDR=$(which xrandr)
-MONITORS=( $($XRANDR | awk '/connected/ { print $1 }') )
+XRANDR=$(command -v xrandr)
+MONITORS=($($XRANDR | awk '/ connected/ { print $1 }'))
 NUM_MONITORS=${#MONITORS[@]}
-TITLES=()
-COMMANDS=()
+TITLES=("Cancel")
+COMMANDS=("true")
 
 gen_xrandr_only() {
     selected=$1
     cmd="xrandr --output ${MONITORS[$selected]} --auto "
-    for entry in $(seq 0 $((${NUM_MONITORS}-1)))
-    do
+    for entry in "${!MONITORS[@]}"; do
         if [ $selected != $entry ]; then
-            cmd="$cmd --output ${MONITORS[$entry]} --off"
+            cmd+="--output ${MONITORS[$entry]} --off "
         fi
     done
-    echo $cmd
+    echo "$cmd"
 }
 
-index=0
-TITLES[$index]="Cancel"
-COMMANDS[$index]="true"
-((index++))
+index=1
 
-for ((entry=0; entry<NUM_MONITORS; entry++))
-do
+for ((entry=0; entry<NUM_MONITORS; entry++)); do
     TITLES[$index]="Only ${MONITORS[$entry]}"
     COMMANDS[$index]=$(gen_xrandr_only $entry)
     ((index++))
 done
 
-for ((entry_a=0; entry_a<NUM_MONITORS; entry_a++))
-do
-    for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++))
-    do
+for ((entry_a=0; entry_a<NUM_MONITORS; entry_a++)); do
+    for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++)); do
         if [ $entry_a != $entry_b ]; then
             TITLES[$index]="Dual Screen ${MONITORS[$entry_a]} -> ${MONITORS[$entry_b]}"
             COMMANDS[$index]="xrandr --output ${MONITORS[$entry_a]} --auto \
@@ -43,10 +36,8 @@ do
     done
 done
 
-for ((entry_a=0; entry_a<NUM_MONITORS; entry_a++))
-do
-    for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++))
-    do
+for ((entry_a=0; entry_a<NUM_MONITORS; entry_a++)); do
+    for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++)); do
         if [ $entry_a != $entry_b ]; then
             TITLES[$index]="Clone Screen ${MONITORS[$entry_a]} -> ${MONITORS[$entry_b]}"
             COMMANDS[$index]="xrandr --output ${MONITORS[$entry_a]} --auto \
@@ -57,9 +48,8 @@ do
 done
 
 gen_entries() {
-    for a in $(seq 0 $(( ${#TITLES[@]} -1 )))
-    do
-        echo $a ${TITLES[a]}
+    for a in "${!TITLES[@]}"; do
+        echo "$a ${TITLES[a]}"
     done
 }
 

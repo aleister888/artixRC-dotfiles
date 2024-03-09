@@ -14,7 +14,6 @@ static const int sidepad                 = gappx;   // Separación horizontal de
 static const int user_bh                 = gappx;   // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;       // Pixeles de cercanía para pegarse al borde (0 = desactivado)
 static const unsigned int systraypinning = 0;       // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
-static const unsigned int systrayonleft  = 0;       // Posición de la barra de tareas (0: Esquina derecha, >0 Izquierda del estado)
 static const unsigned int systrayspacing = gappx/2+2; // Espaciado de la barra de tareas
 static const int systraypinningfailfirst = 1;       // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
 static const int showsystray             = 1;       // ¿Barra de tareas? (0: Desactivada)
@@ -199,7 +198,7 @@ static const Key keys[] = {
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
 	// Configurar pantallas
-	{ MODKEY,                       XK_F1,     spawn,            SHCMD("monitor-layout") },
+	{ MODKEY,                       XK_F1,     spawn,            SHCMD("monitor-layout && nitrogen --restore") },
 	{ MODKEY|ShiftMask,             XK_F1,     spawn,            SHCMD("arandr") },
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
