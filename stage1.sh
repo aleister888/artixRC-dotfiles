@@ -57,7 +57,7 @@ elif [ "$HOME_DISK_COUNT" -gt 1 ]; then
 	HOME_PARTITIONS=$(echo "$HOME_DISK_STRUCT" | tr '\n' ' ')
 	declare -a HOME_PARTITIONS_ARRAY=()
 	for HOME_PARTITION in $HOME_PARTITIONS; do
-		SIZE=$(lsblk -o size -b /dev/"$HOME_PARTITION" | tail -n 1)
+		SIZE=$(lsblk -o size /dev/"$HOME_PARTITION" | tail -n 1)
 		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$SIZE")
 	done
 	HOME_SELECTED_PARTITION=$(whip_menu "Elegir Partición" \
