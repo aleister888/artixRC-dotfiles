@@ -153,6 +153,8 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+	# Descargar mirrorlist
+	wget -O /etc/pacman.d/mirrorlist-arch "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on"
 
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
