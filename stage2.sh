@@ -240,6 +240,10 @@ if arch_support; then
 	whip_msg "Pacman" "Los repositorios de Arch fueron activados correctamente"
 fi
 
+if services_install; then
+	whip_msg "Servicios" "Los servicios se configuraron correctamente"
+fi
+
 if user_create; then
 	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
 fi
