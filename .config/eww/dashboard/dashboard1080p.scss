@@ -1,0 +1,233 @@
+.dashboard {
+  background-color: $bg;
+  color: $fg;
+  padding: 9px;
+}
+
+.timebox {
+  all: unset;
+  background-color: $bgSecondary;
+  border-radius: 12px;
+  padding: 6px;
+  .time-container {
+    .content {
+      font-family: Iosevka Nerd Font;
+      font-weight: bolder;
+      font-size: 56px;
+    }
+  }
+  .date-container {
+    font-family: Iosevka Nerd Font;
+    font-weight: normal;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+}
+
+.profile {
+  all: unset;
+  background-color: $bgSecondary;
+  border-radius: 12px;
+  padding: 6px;
+  .lastcol {
+    font-family: Iosevka Nerd Font;
+    margin-left: 6px;
+    margin-bottom: 3px;
+    .username {
+      font-size: 24px;
+      font-weight: bolder;
+    }
+    .uptime, .hostname {
+      font-family: Iosevka Nerd Font;
+      font-weight: bolder;
+    }
+    .hostname {
+      color: $blue;
+      font-size: 16px;
+    }
+    .uptime {
+      color: $lightblack;
+      font-size: 12px;
+    }
+  }
+}
+
+.controls {
+  all: unset;
+  background-color: $bgSecondary;
+  border-radius: 12px;
+  padding: 6px;
+  .header {
+    font-family: Iosevka Nerd Font;
+    color: $lightblack;
+    font-size: 4px;
+  }
+  .content {
+    padding: 6px 0px;
+    .disk-slider {
+      .disk-label {
+        font-family: Iosevka Nerd Font;
+        font-size: 16px;
+        margin-bottom: -6px;
+        margin-right: 9px;
+        margin-left: -2px;
+        color: $fg;
+      }
+      & progressbar trough {
+        all: unset;
+        border-radius: 4px;
+        background-color: $black;
+        margin-left: 4px;
+        margin-bottom: 6px;
+        min-height: 11px;
+        min-width: 230px;
+        & progress {
+          all: unset;
+          min-height: 11px;
+          background-color: $red;
+          color: #000000;
+          border-radius: 4px;
+        }
+      }
+    }
+    .vol-slider {
+      .vol-label {
+        font-family: Iosevka Nerd Font;
+        font-size: 18px;
+        margin-right: 7px;
+        margin-left: -1px;
+        margin-bottom: 5px;
+        color: $fg;
+      }
+      & scale trough {
+        all: unset;
+        border-radius: 4px;
+        background-color: $black;
+        margin-left: 4px;
+        margin-bottom: 6px;
+        min-height: 11px;
+        min-width: 230px;
+        & highlight {
+          all: unset;
+          background-color: $cyan;
+          color: #000000;
+          border-radius: 4px;
+        }
+      }
+      margin-bottom: 3px;
+    }
+    .mic-label {
+      font-family: Iosevka Nerd Font;
+      font-size: 16px;
+      margin-right: 8px;
+      margin-bottom: 4px;
+      color: $fg;
+    }
+    .mic-slider {
+      & scale trough {
+        all: unset;
+        border-radius: 4px;
+        background-color: $black;
+        margin-left: 4px;
+        margin-bottom: 6px;
+        min-height: 11px;
+        min-width: 230px;
+        & highlight {
+          all: unset;
+          background-color: $yellow;
+          color: #000000;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+}
+
+.music-box {
+  all: unset;
+  background-color: $bgSecondary;
+  border-radius: 12px;
+  padding: 6px;
+  .firstcol {
+    .picture {
+      all: unset;
+      margin: 4px;
+      min-height: 128px;
+      min-width: 128px;
+      border-radius: 12px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+  }
+  .lastcol {
+    .title {
+      all: unset;
+      font-family: Iosevka Nerd Font;
+      font-size: 18px;
+      font-weight: bolder;
+      margin-top: 24px;
+      margin-right: 6px;
+    }
+    .artist {
+      all: unset;
+      font-family: Iosevka Nerd Font;
+      font-size: 12px;
+      color: $lightblack;
+    }
+    .music-controls {
+      all: unset;
+      transition: all ease .3s;
+      button {
+        font-family: Symbols Nerd Font;
+        font-size: 16px;
+        padding: 6px;
+        border-radius: 12px;
+        &:hover { background-color: $black; }
+        &:active { background-color: $bg; }
+      }
+      .pause {
+        font-family: Symbols Nerd Font;
+        font-size: 24px;
+      }
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.cal-box {
+  all: unset;
+  border-radius: 12px;
+  background-color: $bgSecondary;
+  padding: 6px;
+  color: $fg;
+  background-color: $bgSecondary;
+
+  .cal {
+    font-family: Iosevka Nerd Font;
+    font-size: 18px;
+    padding: 0.1rem 0.025rem;
+  }
+}
+
+calendar:selected {
+  color: $cyan;
+}
+
+calendar.header {
+  color: $cyan;
+  font-weight: bold;
+}
+
+calendar.button {
+  color: $cyan;
+}
+
+calendar.highlight {
+  color: $green;
+  font-weight: bold;
+}
+
+calendar:indeterminate {
+  color: $lightblack;
+}

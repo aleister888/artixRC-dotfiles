@@ -10,16 +10,49 @@ done
 
 pkill eww
 
+# Función para ajustar el tamaño del widget de eww y abrirlo
+# si solo hay un monitor y ninguna ventana abierta
 ewwspawn(){
 	while true; do
+	# Contamos el numero de monitores activos
 	local monitors=$(xrandr --listmonitors | grep -c " .:")
-
+	# Definir el archivo al que apunta el enlace simbólico actual
+	current_link=$(readlink -f "$HOME/.config/eww/dashboard.scss")
+	
+	# Definir los archivos de los que se crearán los enlaces simbólicos
+	file_1080="$HOME/.dotfiles/.config/eww/dashboard/dashboard1080p.scss"
+	file_1440="$HOME/.dotfiles/.config/eww/dashboard/dashboard1440p.scss"
+	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
+	
+	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
+	resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
+	
+	# Verificar y crear enlaces simbólicos según los rangos de resolución
+	if [[ $resolution -le 1080 ]]; then
+		if [[ "$current_link" != "$file_1080" ]]; then
+			ln -sf "$file_1080" "$HOME/.config/eww/dashboard.scss"
+		fi
+	elif [[ $resolution -le 1440 ]]; then
+		if [[ "$current_link" != "$file_1440" ]]; then
+			ln -sf "$file_1440" "$HOME/.config/eww/dashboard.scss"
+		fi
+	else
+		if [[ "$current_link" != "$file_2160" ]]; then
+			ln -sf "$file_2160" "$HOME/.config/eww/dashboard.scss"
+		fi
+	fi
+	
+	# Cerrar el widget si hay mas de un monitor en uso
 	if [ "$monitors" -gt 1 ] || [ "$(xdotool getactivewindow)" ]; then
 		pkill eww
+	# Invocar nuestro widget solo si hay un monitor, niguna ventana activa
+	# y eww no esta ya en ejecución
 	elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
+		# Ajustar widget en función de la resolución
 		eww open dashboard &
 	fi
-		sleep 0.05;
+	# Esperar antes de ejecutar el bucle otra vez
+	sleep 0.05;
 	done
 
 	exit 0
