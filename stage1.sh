@@ -1,4 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Instalar whiptail y parted
+pacman -Sy --noconfirm --needed parted libnewt >/dev/null
+
+# Detectar si el sitema es UEFI o BIOS.
+if [ ! -d /sys/firmware/efi ]; then
+	PART_TYPE='msdos' # MBR para BIOS
+else
+	PART_TYPE='gpt' # GPT para UEFI
+fi
 
 whip_msg(){
 	whiptail --title "$1" --msgbox "$2" 10 60
@@ -8,163 +18,183 @@ whip_yes(){
 	whiptail --title "$1" --yesno "$2" 10 60
 }
 
-# Instalr whiptail y parted
-pacman -Sy --noconfirm --needed parted libnewt >/dev/null 2>&1
+whip_menu(){
+	local TITLE=$1
+	local MENU=$2
+	shift 2
+	whiptail --title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
+}
 
-# Elegir el tipo de partición
-fs_type=$(whiptail --title "Selecciona el sistema de archivos" \
-	--menu "Selecciona el sistema de archivos para formatear los discos:" 15 60 2 \
-	"ext4" "Ext4" "btrfs" "Btrfs" 3>&1 1>&2 2>&3)
+home_setup(){
+# Elegimos el disco para "/home" (Excluimos de la lista el disco ya elegido para "/").
+HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
+"$(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | grep -v "$INSTALL_DISK" | tr '\n' ' ')")
 
-# Listar los discos disponibles
-disk=$(whiptail --title "Selecciona un disco para formatear" \
-	--menu "Discos disponibles:" 15 60 4 \
-	$(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | tr '\n' ' ') 3>&1 1>&2 2>&3)
-
-# Confirmar los cambios
-if [ $? -ne 0 ]; then
-	whip_msg "Operación cancelada" "No se ha seleccionado ningún disco. La operación ha sido cancelada."
-	exit 1
-fi
-
-# Confirmar con Whiptail los cambios
-if ! whip_yes "Confirmar formateo" "Estás seguro de que quieres formatear $disk?"; then
-	whip_msg "Operación cancelada" "El formateo ha sido cancelado."
-	exit 1
-fi
-
-# Preguntamos al usuario si ya tiene un disco para su partición /home
-if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
-	# Preguntamos cúal es ese disco
-	home_disk=$(whiptail --title "Selecciona un disco para /home" \
-		--menu "Discos disponibles:" 15 60 4 \
-		$(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | tr '\n' ' ') \
-		3>&1 1>&2 2>&3)
-	# Preguntamos si queremos formatear el disco /home o solo montarlo tal como está
-	if whip_yes "Partición /home" "¿Desea re-formatear el disco dedicado para su partición /home? (Seleccionar 'No' montará el disco tal y como está en /mnt/home)"; then
-		if whip_yes "Partición /home" "¿Está seguro, esto borrara toda la información en $home_disk?"; then
-			home_format=true
-		fi
-	fi
-fi
-
-# Formatear el disco seleccionado
-whiptail --title "Formateando disco" --infobox "Formateando disco $disk..." 10 60
-
-if [ ! -d /sys/firmware/efi ]; then
-	part_type='msdos' # MBR para BIOS
-else
-	part_type='gpt' # GPT para UEFI
-fi
-
-# The idea for defining partitions like this was taken from:
-# https://github.com/Zaechus/artix-installer/blob/main/install.sh
-
-# Definimos nuestras particiones
-case "$disk" in
+# Comprobamos que este disco tenga almenos una partición creada.
+case "$HOME_DISK" in
 *"nvme"*)
-	part1="$disk"p1
-	part2="$disk"p2
-	part3="$disk"p3
+	HOME_DISK_STRUCT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep -o 'nvme.n.p[0-9]*')
+	HOME_DISK_COUNT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep -oc 'nvme.n.p[0-9]*')
 	;;
 *)
-	part1="$disk"1
-	part2="$disk"2
-	part3="$disk"3
+	HOME_DISK_STRUCT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep '[0-9]')
+	HOME_DISK_COUNT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep -c '[0-9]')
 	;;
 esac
 
-# Creamos una partición /boot o /boot/efi dependiendo
-# de si estamos en un sistema UEFI o no
-if [ "$part_type" == "msdos" ]; then
+case "$HOME_DISK" in
+	*"nvme"*)
+		HOME_SELECTED_PARTITION="$HOME_DISK"p1 ;;
+	*)
+		HOME_SELECTED_PARTITION="$HOME_DISK"1 ;;
+esac
+
+# Si no hay niguna partición ya creada preguntamos al usuario que tipo de partición quiere y la creamos.
+if [ "$HOME_DISK_COUNT" -lt 1 ]; then
+	home_partition
+# Si ya hay más de una partición presente, se pide al usuario que escoga que partición usar.
+elif [ "$HOME_DISK_COUNT" -gt 1 ]; then
+	HOME_PARTITIONS=$(echo "$HOME_DISK_STRUCT" | tr '\n' ' ')
+	declare -a HOME_PARTITIONS_ARRAY=()
+	for HOME_PARTITION in $HOME_PARTITIONS; do
+		SIZE=$(lsblk -o size -b /dev/"$HOME_PARTITION" | tail -n 1)
+		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$SIZE")
+	done
+	HOME_SELECTED_PARTITION=$(whip_menu "Elegir Partición" \
+	"Eliga cual partición de $HOME_DISK desea usar para /home:" ${HOME_PARTITIONS_ARRAY[@]})
+# Si hay una sola partición ya creada en el disco duro se utilizara esta.
+fi
+}
+
+home_partition(){
+HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
+	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
+if [ "$PART_TYPE" == "msdos" ]; then
 	# BIOS -> MBR
-	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/$disk
-	mkfs.ext4 "/dev/$part1"
+	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/"$HOME_DISK"
 else
 	# EUFI -> GPT
-	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/$disk
-	mkfs.fat -F32 "/dev/$part1"
+	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/"$HOME_DISK"
+fi
+if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
+	mkfs.ext4 "/dev/$HOME_SELECTED_PARTITION"
+elif [ "$HOME_FILESYSTEM" = "btrfs" ]; then
+	mkfs.btrfs -f "/dev/$HOME_SELECTED_PARTITION"
+elif [ "$HOME_FILESYSTEM" = "xfs" ]; then
+	pacman -Sy --noconfirm --needed xfsprogs
+	mkfs.xfs "/dev/$HOME_SELECTED_PARTITION"
+fi
+}
+
+disk_setup(){
+# Elegir el tipo de partición para "/".
+INSTALL_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para la instalación:" \
+	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
+
+# Elegir el disco duro para la instalación.
+INSTALL_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalación:" \
+	"$(lsblk -d -o name,size,type | grep "disk" | awk '{print $1 " " $2}' | tr '\n' ' ')" )
+
+# Confirmar los cambios.
+if [ -z "$INSTALL_DISK" ] || [ -z "$INSTALL_FILESYSTEM" ] || \
+! whip_yes "Confirmación" "¿Estás seguro? Se borrarán todos los datos en $INSTALL_DISK."; then
+	whip_msg "Operación Cancelada" "La instalación ha sido cancelada."
+	exit 1
 fi
 
-# Crear partición swap de 4GB
-parted -s "/dev/$disk" mkpart primary linux-swap 513MiB 4.5GB
-mkswap "/dev/$part2"
-swapon "/dev/$part2"
+if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
+	home_setup
+fi
+}
 
-# Crear partición / y /home
-if [ "$fs_type" = "ext4" ]; then
-	parted -s "/dev/$disk" mkpart primary ext4 4.5GB 100%
-	mkfs.ext4 "/dev/$part3"
-elif [ "$fs_type" = "btrfs" ]; then
-	# Partición primaria / BTRFS
-	parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
-	mkfs.btrfs -f "/dev/$part3"
-	
-	# Crear subvolúmenes para / y /home
-	mount "/dev/$part3" /mnt
+disk_partition(){
+# Definimos las particiones que usara el auto-particionador.
+case "$INSTALL_DISK" in
+*"nvme"*)
+	PART1="$INSTALL_DISK"p1
+	PART2="$INSTALL_DISK"p2
+	PART3="$INSTALL_DISK"p3
+	;;
+*)
+	PART1="$INSTALL_DISK"1
+	PART2="$INSTALL_DISK"2
+	PART3="$INSTALL_DISK"3
+	;;
+esac
+
+# Creamos nuestras tablas de particiones y formateamos acordemente nuestra partición de arranque.
+if [ "$PART_TYPE" == "msdos" ]; then
+	# BIOS -> MBR
+	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/"$INSTALL_DISK"
+	mkfs.ext4 "/dev/$PART1"
+else
+	# EUFI -> GPT
+	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/"$INSTALL_DISK"
+	mkfs.fat -F32 "/dev/$PART1"
+fi
+
+# Creamos nuestra partición SWAP.
+parted -s "/dev/$INSTALL_DISK" mkpart primary linux-swap 513MiB 4.5GB
+mkswap "/dev/$PART2"
+swapon "/dev/$PART2"
+
+# Creamos nuestra partición "/" y "/home".
+if [ "$INSTALL_FILESYSTEM" = "ext4" ]; then
+	parted -s "/dev/$INSTALL_DISK" mkpart primary ext4 4.5GB 100%
+	mkfs.ext4 "/dev/$PART3"
+elif [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
+	parted -s "/dev/$INSTALL_DISK" mkpart primary btrfs 4.5GB 100%
+	mkfs.btrfs -f "/dev/$PART3"
+	mount "/dev/$PART3" /mnt
 	btrfs subvolume create /mnt/@
-	# Creamos el subvolúmen @home si no se eleigio un disco para /home
-	[ -z "$home_disk" ] && btrfs subvolume create /mnt/@home
-	umount /mnt
-	
-fi
-
-# Montar particiones
-# Si no se eleigió un disco para /home, montar las particiones normalmente
-if [ -z $home_disk ]; then
-	if [ "$fs_type" = "ext4" ]; then
-		mount -o noatime "/dev/$part3" /mnt
-	elif [ "$fs_type" = "btrfs" ]; then
-		# Montar subvolúmenes
-		mount -o noatime,compress=zstd,subvol=@ "/dev/$part3" /mnt
-		mkdir -p /mnt/home
-		mount -o noatime,compress=zstd,subvol=@home "/dev/$part3" /mnt/home
-	fi
-else
-# Si se eleigió un disco para /home:
-#  - Montarlo en /mnt/home, si no se requiere formatearlo
-	if [ -z $home_format ]; then
-		if [ "$fs_type" = "ext4" ]; then
-			mount -o noatime "/dev/$part3" /mnt
-		elif [ "$fs_type" = "btrfs" ]; then
-			mount -o noatime,compress=zstd,subvol=@ "/dev/$part3" /mnt
-		fi
-		mkdir -p /mnt/home
-		mount $home_disk /mnt/disk
-#  - Formatearlo y montarlo en /mnt/home si se eligió así
+	# Se crea el subvolumen @home si no hay un disco para "/home".
+	if [ -n "$HOME_SELECTED_PARTITION" ]; then
+		umount /mnt
 	else
-		if [ "$fs_type" = "ext4" ]; then
-			# Formatear disco /home
-			# PLACEHOLDER
-			mount -o noatime "/dev/$part3" /mnt
-			mkdir -p /mnt/home
-			mount -o noatime "/dev/$home_disk" /mnt/home
-		elif [ "$fs_type" = "btrfs" ]; then
-			# Formatear disco /home
-			# PLACEHOLDER
-			mount -o noatime,compress=zstd,subvol=@ "/dev/$part3" /mnt
-			mkdir -p /mnt/home
-			mount -o noatime,compress=zstd "/dev/$home_disk" /mnt/home
-		fi
+		btrfs subvolume create /mnt/@home
+		umount /mnt
+	fi
+elif [ "$INSTALL_FILESYSTEM" = "xfs" ]; then
+	pacman -Sy --noconfirm --needed xfsprogs
+	parted -s "/dev/$INSTALL_DISK" mkpart primary xfs 4.5GB 100%
+	mkfs.xfs "/dev/$PART3"
+fi
+}
+
+partition_mount(){
+# Creamos nuestra carpeta para la partición de arranque y la montamos.
+if [ "$PART_TYPE" == "msdos" ]; then
+	BOOT_PART="/mnt/boot"
+else
+	BOOT_PART="/mnt/boot/efi"
+fi
+mkdir -p "$BOOT_PART"
+mount "/dev/$PART1" "$BOOT_PART"
+# Montamos nuestras particiones "/" y "/home".
+if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
+	mount -o noatime,compress=zstd,subvol=@ "/dev/$PART3" /mnt
+	mkdir -p /mnt/home
+	if [ -n "$HOME_SELECTED_PARTITION" ]; then
+		mount -o noatime /dev/"$HOME_SELECTED_PARTITION" /mnt/home
+	else
+		mount -o noatime,compress=zstd,subvol=@home "/dev/$PART3" /mnt/home
+	fi
+else
+	mount -o noatime "/dev/$PART3" /mnt
+	if [ -n "$HOME_SELECTED_PARTITION" ]; then
+		mkdir -p /mnt/home
+		mount -o noatime /dev/"$HOME_SELECTED_PARTITION" /mnt/home
 	fi
 fi
+}
 
-
-if [ "$part_type" == "msdos" ]; then
-	boot_part="/mnt/boot"
-else
-	boot_part="/mnt/boot/efi"
+# Hemos terminado de formatear nuestros discos, vamos a proceder a instalar el sistema operativo
+if disk_setup && disk_partition && partition_mount; then
+	whip_msg "Formateo completado" "El formateo ha sido completado."
 fi
-mkdir -p "$boot_part"
-mount "/dev/$part1" "$boot_part"
 
-whiptail --title "Formateo completado" --msgbox "El formateo ha sido completado." 10 60
-
-# Instalar paquetes con basestrap (fstab se genera automaticamente)
+# Instalar paquetes con basestrap
 basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
-
-# Configurar Opendoas
-echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 
@@ -175,5 +205,7 @@ mount --bind /dev /mnt/dev
 mount --bind /dev/pts /mnt/dev/pts
 mount --bind /dev/shm /mnt/dev/shm
 mount --bind /run /mnt/run
+
+# Hacer chroot y ejecutar la 2a parte del script
 
 chroot /mnt bash -c "curl -s https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh | bash"
