@@ -147,8 +147,12 @@ elif [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 	mount "/dev/$PART3" /mnt
 	btrfs subvolume create /mnt/@
 	# Se crea el subvolumen @home si no hay un disco para "/home".
-	[ -n "$HOME_SELECTED_PARTITION" ] || btrfs subvolume create /mnt/@home
-	umount /mnt
+	if [ -n "$HOME_SELECTED_PARTITION" ]; then
+		umount /mnt
+	else
+		btrfs subvolume create /mnt/@home
+		umount /mnt
+	fi
 elif [ "$INSTALL_FILESYSTEM" = "xfs" ]; then
 	pacman -Sy --noconfirm --needed xfsprogs
 	parted -s "/dev/$INSTALL_DISK" mkpart primary xfs 4.5GB 100%
