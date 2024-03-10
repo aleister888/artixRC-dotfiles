@@ -34,7 +34,7 @@ fi
 
 # Establecer zona horaria
 timezoneset(){
-	valid_timezone = false
+	valid_timezone=false
 	while [ "$valid_timezone" = false ]; do
 		# Obtener la lista de regiones disponibles
 		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort -u | grep -v "right")
