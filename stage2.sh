@@ -34,29 +34,34 @@ fi
 
 # Establecer zona horaria
 timezoneset(){
-# Obtener la lista de regiones disponibles
-	regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort | uniq | grep -v "right")
-	# Vamos a hacer un array para las posibles regiones
-	regions_array=()
-	for region in $regions; do
-		regions_array+=("$region" "$region")
+	while [ "$valid_timezone" == false ]; do # Volver a empezar si cancelamos el proceso en algún punto
+		# Obtener la lista de regiones disponibles
+		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort | uniq | grep -v "right")
+		# Vamos a hacer un array para las posibles regiones
+		regions_array=()
+		for region in $regions; do
+			regions_array+=("$region" "$region")
+		done
+		# Elegir región
+		region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+		# Obtener la lista de zonas horarias disponibles para la región seleccionada
+		timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
+		timezones_array=()
+		for timezone in $timezones; do
+			timezones_array+=("$timezone" "$timezone")
+		done
+		# Elegida nuestra región, vamos a elegir ahora nuestra zona horaria
+		timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
+		# Verificar si la zona horaria seleccionada es válida
+		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+			valid_timezone=true
+		else
+			whip_msg "Zona horaria no válida" "Zona horaria no válida. Asegúrate de elegir una zona horaria válida."
+		fi
 	done
-	# Elegir región
-	region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
-	# Obtener la lista de zonas horarias disponibles para la región seleccionada
-	timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
-	timezones_array=()
-	for timezone in $timezones; do
-		timezones_array+=("$timezone" "$timezone")
-	done
-	# Elegida nuestra región, vamos a elegir ahora nuestra zona horaria
-	timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
-	# Verificar si la zona horaria seleccionada es válida
-	if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
 		ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
-	fi
-	# Sincronizar reloj del hardware con la zona horaria
-	hwclock --systohc
+		# Sincronizar reloj del hardware con la zona horaria
+		hwclock --systohc
 }
 
 # Configurar la codificación del sistema
