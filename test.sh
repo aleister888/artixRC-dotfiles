@@ -50,7 +50,7 @@ case "$HOME_DISK" in
 esac
 
 # Si no hay niguna partición ya creada preguntamos al usuario que tipo de partición quiere y la creamos.
-if [ -z $HOME_DISK_COUNT ]; then
+if [ $HOME_DISK_COUNT -lt 1 ]; then
 	home_partition
 # Si ya hay más de una partición presente, se pide al usuario que escoga que partición usar.
 elif [ $HOME_DISK_COUNT -gt 1 ]; then
