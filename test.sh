@@ -133,25 +133,25 @@ else
 fi
 
 # Creamos nuestra partición SWAP.
-parted -s "/dev/$disk" mkpart primary linux-swap 513MiB 4.5GB
+parted -s "/dev/$INSTALL_DISK" mkpart primary linux-swap 513MiB 4.5GB
 mkswap "/dev/$PART2"
 swapon "/dev/$PART2"
 
 # Creamos nuestra partición "/" y "/home".
 if [ "$INSTALL_FILESYSTEM" = "ext4" ]; then
-	parted -s "/dev/$disk" mkpart primary ext4 4.5GB 100%
-	mkfs.ext4 "/dev/$part3"
+	parted -s "/dev/$INSTALL_DISK" mkpart primary ext4 4.5GB 100%
+	mkfs.ext4 "/dev/$PART3"
 elif [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
-	parted -s "/dev/$disk" mkpart primary btrfs 4.5GB 100%
-	mkfs.btrfs -f "/dev/$part3"
-	mount "/dev/$part3" /mnt
+	parted -s "/dev/$INSTALL_DISK" mkpart primary btrfs 4.5GB 100%
+	mkfs.btrfs -f "/dev/$PART3"
+	mount "/dev/$PART3" /mnt
 	btrfs subvolume create /mnt/@
 	# Se crea el subvolumen @home si no hay un disco para "/home".
 	[ -n "$HOME_SELECTED_PARTITION" ] && btrfs subvolume create /mnt/@home
 	umount /mnt
 elif [ "$INSTALL_FILESYSTEM" = "xfs" ]; then
 	pacman -Sy --noconfirm --needed xfsprogs
-	mkfs.xfs "/dev/$part3"
+	mkfs.xfs "/dev/$PART3"
 fi
 }
 
