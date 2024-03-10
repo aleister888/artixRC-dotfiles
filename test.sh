@@ -168,8 +168,8 @@ mount "/dev/$PART1" "$BOOT_PART"
 # Montamos nuestras particiones "/" y "/home".
 if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 	mount -o noatime,compress=zstd,subvol=@ "/dev/$PART3" /mnt
+	mkdir -p /mnt/home
 	if [ -n "$HOME_SELECTED_PARTITION" ]; then
-		mkdir -p /mnt/home
 		mount -o noatime /dev/"$HOME_SELECTED_PARTITION" /mnt/home
 	else
 		mount -o noatime,compress=zstd,subvol=@home "/dev/$PART3" /mnt/home
