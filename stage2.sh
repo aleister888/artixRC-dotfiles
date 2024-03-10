@@ -34,9 +34,10 @@ fi
 
 # Establecer zona horaria
 timezoneset(){
-	while [ "$valid_timezone" == false ]; do
+	valid_timezone = false
+	while [ "$valid_timezone" = false ]; do
 		# Obtener la lista de regiones disponibles
-		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort | uniq | grep -v "right")
+		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort -u | grep -v "right")
 		# Crear un array con las regiones
 		regions_array=()
 		for region in $regions; do
