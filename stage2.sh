@@ -218,6 +218,10 @@ if genlocale; then
 	whip_msg "Locale" "Se estableción el locale como en_US.UTF-8 UTF-8 y es_ES.UTF-8 UTF-8."
 fi
 
+if hostname_config; then
+	whip_msg "Hostname" "El nombre de la máquina se configuró correctamente"
+fi
+
 if root_password; then
 	whip_msg "Contraseña de Root Establecida" "La contraseña del usuario root ha sido establecida correctamente."
 fi
