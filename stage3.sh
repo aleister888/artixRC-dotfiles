@@ -407,7 +407,7 @@ firefox_configure(){
 pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber"
 driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-"${driver_options[@]}" 3>&1 1>&2 2>&3)
+${driver_options[@]} 3>&1 1>&2 2>&3)
 nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 
 case $graphic_driver in
@@ -436,7 +436,7 @@ desktops=(gnome "GNOME" kde "KDE Plasma" xfce "Xfce" dotfiles "Dwm")
 
 # Mostrar el menú de selección con whiptail
 desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
-"${desktops[@]}" 3>&1 1>&2 2>&3)
+${desktops[@]} 3>&1 1>&2 2>&3)
 
 case $desktop_choice in
 	gnome)
@@ -465,7 +465,7 @@ base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh do
 yayinstall $base_pkgs
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad
-privacy_conc="webcord-bin telegram-desktop"
+privacy_conc="discord forkgram-bin"
 whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
 yayinstall $privacy_conc
 

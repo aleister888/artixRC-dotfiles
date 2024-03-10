@@ -30,8 +30,8 @@ static const unsigned int ulinepad       = 0;       // Espaciado horizontal entr
 static const unsigned int ulinestroke    = 4;       // Grosor/Altura del subrayado
 static const unsigned int ulinevoffset   = 0;       // Espacio entre el subrayado y el borde inferior de la barra
 static const int ulineall                = 0;       // 1 para mostrar el subrayado en todos los espacios, 0 para mostrarlo en los seleccionados
-static const char dmenufont[]            = "Iosevka Nerd Font:bold:pixelsize=36"; // Fuentes
-static const char *fonts[]               = { "Symbols Nerd Font:pixelsize=38","Iosevka Nerd Font:bold:pixelsize=36" };
+static const char dmenufont[]            = "Iosevka Nerd Font:bold:pixelsize=28"; // Fuentes
+static const char *fonts[]               = { "Symbols Nerd Font:pixelsize=30","Iosevka Nerd Font:bold:pixelsize=28" };
 static const char background[]           = "#1D2021";
 static const char background_sel[]       = "#282828";
 static const char foreground[]           = "#EBDBB2";

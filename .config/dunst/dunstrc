@@ -1,5 +1,5 @@
 [global]
-font = agave Nerd Font Bold 16
+font = agave Nerd Font Bold
 max_icon_size = 192
 history_length = 20
 always_run_script = true
