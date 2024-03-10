@@ -151,6 +151,7 @@ elif [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 	umount /mnt
 elif [ "$INSTALL_FILESYSTEM" = "xfs" ]; then
 	pacman -Sy --noconfirm --needed xfsprogs
+	parted -s "/dev/$INSTALL_DISK" mkpart primary xfs 4.5GB 100%
 	mkfs.xfs "/dev/$PART3"
 fi
 }
