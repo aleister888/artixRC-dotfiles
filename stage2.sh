@@ -133,13 +133,11 @@ install_grub(){
 
 arch_support(){
 	# Instalar paquetes necesarios
-	pacinstall artix-keyring artix-archlinux-support lib32-artix-archlinux-support pacman-contrib rsync
+	pacinstall artix-keyring artix-archlinux-support lib32-artix-archlinux-support archlinux-mirrorlist pacman-contrib rsync
 	# Activar lib32
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
 	
-	# Escoger mirrors más rápidos de los repositorios de Artix
-	sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
-	
+	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-artix
 	# Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
 	if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
 		sed -i '/^#/{;b}; s/Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
@@ -153,14 +151,13 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
-	# Descargar mirrorlist
-	wget -O /etc/pacman.d/mirrorlist-arch "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on"
-
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
 	pacman-key --populate archlinux
-
 	pacinstall reflector
+
+	# Escoger mirrors más rápidos de los repositorios de Artix
+	sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
 	# Escoger mirrors más rápidos de los repositorios de Arch
 	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
 
