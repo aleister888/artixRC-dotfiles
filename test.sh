@@ -55,9 +55,10 @@ if [ $HOME_DISK_COUNT -lt 1 ]; then
 # Si ya hay más de una partición presente, se pide al usuario que escoga que partición usar.
 elif [ $HOME_DISK_COUNT -gt 1 ]; then
 	HOME_PARTITIONS=$(echo $HOME_DISK_STRUCT | tr '\n' ' ')
-	HOME_PARTITIONS_ARRAY=()
+	declare -a HOME_PARTITIONS_ARRAY=()
 	for HOME_PARTITION in $HOME_PARTITIONS; do
-		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$(lsblk -o size /dev/$HOME_PARTITION | tail -1)")
+		SIZE=$(lsblk -o size -b /dev/$HOME_PARTITION | tail -n 1)
+		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$SIZE")
 	done
 	HOME_SELECTED_PARTITION=$(whip_menu "Elegir Partición" \
 	"Eliga cual partición de $HOME_DISK desea usar para /home:" ${HOME_PARTITIONS_ARRAY[@]})
