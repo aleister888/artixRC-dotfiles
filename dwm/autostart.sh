@@ -10,15 +10,18 @@ done
 
 pkill eww
 
-ewwspawn() {
+ewwspawn(){
 	while true; do
-		if xdotool getactivewindow; then
-			pkill eww
-		else
-			pgrep eww || eww open dashboard &
-		fi
-		sleep 0.025;
+	local monitors=$(xrandr --listmonitors | grep -c " .:")
+
+	if [ "$monitors" -gt 1 ] || [ "$(xdotool getactivewindow)" ]; then
+		pkill eww
+	elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
+		eww open dashboard &
+	fi
+		sleep 0.05;
 	done
+
 	exit 0
 }
 
