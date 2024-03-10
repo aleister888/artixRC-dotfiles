@@ -238,7 +238,7 @@ if [ -d /sys/firmware/efi ]; then
 	whip_msg "Sistema EFI" "Sistema EFI detectado. Se ha instalado efibootmgr."
 fi
 
-pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc world/freetype2 world/libjpeg-turbo
+pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo
 
 install_grub
 
