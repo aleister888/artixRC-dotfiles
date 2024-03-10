@@ -192,12 +192,7 @@ echo '[extra]
 Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
-Include = /etc/pacman.d/mirrorlist-arch
-
-[omniverse]
-Server = https://artix.sakamoto.pl/omniverse/$arch
-Server = https://eu-mirror.artixlinux.org/omniverse/$arch
-Server = https://omniverse.artixlinux.org/$arch' >>/etc/pacman.conf
+Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 
 # Actualizar cambios
 pacman -Sy --noconfirm && \
