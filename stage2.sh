@@ -172,7 +172,7 @@ fi
 
 # Configurar pacman.conf
 
-pacinstall artix-keyring artix-archlinux-support pacman-contrib rsync
+pacinstall artix-keyring artix-archlinux-support lib32-artix-archlinux-support pacman-contrib rsync
 
 # Activar lib32
 sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf

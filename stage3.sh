@@ -301,8 +301,6 @@ aur_install(){
 	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 }
 
-
-
 # Instalar y configurar Tauon Music Box
 tauon_install(){
 	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk atool flacon cuetools"
@@ -432,8 +430,7 @@ whip_msg "Drivers" "Los drivers de video se instalaron correctamente"
 ##################################
 
 # Diferentes escritorios a elegir
-desktops=(gnome "GNOME" kde "KDE Plasma" xfce "Xfce" dotfiles "Dwm")
-
+desktops=("gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm")
 # Mostrar el menú de selección con whiptail
 desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
 ${desktops[@]} 3>&1 1>&2 2>&3)
