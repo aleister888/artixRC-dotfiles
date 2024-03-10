@@ -193,14 +193,12 @@ if disk_setup && disk_partition && partition_mount; then
 	whip_msg "Formateo completado" "El formateo ha sido completado."
 fi
 
+# Instalar paquetes con basestrap
 if [ "$INSTALL_FILESYSTEM" = "xfs" ] || [ "$HOME_FILESYSTEM" = "xfs" ]; then
 	basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio xfsprogs
 else
 	basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
 fi
-
-# Instalar paquetes con basestrap
-basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 
