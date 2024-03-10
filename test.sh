@@ -57,7 +57,7 @@ elif [ $HOME_DISK_COUNT -gt 1 ]; then
 	HOME_PARTITIONS=$(echo $HOME_DISK_STRUCT | tr '\n' ' ')
 	HOME_PARTITIONS_ARRAY=()
 	for HOME_PARTITION in $HOME_PARTITIONS; do
-		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$(lsblk -d -o size,type $HOME_PARTITION | awk '/[0-9]/ {print $1}')")
+		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$(lsblk -d -o size,type /dev/$HOME_PARTITION | awk '/[0-9]/ {print $1}')")
 	done
 	HOME_SELECTED_PARTITION=$(whip_menu "Elegir Partición" \
 	"Eliga cual partición de $HOME_DISK desea usar para /home:" ${HOME_PARTITIONS_ARRAY[@]})
