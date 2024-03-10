@@ -10,11 +10,11 @@ whip_yes(){
 }
 
 pacinstall() {
-    doas pacman -Sy --noconfirm --needed "$@"
+	doas pacman -Sy --noconfirm --needed "$@"
 }
 
 yayinstall() {
-    yay -Sy --noconfirm --needed "$@"
+	yay -Sy --noconfirm --needed "$@"
 }
 
 service_add(){
