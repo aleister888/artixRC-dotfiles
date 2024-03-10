@@ -75,8 +75,6 @@ function get_time {
 	date +'%H:%M'
 }
 
-setopt promptsubst
-
 PROMPT="%B%F{red}[%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red}] "
 
 printf '\033[?1h\033=' >/dev/tty

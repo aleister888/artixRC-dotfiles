@@ -29,7 +29,7 @@ elif [ "$manufacturer" == "AuthenticAMD" ]; then
 	pacinstall linux-headers amd-ucode $base_devel_doas
 else
 	echo "No se pudo detectar el fabricante del procesador."
-	pacinstall $base_devel_doas
+	pacinstall linux-headers $base_devel_doas
 fi
 
 # Establecer zona horaria
@@ -57,7 +57,7 @@ timezoneset(){
 		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
 			valid_timezone=true
 		else
-			whiptail --title "Zona horaria no válida" --msgbox "Zona horaria no válida. Asegúrate de elegir una zona horaria válida." 10 60
+			whip_msg "Zona horaria no válida" "Zona horaria no válida. Asegúrate de elegir una zona horaria válida."
 		fi
 	done
 		ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
