@@ -194,11 +194,11 @@ if disk_setup && disk_partition && partition_mount; then
 fi
 
 # Instalar paquetes con basestrap
+basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio libnewt"
 if [ "$INSTALL_FILESYSTEM" = "xfs" ] || [ "$HOME_FILESYSTEM" = "xfs" ]; then
-	basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio xfsprogs
-else
-	basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio
+	basestrap_pkgs="$basestrap_pkgs xfsprogs"
 fi
+basestrap /mnt $basestrap_pkgs
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 

@@ -18,7 +18,7 @@ manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}'
 
 # Vamos a instalar los paquetes en base-devel manualmente
 # para poder prescindir de sudo y tener solo doas instalado
-base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which libnewt"
+base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
 
 # Instalar el microcódigo correspondiente y paquetes de base-devel
 if [ "$manufacturer" == "GenuineIntel" ]; then
