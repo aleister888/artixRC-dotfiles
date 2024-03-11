@@ -260,4 +260,4 @@ ln -s /usr/bin/nvim /usr/local/bin/vim
 
 # Clonar el repositorio completo y terminar la instalación
 su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-su "$username" -c "cd /home/$username/.dotfiles && curl -s https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh | bash"
+su "$username" -c "cd /home/$username/.dotfiles && curl -s https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage3.sh | bash"
