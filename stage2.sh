@@ -249,14 +249,14 @@ if services_install; then
 	whip_msg "Servicios" "Los servicios se configuraron correctamente"
 fi
 
-if user_create; then
-	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
-fi
-
-# Sustituir sudo por doas
-ln -s /usr/bin/doas /usr/bin/sudo
-ln -s /usr/bin/nvim /usr/local/bin/vim
-
-# Clonar el repositorio completo y terminar la instalación
-su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
+#if user_create; then
+#	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
+#fi
+#
+## Sustituir sudo por doas
+#ln -s /usr/bin/doas /usr/bin/sudo
+#ln -s /usr/bin/nvim /usr/local/bin/vim
+#
+## Clonar el repositorio completo y terminar la instalación
+#su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+#su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
