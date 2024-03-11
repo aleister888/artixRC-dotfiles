@@ -6,7 +6,7 @@ whip_msg(){
 }
 
 pacinstall() {
-	pacman -Sy --noconfirm --needed "$@"
+	pacman -S --noconfirm --needed "$@"
 }
 
 service_add(){
