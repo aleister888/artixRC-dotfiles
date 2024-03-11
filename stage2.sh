@@ -134,17 +134,9 @@ install_grub(){
 arch_support(){
 	# Instalar paquetes necesarios
 	pacinstall artix-keyring artix-archlinux-support lib32-artix-archlinux-support archlinux-mirrorlist archlinux-keyring pacman-contrib rsync
+
 	# Activar lib32
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
-	
-	# Escoger mirrors más rápidos de los repositorios de Artix
-	sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix' # Artix
-
-	# Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
-	if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
-		sed -i '/^#/{;b}; s/Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
-		/etc/pacman.conf
-	fi
 	
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
@@ -166,7 +158,6 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 	# Configurar cronie para que se actualize automáticamente la selección de mirrors
 	if ! grep "rankmirrors" /etc/crontab; then
 		echo "0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" | tee -a /etc/crontab
-		echo "5 8 * * * root sh -c 'rankmirrors /etc/pacman.d/mirrorlist | grep -v \"#\" > /etc/pacman.d/mirrorlist-artix'" | tee -a /etc/crontab
 	fi
 }
 
