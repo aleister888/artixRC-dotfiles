@@ -12,3 +12,4 @@ Configuración de `Artix Linux` y auto-instalador
 - TODO:
     - Finish install script:
     - Auto-adjust font size in dwm, dmenu & st
+    - Improve monitor-layout script, when mirroring screens, make bigger screen follow the resolution of the lesser res one
