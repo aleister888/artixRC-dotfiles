@@ -25,19 +25,23 @@ pacinstall zsh dash stow # Instalar paquetes clave
 
 video_drivers(){
 	# Elegimos nuestra tarjeta gráfica
+	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
 	"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
-	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 
 	case $graphic_driver in
 		amd)
-			pacinstall mesa xf86-video-amdgpu libva-mesa-driver ;;
+			pacinstall mesa xf86-video-amdgpu libva-mesa-driver
+			;;
 		nvidia)
-			pacinstall mesa $nvidia_drivers ;;
+			pacinstall mesa $nvidia_drivers
+			;;
 		intel)
-			pacinstall mesa xf86-video-intel libva-intel-driver ;;
+			pacinstall mesa xf86-video-intel libva-intel-driver
+			;;
 		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse ;;
+			pacinstall mesa xf86-video-vmware xf86-input-vmmouse
+			;;
 		optimus)
 			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
 			doas gpasswd -a "$USER" bumblebee
