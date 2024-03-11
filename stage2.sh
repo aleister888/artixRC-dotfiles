@@ -6,7 +6,7 @@ whip_msg(){
 }
 
 pacinstall() {
-	pacman -S --noconfirm --needed "$@"
+	pacman -Sy --noconfirm --needed "$@"
 }
 
 service_add(){
@@ -132,13 +132,13 @@ install_grub(){
 }
 
 arch_support(){
+	# Activar lib32
+	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
+
 	# Instalar paquetes necesarios
 	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
 	lib32-artix-archlinux-support pacman-contrib rsync
 
-	# Activar lib32
-	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
-	
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
 echo '[extra]
