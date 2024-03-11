@@ -133,7 +133,8 @@ install_grub(){
 
 arch_support(){
 	# Instalar paquetes necesarios
-	pacinstall artix-keyring artix-archlinux-support lib32-artix-archlinux-support archlinux-mirrorlist archlinux-keyring pacman-contrib rsync
+	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
+	lib32-artix-archlinux-support pacman-contrib rsync
 
 	# Activar lib32
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
@@ -234,14 +235,16 @@ pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfs
 
 install_grub
 
-if arch_support; then
-	whip_msg "Pacman" "Los repositorios de Arch fueron activados correctamente"
-fi
+arch_support
 
-if services_install; then
-	whip_msg "Servicios" "Los servicios se configuraron correctamente"
-fi
-
+#if arch_support; then
+#	whip_msg "Pacman" "Los repositorios de Arch fueron activados correctamente"
+#fi
+#
+#if services_install; then
+#	whip_msg "Servicios" "Los servicios se configuraron correctamente"
+#fi
+#
 #if user_create; then
 #	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
 #fi
