@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO: Whiptail menus don't work
+
 # Funciones que invocaremos a menudo
 whip_msg(){
 	whiptail --title "$1" --msgbox "$2" 10 60
