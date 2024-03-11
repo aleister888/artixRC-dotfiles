@@ -200,6 +200,8 @@ if [ "$INSTALL_FILESYSTEM" = "xfs" ] || [ "$HOME_FILESYSTEM" = "xfs" ]; then
 fi
 basestrap /mnt $basestrap_pkgs
 
+echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
+
 fstabgen -U /mnt >> /mnt/etc/fstab
 
 # Montar directorios importantes para el chroot
