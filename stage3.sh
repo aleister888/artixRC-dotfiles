@@ -22,7 +22,6 @@ service_add(){
 }
 
 pacinstall zsh dash stow # Instalar paquetes clave
-chsh -s /bin/zsh # Seleccionar zsh como nuestro shell
 
 video_drivers(){
 	# Elegimos nuestra tarjeta gráfica
@@ -432,9 +431,7 @@ virt_install(){
 ############
 
 # Instalar drivers de video
-if video_drivers; then
-	whip_msg "Drivers" "Los drivers de video se instalaron correctamente"
-fi
+video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correctamente"
 
 # Instalar yay para poder instalar paquetes del AUR
 aur_install
@@ -443,9 +440,7 @@ aur_install
 base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc"
 yayinstall $base_pkgs
 
-if desktop_install; then
-	whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
-fi
+desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
 
 # Instalar nuestros archivos de configuración
 dotfiles_install
@@ -488,3 +483,5 @@ firefox_configure
 # Activar servicios
 service_add irqbalance
 service_add syslog-ng
+
+chsh -s /bin/zsh # Seleccionar zsh como nuestro shell
