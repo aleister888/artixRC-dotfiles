@@ -133,11 +133,11 @@ install_grub(){
 
 arch_support(){
 	# Activar lib32
-	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
+	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
 
 	# Instalar paquetes necesarios
 	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
-	lib32-artix-archlinux-support pacman-contrib rsync
+	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
 
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
