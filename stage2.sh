@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+pacman -Sy libnewt
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -79,7 +81,7 @@ hostname_config(){
 	echo "$hostname" > /etc/hostname
 	# Descargar archivo hosts con bloqueo de sitios indeseados
 	curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-	
+
 	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
 	echo "127.0.0.1 $hostname.localdomain $hostname" | tee -a /etc/hosts && \
 	echo "127.0.0.1 localhost.localdomain"           | tee -a /etc/hosts && \
@@ -91,7 +93,7 @@ root_password(){
 	local password=""
 	local password_confirm=""
 	local match="false"
-	
+
 	# Bucle para pedir al usuario que ingrese la contraseña dos veces
 	while [ "$match" == false ]; do # Mientras las contraseñas no coincidan se volverá a pedir que se introduzcan
 		# Pedir al usuario que ingrese la contraseña
@@ -111,7 +113,7 @@ root_password(){
 			whip_msg "Error" "No se permiten contraseñas vacías. Por favor, inténtalo de nuevo."
 		fi
 	done
-	
+
 	# Establecer la contraseña del usuario root
 	echo "root:$password" | chpasswd
 }
@@ -176,14 +178,14 @@ service_add tlp
 user_create(){
 	# Elegir nombre de usuario
 	username=$(whiptail --inputbox "Por favor, ingresa el nombre de usuario:" 10 60 3>&1 1>&2 2>&3)
-	
+
 	## Elegir contraseña
-	
+
 	# Definimos nuestras variables
 	local user_password=""
 	local user_password_confirm=""
 	local match=false
-	
+
 	# Bucle para pedir al usuario que ingrese la contraseña dos veces
 	while [ "$match" == false ]; do
 		# Pedir al usuario que ingrese la contraseña
@@ -201,7 +203,7 @@ user_create(){
 			whip_msg "Error" "No se permiten contraseñas vacías. Por favor, inténtalo de nuevo."
 		fi
 	done
-	
+
 	groups="wheel,lp,audio" # Definimos los grupos
 	useradd -m -G "$groups" "$username" # Añadimos el usuario a dichos grupos
 	echo "$username:$user_password" | chpasswd # Establecemos la contraseña para el usuario

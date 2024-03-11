@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Instalar whiptail y parted
 pacman -Sy --noconfirm --needed parted libnewt >/dev/null
@@ -194,12 +194,13 @@ if disk_setup && disk_partition && partition_mount; then
 fi
 
 # Instalar paquetes con basestrap
-basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio libnewt wget"
+basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget"
 if [ "$INSTALL_FILESYSTEM" = "xfs" ] || [ "$HOME_FILESYSTEM" = "xfs" ]; then
 	basestrap_pkgs="$basestrap_pkgs xfsprogs"
 fi
 basestrap /mnt $basestrap_pkgs
 
+mkdir -p /mnt/etc
 echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
 fstabgen -U /mnt >> /mnt/etc/fstab

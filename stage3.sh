@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -22,36 +22,30 @@ service_add(){
 }
 
 pacinstall zsh dash stow # Instalar paquetes clave
-doas chsh -s /bin/zsh "$(whoami)" # Seleccionar zsh como nuestro shell
+chsh -s /bin/zsh # Seleccionar zsh como nuestro shell
 
 video_drivers(){
 	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
-	# Paquetes con los drivers de nvidia
-	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
+	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "NVIDIA Optimus")
 	# Elegimos nuestra tarjeta gráfica
 	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
 	${driver_options[@]} 3>&1 1>&2 2>&3)
-	# Si elegimos la opción de portátil con optimus, elegir los drivers de la iGpu
-	if [ "$graphic_driver" = "optimus" ]; then
-		igpu_options=("amd" "AMD" "intel" "Intel") # Opciones
-		igpu_driver=$(whiptail --title "Elige una opción:" --menu "Selecciona tu tarjeta gráfica integrada" \
-		15 60 5 ${igpu_options[@]} 3>&1 1>&2 2>&3) # Elegimos el driver de video
-		case $igpu_driver in # Agregamos el driver seleccionado a los que se instalarán
-			amd) nvidia_drivers="$nvidia_drivers xf86-video-amdgpu libva-mesa-driver" ;;
-			intel) nvidia_drivers="$nvidia_drivers xf86-video-intel libva-intel-driver" ;;
-		esac
-	fi
 
+	# Paquetes con los drivers de nvidia
+	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 	case $graphic_driver in
 		amd)
-			pacinstall mesa xf86-video-amdgpu libva-mesa-driver ;;
+			pacinstall mesa xf86-video-amdgpu libva-mesa-driver
+			;;
 		nvidia)
-			pacinstall mesa $nvidia_drivers ;;
+			pacinstall mesa $nvidia_drivers
+			;;
 		intel)
-			pacinstall mesa xf86-video-intel libva-intel-driver ;;
+			pacinstall mesa xf86-video-intel libva-intel-driver
+			;;
 		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse ;;
+			pacinstall mesa xf86-video-vmware xf86-input-vmmouse
+			;;
 		optimus)
 			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
 			doas gpasswd -a "$USER" bumblebee
@@ -277,7 +271,7 @@ desktop_install(){
 	# Mostrar el menú de selección con whiptail
 	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
 	${desktops[@]} 3>&1 1>&2 2>&3)
-	
+
 	case $desktop_choice in
 		gnome)
 			pacinstall gnome gdm gdm-openrc $pipewire_packages
