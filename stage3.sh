@@ -21,8 +21,8 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber"
-pacinstall zsh dash stow $pipewire_packages # Instalar paquetes clave
+# Instalar paquetes clave
+pacinstall zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber
 
 video_drivers(){
 	# Elegimos nuestra tarjeta gráfica
@@ -235,7 +235,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
 	xorg-xinit xorg-xkill net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu bc \
-	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance
+	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl
 }
 
 # Configurar el fondo de pantalla
@@ -406,6 +406,22 @@ firefox_configure(){
 	killall firefox
 }
 
+# Configurar neovim e instalar los plugins
+vim_configure() {
+	# Instalar VimPlug
+	sh -c "curl -fLo ${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim --create-dirs \
+		   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" >/dev/null
+	# Instalar los plugins
+	nvim +'PlugInstall --sync' +qa >/dev/null 2>&1
+}
+
+# Configurar keepassxc para que siga el tema de QT
+keepass_configure(){
+	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
+	echo "[GUI]
+ApplicationTheme=classic" > $HOME/.config/keepassxc/keepassxc.ini
+}
+
 #####################
 # Optional Software #
 #####################
@@ -441,7 +457,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc qbittorrent-qt5 handbrake czkawka-gui blueman"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc qbittorrent-qt5 handbrake czkawka-gui blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc"
 yayinstall $base_pkgs
 
 desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
@@ -478,14 +494,18 @@ daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo wine wi
 whip_yes "DAW" "¿Deseas instalar herramientas para músicos?" && yayinstall $daw_packages
 
 # Instalar software de ofimática
-office_packages="thunderbird thunderbird-dark-reader zim libreoffice"
+office_packages="zim libreoffice"
 whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $office_packages
 
 # Configurar firefox para proteger la privacidad
 firefox_configure
 
+vim_configure
+
 # Activar servicios
 service_add irqbalance
 service_add syslog-ng
 
-chsh -s /bin/zsh # Seleccionar zsh como nuestro shell
+doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
+
+rm "$HOME/.bash*" "$HOME/.wget-hsts"
