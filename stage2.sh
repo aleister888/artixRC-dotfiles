@@ -137,7 +137,11 @@ arch_support(){
 	# Activar lib32
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf
 	
+	# Preparar mirrorlists
 	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-artix
+	wget -O /etc/pacman.d/mirrorlist-arch https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/pacman-mirrorlist/trunk/mirrorlist
+	sed -i 's/#Server/Server/' /etc/pacman.d/mirrorlist-arch
+
 	# Cambiamos /etc/pacman.conf para que use mirrorlist-artix para descargar los paquetes
 	if ! grep -q "/etc/pacman.d/mirrorlist-artix" /etc/pacman.conf; then
 		sed -i '/^#/{;b}; s/Include = \/etc\/pacman\.d\/mirrorlist/Include = \/etc\/pacman\.d\/mirrorlist-artix/' \
