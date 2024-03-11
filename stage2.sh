@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: Configure OpenDoas
-
 # Funciones que invocaremos a menudo
 whip_msg(){
 	whiptail --title "$1" --msgbox "$2" 10 60
