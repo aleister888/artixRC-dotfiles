@@ -235,7 +235,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
 	xorg-xinit xorg-xkill net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu bc \
-	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility
+	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance
 }
 
 # Configurar el fondo de pantalla
@@ -441,7 +441,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc qbittorrent-qt5 handbrake czkawka-gui blueman"
 yayinstall $base_pkgs
 
 desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
