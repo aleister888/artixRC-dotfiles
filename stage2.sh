@@ -10,7 +10,7 @@ pacinstall() {
 }
 
 service_add(){
-	doas rc-update add "$1" default
+	rc-update add "$1" default
 }
 
 # Detectar el fabricante del procesador
@@ -153,6 +153,8 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+	wget -O /etc/pacman.d/mirrorlist-arch https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/pacman-mirrorlist/trunk/mirrorlist
+	sed -i 's/#Server/Server/' /etc/pacman.d/mirrorlist-arch
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
 	pacman-key --populate archlinux
