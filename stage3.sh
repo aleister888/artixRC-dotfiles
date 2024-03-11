@@ -25,11 +25,9 @@ pacinstall zsh dash stow # Instalar paquetes clave
 chsh -s /bin/zsh # Seleccionar zsh como nuestro shell
 
 video_drivers(){
-	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 	# Elegimos nuestra tarjeta gráfica
 	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-	"${driver_options[@]}" 3>&1 1>&2 2>&3)
+	"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
 	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 
 	case $graphic_driver in
@@ -261,11 +259,9 @@ dwm_setup(){
 
 desktop_install(){
 	pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber"
-	# Diferentes escritorios a elegir
-	desktops=("gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm")
-	# Mostrar el menú de selección con whiptail
+	# Elegimos nuestro entorno de escritorio
 	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
-	"${desktops[@]}" 3>&1 1>&2 2>&3)
+	"gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
 
 	case $desktop_choice in
 		gnome)
