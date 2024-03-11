@@ -117,6 +117,15 @@ root_password(){
 }
 
 install_grub(){
+	boot_part=$(df / --output=source | tail -n1)
+
+	case "$boot_part" in
+	*"nvme"*)
+	        boot_part=$(echo $boot_part | sed 's/p[0-9]*$//') ;;
+	*)
+	        boot_part=$(echo $boot_part | sed 's/[0-9]*$//') ;;
+	esac
+
 	# Verificar si el sistema es EFI
 	if [ -d /sys/firmware/efi ]; then
 		echo "Sistema EFI detectado. Instalando GRUB para EFI..."

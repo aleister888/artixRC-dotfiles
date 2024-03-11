@@ -201,7 +201,7 @@ fi
 basestrap /mnt $basestrap_pkgs
 
 mkdir -p /mnt/etc
-echo "permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
+echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 
