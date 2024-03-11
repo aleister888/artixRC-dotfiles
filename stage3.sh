@@ -26,26 +26,21 @@ chsh -s /bin/zsh # Seleccionar zsh como nuestro shell
 
 video_drivers(){
 	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "NVIDIA Optimus")
+	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 	# Elegimos nuestra tarjeta gráfica
 	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-	${driver_options[@]} 3>&1 1>&2 2>&3)
-
-	# Paquetes con los drivers de nvidia
+	"${driver_options[@]}" 3>&1 1>&2 2>&3)
 	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
+
 	case $graphic_driver in
 		amd)
-			pacinstall mesa xf86-video-amdgpu libva-mesa-driver
-			;;
+			pacinstall mesa xf86-video-amdgpu libva-mesa-driver ;;
 		nvidia)
-			pacinstall mesa $nvidia_drivers
-			;;
+			pacinstall mesa $nvidia_drivers ;;
 		intel)
-			pacinstall mesa xf86-video-intel libva-intel-driver
-			;;
+			pacinstall mesa xf86-video-intel libva-intel-driver ;;
 		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse
-			;;
+			pacinstall mesa xf86-video-vmware xf86-input-vmmouse ;;
 		optimus)
 			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
 			doas gpasswd -a "$USER" bumblebee
@@ -270,7 +265,7 @@ desktop_install(){
 	desktops=("gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm")
 	# Mostrar el menú de selección con whiptail
 	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
-	${desktops[@]} 3>&1 1>&2 2>&3)
+	"${desktops[@]}" 3>&1 1>&2 2>&3)
 
 	case $desktop_choice in
 		gnome)
