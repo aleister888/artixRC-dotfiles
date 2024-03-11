@@ -146,8 +146,6 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
-	wget -O /etc/pacman.d/mirrorlist-arch https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/pacman-mirrorlist/trunk/mirrorlist
-	sed -i 's/#Server/Server/' /etc/pacman.d/mirrorlist-arch
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
 	pacman-key --populate archlinux
@@ -157,7 +155,7 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
 
 	# Configurar cronie para que se actualize automáticamente la selección de mirrors
-	if ! grep "rankmirrors" /etc/crontab; then
+	if ! grep "reflector" /etc/crontab; then
 		echo "0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" | tee -a /etc/crontab
 	fi
 }
@@ -235,24 +233,22 @@ pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfs
 
 install_grub
 
-arch_support
+if arch_support; then
+	whip_msg "Pacman" "Los repositorios de Arch fueron activados correctamente"
+fi
 
-#if arch_support; then
-#	whip_msg "Pacman" "Los repositorios de Arch fueron activados correctamente"
-#fi
-#
-#if services_install; then
-#	whip_msg "Servicios" "Los servicios se configuraron correctamente"
-#fi
-#
-#if user_create; then
-#	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
-#fi
-#
-## Sustituir sudo por doas
-#ln -s /usr/bin/doas /usr/bin/sudo
-#ln -s /usr/bin/nvim /usr/local/bin/vim
-#
-## Clonar el repositorio completo y terminar la instalación
-#su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-#su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
+if services_install; then
+	whip_msg "Servicios" "Los servicios se configuraron correctamente"
+fi
+
+if user_create; then
+	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
+fi
+
+# Sustituir sudo por doas
+ln -s /usr/bin/doas /usr/bin/sudo
+ln -s /usr/bin/nvim /usr/local/bin/vim
+
+# Clonar el repositorio completo y terminar la instalación
+su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
