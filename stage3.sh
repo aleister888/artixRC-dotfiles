@@ -21,7 +21,8 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-pacinstall zsh dash stow # Instalar paquetes clave
+pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber"
+pacinstall zsh dash stow $pipewire_packages # Instalar paquetes clave
 
 video_drivers(){
 	# Elegimos nuestra tarjeta gráfica
@@ -261,26 +262,25 @@ dwm_setup(){
 ###
 
 desktop_install(){
-	pipewire_packages="pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber"
 	# Elegimos nuestro entorno de escritorio
 	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
 	"gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
 
 	case $desktop_choice in
 		gnome)
-			pacinstall gnome gdm gdm-openrc $pipewire_packages
+			pacinstall gnome gdm gdm-openrc
 			service_add gdm
 			;;
 		kde)
-			pacinstall plasma sddm sddm-openrc konsole $pipewire_packages
+			pacinstall plasma sddm sddm-openrc konsole
 			service_add sddm
 			;;
 		xfce)
-			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol $pipewire_packages
+			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
 			service_add sddm
 			;;
 		dotfiles)
-			pacinstall $pipewire_packages
+			pacinstall
 			dwm_setup
 			;;
 	esac
