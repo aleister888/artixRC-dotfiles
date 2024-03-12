@@ -12,7 +12,7 @@
            :space-evenly false
            :vexpand true
            :valign "center"
-        (label :class "username" :text "Welcome aleister" :halign "start")
+        (label :class "username" :text "Welcome ${whoami}" :halign "start")
         (label :class "hostname" :text "@${hostname}" :halign "start")
         (label :class "uptime" :text "${uptime}" :halign "start")
       )
