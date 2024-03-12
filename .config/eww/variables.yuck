@@ -13,6 +13,7 @@
 
 (defpoll uptime        :interval "30s" "uptime -p")
 (defpoll hostname      :interval "10h" "cat /etc/hostname")
+(defpoll user          :interval "30s" "whoami")
 
 (defpoll calendar_day   :interval "10h" "date '+%d'")
 (defpoll calendar_month :interval "10h" "date '+%m")
