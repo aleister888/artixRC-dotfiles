@@ -24,6 +24,33 @@ service_add(){
 # Instalar paquetes clave
 pacinstall zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber
 
+video_drivers(){
+	# Elegimos nuestra tarjeta gráfica
+	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
+	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
+	"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
+
+	case $graphic_driver in
+		amd)
+			pacinstall mesa xf86-video-amdgpu libva-mesa-driver
+			;;
+		nvidia)
+			pacinstall mesa $nvidia_drivers
+			;;
+		intel)
+			pacinstall mesa xf86-video-intel libva-intel-driver
+			;;
+		virtual)
+			pacinstall mesa xf86-video-vmware xf86-input-vmmouse
+			;;
+		optimus)
+			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
+			doas gpasswd -a "$USER" bumblebee
+			service_add bumblebee
+			;;
+	esac
+}
+
 aur_install(){
 	tmp_dir="/tmp/yay_install_temp"
 	mkdir -p "$tmp_dir"
@@ -234,6 +261,31 @@ dwm_setup(){
 
 ###
 
+desktop_install(){
+	# Elegimos nuestro entorno de escritorio
+	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
+	"gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
+
+	case $desktop_choice in
+		gnome)
+			pacinstall gnome gdm gdm-openrc
+			service_add gdm
+			;;
+		kde)
+			pacinstall plasma sddm sddm-openrc konsole
+			service_add sddm
+			;;
+		xfce)
+			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
+			service_add sddm
+			;;
+		dotfiles)
+			pacinstall
+			dwm_setup
+			;;
+	esac
+}
+
 dotfiles_install(){
 	# Plugins de zsh a clonar
 	plugins=(
@@ -398,30 +450,8 @@ virt_install(){
 ## SCRIPT ##
 ############
 
-# Elegimos nuestra tarjeta gráfica
-nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
-graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
-
-case $graphic_driver in
-	amd)
-		pacinstall mesa xf86-video-amdgpu libva-mesa-driver
-		;;
-	nvidia)
-		pacinstall mesa $nvidia_drivers
-		;;
-	intel)
-		pacinstall mesa xf86-video-intel libva-intel-driver
-		;;
-	virtual)
-		pacinstall mesa xf86-video-vmware xf86-input-vmmouse
-		;;
-	optimus)
-		pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
-		doas gpasswd -a "$USER" bumblebee
-		service_add bumblebee
-		;;
-esac
+# Instalar drivers de video
+video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correctamente"
 
 # Instalar yay para poder instalar paquetes del AUR
 aur_install
@@ -430,27 +460,7 @@ aur_install
 base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc qbittorrent-qt5 handbrake czkawka-gui blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc"
 yayinstall $base_pkgs
 
-# Elegimos nuestro entorno de escritorio
-desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
-"gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
-case $desktop_choice in
-	gnome)
-		pacinstall gnome gdm gdm-openrc
-		service_add gdm
-		;;
-	kde)
-		pacinstall plasma sddm sddm-openrc konsole
-		service_add sddm
-		;;
-	xfce)
-		pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
-		service_add sddm
-		;;
-	dotfiles)
-		pacinstall
-		dwm_setup
-		;;
-esac
+desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
 
 # Instalar nuestros archivos de configuración
 dotfiles_install
