@@ -317,7 +317,7 @@ tauon_install(){
 # Código extraido de larbs.xyz/larbs.sh
 # Créditos para: <luke@lukesmith.xyz>
 installffaddons(){
-	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser"
+	addonlist="ublock-origin istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser video-downloadhelper"
 	addontmp="$(mktemp -d)"
 	trap "rm -fr $addontmp" HUP INT QUIT TERM PWR EXIT
 	IFS=' '
