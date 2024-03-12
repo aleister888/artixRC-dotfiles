@@ -309,7 +309,7 @@ lf_install(){
 # Instalar el reproductor de música
 tauon_install(){
 	yayinstall tauon-music-box
-	"$HOME"/.dotfiles/tauon-config.sh
+	"$HOME/.dotfiles/tauon-config.sh"
 }
 
 # Instalar nuestras extensiones de navegador

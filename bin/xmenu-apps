@@ -12,7 +12,7 @@ IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/$BROWSER.svg					$(echo $BROWSER | sed 's/^\(.\)/\U\1/')	$BROWSER
 	IMG:$ICONPATH/apps/discord.svg					Discord			discord
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
-	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
+	IMG:$ICONPATH/apps/transmission.svg				Transmission		transmission-gtk
 	IMG:$ICONPATH/apps/telegram.svg					Telegram		Forkgram
 
 IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video

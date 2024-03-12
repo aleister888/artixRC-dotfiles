@@ -12,9 +12,7 @@ sleep 1;
 
 # Descargamos nuestro tema
 
-THEME_FILE="/tmp/themes.tar.gz"
-sh -c "cd /tmp && wget https://github.com/Taiko2k/TauonMusicBox/files/14394169/themes.tar.gz"
-aunpack "$THEME_FILE" -X "$HOME/.local/share/TauonMusicBox/theme/"
+aunpack "$HOME/.dotfiles/themes.tar.gz" -X "$HOME/.local/share/TauonMusicBox/theme/"
 
 # Script para configurar automaticamente Tauon Music Box
 
