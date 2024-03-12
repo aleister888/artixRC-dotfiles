@@ -241,7 +241,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 # Instalar los paquetes necesarios para usar dwm como entorno de escritorio
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
-	xorg-xinit xorg-xkill net-tools qt5ct keepassxc arandr gruvbox-dark-gtk xmenu bc \
+	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk xmenu bc \
 	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl
 }
 
@@ -258,7 +258,6 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 
 dwm_setup(){
 	gtk_config
-	qt_config
 	xinit_make
 	suckless_install
 	xresources_config
@@ -466,7 +465,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct"
 yayinstall $base_pkgs
 
 desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
@@ -511,11 +510,14 @@ whip_yes "DAW" "¿Deseas instalar herramientas para músicos?" && yayinstall $da
 office_packages="zim libreoffice"
 whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $office_packages
 
-# Instalar laTeX
-whip_yes "laTeX" "¿Desas instalar laTeX?" && yayinstall texlive-full
-
 # Configurar firefox para proteger la privacidad
 firefox_configure
+
+# Configurar keepass
+keepass_configure
+
+# Configurar QT5
+qt_config
 
 vim_configure
 
