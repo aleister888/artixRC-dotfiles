@@ -24,33 +24,6 @@ service_add(){
 # Instalar paquetes clave
 pacinstall zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber
 
-video_drivers(){
-	# Elegimos nuestra tarjeta gráfica
-	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
-	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-	"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
-
-	case $graphic_driver in
-		amd)
-			pacinstall mesa xf86-video-amdgpu libva-mesa-driver
-			;;
-		nvidia)
-			pacinstall mesa $nvidia_drivers
-			;;
-		intel)
-			pacinstall mesa xf86-video-intel libva-intel-driver
-			;;
-		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse
-			;;
-		optimus)
-			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
-			doas gpasswd -a "$USER" bumblebee
-			service_add bumblebee
-			;;
-	esac
-}
-
 aur_install(){
 	tmp_dir="/tmp/yay_install_temp"
 	mkdir -p "$tmp_dir"
@@ -451,7 +424,30 @@ virt_install(){
 ############
 
 # Instalar drivers de video
-video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correctamente"
+# Elegimos nuestra tarjeta gráfica
+nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
+graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
+"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
+
+case $graphic_driver in
+	amd)
+		pacinstall mesa xf86-video-amdgpu libva-mesa-driver
+		;;
+	nvidia)
+		pacinstall mesa $nvidia_drivers
+		;;
+	intel)
+		pacinstall mesa xf86-video-intel libva-intel-driver
+		;;
+	virtual)
+		pacinstall mesa xf86-video-vmware xf86-input-vmmouse
+		;;
+	optimus)
+		pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
+		doas gpasswd -a "$USER" bumblebee
+		service_add bumblebee
+		;;
+esac
 
 # Instalar yay para poder instalar paquetes del AUR
 aur_install
