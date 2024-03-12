@@ -83,8 +83,7 @@ hostname_config(){
 	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
 	echo "127.0.0.1 $hostname.localdomain $hostname" | tee -a /etc/hosts && \
 	echo "127.0.0.1 localhost.localdomain"           | tee -a /etc/hosts && \
-	echo "127.0.0.1 local"                           | tee -a /etc/hosts && \
-	whip_msg "/etc/hosts" "El archivo /etc/hosts fue configurado correctamente"
+	echo "127.0.0.1 local"                           | tee -a /etc/hosts
 }
 
 root_password(){
@@ -225,7 +224,7 @@ if genlocale; then
 fi
 
 if hostname_config; then
-	whip_msg "Hostname" "El nombre de la máquina se configuró correctamente"
+	whip_msg "/etc/hosts" "El archivo /etc/hosts fue configurado correctamente"
 fi
 
 if root_password; then
