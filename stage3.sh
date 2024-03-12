@@ -511,7 +511,7 @@ firefox_configure
 # Configurar keepass
 keepass_configure
 
-# Configurar QT5
+# Configurar la apariencia de las aplicaciones
 gtk_config
 qt_config
 
