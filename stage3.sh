@@ -257,7 +257,6 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 }
 
 dwm_setup(){
-	gtk_config
 	xinit_make
 	suckless_install
 	xresources_config
@@ -513,6 +512,7 @@ firefox_configure
 keepass_configure
 
 # Configurar QT5
+gtk_config
 qt_config
 
 vim_configure
