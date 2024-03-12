@@ -269,14 +269,10 @@ dwm_setup(){
 
 desktop_install(){
 	# Elegimos nuestro entorno de escritorio
-	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
-	"gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
+	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 3 \
+	"kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
 
 	case $desktop_choice in
-		gnome)
-			pacinstall gnome gdm gdm-openrc
-			service_add gdm
-			;;
 		kde)
 			pacinstall plasma sddm sddm-openrc konsole
 			service_add sddm
