@@ -177,42 +177,7 @@ calculate_dpi() {
 
 # Configurar Xresources teniendo en cuenta el dpi
 xresources_config(){
-XRES_FILE="$HOME/.config/Xresources"
-
-echo 'Xcursor.theme: Breeze_Snow
-Xcursor.size: 64
-
-! hard contrast: *background: #1d2021
-*background: #282828
-! soft contrast: *background: #32302f
-*foreground: #ebdbb2
-! Black + DarkGrey
-*color0:  #665C54
-*color8:  #665C54
-! DarkRed + Red
-*color1:  #CC241D
-*color9:  #FB4934
-! DarkGreen + Green
-*color2:  #98971A
-*color10: #B8BB26
-! DarkYellow + Yellow
-*color3:  #D79921
-*color11: #FABD2F
-! DarkBlue + Blue
-*color4:  #458588
-*color12: #83A598
-! DarkMagenta + Magenta
-*color5:  #B16286
-*color13: #D3869B
-! DarkCyan + Cyan
-*color6:  #689D6A
-*color14: #8EC07C
-! LightGrey + White
-*color7:  #A89984
-*color15: #A89984
-
-xmenu.foreground: #D5C4A1
-xmenu.background: #1D2021' > "$XRES_FILE"
+XRES_FILE="$HOME/.dotfiles/.config/Xresources"
 
 # Mostrar diálogo de selección de resolución y tamaño del monitor
 resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" 15 60 4 \
@@ -241,7 +206,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 # Instalar los paquetes necesarios para usar dwm como entorno de escritorio
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
-	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk xmenu \
+	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk xmenu nsxiv \
 	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl
 }
 
@@ -254,6 +219,14 @@ echo "[xin_-1]
 file=$HOME/.dotfiles/assets/wallpaper.png
 mode=5
 bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
+}
+
+cursor_configure(){
+	mkdir -p "$HOME/.local/share/icons/default"
+	echo "[Icon Theme]
+Name=Default
+Comment=Default Cursor Theme
+Inherits=capitaine-cursors"
 }
 
 dwm_setup(){
@@ -465,7 +438,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors"
 yayinstall $base_pkgs
 
 desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"

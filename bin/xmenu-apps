@@ -63,7 +63,6 @@ IMG:$ICONPATH/apps/applications-utilities.svg				Utilidades
 	IMG:$ICONPATH/apps/rustdesk.svg					Escritrio Remoto	rustdesk
 	IMG:$ICONPATH/apps/timeshift.svg				Copias de seguridad	timeshift-launcher
 	IMG:$ICONPATH/apps/cheese.svg					Visualizar Webcam	mpv /dev/video0
-	IMG:/usr/share/pixmaps/czkawka-gui.png				Czkawka			czkawka-gui
 	IMG:$ICONPATH/apps/preferences-system-windows.svg		Ajustes
 		IMG:$ICONPATH/apps/cups.svg				Ajuste de impresión	xdg-open http://localhost:631/
 		IMG:$ICONPATH/apps/preferences-system-bluetooth.svg	Dispositivos bluetooth	blueman-manager

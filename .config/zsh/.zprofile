@@ -27,7 +27,8 @@ fi
 
 export PATH="$PATH:$HOME/.local/share/yabridge"
 
-export XCURSOR_THEME=Breeze_Snow
+export XCURSOR_PATH=/usr/share/icons/
+export XCURSOR_THEME=capitaine-cursors
 export XCURSOR_SIZE=64
 
 export PIPEWIRE_LATENCY="128/48000"
