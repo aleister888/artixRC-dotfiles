@@ -215,4 +215,4 @@ mount --bind /run /mnt/run
 
 # Hacer chroot y ejecutar la 2a parte del script
 
-chroot /mnt bash -c "curl -s https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh | bash"
+chroot /mnt bash -c "wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh && chmod 700 stage2.sh && ./stage2.sh"
