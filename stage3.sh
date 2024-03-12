@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# todo: zim y tuxguitar no abren, falta rustdesk en el instalador
+# configurar tema gtk del usuario root
+#
+# Hacer un pdf que contenga información de toda la configuración
+# manual que nos puede interesar hacer (looking glass con vfio pass...)
+# con los bindings de dwm y info. que nos pueda ser útil.
+#
+# Ajustar reglas de dwm par transmission
+#
+# Stage 2 en /tmp o borrarlo después de la instalación
+
 # Funciones que invocaremos a menudo
 whip_msg(){
 	whiptail --title "$1" --msgbox "$2" 10 60
@@ -398,7 +409,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy"
 yayinstall $base_pkgs
 
 # Instalar dwm y todos los paquetes necesarios
@@ -425,7 +436,7 @@ lf_install
 tauon_install
 
 # Preguntamos si instalar software para audiofilos
-music_packages="easytag picard lrcget-bin atool flacon cuetools"
+music_packages="easytag picard atool flacon cuetools"
 whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
 yayinstall $music_packages
 
