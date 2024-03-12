@@ -373,8 +373,7 @@ lf_install(){
 
 # Instalar el reproductor de música
 tauon_install(){
-	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin atool flacon cuetools"
-	yay -S --noconfirm --needed $music_packages
+	yayinstall tauon-music-box
 	"$HOME"/.dotfiles/tauon-config.sh
 }
 
@@ -483,6 +482,11 @@ lf_install
 
 # Instalamos y configuramos el reproductor de música
 tauon_install
+
+# Preguntamos si instalar software para audiofilos
+music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin atool flacon cuetools"
+whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
+yayinstall $music_packages
 
 # Preparamos el uso de máquinas virtuales
 whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?" && virt_install
