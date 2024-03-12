@@ -259,4 +259,4 @@ ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
 
 # Clonar el repositorio completo y terminar la instalación
-su -s /bin/bash "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles && cd ~/.dotfiles && ./stage3.sh"
+su -s /usr/bin/bash "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles && cd ~/.dotfiles && ./stage3.sh"
