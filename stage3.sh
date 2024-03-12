@@ -241,7 +241,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 # Instalar los paquetes necesarios para usar dwm como entorno de escritorio
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
-	xorg-xinit xorg-xkill net-tools qt5ct keepassxc arandr papirus-icon-theme gruvbox-dark-gtk xmenu bc \
+	xorg-xinit xorg-xkill net-tools qt5ct keepassxc arandr gruvbox-dark-gtk xmenu bc \
 	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl
 }
 
@@ -285,6 +285,9 @@ desktop_install(){
 		xfce)
 			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
 			service_add sddm
+			# No mostrar iconos en el escritorio
+			xfconf-query -c xfce4-desktop -p /desktop-icons/file-icons/show-home -s false -t bool --create
+			echo "pipewire & pipewire-pulse & wireplumber &" | tee -a "$HOME/.xprofile"
 			;;
 		dotfiles)
 			pacinstall
@@ -463,7 +466,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme"
 yayinstall $base_pkgs
 
 desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
@@ -508,6 +511,9 @@ whip_yes "DAW" "¿Deseas instalar herramientas para músicos?" && yayinstall $da
 office_packages="zim libreoffice"
 whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $office_packages
 
+# Instalar laTeX
+whip_yes "laTeX" "¿Desas instalar laTeX?" && yayinstall texlive-full
+
 # Configurar firefox para proteger la privacidad
 firefox_configure
 
@@ -518,5 +524,13 @@ service_add irqbalance
 service_add syslog-ng
 
 doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
+
+# Crear directorios
+mkdir -p $HOME/Documents
+mkdir -p $HOME/Downloads
+mkdir -p $HOME/Music
+mkdir -p $HOME/Pictures
+mkdir -p $HOME/Public
+mkdir -p $HOME/Videos
 
 rm $HOME/.bash* $HOME/.wget-hsts
