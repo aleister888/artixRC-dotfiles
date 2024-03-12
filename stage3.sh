@@ -280,13 +280,12 @@ desktop_install(){
 Type=Application
 Name=Important Command
 Exec=pipewire-start
-Terminal=false" > "$HOME/.config/autostart/pipewire.desktop"
+Terminal=false" | tee -a "$HOME/.config/autostart/pipewire.desktop"
 			;;
 		xfce)
 			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
 			service_add sddm
 			# No mostrar iconos en el escritorio
-			xfconf-query -c xfce4-desktop -p /desktop-icons/file-icons/show-home -s false -t bool --create
 			echo "pipewire & pipewire-pulse & wireplumber &" | tee -a "$HOME/.xprofile"
 			;;
 		dotfiles)
