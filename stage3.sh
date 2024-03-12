@@ -234,31 +234,6 @@ dwm_setup(){
 
 ###
 
-desktop_install(){
-	# Elegimos nuestro entorno de escritorio
-	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
-	"gnome" "GNOME" "kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
-
-	case $desktop_choice in
-		gnome)
-			pacinstall gnome gdm gdm-openrc
-			service_add gdm
-			;;
-		kde)
-			pacinstall plasma sddm sddm-openrc konsole
-			service_add sddm
-			;;
-		xfce)
-			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
-			service_add sddm
-			;;
-		dotfiles)
-			pacinstall
-			dwm_setup
-			;;
-	esac
-}
-
 dotfiles_install(){
 	# Plugins de zsh a clonar
 	plugins=(
@@ -426,8 +401,9 @@ virt_install(){
 # Instalar drivers de video
 # Elegimos nuestra tarjeta gráfica
 nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
+driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
 graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus" 3>&1 1>&2 2>&3)
+"${driver_options[@]}" 3>&1 1>&2 2>&3)
 
 case $graphic_driver in
 	amd)
@@ -456,7 +432,31 @@ aur_install
 base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc qbittorrent-qt5 handbrake czkawka-gui blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc"
 yayinstall $base_pkgs
 
-desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
+# Diferentes escritorios a elegir
+desktops=(gnome "GNOME" kde "KDE Plasma" xfce "Xfce" dotfiles "Dwm")
+
+# Mostrar el menú de selección con whiptail
+desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 4 \
+"${desktops[@]}" 3>&1 1>&2 2>&3)
+
+case $desktop_choice in
+	gnome)
+		pacinstall gnome gdm gdm-openrc
+		service_add gdm
+		;;
+	kde)
+		pacinstall plasma sddm sddm-openrc konsole
+		service_add sddm
+		;;
+	xfce)
+		pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
+		service_add sddm
+		;;
+	dotfiles)
+		pacinstall
+		dwm_setup
+		;;
+esac
 
 # Instalar nuestros archivos de configuración
 dotfiles_install
