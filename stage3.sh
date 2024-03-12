@@ -519,4 +519,4 @@ service_add syslog-ng
 
 doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
 
-rm "$HOME/.bash*" "$HOME/.wget-hsts"
+rm $HOME/.bash* $HOME/.wget-hsts
