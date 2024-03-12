@@ -226,46 +226,7 @@ cursor_configure(){
 	echo "[Icon Theme]
 Name=Default
 Comment=Default Cursor Theme
-Inherits=capitaine-cursors"
-}
-
-dwm_setup(){
-	xinit_make
-	suckless_install
-	xresources_config
-	dotfiles_packages
-	nitrogen_configure
-}
-
-###
-
-desktop_install(){
-	# Elegimos nuestro entorno de escritorio
-	desktop_choice=$(whiptail --title "Selecciona tu entorno de escritorio" --menu "Elige una opción:" 15 60 3 \
-	"kde" "KDE Plasma" "xfce" "Xfce" "dotfiles" "Dwm" 3>&1 1>&2 2>&3)
-
-	case $desktop_choice in
-		kde)
-			pacinstall plasma sddm sddm-openrc konsole
-			service_add sddm
-			mkdir -p "$HOME/.config/autostart"
-			echo "[Desktop Entry]
-Type=Application
-Name=Important Command
-Exec=pipewire-start
-Terminal=false" | tee -a "$HOME/.config/autostart/pipewire.desktop"
-			;;
-		xfce)
-			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
-			service_add sddm
-			# No mostrar iconos en el escritorio
-			echo "pipewire & pipewire-pulse & wireplumber &" | tee -a "$HOME/.xprofile"
-			;;
-		dotfiles)
-			pacinstall
-			dwm_setup
-			;;
-	esac
+Inherits=capitaine-cursors" > "$HOME/.local/share/icons/default/index.theme"
 }
 
 dotfiles_install(){
@@ -438,10 +399,16 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks"
 yayinstall $base_pkgs
 
-desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
+# Instalar dwm y todos los paquetes necesarios
+xinit_make
+suckless_install
+xresources_config
+dotfiles_packages
+nitrogen_configure
+cursor_configure
 
 # Instalar nuestros archivos de configuración
 dotfiles_install
@@ -459,16 +426,12 @@ lf_install
 tauon_install
 
 # Preguntamos si instalar software para audiofilos
-music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin atool flacon cuetools"
+music_packages="easytag picard lrcget-bin atool flacon cuetools"
 whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
 yayinstall $music_packages
 
 # Preparamos el uso de máquinas virtuales
 whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?" && virt_install
-
-# Instalar WINE
-wine_packages="wine wine-mono wine-gecko winetricks"
-whip_yes "WINE" "¿Deseas instalar wine?" && pacinstall $wine_packages
 
 # Preguntar si instalar paquetes que pueden vulnerar la privacidad
 privacy_conc="discord forkgram-bin"
@@ -476,7 +439,7 @@ whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas 
 yayinstall $privacy_conc
 
 # Software de Producción de Audio
-daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo wine wine-mono wine-gecko winetricks"
+daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo"
 whip_yes "DAW" "¿Deseas instalar herramientas para músicos?" && yayinstall $daw_packages
 
 # Instalar software de ofimática
