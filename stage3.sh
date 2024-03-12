@@ -26,7 +26,7 @@ pacinstall zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pip
 
 video_drivers(){
 	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "Máquina Virtual" "optimus" "Portátil con NVIDIA Optimus")
+	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VMWare" "optimus" "Portátil")
 	# Paquetes con los drivers de nvidia
 	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 	# Elegimos nuestra tarjeta gráfica
@@ -373,7 +373,7 @@ lf_install(){
 
 # Instalar el reproductor de música
 tauon_install(){
-	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin transmission-gtk atool flacon cuetools"
+	music_packages="tauon-music-box pavucontrol easytag picard lrcget-bin atool flacon cuetools"
 	yay -S --noconfirm --needed $music_packages
 	"$HOME"/.dotfiles/tauon-config.sh
 }
@@ -464,7 +464,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc qbittorrent-qt5 handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc"
 yayinstall $base_pkgs
 
 desktop_install && whip_msg "Escritorio" "El entorno de escritorio se instaló correctamente"
