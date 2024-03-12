@@ -275,6 +275,12 @@ desktop_install(){
 		kde)
 			pacinstall plasma sddm sddm-openrc konsole
 			service_add sddm
+			mkdir -p "$HOME/.config/autostart"
+			echo "[Desktop Entry]
+Type=Application
+Name=Important Command
+Exec=pipewire-start
+Terminal=false" > "$HOME/.config/autostart/pipewire.desktop"
 			;;
 		xfce)
 			pacinstall xfce4 xfce4-goodies sddm sddm-openrc pavucontrol
