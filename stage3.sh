@@ -1,15 +1,24 @@
 #!/bin/bash
 
-# todo: zim y tuxguitar no abren, falta rustdesk en el instalador
-# configurar tema gtk del usuario root
+# Falta rustdesk en el instalador y
+# configurar el tema gtk del usuario root
 #
-# Hacer un pdf que contenga información de toda la configuración
-# manual que nos puede interesar hacer (looking glass con vfio pass...)
-# con los bindings de dwm y info. que nos pueda ser útil.
+# Queda hacer un pdf que contenga información de toda la configuración
+# manual que nos puede interesar hacer (configurar una vm con vfio gpu y
+# looking glass, configurar cronie, etc.) e info. que nos pueda ser útil
+# (bindings de dwm, etc.).
 #
-# Ajustar reglas de dwm par transmission
+# Ajustar reglas de dwm para usar transmission y no qbittorrent
 #
-# Stage 2 en /tmp o borrarlo después de la instalación
+# Descargar stage 2 en /tmp o borrarlo después de la instalación
+#
+# Adaptar el script wakeme para funcionar con cualquier tarjeta de sonido
+# y poner en el PDF como podriamos configurar cronie para automatizar diversas
+# tareas utilizando los scripts que se nos proveen.
+#
+# Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
+#
+# Explicar todo en el PDF.
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -409,7 +418,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy perl-image-exiftool"
 yayinstall $base_pkgs
 
 # Instalar dwm y todos los paquetes necesarios
