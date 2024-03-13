@@ -10,8 +10,6 @@
 #
 # Ajustar reglas de dwm para usar transmission y no qbittorrent
 #
-# Descargar stage 2 en /tmp o borrarlo después de la instalación
-#
 # Adaptar el script wakeme para funcionar con cualquier tarjeta de sonido
 # y poner en el PDF como podriamos configurar cronie para automatizar diversas
 # tareas utilizando los scripts que se nos proveen.
