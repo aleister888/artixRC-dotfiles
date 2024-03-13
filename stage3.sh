@@ -19,6 +19,8 @@
 # Explicar todo en el PDF.
 #
 # Añadir DVDBounce y xautolock
+#
+# Instalar bleachbit y baobab
 
 # Funciones que invocaremos a menudo
 whip_msg(){

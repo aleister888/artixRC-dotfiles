@@ -18,15 +18,15 @@ ewwspawn(){
 	local monitors=$(xrandr --listmonitors | grep -c " .:")
 	# Definir el archivo al que apunta el enlace simbólico actual
 	current_link=$(readlink -f "$HOME/.config/eww/dashboard.scss")
-	
+
 	# Definir los archivos de los que se crearán los enlaces simbólicos
 	file_1080="$HOME/.dotfiles/.config/eww/dashboard/dashboard1080p.scss"
 	file_1440="$HOME/.dotfiles/.config/eww/dashboard/dashboard1440p.scss"
 	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
-	
+
 	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
 	resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
-	
+
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
 	if [[ $resolution -le 1080 ]]; then
 		if [[ "$current_link" != "$file_1080" ]]; then
@@ -41,7 +41,7 @@ ewwspawn(){
 			ln -sf "$file_2160" "$HOME/.config/eww/dashboard.scss"
 		fi
 	fi
-	
+
 	# Cerrar el widget si hay mas de un monitor en uso
 	if [ "$monitors" -gt 1 ] || [ "$(xdotool getactivewindow)" ]; then
 		pkill eww
@@ -103,7 +103,7 @@ pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
 pgrep redshift		|| redshift -l "$LOCATION" -t 5000:4000 &
-pgrep syncthing		|| syncthing --no-browser &
+pgrep syncthing		|| syncthing --no-browser --no-default-folder &
 pgrep picom		|| picom &
 pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &

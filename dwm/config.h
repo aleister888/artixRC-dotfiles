@@ -103,7 +103,7 @@ static const Rule rules[] = {
 	{ "electron-mail",	NULL,	NULL,	1 << 1,	0,	0,	0,	-1,     0},
 	// Espacio 3: Internet
 	// Espacio 4: Oficina
-	{ "Zim",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,   's'},
+	{ "Zim",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,     0},
 	{ "Soffice",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,     0},
 	// Espacio 5: Chats
 	{ "discord",		NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
@@ -112,10 +112,6 @@ static const Rule rules[] = {
 	// Espacio 6: Gaming y Virtualización
 	{ "Virt-manager",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "MultiMC",		NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
-	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "steam",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
 	// Espacio 7: Guitarra/Producción MusicAudioPlayal
 	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
@@ -129,15 +125,12 @@ static const Rule rules[] = {
 	{ "Lrcget",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	{ "Easytag",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	{ "Picard",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "qBittorrent",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "transmission-gtk",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	// Espacio 10: Utilidades/Configuración
-	{ "org.gnome.clocks",	NULL,	NULL,	1 << 9,	1,	0,	0,	-1,     0},
 	{ "KeePassXC",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
 	{ "Timeshift-gtk",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
 	{ "BleachBit",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
 	{ "Gnome-disks",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "Clamtk",		NULL,	NULL,	1 << 9,	1,	0,	0,	-1,     0},
-	{ "balena-etcher",	NULL,	NULL,	1 << 9,	1,	0,	0,	-1,     0},
 	{ "Nitrogen",		NULL,	NULL,	1 << 9,	1,	0,	0,	-1,     0},
 	{ "Blueman-manager",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
 	{ "Arandr",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
