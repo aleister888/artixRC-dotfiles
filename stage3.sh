@@ -21,6 +21,10 @@
 # Añadir DVDBounce y xautolock
 #
 # Instalar bleachbit y baobab
+#
+# Añadir recordatorio para cambiar la función de dwm que limita el
+# framerate de los movimientos de ventana a 60Hz en el PDF (para el caso
+# en el que el usuario utilize un monitor de mas de 60Hz)
 
 # Funciones que invocaremos a menudo
 whip_msg(){
