@@ -17,6 +17,8 @@
 # Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
 #
 # Explicar todo en el PDF.
+#
+# Añadir DVDBounce y xautolock
 
 # Funciones que invocaremos a menudo
 whip_msg(){
