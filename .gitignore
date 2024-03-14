@@ -3,3 +3,7 @@ qt5ct.conf
 .stfolder
 .zcompdump
 dashboard.scss
+*.toc
+*.log
+*.out
+*.aux
