@@ -71,10 +71,10 @@ HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de arch
 	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 if [ "$PART_TYPE" == "msdos" ]; then
 	# BIOS -> MBR
-	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/"$HOME_DISK"
+	echo -e "label: dos\n,,\n" | sfdisk /dev/"$HOME_DISK"
 else
 	# EUFI -> GPT
-	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/"$HOME_DISK"
+	echo -e "label: gpt\n,,\n" | sfdisk /dev/"$HOME_DISK"
 fi
 if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
 	mkfs.ext4 "/dev/$HOME_SELECTED_PARTITION"
