@@ -164,12 +164,12 @@ fi
 partition_mount(){
 # Creamos nuestra carpeta para la partición de arranque y la montamos.
 if [ "$PART_TYPE" == "msdos" ]; then
-	BOOT_PART="/mnt/boot"
+	mkdir -p /mnt/boot
+	mount "/dev/$PART1" /mnt/boot
 else
-	BOOT_PART="/mnt/boot/efi"
+	mkdir -p /mnt/boot/efi
+	mount "/dev/$PART1" /mnt/boot/efi
 fi
-mkdir -p "$BOOT_PART"
-mount "/dev/$PART1" "$BOOT_PART"
 # Montamos nuestras particiones "/" y "/home".
 if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 	mount -o noatime,compress=zstd,subvol=@ "/dev/$PART3" /mnt
