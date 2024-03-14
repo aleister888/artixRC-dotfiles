@@ -387,7 +387,7 @@ scripts_link(){
 	done
 }
 
-trash_dir() {
+trash_dir(){
 	# Crear el directorio /.Trash con permisos adecuados
 	doas mkdir --parent /.Trash
 	doas chmod a+rw /.Trash
@@ -395,9 +395,9 @@ trash_dir() {
 }
 
 
-#####################
-# Optional Software #
-#####################
+syncthing_setup(){
+	echo "@reboot $(whoami) syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
+}
 
 # Instalar Virt-Manager y configurar la virtualización
 virt_install(){
@@ -501,6 +501,9 @@ service_add syslog-ng
 scripts_link
 
 doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
+
+# Configurar syncthing para que se inicie con el ordenador
+syncthing_setup
 
 # Crear la carpeta de basura
 trash_dir
