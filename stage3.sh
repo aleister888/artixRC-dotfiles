@@ -1,30 +1,12 @@
 #!/bin/bash
 
-# Falta rustdesk en el instalador y
-# configurar el tema gtk del usuario root
-#
-# Queda hacer un pdf que contenga información de toda la configuración
-# manual que nos puede interesar hacer (configurar una vm con vfio gpu y
-# looking glass, configurar cronie, etc.) e info. que nos pueda ser útil
-# (bindings de dwm, etc.).
-#
-# Ajustar reglas de dwm para usar transmission y no qbittorrent
+# Configurar el tema gtk del usuario root
 #
 # Adaptar el script wakeme para funcionar con cualquier tarjeta de sonido
-# y poner en el PDF como podriamos configurar cronie para automatizar diversas
-# tareas utilizando los scripts que se nos proveen.
 #
 # Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
 #
-# Explicar todo en el PDF.
-#
 # Añadir DVDBounce y xautolock
-#
-# Instalar bleachbit y baobab
-#
-# Añadir recordatorio para cambiar la función de dwm que limita el
-# framerate de los movimientos de ventana a 60Hz en el PDF (para el caso
-# en el que el usuario utilize un monitor de mas de 60Hz)
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -79,7 +61,9 @@ video_drivers(){
 			esac
 			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
 			doas gpasswd -a "$USER" bumblebee
-			service_add bumblebee
+			# Bumblebee necesita de xdm para funcionar, hasta que encuentre una solución
+			# no activaré el servicio.
+			#service_add bumblebee
 			;;
 	esac
 }
@@ -374,7 +358,7 @@ firefox_configure(){
 }
 
 # Configurar neovim e instalar los plugins
-vim_configure() {
+vim_configure(){
 	# Instalar VimPlug
 	sh -c "curl -fLo ${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim --create-dirs \
 		   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" >/dev/null
@@ -389,6 +373,28 @@ keepass_configure(){
 ApplicationTheme=classic" > $HOME/.config/keepassxc/keepassxc.ini
 }
 
+scripts_link(){
+	files=(
+		"convert-2m4a"
+		"convert-2mp3"
+		"corruption-check"
+		"exif-remove"
+		"wake"
+		"wakeme"
+	)
+	for file in "${files[@]}"; do
+		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
+	done
+}
+
+trash_dir() {
+	# Crear el directorio /.Trash con permisos adecuados
+	doas mkdir --parent /.Trash
+	doas chmod a+rw /.Trash
+	doas chmod +t /.Trash
+}
+
+
 #####################
 # Optional Software #
 #####################
@@ -396,7 +402,7 @@ ApplicationTheme=classic" > $HOME/.config/keepassxc/keepassxc.ini
 # Instalar Virt-Manager y configurar la virtualización
 virt_install(){
 	# Instalar paquetes para virtualización
-	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager qemu-full"
+	virtual_packages="looking-glass doas-sudo-shim-minimal libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
 	yay -S --noconfirm --needed $virtual_packages
 	# Configurar QEMU para usar el usuario actual
 	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
@@ -424,7 +430,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy perl-image-exiftool"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza github-cli lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy perl-image-exiftool bleachbit baobab"
 yayinstall $base_pkgs
 
 # Instalar dwm y todos los paquetes necesarios
@@ -465,11 +471,14 @@ yayinstall $privacy_conc
 
 # Software de Producción de Audio
 daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo"
-whip_yes "DAW" "¿Deseas instalar herramientas para músicos?" && yayinstall $daw_packages
+whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && yayinstall $daw_packages
 
 # Instalar software de ofimática
 office_packages="zim libreoffice"
 whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $office_packages
+
+# Instalar rustdesk
+whip_yes "Rustdes" "¿Deseas instalar rustdesk?" && yayinstall rustdesk-bin
 
 # Configurar firefox para proteger la privacidad
 firefox_configure
@@ -481,13 +490,20 @@ keepass_configure
 gtk_config
 qt_config
 
+# Descargar los plugins de vim
 vim_configure
 
 # Activar servicios
 service_add irqbalance
 service_add syslog-ng
 
+# Linkear scripts a /usr/local/bin
+scripts_link
+
 doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
+
+# Crear la carpeta de basura
+trash_dir
 
 # Crear directorios
 mkdir -p $HOME/Documents
@@ -497,4 +513,5 @@ mkdir -p $HOME/Pictures
 mkdir -p $HOME/Public
 mkdir -p $HOME/Videos
 
-rm $HOME/.bash* $HOME/.wget-hsts
+rm $HOME/.bash*
+rm $HOME/.wget-hsts

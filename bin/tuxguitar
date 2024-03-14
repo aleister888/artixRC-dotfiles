@@ -1,5 +1,0 @@
-#!/bin/sh -e
-cd /usr/share/tuxguitar
-exec ./tuxguitar.sh \
--Dtuxguitar.config.path="/home/aleister/.config/tuxguitar" \
--Dtuxguitar.user-share.path="/home/aleister/.cache/tuxguitar" "$@"

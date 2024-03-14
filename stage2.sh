@@ -164,7 +164,9 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 
 	# Configurar cronie para que se actualize automáticamente la selección de mirrors
 	if ! grep "reflector" /etc/crontab; then
-		echo "0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" | tee -a /etc/crontab
+		echo "SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" | tee -a /etc/crontab
 	fi
 }
 
@@ -210,7 +212,7 @@ user_create(){
 		fi
 	done
 
-	groups="wheel,lp,audio" # Definimos los grupos
+	groups="wheel,lp,audio,kvm" # Definimos los grupos
 	useradd -m -G "$groups" "$username" # Añadimos el usuario a dichos grupos
 	echo "$username:$user_password" | chpasswd # Establecemos la contraseña para el usuario
 }
