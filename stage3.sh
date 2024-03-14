@@ -88,8 +88,8 @@ gtk_config() {
 	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.config/gtk-4.0"
 	# Crear el archivo de configuración de GTK
 	echo "[Settings]
-	gtk-theme-name=Gruvbox-Dark-B
-	gtk-icon-theme-name=gruvbox-dark-icons-gtk" > "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
+gtk-theme-name=Gruvbox-Dark-B
+gtk-icon-theme-name=gruvbox-dark-icons-gtk" > "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
 	# Aplicar configuraciones utilizando stow
 	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
 
