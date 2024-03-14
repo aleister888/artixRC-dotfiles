@@ -480,6 +480,8 @@ whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $of
 # Instalar rustdesk
 whip_yes "Rustdes" "¿Deseas instalar rustdesk?" && yayinstall rustdesk-bin
 
+whip_yes "laTeX" "¿Deseas instalar laTeX?" && yayinstall texlive-full
+
 # Configurar firefox para proteger la privacidad
 firefox_configure
 

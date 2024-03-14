@@ -186,7 +186,7 @@ static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; /
 static const Key keys[] = {
 	// Modificador                  Tecla      Función           Argumento
 	// Abrir dmenu
-	{ MODKEY|ControlMask            XK_h       spawn,            SHCMD("zathura ~/.dotfiles/Help.pdf") }
+	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/Help.pdf") },
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 16'") },
 	// Abrir terminal
@@ -197,6 +197,7 @@ static const Key keys[] = {
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
 	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } },
+	{ MODKEY|ShiftMask,             XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", "/run/media/", NULL } } },
 	{ MODKEY,                       XK_F4,     spawn,            SHCMD("tauon") },
 	// Montar/Desmontar dispositivos android
 	{ MODKEY,                       XK_F5,     spawn,            SHCMD("android-mount") },
