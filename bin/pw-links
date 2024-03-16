@@ -27,7 +27,7 @@ case "$1" in
   mpv)
     share_toggle mpv mpv ;;
   qemu)
-    share_toggle win10 preferences-desktop-remote-desktop ;;
+    share_toggle "Looking Glass" preferences-desktop-remote-desktop ;;
   telegram)
     share_toggle "Telegram Desktop" telegram ;;
   reaper)

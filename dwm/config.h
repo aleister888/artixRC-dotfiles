@@ -205,7 +205,7 @@ static const Key keys[] = {
 	// Cerrar dwm
 	{ MODKEY|ShiftMask,             XK_F11,    spawn,            SHCMD("pkill dwm") },
 	// Ajustes de audio
-	{ MODKEY,                       XK_F12,    spawn,           SHCMD("pavucontrol") },
+	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pavucontrol") },
 	// Cambiar música
 	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -54 dwmblocks") },
 	{ MODKEY,                       XK_x,      spawn,            SHCMD("playerctl -p tauon next; pkill -54 dwmblocks") },
@@ -213,6 +213,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -54 dwmblocks") },
 	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -54 dwmblocks") },
 	// Cambiar volumen
+	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -2.5%; pkill -44 dwmblocks") },
+	{ 0,         XF86XK_AudioRaiseVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +2.5%; pkill -44 dwmblocks") },
 	{ MODKEY,                       XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -44 dwmblocks") },
 	{ MODKEY,                       XK_m,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%; pkill -44 dwmblocks") },
 	{ MODKEY|ControlMask,           XK_n,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -44 dwmblocks") },
