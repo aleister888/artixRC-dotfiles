@@ -49,7 +49,9 @@ video_drivers(){
 		intel)
 			pacinstall mesa xf86-video-intel libva-intel-driver ;;
 		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse ;;
+			pacinstall mesa xf86-video-vmware xf86-input-vmmouse spice-vdagent-openrc
+			service_add spice-vdagent
+			;;
 		optimus)
 			# Si elegimos la opción de portátil con optimus, elegir los drivers de la igpu
 			igpu_options=("amd" "AMD" "intel" "Intel") # Opciones
@@ -518,5 +520,7 @@ mkdir -p $HOME/Pictures
 mkdir -p $HOME/Public
 mkdir -p $HOME/Videos
 
-rm $HOME/.bash*
-rm $HOME/.wget-hsts
+rm $HOME/.bash* 2>/dev/null
+rm $HOME/.wget-hsts 2>/dev/null
+
+yay -Rcns $(yay -Qdtq) --noconfirm

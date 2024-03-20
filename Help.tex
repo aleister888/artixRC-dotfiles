@@ -571,7 +571,7 @@ Para conectarte a tu torre debes tener instalado algun cliente VNC, mi recomenda
 Instalar y configurar un firewall no es posible dentro de un chroot. Por eso configurar el firewall debe hacerse una vez reiniciemos y hallamos arrancado nuestro sistema operativo. Para instalar el firewall ejecuta:
 
 \begin{verbatim}
-doas sh -c 'pacman -Sy ufw ufw-openrc; rc-update add ufw default; ufw enable'
+doas sh -c 'pacman -Sy ufw-openrc; rc-update add ufw default; ufw enable'
 \end{verbatim}
 
 Ahora, la próxima vez que inicies tu equipo tendras un firewall ya instalado. Para configurarlo puedes ejecutar los siguientes comandos, que establecen unas reglas de filtrado de paquetes bastante permisivas.
@@ -580,6 +580,7 @@ Ahora, la próxima vez que inicies tu equipo tendras un firewall ya instalado. P
 doas ufw limit 22/tcp
 doas ufw allow 80/tcp
 doas ufw allow 443/tcp
+doas ufw allow syncthing
 doas ufw default deny incoming
 doas ufw default allow outgoing
 \end{verbatim}

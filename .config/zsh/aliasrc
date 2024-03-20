@@ -22,7 +22,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Actualizar el sistema
-alias update='yay -Syuu'
+alias update='yay -Syuu --removemake'
 
 # Herramientas
 alias xdotool_table='xmodmap -pk'
