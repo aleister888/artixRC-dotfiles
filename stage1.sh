@@ -46,7 +46,7 @@ if [ "$HOME_DISK_COUNT" -lt 1 ]; then
 	home_partition
 # Si hay una sola partición ya existente, se pregunta al usuario si quiere utilizarla como /home
 # o si quiere borrarla y crear una nueva
-elif [ "$HOME_DISK_COUNT" == 1 ]; then
+elif [ "$HOME_DISK_COUNT" -eq 1 ]; then
 	if ! whip_yes "Partición detectada" "Desea usar $HOME_SELECTED_PARTITION como /home"; then
 		if whip_yes "Confirmación" "¿Estás seguro? Esto borrara toda la información en $HOME_SELECTED_PARTITION"; then
 			wipefs --all "$HOME_DISK" # Borrar todos los datos del disco /home
