@@ -2,7 +2,6 @@
 
 # Instalar whiptail y parted
 pacman -Sy --noconfirm --needed parted libnewt >/dev/null
-
 # Detectar si el sitema es UEFI o BIOS.
 if [ ! -d /sys/firmware/efi ]; then
 	PART_TYPE='msdos' # MBR para BIOS
@@ -25,6 +24,10 @@ whip_menu(){
 	whiptail --title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
 }
 
+
+
+
+
 home_setup(){
 # Elegimos el disco para "/home" (Excluimos de la lista el disco ya elegido para "/").
 HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
@@ -35,34 +38,36 @@ case "$HOME_DISK" in
 *"nvme"*)
 	HOME_DISK_STRUCT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep -o 'nvme.n.p[0-9]*')
 	HOME_DISK_COUNT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep -oc 'nvme.n.p[0-9]*')
-	;;
+	HOME_SELECTED_PARTITION="$HOME_DISK"p1 ;;
 *)
 	HOME_DISK_STRUCT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep '[0-9]')
 	HOME_DISK_COUNT=$(lsblk -o NAME -n -l /dev/"$HOME_DISK"* | grep -c '[0-9]')
-	;;
-esac
-
-case "$HOME_DISK" in
-	*"nvme"*)
-		HOME_SELECTED_PARTITION="$HOME_DISK"p1 ;;
-	*)
-		HOME_SELECTED_PARTITION="$HOME_DISK"1 ;;
+	HOME_SELECTED_PARTITION="$HOME_DISK"1 ;;
 esac
 
 # Si no hay niguna partición ya creada preguntamos al usuario que tipo de partición quiere y la creamos.
 if [ "$HOME_DISK_COUNT" -lt 1 ]; then
 	home_partition
+# Si hay una sola partición ya existente, se pregunta al usuario si quiere utilizarla como /home
+# o si quiere borrarla y crear una nueva
+elif [ "$HOME_DISK_COUNT" == 1 ]; then
+	if ! whip_yes "Partición detectada" "Desea usar $HOME_SELECTED_PARTITION como /home"; then
+		if whip_yes "Confirmación" "¿Estás seguro? Esto borrara toda la información en $HOME_SELECTED_PARTITION"
+			wipefs --all "$HOME_DISK" # Borrar todos los datos del disco /home
+			home_partition
+		fi
+	fi
 # Si ya hay más de una partición presente, se pide al usuario que escoga que partición usar.
 elif [ "$HOME_DISK_COUNT" -gt 1 ]; then
-	HOME_PARTITIONS=$(echo "$HOME_DISK_STRUCT" | tr '\n' ' ')
-	declare -a HOME_PARTITIONS_ARRAY=()
-	for HOME_PARTITION in $HOME_PARTITIONS; do
-		SIZE=$(lsblk -o size /dev/"$HOME_PARTITION" | tail -n 1)
-		HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$SIZE")
-	done
-	HOME_SELECTED_PARTITION=$(whip_menu "Elegir Partición" \
-	"Eliga cual partición de $HOME_DISK desea usar para /home:" ${HOME_PARTITIONS_ARRAY[@]})
-# Si hay una sola partición ya creada en el disco duro se utilizara esta.
+		HOME_PARTITIONS=$(echo "$HOME_DISK_STRUCT" | tr '\n' ' ')
+		declare -a HOME_PARTITIONS_ARRAY=()
+		for HOME_PARTITION in $HOME_PARTITIONS; do
+			SIZE=$(lsblk -o size /dev/"$HOME_PARTITION" | tail -n 1)
+			HOME_PARTITIONS_ARRAY+=("$HOME_PARTITION" "$SIZE")
+		done
+		HOME_SELECTED_PARTITION=$(whip_menu "Elegir Partición" \
+		"Eliga cual partición de $HOME_DISK desea usar para /home:" ${HOME_PARTITIONS_ARRAY[@]})
+		# Si hay una sola partición ya creada en el disco duro se utilizara esta.
 fi
 }
 
@@ -70,11 +75,9 @@ home_partition(){
 HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
 	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 if [ "$PART_TYPE" == "msdos" ]; then
-	# BIOS -> MBR
-	echo -e "label: dos\n,,\n" | sfdisk /dev/"$HOME_DISK"
+	echo -e "label: dos\n,,\n" | sfdisk /dev/"$HOME_DISK" # BIOS -> MBR
 else
-	# EUFI -> GPT
-	echo -e "label: gpt\n,,\n" | sfdisk /dev/"$HOME_DISK"
+	echo -e "label: gpt\n,,\n" | sfdisk /dev/"$HOME_DISK" # EUFI -> GPT
 fi
 if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
 	mkfs.ext4 "/dev/$HOME_SELECTED_PARTITION"
@@ -85,6 +88,10 @@ elif [ "$HOME_FILESYSTEM" = "xfs" ]; then
 	mkfs.xfs "/dev/$HOME_SELECTED_PARTITION"
 fi
 }
+
+
+
+
 
 disk_setup(){
 # Elegir el tipo de partición para "/".
@@ -101,6 +108,8 @@ if [ -z "$INSTALL_DISK" ] || [ -z "$INSTALL_FILESYSTEM" ] || \
 	whip_msg "Operación Cancelada" "La instalación ha sido cancelada."
 	exit 1
 fi
+
+wipefs --all "$INSTALL_DISK" # Borrar toda la información del disco
 
 if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
 	home_setup
