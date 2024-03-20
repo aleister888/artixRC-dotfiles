@@ -50,6 +50,7 @@ elif [ "$HOME_DISK_COUNT" -eq 1 ]; then
 	if ! whip_yes "Partición detectada" "¿Desea usar $HOME_SELECTED_PARTITION como /home? En caso contrario, se formateará el disco."; then
 		if whip_yes "Confirmación" "¿Estás seguro? Esto borrara toda la información en $HOME_SELECTED_PARTITION"; then
 			wipefs --all "$HOME_DISK" # Borrar todos los datos del disco /home
+			partprobe "$HOME_DISK"
 			home_partition
 		fi
 	fi
@@ -103,6 +104,7 @@ if [ -z "$INSTALL_DISK" ] || [ -z "$INSTALL_FILESYSTEM" ] || \
 fi
 
 wipefs --all "$INSTALL_DISK" # Borrar toda la información del disco
+partprobe "$INSTALL_DISK"
 
 if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
 	home_setup
