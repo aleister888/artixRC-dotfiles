@@ -24,10 +24,6 @@ whip_menu(){
 	whiptail --title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
 }
 
-
-
-
-
 home_setup(){
 # Elegimos el disco para "/home" (Excluimos de la lista el disco ya elegido para "/").
 HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
@@ -79,6 +75,7 @@ if [ "$PART_TYPE" == "msdos" ]; then
 else
 	echo -e "label: gpt\n,,\n" | sfdisk /dev/"$HOME_DISK" # EUFI -> GPT
 fi
+
 if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
 	mkfs.ext4 "/dev/$HOME_SELECTED_PARTITION"
 elif [ "$HOME_FILESYSTEM" = "btrfs" ]; then
@@ -88,10 +85,6 @@ elif [ "$HOME_FILESYSTEM" = "xfs" ]; then
 	mkfs.xfs "/dev/$HOME_SELECTED_PARTITION"
 fi
 }
-
-
-
-
 
 disk_setup(){
 # Elegir el tipo de partición para "/".
