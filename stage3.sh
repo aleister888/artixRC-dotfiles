@@ -34,7 +34,7 @@ pacinstall bc zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack 
 
 video_drivers(){
 	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VMWare" "optimus" "Portátil")
+	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM" "optimus" "Portátil")
 	# Paquetes con los drivers de nvidia
 	nvidia_drivers="nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver"
 	# Elegimos nuestra tarjeta gráfica
@@ -49,7 +49,7 @@ video_drivers(){
 		intel)
 			pacinstall mesa xf86-video-intel libva-intel-driver ;;
 		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse spice-vdagent-openrc
+			pacinstall mesa xf86-video-vmware xf86-input-vmmouse spice-vdagent-openrc vulkan-virtio lib32-vulkan-virtio
 			service_add spice-vdagent
 			;;
 		optimus)
