@@ -108,7 +108,7 @@ pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
 pgrep dunst		|| dunst &
 pgrep xautolock		|| xautolock -time 5 -locker \
-~/.local/bin/DVDBounce/dvdbounce --fullscreen --screensaver &
+"~/.local/bin/DVDBounce/dvdbounce --fullscreen --screensaver" &
 pgrep nm-applet		|| nm-applet &
 
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
