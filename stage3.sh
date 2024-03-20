@@ -512,6 +512,10 @@ syncthing_setup
 # Crear la carpeta de basura
 trash_dir
 
+# Instalar java
+pacinstall jre17-openjdk jre17-openjdk-headless jdk-openjdk
+doas archlinux-java set java-17-openjdk
+
 # Crear directorios
 mkdir -p $HOME/Documents
 mkdir -p $HOME/Downloads
