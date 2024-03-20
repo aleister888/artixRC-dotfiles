@@ -72,9 +72,9 @@ home_partition(){
 HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
 	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 if [ "$PART_TYPE" == "msdos" ]; then
-	echo -e "label: dos\n,,\n" | sfdisk /dev/"$HOME_DISK" # BIOS -> MBR
+	echo -e "label: dos\n,,\n" | sfdisk --force /dev/"$HOME_DISK" # BIOS -> MBR
 else
-	echo -e "label: gpt\n,,\n" | sfdisk /dev/"$HOME_DISK" # EUFI -> GPT
+	echo -e "label: gpt\n,,\n" | sfdisk --force /dev/"$HOME_DISK" # EUFI -> GPT
 fi
 
 if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
@@ -129,11 +129,11 @@ esac
 # Creamos nuestras tablas de particiones y formateamos acordemente nuestra partición de arranque.
 if [ "$PART_TYPE" == "msdos" ]; then
 	# BIOS -> MBR
-	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/"$INSTALL_DISK"
+	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk --force /dev/"$INSTALL_DISK"
 	mkfs.ext4 -f "/dev/$PART1"
 else
 	# EUFI -> GPT
-	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/"$INSTALL_DISK"
+	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk --force /dev/"$INSTALL_DISK"
 	mkfs.fat -F32 -f "/dev/$PART1"
 fi
 
@@ -166,14 +166,6 @@ fi
 }
 
 partition_mount(){
-# Creamos nuestra carpeta para la partición de arranque y la montamos.
-if [ "$PART_TYPE" == "msdos" ]; then
-	mkdir -p /mnt/boot
-	mount "/dev/$PART1" /mnt/boot
-else
-	mkdir -p /mnt/boot/efi
-	mount "/dev/$PART1" /mnt/boot/efi
-fi
 # Montamos nuestras particiones "/" y "/home".
 if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 	mount -o noatime,compress=zstd,subvol=@ "/dev/$PART3" /mnt
@@ -189,6 +181,15 @@ else
 		mkdir -p /mnt/home
 		mount -o noatime /dev/"$HOME_SELECTED_PARTITION" /mnt/home
 	fi
+fi
+
+# Creamos nuestro directorio de arranque.
+if [ "$PART_TYPE" == "msdos" ]; then
+	mkdir -p /mnt/boot
+	mount "/dev/$PART1" /mnt/boot
+else
+	mkdir -p /mnt/boot/efi
+	mount "/dev/$PART1" /mnt/boot/efi
 fi
 }
 
