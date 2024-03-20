@@ -78,12 +78,12 @@ else
 fi
 
 if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
-	mkfs.ext4 "/dev/$HOME_SELECTED_PARTITION"
+	mkfs.ext4 -f "/dev/$HOME_SELECTED_PARTITION"
 elif [ "$HOME_FILESYSTEM" = "btrfs" ]; then
 	mkfs.btrfs -f "/dev/$HOME_SELECTED_PARTITION"
 elif [ "$HOME_FILESYSTEM" = "xfs" ]; then
 	pacman -Sy --noconfirm --needed xfsprogs
-	mkfs.xfs "/dev/$HOME_SELECTED_PARTITION"
+	mkfs.xfs -f "/dev/$HOME_SELECTED_PARTITION"
 fi
 }
 
@@ -130,11 +130,11 @@ esac
 if [ "$PART_TYPE" == "msdos" ]; then
 	# BIOS -> MBR
 	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/"$INSTALL_DISK"
-	mkfs.ext4 "/dev/$PART1"
+	mkfs.ext4 -f "/dev/$PART1"
 else
 	# EUFI -> GPT
 	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/"$INSTALL_DISK"
-	mkfs.fat -F32 "/dev/$PART1"
+	mkfs.fat -F32 -f "/dev/$PART1"
 fi
 
 # Creamos nuestra partición SWAP.
@@ -145,7 +145,7 @@ swapon "/dev/$PART2"
 # Creamos nuestra partición "/" y "/home".
 if [ "$INSTALL_FILESYSTEM" = "ext4" ]; then
 	parted -s "/dev/$INSTALL_DISK" mkpart primary ext4 4.5GB 100%
-	mkfs.ext4 "/dev/$PART3"
+	mkfs.ext4 -f "/dev/$PART3"
 elif [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 	parted -s "/dev/$INSTALL_DISK" mkpart primary btrfs 4.5GB 100%
 	mkfs.btrfs -f "/dev/$PART3"
@@ -161,7 +161,7 @@ elif [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
 elif [ "$INSTALL_FILESYSTEM" = "xfs" ]; then
 	pacman -Sy --noconfirm --needed xfsprogs
 	parted -s "/dev/$INSTALL_DISK" mkpart primary xfs 4.5GB 100%
-	mkfs.xfs "/dev/$PART3"
+	mkfs.xfs -f "/dev/$PART3"
 fi
 }
 
