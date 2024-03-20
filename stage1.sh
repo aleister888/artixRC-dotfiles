@@ -49,8 +49,6 @@ if [ "$HOME_DISK_COUNT" -lt 1 ]; then
 elif [ "$HOME_DISK_COUNT" -eq 1 ]; then
 	if ! whip_yes "Partición detectada" "¿Desea usar $HOME_SELECTED_PARTITION como /home? En caso contrario, se formateará el disco."; then
 		if whip_yes "Confirmación" "¿Estás seguro? Esto borrara toda la información en $HOME_SELECTED_PARTITION"; then
-			wipefs --all "$HOME_DISK" # Borrar todos los datos del disco /home
-			partprobe "$HOME_DISK"
 			home_partition
 		fi
 	fi
@@ -72,9 +70,9 @@ home_partition(){
 HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
 	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 if [ "$PART_TYPE" == "msdos" ]; then
-	echo -e "label: dos\n,,\n" | sfdisk /dev/"$HOME_DISK" >/dev/null # BIOS -> MBR
+	echo -e "label: dos\n,,\n" | sfdisk -f /dev/"$HOME_DISK" >/dev/null # BIOS -> MBR
 else
-	echo -e "label: gpt\n,,\n" | sfdisk /dev/"$HOME_DISK" >/dev/null # EUFI -> GPT
+	echo -e "label: gpt\n,,\n" | sfdisk -f /dev/"$HOME_DISK" >/dev/null # EUFI -> GPT
 fi
 
 if   [ "$HOME_FILESYSTEM" = "ext4" ]; then
@@ -103,9 +101,6 @@ if [ -z "$INSTALL_DISK" ] || [ -z "$INSTALL_FILESYSTEM" ] || \
 	exit 1
 fi
 
-wipefs --all "$INSTALL_DISK" # Borrar toda la información del disco
-partprobe "$INSTALL_DISK"
-
 if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
 	home_setup
 fi
@@ -129,11 +124,11 @@ esac
 # Creamos nuestras tablas de particiones y formateamos acordemente nuestra partición de arranque.
 if [ "$PART_TYPE" == "msdos" ]; then
 	# BIOS -> MBR
-	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk /dev/"$INSTALL_DISK" >/dev/null
+	echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk -f /dev/"$INSTALL_DISK" >/dev/null
 	mkfs.ext4 -f "/dev/$PART1"
 else
 	# EUFI -> GPT
-	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk /dev/"$INSTALL_DISK" >/dev/null
+	echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | sfdisk -f /dev/"$INSTALL_DISK" >/dev/null
 	mkfs.fat -F32 -f "/dev/$PART1"
 fi
 
