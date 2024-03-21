@@ -134,6 +134,14 @@ Cualquier texto que veas coloreado en naranja es un hipervínculo \emph{(exceptu
 
 \section{Compartir audio en Discord}
 
+Si has instalado el cliente de discord te darás cuenta de una funcionalidad que esta en la versión de Windows y no en la de Linux. En Linux, no puedes compartir el audio cuando compartes tu escritorio o video.
+
+Para solucionar este problema, cuando inicias sesión se crea un \emph{micrófono virtual} al que puedes añadir tu micrófono real y el audio de las aplicaciones que desees. Para que la gente pueda escuchar el audio de las aplicaciones tendrás que elegir en discord el micrófono como \emph{my-virtualmic}, y, recomendablemente; desactivar al reducción de ruido. Pues esta detectará el audio de las aplicaciones como ruido.
+
+Para añadir tu micrófono, haz click en una parte vacía del escritorio y en la pestaña \emph{Compar. audio} haz click en \emph{Ajustes Mic.}. Aparecerá un menu para añadir o quitar dispositivos de audio del micrófono virtual.
+
+También verás que en la pestaña \emph{Compar. audio} puedes hacer click en las diferentes opciones que hay para compartir o dejar de compartir el audio de las aplicaciones
+
 \section{Cronie y script útiles}
 
 Mi instalación viene con varios scripts para automatizar tareas pero que por defecto no se usan para nada.
@@ -360,9 +368,10 @@ Ahora debemos añadir cada uno de estos ID \emph{(sólo el texto contenido por l
 
 Si añadimos esta opción a nuestro archivo de configuración de GRUB, este quedaría como:
 
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[basicstyle=\ttfamily]
 GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
-GRUB_CMDLINE_LINUX="amd_iommu=on iommu=pt video=efifb:off vfio-pci.ids=10de:21c4,10de:1aeb,10de:1aec,10de:1aed"
+GRUB_CMDLINE_LINUX="amd_iommu=on iommu=pt video=efifb:off
+vfio-pci.ids=10de:21c4,10de:1aeb,10de:1aec,10de:1aed"
 \end{lstlisting}
 
 Ejecutamos de nuevo:
@@ -516,9 +525,29 @@ doas pacman -Sy --noconfirm etmpfiles
 
 Ahora ya tenemos casi todo listo, queda instalar los drivers de video e instalar Looking Glass en nuestra máquina virtual \emph{(a la hora de la instalación debió de haberse instalado ya en nuestro linux)}.
 
-Primero tenemos que añadir nuestra tarjeta gráfica a nuestra máquina virtual. Para ello tenemos que ir a los ajustes de nuestra máquina virtual y en \emph{"Añadir Dispositivo"}
+Primero tenemos que añadir nuestra tarjeta gráfica a nuestra máquina virtual. Para ello tenemos que ir a los ajustes de nuestra máquina virtual y en \emph{"Añadir Dispositivo"}, busca la pestaña para añadir dispostivos PCI y añade tu gráfica.
 
-\subsection{Pasos finales}
+\emph{Pendiente: Añadir imagen de como añadimos la gráfica}
+
+Ahora configura el servidor Spice para que use el puerto 6000 en vez de asignar un puerto automáticamente
+
+\emph{Pendiente: Añadir imagen de como configuramos spice}
+
+Ahora tenemos que activar la edición de XML en Virt-Manager y editar el código XML de nuestra máquina virtual. Añadiremos estas lineas de código al final para que el archivo acabe viendose así:
+
+\emph{Pendiente: Añadir imagen de como activamos edición del XML y como queda el XML modificado}
+
+Finalmente iniciamos nuestra máquina virtual e instalamos nuestros drivers de \href{https://www.nvidia.es/Download/index.aspx?lang=es}{NVIDIA} o \href{https://www.amd.com/es/support}{AMD} y \href{https://looking-glass.io/downloads}{Looking Glass Host}.
+
+Finalmente cambiamos el driver virtual de video de \emph{QXL} a \emph{None} y borramos el dispositivo de tableta táctil. La próxima vez que iniciemos la máquina virtual solo tenemos que iniciarla en Virt-Manager e interactuaremos con nuestra máquina virtual abriendo Looking Glass \emph{(Podemos abrirlo seleccionando "Looking Glass" en el menú que aparece cuando hacemos click derecho en alguna parte vacía del Escritorio)}.
+
+\emph{Pendiente: Añadir imagen de como realizamos los pasos mencionados}
+
+Para que esto funcione debemos reiniciar nuestro ordenador o ejecutar el comando.
+
+\begin{verbatim}
+doas install -g kvm -o $(whoami) -m 0660 /dev/null /dev/shm/looking-glass
+\end{verbatim}
 
 \begin{mybox}{Nota}
 	Para más información sobre como configurar un VFIO passthought puede consultar:
@@ -629,5 +658,9 @@ resizemouse(const Arg *arg)
 \end{verbatim}
 
 y realizar el mismo tipo de modificación. Para hacer los cambios efectivos re-compila dwm ejecutando \emph{doas make install} desde la carpeta de dwm, y reinicia dwm pulsando \emph{Alt Izq. + Shift + F11}.
+
+\section{Firefox}
+
+\emph{Pendiente: Instrucciones de como cambiar el buscador por defecto a DuckDuckGo, activar la integración con keepassxc, activar las extensiones y desactivar la administración de contraseñas}
 
 \end{document}
