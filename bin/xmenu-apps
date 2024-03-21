@@ -36,7 +36,7 @@ IMG:$ICONPATH/apps/radiotray.svg					Radio
 	BBC								$TERMINAL $RADIOFLAG "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service"
 
 IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
-	IMG:$ICONPATH/devices/audio-input-microphone.svg		Ajustar Mic.	pipewire-virtualmic-select
+	IMG:$ICONPATH/devices/audio-input-microphone.svg		Ajustes Mic.	pipewire-virtualmic-select
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		pw-links tauon
 	IMG:$ICONPATH/apps/firefox.svg					Firefox		pw-links firefox
 	IMG:$ICONPATH/apps/mpv.svg					mpv		pw-links mpv
