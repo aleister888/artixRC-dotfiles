@@ -70,10 +70,10 @@ map P size
 map s shell
 
 cmd on-cd &{{
-    # '&' commands run silently in background (which is what we want here),
-    # but are not connected to stdout.
-    # To make sure our escape sequence still reaches stdout we pipe it to /dev/tty
-    printf "\033]0;$(pwd | sed "s|$HOME|~|")\007" >/dev/tty
+	# '&' commands run silently in background (which is what we want here),
+	# but are not connected to stdout. To make sure our escape sequence
+	# still reaches stdout we pipe it to /dev/tty
+	printf "\033]0;$(pwd | sed "s|$HOME|~|")\007" >/dev/tty
 }}
 
 # Imprimir como título de ventana nuestro CWD
@@ -86,71 +86,80 @@ cmd clean ${{
 }}
 
 cmd compress ${{
-	clear; tput bold
-	set -f
-	echo "COMPRESS EVERYTHING:"
-	echo "  INSIDE => $(echo $f |sed 's#/[^/]*$##')"
-	echo "  INTO   => $(echo $PWD | sed 's/\//\_/g').tar"
-	trash-list
-	printf "Compress? [y/N]"
-	read ans
-	[ $ans = "y" ] && cd $PWD && tar -C . -cvf $(echo $PWD | sed 's/\//\_/g').tar * && printf "done"
-	read ans
+	whiptail --title "$(echo $f |sed 's#/[^/]*$##')" \
+	--msgbox "Comprimir todos los archivos:\n  Archivos de => $(echo $f |sed 's#/[^/]*$##')\n  En el archivo => /tmp/$(echo $PWD | sed 's/\//\_/g').*" 10 60 && \
+	formato=$(whiptail --title "Formato" --menu "¿En que formato desea comprimirlos?" \
+	15 60 3 "tar" ".tar.gz" "zip" ".zip" "7z" ".7z" 3>&1 1>&2 2>&3)
+	case "$formato" in
+	tar)
+		tar -zcvf /tmp/$(date +'%H_%M_%S').tar.gz . >/dev/null && \
+		whiptail --title "Operación Completada" \
+		--msgbox "Archivo comprimido en: /tmp/$(date +'%H_%M_%S').tar.gz" 10 60 ;;
+	zip)
+		zip -r /tmp/$(date +'%H_%M_%S').zip . >/dev/null && \
+		whiptail --title "Operación Completada" \
+		--msgbox "Archivo comprimido en: /tmp/$(date +'%H_%M_%S').zip" 10 60 ;;
+	7z)
+		7z a /tmp/$(date +'%H_%M_%S').7z . >/dev/null && \
+		whiptail --title "Operación Completada" \
+		--msgbox "Archivo comprimido en: 7z a /tmp/$(date +'%H_%M_%S').7z" 10 60 ;;
+	esac
 }}
 
 cmd size &{{
-  dunstctl close-all
-  notify-send "📚 Size is $(/usr/bin/du -chs $fx | grep total | awk {'print $1'})"
+	dunstctl close-all
+	notify-send -i system-file-manager \
+	"El tamaño es de $(/usr/bin/du -chs $fx | grep total | awk {'print $1'})"
 }}
 
 cmd home :cd ~/
 
 cmd bulk-rename ${{
-    old="$(mktemp)"
-    new="$(mktemp)"
-    if [ -n "$fs" ]; then
-        fs="$(basename $fs)"
-    else
-        fs="$(ls)"
-    fi
-    printf '%s\n' "$fs" >"$old"
-    printf '%s\n' "$fs" >"$new"
-    $EDITOR "$new"
-    [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
-    paste "$old" "$new" | while IFS= read -r names; do
-        src="$(printf '%s' "$names" | cut -f1)"
-        dst="$(printf '%s' "$names" | cut -f2)"
-        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
-            continue
-        fi
-        mv -- "$src" "$dst"
-    done
-    rm -- "$old" "$new"
-    /usr/bin/lf -remote "send $id unselect"
+	old="$(mktemp)"
+	new="$(mktemp)"
+	if [ -n "$fs" ]; then
+		fs="$(basename $fs)"
+	else
+		fs="$(ls)"
+	fi
+	printf '%s\n' "$fs" >"$old"
+	printf '%s\n' "$fs" >"$new"
+	$EDITOR "$new"
+	[ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
+	paste "$old" "$new" | while IFS= read -r names; do
+		src="$(printf '%s' "$names" | cut -f1)"
+		dst="$(printf '%s' "$names" | cut -f2)"
+		if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+			continue
+		fi
+		mv -- "$src" "$dst"
+	done
+	rm -- "$old" "$new"
+	/usr/bin/lf -remote "send $id unselect"
 }}
 
 cmd fzf_search ${{
-    RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
-    res="$(
-        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
-            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
-            --ansi --layout=reverse --header 'Search in files' \
-            | cut -d':' -f1 | sed 's/\\/\\\\/g;s/"/\\"/g'
-    )"
-    [ -n "$res" ] && /usr/bin/lf -remote "send $id select \"$res\""
+	RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+	res="$(
+		FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+		fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+		--ansi --layout=reverse --header 'Buscar en los archivos' \
+		| cut -d':' -f1 | sed 's/\\/\\\\/g;s/"/\\"/g'
+	)"
+	[ -n "$res" ] && /usr/bin/lf -remote "send $id select \"$res\""
 }}
 
 cmd fzf_jump ${{
-    res="$(find . -maxdepth 1 | fzf --reverse --header='Jump to location')"
-    if [ -n "$res" ]; then
-        if [ -d "$res" ]; then
-            cmd="cd"
-        else
-            cmd="select"
-        fi
-        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
-        /usr/bin/lf -remote "send $id $cmd \"$res\""
-    fi
+	res="$(find . -maxdepth 1 | fzf --reverse --header='Ir a la localización')"
+	if [ -n "$res" ]; then
+		if [ -d "$res" ]; then
+			cmd="cd"
+		else
+			cmd="select"
+		fi
+		res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+		/usr/bin/lf -remote "send $id $cmd \"$res\""
+	fi
 }}
 
 cmd open ${{
@@ -189,76 +198,75 @@ cmd open ${{
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
 cmd extract ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	printf "%s\n\t" "$fx"
-	printf "extract $f?[y/N]"
-	read ans
-	[ $ans = "y" ] && aunpack $f && printf "done"
-	read ans
+	whiptail --title "¿Extraer archivo(s)?" \
+	--msgbox "¿Quieres extraer el archivo $f?" 10 60 && \
+	aunpack $f && \
+	whiptail --title "Operación Completada" \
+	--msgbox "Los archivos se extrajeron correctamente" 10 60
 }}
 
 cmd paste &{{
-    set -- $(cat ~/.local/share/lf/files)
-    mode="$1"
-    shift
-    case "$mode" in
-        copy)
-            rsync -av --ignore-existing --progress -- "$@" . |
-            stdbuf -i0 -o0 -e0 tr '\r' '\n' |
-            while IFS= read -r line; do
-                /usr/bin/lf -remote "send $id echo $line"
-            done && notify-send '📋 File(s) copied.'
-            ;;
-        move) mv -n -- "$@" . && notify-send '📋 File(s) copied.';;
-    esac
-    rm ~/.local/share/lf/files
-    /usr/bin/lf -remote "send clear"
+	set -- $(cat ~/.local/share/lf/files)
+	mode="$1"
+	shift
+	case "$mode" in
+		copy)
+			rsync -av --ignore-existing --progress -- "$@" . |
+			stdbuf -i0 -o0 -e0 tr '\r' '\n' |
+			while IFS= read -r line; do
+				/usr/bin/lf -remote "send $id echo $line"
+			done && notify-send -i copyq "Archivo(s) copiados." >/dev/null
+			;;
+		move) mv -n -- "$@" . && notify-send -i copyq "Archivo(s) movidos."
+		;;
+	esac
+	rm ~/.local/share/lf/files
+	/usr/bin/lf -remote "send clear"
 }}
 
 cmd delete ${{
-  clear; tput bold
-  set -f
-  printf "%s\n\n" "$fx"
-  printf "¿Borrar archivo(s)? [y/N] "
-  read ans
-  [ $ans = "y" ] && rm -rf -- $fx && \
-  notify-send -i \
-  /usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
-  "Archivos borrados"
+	clear; tput bold
+	set -f
+	printf "%s\n\n" "$fx"
+	printf "¿Borrar archivo(s)? [s/N] "
+	read ans
+	[ $ans = "s" ] && rm -rf -- $fx && \
+	notify-send -i \
+	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+	"Archivos borrados"
 }}
 
 cmd trash ${{
-  clear; tput bold
-  set -f
-  printf "%s\n\n" "$fx"
-  printf "¿Mover archivo(s) a la papelera? [y/N] "
-  read ans
-  [ $ans = "y" ] && trash-put $fx &&
-  notify-send -i \
-  /usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
-  "Archivos movidos a la papelera"
+	clear; tput bold
+	set -f
+	printf "%s\n\n" "$fx"
+	printf "¿Mover archivo(s) a la papelera? [s/N] "
+	read ans
+	[ $ans = "s" ] && trash-put $fx &&
+	notify-send -i \
+	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+	"Archivos movidos a la papelera"
 }}
 
 cmd clean-trash ${{
-  clear; tput bold
-  set -f
-  printf "Contenidos de la papelera:\n"
-  trash-list
-  printf "¿Vaciar papelera? [y/N] "
-  read ans
-  [ $ans = "y" ] && trash-empty -f && \
-  notify-send -i \
-  /usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
-  "Archivos borrados"
+	clear; tput bold
+	set -f
+	printf "Contenidos de la papelera:\n"
+	trash-list
+	printf "¿Vaciar papelera? [s/N] "
+	read ans
+	[ $ans = "s" ] && trash-empty -f && \
+	notify-send -i \
+	/usr/local/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+	"Archivos borrados"
 }}
 
 cmd restore-trash ${{
-  clear; tput bold
-  set -f
-  printf "Contenidos de la papelera:\n"
-  trash-list
-  printf "¿Restaurar papelera? [y/N] "
-  read ans
-  [ $ans = "y" ] && trash-restore && printf "done"
+	clear; tput bold
+	set -f
+	printf "Contenidos de la papelera:\n"
+	trash-list
+	printf "¿Restaurar papelera? [s/N] "
+	read ans
+	[ $ans = "s" ] && trash-restore && printf "done"
 }}

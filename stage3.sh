@@ -1,12 +1,6 @@
 #!/bin/bash
 
-# Configurar el tema gtk del usuario root
-#
-# Adaptar el script wakeme para funcionar con cualquier tarjeta de sonido
-#
 # Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
-#
-# Añadir DVDBounce y xautolock
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -43,14 +37,22 @@ video_drivers(){
 
 	case $graphic_driver in
 		amd)
-			pacinstall mesa xf86-video-amdgpu libva-mesa-driver ;;
+			pacinstall mesa lib32-mesa xf86-video-amdgpu libva-mesa-driver ;;
 		nvidia)
-			pacinstall mesa $nvidia_drivers ;;
+			pacinstall mesa lib32-mesa $nvidia_drivers ;;
 		intel)
-			pacinstall mesa xf86-video-intel libva-intel-driver ;;
+			pacinstall mesa lib32-mesa xf86-video-intel libva-intel-driver ;;
 		virtual)
-			pacinstall mesa xf86-video-vmware xf86-input-vmmouse spice-vdagent-openrc vulkan-virtio lib32-vulkan-virtio
+			pacinstall mesa lib32-mesa xf86-video-vmware xf86-input-vmmouse spice-vdagent-openrc vulkan-virtio lib32-vulkan-virtio
 			service_add spice-vdagent
+			echo 'Section "Screen"
+Identifier "Screen0"
+Device     "Card0"
+Monitor    "Monitor0"
+SubSection "Display"
+	Modes "1920x1080"
+EndSubSection
+EndSection' | doas tee /etc/X11/xorg.conf
 			;;
 		optimus)
 			# Si elegimos la opción de portátil con optimus, elegir los drivers de la igpu
@@ -107,6 +109,17 @@ file:///home/$(whoami)/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
 	# Copia el tema deseado a la carpeta de temas
 	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
+
+	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
+	echo 'gtk-theme-name="gruvbox-dark-gtk"
+gtk-icon-theme-name="Papirus-Dark"
+gtk-font-name="Iosevka Nerd Font 14"
+gtk-cursor-theme-name="capitaine-cursors"
+gtk-cursor-theme-size=64' | doas tee /root/.gtkrc-2.0
+	doas mkdir -p /root/.config/gtk-3.0
+	doas mkdir -p /root/.config/gtk-4.0
+	doas cp $HOME/.dotfiles/.config/gtk-3.0/settings.ini /root/.config/gtk-3.0/
+	doas cp $HOME/.dotfiles/.config/gtk-4.0/settings.ini /root/.config/gtk-4.0/
 }
 
 # Configurar nuestro tema de QT
@@ -280,6 +293,9 @@ echo "Section \"InputClass\"
         Option \"XkbModel\" \"pc105\"
         Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
+	if [ $final_layout = "es" ]; then
+		doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
+	fi
 }
 
 fontdownload() {
@@ -287,6 +303,7 @@ fontdownload() {
 	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
 	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
 	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
+	# Archivos temporales
 	AGAVE_ZIP="/tmp/Agave.zip"
 	SYMBOLS_ZIP="/tmp/Symbols.zip"
 	IOSEVKA_ZIP="/tmp/Iosevka.zip"
