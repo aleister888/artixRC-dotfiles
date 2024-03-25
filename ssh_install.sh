@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# https://www.ssh-audit.com/hardening_guides.html
+# Install OpenSSH
+doas pacman -S openssh openssh-openrc
+# Activate OpenSSH service
+doas rc-update add sshd default
+# Generate the RSA and ED25519 keys
+doas ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
+doas ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+# Remove small Diffie-Hellman moduli
+awk '$5 >= 3071' /etc/ssh/moduli | doas tee /etc/ssh/moduli.safe
+doas mv -f /etc/ssh/moduli.safe /etc/ssh/moduli
+# Restrict supported key exchange, cipher, and MAC algorithms
+echo -e "\n# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256\nCiphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\nMACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com\nHostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com" | doas tee /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
+
+# Install fail2ban
+doas pacman -S fail2ban-openrc
+# Activate fail2ban service
+doas rc-update add fail2ban default
+echo "[Definition]
+actionstart =
+actionstop =
+actioncheck =
+actionban = ufw insert 1 deny from <ip> to any
+actionunban = ufw delete deny from <ip> to any" | doas tee /etc/fail2ban/action.d/ufw.conf
+sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/jail.local
+echo '[sshd]
+backend = polling
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 5
+action = ufw' | doas tee -a /etc/fail2ban/jail.local
