@@ -4,9 +4,9 @@
 [ ! -d "$HOME/.config" ] && mkdir -p "$HOME/.config"
 [ ! -d "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
 sh -c "cd $HOME/.dotfiles && stow --target="${HOME}/.local/bin/" bin/" >/dev/null
-ln -s $HOME/.dotfiles/.config/lf $HOME/.config/lf
-ln -s $HOME/.dotfiles/.config/nvim $HOME/.config/nvim
-ln -s $HOME/.dotfiles/.config/zsh $HOME/.config/zsh
+ln -s $HOME/.dotfiles/.config/lf $HOME/.config/
+ln -s $HOME/.dotfiles/.config/nvim $HOME/.config/
+ln -s $HOME/.dotfiles/.config/zsh $HOME/.config/
 # Borrar enlaces rotos
 find "$HOME/.local/bin" -type l ! -exec test -e {} \; -delete
 find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
