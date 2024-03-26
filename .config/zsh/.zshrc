@@ -1,10 +1,10 @@
 # Plugins
-source $XDG_CONFIG_HOME/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $XDG_CONFIG_HOME/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
-source $XDG_CONFIG_HOME/zsh/zsh-you-should-use/you-should-use.plugin.zsh
-source $XDG_CONFIG_HOME/zsh/ohmyzsh/dirhistory.plugin.zsh
-source $XDG_CONFIG_HOME/zsh/aliasrc
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-you-should-use/you-should-use.plugin.zsh
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/ohmyzsh/dirhistory.plugin.zsh
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/aliasrc
 
 bindkey -e
 

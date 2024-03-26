@@ -169,6 +169,8 @@ vim_configure
 # Instalar otros paquetes
 yayinstall pavucontrol github-cli dashbinsh simple-mtpfs pfetch-rs-bin thunderbird thunderbird-dark-reader keepassxc mate-calc gnu-free-fonts ttf-linux-libertine ttf-opensans
 
+dotfiles_install
+
 # Preparamos el uso de máquinas virtuales
 whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?" && virt_install
 
