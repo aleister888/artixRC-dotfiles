@@ -12,8 +12,7 @@ whip_yes(){
 }
 
 # Instalamos whiptail y otros paquetes
-pacinstall zsh dash stow libnewt
-
+sudo pacman -Sy --noconfirm --needed zsh dash stow libnewt
 
 # Borramos el grupo base-devel
 sudo pacman -R base-devel
