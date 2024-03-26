@@ -14,27 +14,26 @@ whip_yes(){
 # Instalamos whiptail y otros paquetes
 sudo pacman -Sy --noconfirm --needed zsh dash stow libnewt
 
-# Borramos el grupo base-devel
-sudo pacman -R --noconfirm base-devel 2>/dev/null
-# Instalamos los paquetes que nos interesan manualmente
-base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which opendoas firefox"
-sudo pacman -Sy --noconfirm --needed $base_devel_doas
+sudo_replace() {
+	# Borramos el grupo base-devel
+	sudo pacman -R --noconfirm base-devel 2>/dev/null
+	# Instalamos los paquetes que nos interesan manualmente
+	base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which opendoas firefox"
+	sudo pacman -Sy --noconfirm --needed $base_devel_doas
+	# Activamos doas y borramos sudo
+	echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" | \
+	sudo tee /etc/doas.conf
+	sudo pacman -R sudo
+	doas ln -s /usr/bin/doas /usr/bin/sudo
+	doas ln -s /usr/bin/nvim /usr/local/bin/vim
+}
 
-
-# Activamos doas y borramos sudo
-echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" | \
-sudo tee /etc/doas.conf
-sudo pacman -R sudo
-doas ln -s /usr/bin/doas /usr/bin/sudo
-doas ln -s /usr/bin/nvim /usr/local/bin/vim
-
-
-# Instalamos yay
-tmp_dir="/tmp/yay_install_temp"
-mkdir -p "$tmp_dir"
-git clone https://aur.archlinux.org/yay.git "$tmp_dir"
-sh -c "cd $tmp_dir && makepkg -si --noconfirm"
-
+aur_install(){
+	tmp_dir="/tmp/yay_install_temp"
+	mkdir -p "$tmp_dir"
+	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
+	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
+}
 
 # Instalamos nuestros archivos de configuración
 dotfiles_install(){
@@ -154,8 +153,18 @@ virt_install(){
 	doas virsh net-autostart default
 }
 
+############
+## SCRIPT ##
+############
+
+# Reemplazamos sudo con doas
+sudo_replace
+
+# Instalamos yay
+aur_install
+
 # Instalar paquetes para hacer funcionar lf
-lf_packages="lf bc imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv atool eza jq rsync tar gzip unzip mpv transmission-qt"
+lf_packages="lf bc imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv atool eza jq rsync tar gzip unzip mpv transmission-qt dunst"
 yayinstall $lf_packages
 
 # Instalar firefox y configurarlo
@@ -169,7 +178,11 @@ vim_configure
 # Instalar otros paquetes
 yayinstall pavucontrol github-cli dashbinsh simple-mtpfs pfetch-rs-bin thunderbird thunderbird-dark-reader keepassxc mate-calc gnu-free-fonts ttf-linux-libertine ttf-opensans
 
+# Instalamos los archivos de configuración
 dotfiles_install
+
+# Instalamos y configuramos syncthing
+syncthing_setup
 
 # Preparamos el uso de máquinas virtuales
 whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?" && virt_install
@@ -199,5 +212,3 @@ whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $of
 whip_yes "Rustdes" "¿Deseas instalar rustdesk?" && yayinstall rustdesk-bin
 
 whip_yes "laTeX" "¿Deseas instalar laTeX?" && pacinstall texlive-core texlive-bin $(pacman -Ssq texlive)
-
-syncthing_setup
