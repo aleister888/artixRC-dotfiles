@@ -15,10 +15,10 @@ whip_yes(){
 sudo pacman -Sy --noconfirm --needed zsh dash stow libnewt
 
 # Borramos el grupo base-devel
-sudo pacman -R base-devel
+sudo pacman -R --noconfirm base-devel 2>/dev/null
 # Instalamos los paquetes que nos interesan manualmente
 base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which opendoas firefox"
-pacinstall $base_devel_doas
+sudo pacman -Sy --noconfirm --needed $base_devel_doas
 
 
 # Activamos doas y borramos sudo
