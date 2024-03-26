@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Script para añadir mis configuraciones a un entorno de escritorio convencional
+# tanto en Aritx Linux OpenRC como para Arch Linux
+
 # Funciones para instalar paquetes
 pacinstall() {
 	doas pacman -Sy --noconfirm --needed "$@"
@@ -12,7 +15,7 @@ whip_yes(){
 }
 
 # Instalamos whiptail y otros paquetes
-sudo pacman -Sy --noconfirm --needed zsh dash stow libnewt
+sudo pacman -Sy --noconfirm --needed zsh dash stow libnewt wl-clipboard
 
 sudo_replace() {
 	# Borramos el grupo base-devel
@@ -20,6 +23,7 @@ sudo_replace() {
 	# Instalamos los paquetes que nos interesan manualmente
 	base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which opendoas firefox"
 	sudo pacman -Sy --noconfirm --needed $base_devel_doas
+	sudo pacman -D --asexplicit $base_devel_doas
 	# Activamos doas y borramos sudo
 	echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" | \
 	sudo tee /etc/doas.conf
@@ -119,7 +123,7 @@ syncthing_setup(){
 # Instalar Virt-Manager y configurar la virtualización
 virt_install(){
 	# Instalar paquetes para virtualización
-	virtual_packages="looking-glass doas-sudo-shim-minimal virt-manager qemu-full edk2-ovmf dnsmasq"
+	virtual_packages="looking-glass virt-manager qemu-full edk2-ovmf dnsmasq"
 	case "$(readlink -f /sbin/init)" in
 	*systemd*)
 		virtual_packages="$virtual_packages libvirt"
@@ -141,8 +145,8 @@ virt_install(){
 	# Activar sericios necesarios
 	case "$(readlink -f /sbin/init)" in
 	*systemd*)
-		doas systemctl enable libvirtd
-		doas systemctl enable virtlogd
+		doas systemctl enable --now libvirtd
+		doas systemctl enable --now virtlogd
 		;;
 	*)
 		doas rc-update add libvirtd default
@@ -167,7 +171,7 @@ aur_install
 pacman xorg-twm xorg-xclock xterm
 
 # Instalar paquetes para hacer funcionar lf
-lf_packages="lf bc imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv atool eza jq rsync tar gzip unzip mpv transmission-qt dunst"
+lf_packages="lf bc imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv nsxiv man-db atool dragon-drop mpv atool eza jq rsync tar gzip unzip mpv transmission-qt dunst"
 yayinstall $lf_packages
 
 # Instalar firefox y configurarlo
@@ -201,27 +205,47 @@ whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas 
 yayinstall $privacy_conc
 
 # Software de Producción de Audio
-daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
+daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth realtime-privileges"
 whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && \
-yayinstall $daw_packages
+yayinstall $daw_packages && \
+doas gpasswd -a "$USER" realtime && \
+doas gpasswd -a "$USER" audio && \
+cat /etc/security/limits.conf | grep audio || \
+echo "@audio           -       rtprio          95
+@audio           -       memlock         unlimited" | doas tee -a /etc/security/limits.conf
 
 # Instalar software de ofimática
-office_packages="zim libreoffice"
+office_packages="zim texlive-core texlive-bin $(pacman -Ssq texlive)"
 whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && \
 pacinstall $office_packages
 
 # Instalar rustdesk
-whip_yes "Rustdes" "¿Deseas instalar rustdesk?" && \
+whip_yes "Rustdesk" "¿Deseas instalar rustdesk?" && \
 yayinstall rustdesk-bin
 
 # Instalar latex
 whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
 pacinstall texlive-core texlive-bin $(pacman -Ssq texlive)
 
+gpu_libs(){
+gpu_info=$(lspci | grep -i vga)
+if echo "$gpu_info" | grep -iq "NVIDIA"; then
+	pacinstall nvidia-utils lib32-nvidia-utils
+else
+	pacinstall lib32-mesa
+fi
+}
+
 # Videojuegos
 whip_yes "Videojuegos" "¿Quieres instalar Steam y otras apps de Videojuegos?" && \
 echo "abi.vsyscall32=0" | doas tee /etc/sysctl.conf && \
-yayinstall steam lutris protonup-qt wine-staging wine-mono winetricks heroic-games-launcher-bin gamescope mangohud
+yayinstall steam lutris ryujinx-bin protonup-qt wine-staging wine-mono winetricks heroic-games-launcher-bin mangohud wine_gecko gamemode && \
+gpu_libs
 
-# KDE
-#packagekit-qt6
+if [ "$(which kde-open)" ]; then
+	pacinstall packagekit-qt6 packagekit-qt6
+fi
+
+pacinstall xclip wl-clipboard
+
+yay -Rcns $(yay -Qdtq) --noconfirm
