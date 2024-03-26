@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Cuando instalamos un daw, instalar realtime-privileges y añadir el usuario al grupo.
+
 # Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
 
 # Funciones que invocaremos a menudo

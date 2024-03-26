@@ -5,7 +5,7 @@
 doas pacman -S openssh openssh-openrc
 # Activate OpenSSH service
 doas rc-update add sshd default
-# Generate the RSA and ED25519 keys
+# Generate RSA and ED25519 keys
 doas ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 doas ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
 # Remove small Diffie-Hellman moduli
@@ -18,12 +18,14 @@ echo "\n# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com
 doas pacman -S fail2ban-openrc
 # Activate fail2ban service
 doas rc-update add fail2ban default
+# Use ufw as backend
 echo "[Definition]
 actionstart =
 actionstop =
 actioncheck =
 actionban = ufw insert 1 deny from <ip> to any
 actionunban = ufw delete deny from <ip> to any" | doas tee /etc/fail2ban/action.d/ufw.conf
+# Enable SSH banning
 sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/jail.local
 echo '[sshd]
 backend = polling
