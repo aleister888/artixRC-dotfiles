@@ -27,16 +27,22 @@ fi
 
 export PATH="$PATH:$HOME/.local/share/yabridge"
 
-export XCURSOR_PATH=/usr/share/icons/
-export XCURSOR_THEME=capitaine-cursors
-export XCURSOR_SIZE=64
+if [ -x "/usr/local/bin/dwm" ]; then
+	export XCURSOR_PATH=/usr/share/icons/
+	export XCURSOR_THEME=capitaine-cursors
+	export XCURSOR_SIZE=64
+	export GDK_SCALE=1
+	export GTK_USE_PORTAL=1
+	export XDG_CURRENT_DESKTOP=X-Generic
+	# Fix for java apps
+	export _JAVA_AWT_WM_NONREPARENTING=1
+	# Make QT themes follow qt5ct settings
+	export QT_QPA_PLATFORMTHEME="qt5ct"
+fi
 
 export PIPEWIRE_LATENCY="128/48000"
-export GDK_SCALE=1
-export GTK_USE_PORTAL=1
 
 # XDG
-export XDG_CURRENT_DESKTOP=X-Generic
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
@@ -56,12 +62,6 @@ export OPENER="xdg-open"
 export PAGER="less"
 export VIEWER="nomacs"
 
-# Fix for java apps
-export _JAVA_AWT_WM_NONREPARENTING=1
-
-# Make QT themes follow qt5ct settings
-export QT_QPA_PLATFORMTHEME="qt5ct"
-
 # ~/ Clean Up
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export GOPATH="$XDG_DATA_HOME"/go
@@ -80,7 +80,7 @@ export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"/npm/npmrc
 export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
 
 # Abreviaciones
-source "$XDG_CONFIG_HOME/zsh/aliasrc"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
 
 # lf Icons
 export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=:or=:\
