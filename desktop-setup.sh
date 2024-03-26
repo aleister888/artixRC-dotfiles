@@ -95,13 +95,13 @@ firefox_configure(){
 # Configurar neovim e instalar los plugins
 vim_configure(){
 	# Instalar VimPlug
-	sh -c "curl -fLo ${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim --create-dirs \
-		   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" >/dev/null
+	sh -c "curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" >/dev/null
 	# Instalar los plugins
 	nvim +'PlugInstall --sync' +qa >/dev/null 2>&1
 }
 
 syncthing_setup(){
+	pacinstall syncthing
 	case "$(readlink -f /sbin/init)" in
 	*systemd*)
 		pacinstall cronie
@@ -187,28 +187,41 @@ dotfiles_install
 # Instalamos y configuramos syncthing
 syncthing_setup
 
-## Preparamos el uso de máquinas virtuales
-#whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?" && virt_install
-#
-## Preguntamos si instalar software para audiofilos
-#music_packages="easytag picard atool flacon cuetools"
-#whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
-#yayinstall $music_packages
-#
-## Preguntar si instalar paquetes que pueden vulnerar la privacidad
-#privacy_conc="discord forkgram-bin"
-#whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
-#yayinstall $privacy_conc
-#
-## Software de Producción de Audio
-#daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
-#whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && yayinstall $daw_packages
-#
-## Instalar software de ofimática
-#office_packages="zim libreoffice"
-#whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && pacinstall $office_packages
-#
-## Instalar rustdesk
-#whip_yes "Rustdes" "¿Deseas instalar rustdesk?" && yayinstall rustdesk-bin
-#
-#whip_yes "laTeX" "¿Deseas instalar laTeX?" && pacinstall texlive-core texlive-bin $(pacman -Ssq texlive)
+# Preparamos el uso de máquinas virtuales
+whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?" && virt_install
+
+# Preguntamos si instalar software para audiofilos
+music_packages="easytag picard atool flacon cuetools"
+whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
+yayinstall $music_packages
+
+# Preguntar si instalar paquetes que pueden vulnerar la privacidad
+privacy_conc="discord forkgram-bin"
+whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
+yayinstall $privacy_conc
+
+# Software de Producción de Audio
+daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
+whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && \
+yayinstall $daw_packages
+
+# Instalar software de ofimática
+office_packages="zim libreoffice"
+whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && \
+pacinstall $office_packages
+
+# Instalar rustdesk
+whip_yes "Rustdes" "¿Deseas instalar rustdesk?" && \
+yayinstall rustdesk-bin
+
+# Instalar latex
+whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
+pacinstall texlive-core texlive-bin $(pacman -Ssq texlive)
+
+# Videojuegos
+whip_yes "Videojuegos" "¿Quieres instalar Steam y otras apps de Videojuegos?" && \
+echo "abi.vsyscall32=0" | doas tee /etc/sysctl.conf && \
+yayinstall steam lutris protonup-qt wine-staging wine-mono winetricks heroic-games-launcher-bin gamescope mangohud
+
+# KDE
+#packagekit-qt6

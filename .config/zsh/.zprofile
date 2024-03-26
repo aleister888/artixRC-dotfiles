@@ -46,20 +46,21 @@ if [ -x "/usr/local/bin/dwm" ]; then
 	export XDG_CACHE_HOME="$HOME/.cache"
 	export XDG_STATE_HOME="$HOME/.local/state"
 	# Apps
-	export EDITOR="nvim"
-	export SUDO_EDITOR="nvim"
-	export READER="zathura"
-	export TERMINAL="st"
-	export TERMTITLE="-t"
-	export TERMEXEC=""
-	export TERM="st-256color"
-	export BROWSER="firefox"
-	export VIDEO="mpv"
-	export OPENER="xdg-open"
-	export PAGER="less"
-	export VIEWER="nomacs"
 	export PIPEWIRE_LATENCY="128/48000"
 fi
+
+export EDITOR="nvim"
+export SUDO_EDITOR="nvim"
+export READER="zathura"
+export TERMINAL="st"
+export TERMTITLE="-t"
+export TERMEXEC=""
+export TERM="st-256color"
+export BROWSER="firefox"
+export VIDEO="mpv"
+export OPENER="xdg-open"
+export PAGER="less"
+export VIEWER="nsxiv"
 
 # Limpiar el directorio ~/ de archivos de configuración
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
