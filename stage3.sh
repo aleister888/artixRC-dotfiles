@@ -65,11 +65,12 @@ EndSection' | doas tee /etc/X11/xorg.conf
 				amd) nvidia_drivers="$nvidia_drivers xf86-video-amdgpu libva-mesa-driver" ;;
 				intel) nvidia_drivers="$nvidia_drivers xf86-video-intel libva-intel-driver" ;;
 			esac
-			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
+			pacinstall mesa bumblebee bumblebee-openrc xorg-xdm $nvidia_drivers
 			doas gpasswd -a "$USER" bumblebee
 			# Bumblebee necesita de xdm para funcionar, hasta que encuentre una solución
 			# no activaré el servicio.
-			#service_add bumblebee
+			service_add xdm
+			service_add bumblebee
 			;;
 	esac
 }
