@@ -232,7 +232,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 # Instalar los paquetes necesarios para usar dwm como entorno de escritorio
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
-	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk xmenu nsxiv \
+	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk xmenu nsxiv xorg-twm xorg-xclock xterm \
 	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl
 }
 

@@ -163,6 +163,9 @@ sudo_replace
 # Instalamos yay
 aur_install
 
+# Instalar paquetes de xorg
+pacman xorg-twm xorg-xclock xterm
+
 # Instalar paquetes para hacer funcionar lf
 lf_packages="lf bc imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv atool eza jq rsync tar gzip unzip mpv transmission-qt dunst"
 yayinstall $lf_packages
