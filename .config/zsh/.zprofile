@@ -3,21 +3,21 @@
 # Abreviaciones
 source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
 
-if [ -d "$HOME/.local/bin" ] ; then
+if [[ -d "$HOME/.local/bin" ]] ; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
-if [ -x "/usr/local/bin/dwm" ]; then
+if [[ -x /usr/local/bin/dwm ]]; then
 	# Añadir scripts de eww a $PATH
-	if [ -d "$HOME/.local/bin/eww" ]; then
+	if [[ -d "$HOME/.local/bin/eww" ]]; then
 	PATH="$HOME/.local/bin/eww:$PATH"
 	fi
 	# Añadir scripts de dwmblocks a $PATH
-	if [ -d "$HOME/.local/bin/sb" ]; then
+	if [[ -d "$HOME/.local/bin/sb" ]]; then
 		PATH="$HOME/.local/bin/sb:$PATH"
 	fi
 	# Definir localización para ser usada por Redshift
-	if [ -z "$LOCATION" ]; then
+	if [[ -z "$LOCATION" ]]; then
 		# Verificar la conexión a internet
 		if ping -q -c 1 -W 1 gnu.org >/dev/null; then
 			# Si hay conexión a internet, asignar el valor utilizando curl y jq
@@ -136,9 +136,9 @@ pi=33:\
 fi=00"
 
 # Iniciar dwm
-if [ -x "/usr/local/bin/dwm" ]; then
+if [[ -x "/usr/local/bin/dwm" ]]; then
 if [[ "$(tty)" = "/dev/tty1" ]]; then
-	if [ "$(pgrep -c dbus)" -lt 5 ]; then
+	if [[ "$(pgrep -c dbus)" -lt 5 ]]; then
 		export $(dbus-launch) && dbus-update-activation-environment --all &
         	startx
 	else
