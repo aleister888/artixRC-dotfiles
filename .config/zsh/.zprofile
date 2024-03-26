@@ -15,7 +15,7 @@ fi
 # Definir localización para ser usada por Redshift
 #
 # Verificar si $LOCATION está definida:
-if [ -z "$LOCATION" ]; then
+if [ -z "$LOCATION" ] && [ -x "/usr/local/bin/dwm" ]; then
 	# Verificar la conexión a internet
 	if ping -q -c 1 -W 1 gnu.org >/dev/null; then
 		# Si hay conexión a internet, asignar el valor utilizando curl y jq
