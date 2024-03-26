@@ -29,7 +29,7 @@ recovery-pacman() {
     --needed
 }
 
-# Cambiar directorios con lf
+# Cambiar directorios con lf (Ctrl+O)
 lfcd () {
     tmp="$(mktemp)"
     lf -last-dir-path="$tmp" "$@"

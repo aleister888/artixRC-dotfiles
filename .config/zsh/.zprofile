@@ -1,68 +1,67 @@
 #!/bin/sh
 
+# Abreviaciones
+source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
+
 if [ -d "$HOME/.local/bin" ] ; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
-if [ -d "$HOME/.local/bin/eww" ] ; then
-	PATH="$HOME/.local/bin/eww:$PATH"
-fi
-
-if [ -d "$HOME/.local/bin/sb" ] ; then
-	PATH="$HOME/.local/bin/sb:$PATH"
-fi
-
-# Definir localización para ser usada por Redshift
-#
-# Verificar si $LOCATION está definida:
-if [ -z "$LOCATION" ] && [ -x "/usr/local/bin/dwm" ]; then
-	# Verificar la conexión a internet
-	if ping -q -c 1 -W 1 gnu.org >/dev/null; then
-		# Si hay conexión a internet, asignar el valor utilizando curl y jq
-		export LOCATION=$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"' &)
-	else
-		echo "No se pudo establecer conexión a internet."
-	fi
-fi
-
-export PATH="$PATH:$HOME/.local/share/yabridge"
-
 if [ -x "/usr/local/bin/dwm" ]; then
+	# Añadir scripts de eww a $PATH
+	if [ -d "$HOME/.local/bin/eww" ]; then
+	PATH="$HOME/.local/bin/eww:$PATH"
+	fi
+	# Añadir scripts de dwmblocks a $PATH
+	if [ -d "$HOME/.local/bin/sb" ]; then
+		PATH="$HOME/.local/bin/sb:$PATH"
+	fi
+	# Definir localización para ser usada por Redshift
+	if [ -z "$LOCATION" ]; then
+		# Verificar la conexión a internet
+		if ping -q -c 1 -W 1 gnu.org >/dev/null; then
+			# Si hay conexión a internet, asignar el valor utilizando curl y jq
+			export LOCATION=$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | \
+			jq -r '"\(.location.lat):\(.location.lng)"' &)
+		else
+			echo "No se pudo establecer conexión a internet."
+		fi
+	fi
+	# Definir cursor usado por X11
+	export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
 	export XCURSOR_PATH=/usr/share/icons/
 	export XCURSOR_THEME=capitaine-cursors
 	export XCURSOR_SIZE=64
+	# Usar el filechooser del portal GTK
 	export GDK_SCALE=1
 	export GTK_USE_PORTAL=1
-	export XDG_CURRENT_DESKTOP=X-Generic
 	# Fix for java apps
 	export _JAVA_AWT_WM_NONREPARENTING=1
 	# Make QT themes follow qt5ct settings
 	export QT_QPA_PLATFORMTHEME="qt5ct"
+	# XDG
+	export XDG_CURRENT_DESKTOP=X-Generic
+	export XDG_CONFIG_HOME="$HOME/.config"
+	export XDG_DATA_HOME="$HOME/.local/share"
+	export XDG_CACHE_HOME="$HOME/.cache"
+	export XDG_STATE_HOME="$HOME/.local/state"
+	# Apps
+	export EDITOR="nvim"
+	export SUDO_EDITOR="nvim"
+	export READER="zathura"
+	export TERMINAL="st"
+	export TERMTITLE="-t"
+	export TERMEXEC=""
+	export TERM="st-256color"
+	export BROWSER="firefox"
+	export VIDEO="mpv"
+	export OPENER="xdg-open"
+	export PAGER="less"
+	export VIEWER="nomacs"
+	export PIPEWIRE_LATENCY="128/48000"
 fi
 
-export PIPEWIRE_LATENCY="128/48000"
-
-# XDG
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_STATE_HOME="$HOME/.local/state"
-
-# Apps
-export EDITOR="nvim"
-export SUDO_EDITOR="nvim"
-export READER="zathura"
-export TERMINAL="st"
-export TERMTITLE="-t"
-export TERMEXEC=""
-export TERM="st-256color"
-export BROWSER="firefox"
-export VIDEO="mpv"
-export OPENER="xdg-open"
-export PAGER="less"
-export VIEWER="nomacs"
-
-# ~/ Clean Up
+# Limpiar el directorio ~/ de archivos de configuración
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export GOPATH="$XDG_DATA_HOME"/go
 export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var
@@ -77,12 +76,8 @@ export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"/npm/npmrc
-export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
 
-# Abreviaciones
-source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
-
-# lf Icons
+# Iconos de lf
 export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=:or=:\
 *.mp3=:*.opus=:*.ogg=:*.m4a=:*.flac=:*.ape=:*.wav=:*.cue=:\
 *.RPP=󰋅:*.RPP-bak=󰋅:*.rpp=󰋅:*.rpp-bak=󰋅:*.rpp-PROX=󰋅:*drums.wav=󰋅:\
@@ -139,7 +134,7 @@ or=31;01:\
 pi=33:\
 fi=00"
 
-# start dwm
+# Iniciar dwm
 if [[ "$(tty)" = "/dev/tty1" ]]; then
 	if [ "$(pgrep -c dbus)" -lt 5 ]; then
 		export $(dbus-launch) && dbus-update-activation-environment --all &
