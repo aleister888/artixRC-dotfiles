@@ -3,6 +3,9 @@
 # Script para añadir mis configuraciones a un entorno de escritorio convencional
 # tanto en Aritx Linux OpenRC como para Arch Linux
 
+# TODO: Instalar dmenu y st
+# Configurar bluetooth
+
 # Funciones para instalar paquetes
 pacinstall() {
 	doas pacman -Sy --noconfirm --needed "$@"
