@@ -86,9 +86,6 @@ virtualmic(){
 if [ "$(pgrep -c dbus)" -lt 5 ]; then
 	export "$(dbus-launch)" && dbus-update-activation-environment --all &
 fi
-# Get location for redshift
-pgrep redshift || export LOCATION="$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"' &)"
-
 # Disable screen diming
 xset -dpms && xset s off &
 
@@ -103,7 +100,6 @@ dbus-update-activation-environment --all
 pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
-pgrep redshift		|| redshift -l "$LOCATION" -t 5000:4000 &
 pgrep picom		|| picom &
 pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
@@ -120,3 +116,6 @@ fi
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
 virtualmic &
 ewwspawn &
+
+# Iniciar redshift
+pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"' &)" -t 5000:4000

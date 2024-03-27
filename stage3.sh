@@ -436,6 +436,15 @@ virt_install(){
 	doas virsh net-autostart default
 }
 
+audio_setup(){
+	doas gpasswd -a "$USER" realtime && \
+	doas gpasswd -a "$USER" audio && \
+	cat /etc/security/limits.conf | grep audio || \
+	echo "@audio - rtprio 95
+	@audio - memlock unlimited
+	$(whoami) hard nofile 524288" | doas tee -a /etc/security/limits.conf
+}
+
 ############
 ## SCRIPT ##
 ############
@@ -496,11 +505,7 @@ mkdir -p $HOME/Documents/Guitarra/REAPER\ Media && \
 ln -s $HOME/Documents/Guitarra/REAPER\ Media $HOME/Documents/REAPER\ Media
 
 # Audio de baja latencia
-doas gpasswd -a "$USER" realtime && \
-doas gpasswd -a "$USER" audio && \
-cat /etc/security/limits.conf | grep audio || \
-echo "@audio           -       rtprio          95
-@audio           -       memlock         unlimited" | doas tee -a /etc/security/limits.conf
+audio_setup
 
 # Instalar software de ofimática
 office_packages="zim libreoffice"
@@ -558,7 +563,7 @@ mkdir -p $HOME/Videos
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
 
-# Allow Dualshock 4 controller
+# Permitir a Steam controlar mandos de PlayStation 4
 doas cp $HOME/.dotfiles/assets/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
 # Borrar paquetes no necesarios

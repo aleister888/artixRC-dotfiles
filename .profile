@@ -14,17 +14,6 @@ if [ -x /usr/local/bin/dwm ]; then
 	if [ -d "$HOME/.local/bin/sb" ]; then
 		PATH="$HOME/.local/bin/sb:$PATH"
 	fi
-	# Definir localización para ser usada por Redshift
-	if [ -z "$LOCATION" ]; then
-		# Verificar la conexión a internet
-		if ping -q -c 1 -W 1 gnu.org >/dev/null; then
-			# Si hay conexión a internet, asignar el valor utilizando curl y jq
-			export LOCATION=$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | \
-			jq -r '"\(.location.lat):\(.location.lng)"' &)
-		else
-			echo "No se pudo establecer conexión a internet."
-		fi
-	fi
 	# Definir cursor usado por X11
 	export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
 	export XCURSOR_PATH=/usr/share/icons/

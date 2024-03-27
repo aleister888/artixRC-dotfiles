@@ -158,6 +158,33 @@ virt_install(){
 	esac
 	# Autoinciar red virtual
 	doas virsh net-autostart default
+	doas useradd -m -G kvm $(whoami)
+}
+
+audio_setup(){
+	doas gpasswd -a "$USER" realtime && \
+	doas gpasswd -a "$USER" audio && \
+	cat /etc/security/limits.conf | grep audio || \
+	echo "@audio - rtprio 95
+	@audio - memlock unlimited
+	$(whoami) hard nofile 524288" | doas tee -a /etc/security/limits.conf
+}
+
+bluetooth_setup(){
+	blue_packages="blueman bluez-utils"
+	case "$(readlink -f /sbin/init)" in
+	*systemd*)
+		blue_packages="$blue_packages"
+		pacinstall $blue_packages
+		doas systemctl enable bluetooth
+		;;
+	*)
+		blue_packages="$blue_packages bluez-openrc"
+		pacinstall $blue_packages
+		doas rc-update add bluetoothd default
+		;;
+	esac
+	doas useradd -m -G lp $(whoami)
 }
 
 ############
@@ -210,12 +237,8 @@ yayinstall $privacy_conc
 # Software de Producción de Audio
 daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth realtime-privileges"
 whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && \
-yayinstall $daw_packages && \
-doas gpasswd -a "$USER" realtime && \
-doas gpasswd -a "$USER" audio && \
-cat /etc/security/limits.conf | grep audio || \
-echo "@audio           -       rtprio          95
-@audio           -       memlock         unlimited" | doas tee -a /etc/security/limits.conf
+yayinstall $daw_packages
+audio_setup
 
 # Instalar software de ofimática
 office_packages="zim texlive-core texlive-bin $(pacman -Ssq texlive)"
@@ -244,6 +267,9 @@ whip_yes "Videojuegos" "¿Quieres instalar Steam y otras apps de Videojuegos?" &
 echo "abi.vsyscall32=0" | doas tee /etc/sysctl.conf && \
 yayinstall steam lutris ryujinx-bin protonup-qt wine-staging wine-mono winetricks heroic-games-launcher-bin mangohud wine_gecko gamemode && \
 gpu_libs
+
+# Permitir a Steam controlar mandos de PlayStation 4
+doas cp $HOME/.dotfiles/assets/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
 if [ "$(which kde-open)" ]; then
 	pacinstall packagekit-qt6 packagekit-qt5

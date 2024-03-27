@@ -74,10 +74,6 @@ IMG:$ICONPATH/apps/$TERMINAL.svg					$(echo $TERMINAL | sed 's/^\(.\)/\U\1/')	$T
 IMG:$ICONPATH/apps/virt-manager.svg					Virt-Manager		virt-manager
 IMG:$ICONPATH/apps/remmina.svg						Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes
 
-IMG:$ICONPATH/apps/fluxgui.svg	Redshift
-	Start								pgrep redshift || sh -c "redshift -l $LOCATION -t 5000:4000 & notify-send '💡 Blue Light Filter Enabled'"
-	Stop								notify-send "💡 Blue Light Filter Off"; killall redshift
-
 IMG:$ICONPATH/apps/system-shutdown.svg					Power
 	IMG:$ICONPATH/apps/system-lock-screen.svg			Lock			i3lock-fancy
 	IMG:$ICONPATH/apps/preferences-desktop-screensaver.svg		Screensaver		xautolock -locknow
