@@ -56,7 +56,7 @@
 
 \section{Introducción}
 
-Este documento pretende ser una guía para terminar de configurar mi sistema, pues hay cosas que no son factibles auto-configurar. Así como puede ser una ayuda para terceros que se han animado a usar mi instalador y que ahora se encuentran ante la tarea de aprender a usar un entorno de trabajo que no es el suyo.
+Este documento pretende ser una guía para terminar de configurar nuestra isntalación de Artix, pues hay cosas que no son factibles auto-configurar. Así como puede ser una ayuda para terceros que se han animado a usar mi instalador y que ahora se encuentran ante la tarea de aprender a usar un entorno de trabajo que no es el suyo.
 
 \begin{mybox}{Nota}
 Cualquier texto que veas coloreado en naranja es un hipervínculo \emph{(exceptuando los títulos)}, si haces doble click en él, te llevará a la página web a la que hace referencia o a una donde se explica de que estoy hablando.
@@ -266,7 +266,30 @@ Si elegiste instalar herramientas de producción musical, deberas tener instalad
 15 23 * * * usuario1 yabridgectl sync --prune
 \end{verbatim}
 
-\section{Copias de seguridad}
+\subsection{compressed-backup}
+
+Este script crea un fichero comprimido \emph{tar.gz} con una copia de seguridad del directorio que se le da por primer argumento en el directorio que se le da por segundo argumento. Además se encarga de borrar las copias de seguridad que tienen mas de un mes automáticamente.
+
+Por ejemplo, añadir esta linea a nuestro \emph{/etc/crontab}:
+
+\begin{verbatim}
+0 16 * * 3 usuario1 compressed-backup ~/Música /Resguardos/Música
+\end{verbatim}
+
+Nos crearía todos los miércoles a las 16:00 una copia de seguridad de la carpeta \emph{~/Música} en un archivo comprimido en \emph{/Resguardos/Música}
+
+\subsection{Copias de seguridad}
+
+Podemos usar el comando \emph{rsync} para cerar copias de seguridad tipo mirror de nuestro directorio /home en otro disco duro.
+
+Por ejemplo, añadir esta línea a nuestro \emph{/etc/crontab}:
+
+\begin{verbatim}
+0 16 * * */2 usuario1 rsync -av --delete /home/ /mnt/Mirror1
+0 16 * * */7 usuario1 rsync -av --delete /home/ /mnt/Mirror2
+\end{verbatim}
+
+Hará que se cree un mirror de nuestro directorio \emph{/home} en \emph{/mnt/Mirror1} cada 2 días y otro en \emph{/mnt/Mirror2} cada semana.
 
 \section{VFIO GPU passthrough}
 
@@ -346,13 +369,13 @@ Una vez ejecutes este bloque de comandos, deberas obtener una salida parecida a 
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
 IOMMU Group 15:
-  08:00.0 VGA compatible controller [0300]: NVIDIA TU116 [GeForce GTX 1660 SUPER] [10de:21c4] (rev a1)
+  08:00.0 VGA compatible controller [0300]: NVIDIA TU116 [GeForce GTX 1660] [10de:21c4] (rev a1)
   08:00.1 Audio device [0403]: NVIDIA TU116 High Definition Audio Controller [10de:1aeb] (rev a1)
   08:00.2 USB controller [0c03]: NVIDIA Device [10de:1aec] (rev a1)
-  08:00.3 Serial bus controller [0c80]: NVIDIA TU116 [GeForce GTX 1650 SUPER] [10de:1aed] (rev a1)
+  08:00.3 Serial bus controller [0c80]: NVIDIA TU116 [GeForce GTX 1650] [10de:1aed] (rev a1)
 \end{lstlisting}
 
-Debes fijarte en que grupo se encuentra tu tarjeta gráfica, en este caso, se trata de una MSI GTX 1660 Super.
+Debes fijarte en que grupo se encuentra tu tarjeta gráfica, en este caso, se trata de una MSI GTX 1660.
 
 Ahora que tienes identificado en que grupo esta tu tarjeta gráfica, nos tenemos que fijar en las ID, que están contenidas por corchetes, para nuestro ejemplo serían:
 
@@ -439,11 +462,11 @@ Una vez descargada la ISO, abriremos \emph{virt-manager} y crearemos una máquin
 \begin{multicols}{2}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=\textwidth]{assets/vmm_iso_selection.png}
+\includegraphics[width=0.75\textwidth]{assets/vmm_iso_selection.png}
 \end{minipage}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=\textwidth]{assets/vmm_disk_creation.png}
+\includegraphics[width=0.75\textwidth]{assets/vmm_disk_creation.png}
 \end{minipage}
 \end{multicols}
 
@@ -452,11 +475,11 @@ Vamos a asignarle la memoria RAM \emph{(mi recomendación es asignar, como míni
 \begin{multicols}{2}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=\textwidth]{assets/vmm_memory_setup.png}
+\includegraphics[width=0.75\textwidth]{assets/vmm_memory_setup.png}
 \end{minipage}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=\textwidth]{assets/vmm_name.png}
+\includegraphics[width=0.75\textwidth]{assets/vmm_name.png}
 \end{minipage}
 \end{multicols}
 
@@ -573,15 +596,13 @@ También esto ayuda a que el script \ref{sec:wake} funcione correctamente.
 
 \section{SSH}
 
-Si queremos conectarnos a un equipo remoto atraves de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}, podemos activar el servicio con:
+Si queremos conectarnos a un equipo remoto atraves de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}. Por defecto incluyo un script que configura SSH de forma muy básica, configurando SSH para poder acceder a tu equipo remoto con una contraseña. Para activar ssh simplemente ejecuta:
 
 \begin{verbatim}
-doas rc-update add sshd default
+ssh-configure
 \end{verbatim}
 
-Pero antes vamos a seguir una serie de pasos, pues la configuración por defecto no es muy segura.
-
-...
+Mi recomendación es no conformarse con esta configuración básica. Desactiva el login con el usuario root, desactiva el login por contraseña y usa claves públicas para conectarte. Si no sabes de lo que estoy hablando, es mejor que no uses SSH y no te expongas a abrir la puerta a tu ordenador al internet, aunque sea con candado.
 
 \subsection{VNC através de SSH}
 
@@ -663,13 +684,31 @@ y realizar el mismo tipo de modificación. Para hacer los cambios efectivos re-c
 
 \subsection{Activar extensiones}
 
+Por defecto, nuestro Firefox viene instalado con varias extensiones útiles, pero estas vienen desactivadas.
+
+Para activarlas, pulsa en el icono con forma de pieza de puzzle, que esta situado a la derecha de la barra de búsqueda. Te encontrarás con una lista como la de la imagen de abajo. Simplemente activa cada extensión con haciendo click en el deslizador que hay a la izquierda de los 3 puntos y dale a aceptar en los menus flotantes que aparezcan pidiendo confirmación
+
+\begin{center}
+	\includegraphics[width=0.5\textwidth]{assets/extensions.jpg}
+\end{center}
+
 \subsection{Cambiar buscador por defecto}
 
-\subsection{Keepassxc}
+Pese a usar al configuración reforzada de firefox, \href{https://github.com/arkenfox/user.js}{arkenfox}, esta no cambia el que el buscador por defecto de firefox es google. Mi recomendación es cambiar google por DuckDuckGo.
+
+\begin{center}
+	\includegraphics[width=0.75\textwidth]{assets/search-engine.jpg}
+\end{center}
 
 \subsection{Desactivar baúl de contraseñas}
 
-Por defecto Firefox intentará manejar nuestras contraseñas ....
+Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usando la extensión de Keepass que viene incluida con nuestra isntalación, las ventanas de Firefox que aparecen preguntando si queremos guardar nuestra contraseña pueden ser bastante molestas.
+
+Para desacrivarlas, simplemente busca \emph{Contraseña} en el menu de configuración de Firefox y desactiva el \emph{Ask to save passwords} o \emph{Preguntar para guardar contraseñas}, en español.
+
+\begin{center}
+	\includegraphics[width=0.75\textwidth]{assets/passwords.jpg}
+\end{center}
 
 \subsection{Violentmonkey}
 
@@ -679,8 +718,6 @@ Violentmonkey es una extensión para cargar pequeños scripts de javascript desp
 ~/.dotfiles/violentmonkey.zip
 \end{verbatim}
 
-\emph{Pendiente: Instrucciones de como cambiar el buscador por defecto a DuckDuckGo, activar la integración con keepassxc, activar las extensiones y desactivar la administración de contraseñas}
-
-\section{Bluetooth Applet}
+\includegraphics[width=\textwidth]{assets/violentmonkey.jpg}
 
 \end{document}

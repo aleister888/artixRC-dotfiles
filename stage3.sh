@@ -385,8 +385,13 @@ vim_configure(){
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
-	echo "[GUI]
-ApplicationTheme=classic" > $HOME/.config/keepassxc/keepassxc.ini
+	echo "[Browser]
+Enabled=true
+CustomBrowserType=2
+
+[GUI]
+ApplicationTheme=classic
+" > $HOME/.config/keepassxc/keepassxc.ini
 }
 
 scripts_link(){
@@ -397,6 +402,7 @@ scripts_link(){
 		"exif-remove"
 		"wake"
 		"wakeme"
+		"compressed-backup"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
