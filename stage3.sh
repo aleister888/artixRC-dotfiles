@@ -488,9 +488,11 @@ whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas 
 yayinstall $privacy_conc
 
 # Software de Producción de Audio
-daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth realtime-privileges"
+daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
 whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && \
-yayinstall $daw_packages && \
+yayinstall $daw_packages
+
+# Audio de baja latencia
 doas gpasswd -a "$USER" realtime && \
 doas gpasswd -a "$USER" audio && \
 cat /etc/security/limits.conf | grep audio || \
