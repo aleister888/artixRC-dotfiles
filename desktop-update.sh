@@ -7,6 +7,7 @@ sh -c "cd $HOME/.dotfiles && stow --target="${HOME}/.local/bin/" bin/" >/dev/nul
 ln -s $HOME/.dotfiles/.config/lf $HOME/.config/
 ln -s $HOME/.dotfiles/.config/nvim $HOME/.config/
 ln -s $HOME/.dotfiles/.config/zsh $HOME/.config/
+ln -s $HOME/.dotfiles/.profile $HOME/
 # Borrar enlaces rotos
 find "$HOME/.local/bin" -type l ! -exec test -e {} \; -delete
 find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
