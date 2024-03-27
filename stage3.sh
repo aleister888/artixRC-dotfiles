@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Cuando instalamos un daw, instalar realtime-privileges y añadir el usuario al grupo.
-
 # Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
 
 # Funciones que invocaremos a menudo
@@ -65,11 +63,8 @@ EndSection' | doas tee /etc/X11/xorg.conf
 				amd) nvidia_drivers="$nvidia_drivers xf86-video-amdgpu libva-mesa-driver" ;;
 				intel) nvidia_drivers="$nvidia_drivers xf86-video-intel libva-intel-driver" ;;
 			esac
-			pacinstall mesa bumblebee bumblebee-openrc xorg-xdm $nvidia_drivers
+			pacinstall mesa bumblebee bumblebee-openrc $nvidia_drivers
 			doas gpasswd -a "$USER" bumblebee
-			# Bumblebee necesita de xdm para funcionar, hasta que encuentre una solución
-			# no activaré el servicio.
-			service_add xdm
 			service_add bumblebee
 			;;
 	esac
@@ -543,6 +538,10 @@ trash_dir
 pacinstall jre17-openjdk jre17-openjdk-headless jdk-openjdk
 doas archlinux-java set java-17-openjdk
 
+# Instalar y activar xdm
+pacinstall xorg-xdm xdm-openrc
+service_add xdm
+
 # Crear directorios
 mkdir -p $HOME/Documents
 mkdir -p $HOME/Downloads
@@ -554,4 +553,5 @@ mkdir -p $HOME/Videos
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
 
+# Borrar paquetes no necesarios
 yay -Rcns $(yay -Qdtq) --noconfirm

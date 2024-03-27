@@ -246,7 +246,7 @@ yayinstall steam lutris ryujinx-bin protonup-qt wine-staging wine-mono winetrick
 gpu_libs
 
 if [ "$(which kde-open)" ]; then
-	pacinstall packagekit-qt6 packagekit-qt6
+	pacinstall packagekit-qt6 packagekit-qt5
 fi
 
 pacinstall xclip wl-clipboard
