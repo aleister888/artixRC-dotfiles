@@ -1,5 +1,7 @@
 #!/bin/bash
 
+nitrogen --restore
+
 . "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 # Cerrar instancias previas del script
@@ -97,7 +99,6 @@ xset -dpms && xset s off &
 pgrep pipewire || pipewire-start &
 
 # Wallpaper
-nitrogen --restore
 dbus-update-activation-environment --all
 pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
@@ -110,6 +111,11 @@ pgrep dunst		|| dunst &
 pgrep xautolock		|| xautolock -time 5 -locker \
 "~/.local/bin/DVDBounce/dvdbounce --fullscreen --screensaver" &
 pgrep nm-applet		|| nm-applet &
+pgrep blueman-applet	|| blueman-applet &
+battery_count=$(ls -l /sys/class/power_supply/ | grep -c BAT)
+if [ "$battery_count" -gt 0 ]; then
+	pgrep cbatticon || cbatticon &
+fi
 
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
 virtualmic &

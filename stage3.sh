@@ -12,11 +12,11 @@ whip_yes(){
 }
 
 pacinstall() {
-	doas pacman -Sy --noconfirm --needed "$@"
+	doas pacman -Sy --noconfirm --needed --asexplicit "$@"
 }
 
 yayinstall() {
-	yay -Sy --noconfirm --needed "$@"
+	yay -Sy --noconfirm --needed --asexplicit "$@"
 }
 
 service_add(){
@@ -63,9 +63,7 @@ EndSection' | doas tee /etc/X11/xorg.conf
 				amd) nvidia_drivers="$nvidia_drivers xf86-video-amdgpu libva-mesa-driver" ;;
 				intel) nvidia_drivers="$nvidia_drivers xf86-video-intel libva-intel-driver" ;;
 			esac
-			pacinstall mesa bumblebee bumblebee-openrc bbswitch $nvidia_drivers
-			doas gpasswd -a "$USER" bumblebee
-			service_add bumblebee
+			pacinstall mesa nvidia-prime bbswitch $nvidia_drivers
 			;;
 	esac
 }
@@ -199,7 +197,8 @@ calculate_dpi() {
 
 # Configurar Xresources teniendo en cuenta el dpi
 xresources_config(){
-XRES_FILE="$HOME/.dotfiles/.config/Xresources"
+XRES_FILE="$HOME/.config/Xresources"
+cp $HOME/.dotfiles/assets/Xresources $XRES_FILE
 
 # Mostrar diálogo de selección de resolución y tamaño del monitor
 resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" 15 60 4 \
@@ -448,7 +447,7 @@ video_drivers && whip_msg "Drivers" "Los drivers de video se instalaron correcta
 aur_install
 
 # Instalar paquetes básicos
-base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin"
+base_pkgs="alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli"
 yayinstall $base_pkgs
 
 # Instalar dwm y todos los paquetes necesarios
@@ -490,7 +489,11 @@ yayinstall $privacy_conc
 # Software de Producción de Audio
 daw_packages="tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
 whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?" && \
-yayinstall $daw_packages
+yayinstall $daw_packages && \
+mkdir -p $HOME/Documents/Guitarra/Tabs && \
+ln -s $HOME/Documents/Guitarra/Tabs $HOME/Documents/Tabs
+mkdir -p $HOME/Documents/Guitarra/REAPER\ Media && \
+ln -s $HOME/Documents/Guitarra/REAPER\ Media $HOME/Documents/REAPER\ Media
 
 # Audio de baja latencia
 doas gpasswd -a "$USER" realtime && \
@@ -555,8 +558,8 @@ mkdir -p $HOME/Videos
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
 
-# Separated because is lately giving issues
-pacinstall github-cli
+# Allow Dualshock 4 controller
+doas cp $HOME/.dotfiles/assets/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
 # Borrar paquetes no necesarios
 yay -Rcns $(yay -Qdtq) --noconfirm
