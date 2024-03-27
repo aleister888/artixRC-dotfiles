@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$XDG_CONFIG_HOME/zsh/.zprofile"
+. "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 # Cerrar instancias previas del script
 INSTANCIAS="$(pgrep -c -x "$(basename "$0")")"
