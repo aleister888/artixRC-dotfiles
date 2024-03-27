@@ -149,7 +149,7 @@ suckless_install(){
 	doas make install --directory "$HOME/.dotfiles/dwm" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/dmenu" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
-	doas make install --directory "$HOME/.dotfiles/st" >/dev/null
+	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
 calculate_dpi() {
@@ -227,7 +227,7 @@ echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 # Instalar los paquetes necesarios para usar dwm como entorno de escritorio
 dotfiles_packages(){
 	yayinstall polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg \
-	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk xmenu nsxiv xorg-twm xorg-xclock xterm \
+	xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm \
 	xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl
 }
 

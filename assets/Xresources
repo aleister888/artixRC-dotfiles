@@ -29,10 +29,3 @@ Xcursor.size: 64
 ! LightGrey + White
 *color7:  #A89984
 *color15: #A89984
-
-XMenu.foreground: #D5C4A1
-XMenu.background: #1D2021
-XMenu.activeForeground: #D5C4A1
-XMenu.activeBackground: #282828
-XMenu.borderWidth: 4
-XMenu.borderColor: #282828
