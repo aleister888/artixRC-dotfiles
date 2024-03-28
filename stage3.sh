@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Incorpoprar un script para hacer copias de seguridad y para restaurar $HOME etc.
+# TODO: Hacer primero todas las preguntas y luego instalar los paquetes
+
+# Incorpoprar un script para restaurar $HOME etc.
 
 # Funciones que invocaremos a menudo
 whip_msg(){
