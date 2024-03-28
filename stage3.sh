@@ -21,7 +21,7 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli bc zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber mesa lib32-mesa polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc"
+packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber mesa lib32-mesa polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc"
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -89,6 +89,30 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	if [ "$final_layout" = "es" ]; then
 		doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 	fi
+}
+
+# Calcular el DPI de nuestra pantalla y configurar Xresources
+xresources_make(){
+	XRES_FILE="$HOME/.config/Xresources"
+	cp $HOME/.dotfiles/assets/Xresources $XRES_FILE
+	resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" \
+	15 60 4 "720p" "" "1080p" "" "1440p" "" "4K" "" 3>&1 1>&2 2>&3)
+	size=$(whiptail --title "Tamaño del Monitor" --menu "Seleccione el tamaño de su monitor (en pulgadas):" \
+	15 60 5 "14" "" "15.6" "" "17" "" "24" "" "27" "" 3>&1 1>&2 2>&3)
+	case $resolution in
+		"720p")
+			width=1280 height=720 ;;
+		"1080p")
+			width=1920 height=1080 ;;
+		"1440p")
+			width=2560 height=1440 ;;
+		"4K")
+			width=3840 height=2160 ;;
+	esac
+	display_dpi=$(echo "scale=2; sqrt($width^2 + $height^2) / $size" | bc)
+	rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc)
+	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 1.5
+	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
 }
 
 # Descargar e instalar nuestras fuentes
@@ -260,30 +284,6 @@ gtk-cursor-theme-size=64' | doas tee /root/.gtkrc-2.0
 	doas cp $HOME/.dotfiles/.config/gtk-4.0/settings.ini /root/.config/gtk-4.0/
 }
 
-# Calcular el DPI de nuestra pantalla y configurar Xresources
-xresources_make(){
-	XRES_FILE="$HOME/.config/Xresources"
-	cp $HOME/.dotfiles/assets/Xresources $XRES_FILE
-	resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" \
-	15 60 4 "720p" "" "1080p" "" "1440p" "" "4K" "" 3>&1 1>&2 2>&3)
-	size=$(whiptail --title "Tamaño del Monitor" --menu "Seleccione el tamaño de su monitor (en pulgadas):" \
-	15 60 5 "14" "" "15.6" "" "17" "" "24" "" "27" "" 3>&1 1>&2 2>&3)
-	case $resolution in
-		"720p")
-			width=1280 height=720 ;;
-		"1080p")
-			width=1920 height=1080 ;;
-		"1440p")
-			width=2560 height=1440 ;;
-		"4K")
-			width=3840 height=2160 ;;
-	esac
-	display_dpi=$(echo "scale=2; sqrt($width^2 + $height^2) / $size" | bc)
-	rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc)
-	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 1.5
-	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
-}
-
 # Configurar el fondo de pantalla
 nitrogen_configure() {
 # Crear el archivo de configuración bg-saved.cfg
@@ -410,11 +410,17 @@ packages="$packages libreoffice"
 whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
 packages="$packages texlive-core texlive-bin $(pacman -Ssq texlive)"
 
-pacinstall xkeyboard-config
+pacinstall xkeyboard-config bc
 
 # Elegimos distribución de teclado
 kb_layout_select
 kb_layout_conf
+
+# Calcular el DPI de nuestra pantalla y configurar Xresources
+xresources_make
+
+# A partir de aquí no se necesita interacción del usuario
+whip_msg "Tiempo de espera" "La instalación va a terminarse, esto tomará unos 20min aprox. (Depende de la velocidad de tu conexión a Internet)"
 
 # Instalamos todos nuestros paquetes
 yayinstall $packages
@@ -442,8 +448,6 @@ xinit_make
 qt_config
 # Configurar nuestro tema de GTK
 gtk_config
-# Calcular el DPI de nuestra pantalla y configurar Xresources
-xresources_make
 # Configurar el fondo de pantalla
 nitrogen_configure
 # Configurar el tema del cursor
