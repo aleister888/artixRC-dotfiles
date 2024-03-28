@@ -363,8 +363,7 @@ virt_conf(){
 	doas sed -i "s/^unix_sock_group = .*/unix_sock_group = \"$USER\"/" /etc/libvirt/libvirtd.conf
 	doas sed -i "s/^unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
 	# Agregar el usuario al grupo libvirt
-	doas usermod -aG libvirt "$USER"
-	doas usermod -aG libvirt-qemu "$USER"
+	doas usermod -mG libvirt,libvirt-qemu,kvm "$USER"
 	# Activar sericios necesarios
 	doas rc-update add libvirtd default
 	doas rc-service libvirtd start

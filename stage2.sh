@@ -13,6 +13,10 @@ service_add(){
 	rc-update add "$1" default
 }
 
+echo_msg(){
+	clear; echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"; sleep 1
+}
+
 # Detectar el fabricante del procesador
 manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
 
@@ -130,12 +134,12 @@ install_grub(){
 		echo "Sistema EFI detectado. Instalando GRUB para EFI..."
 		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
 		grub-mkconfig -o /boot/grub/grub.cfg && \
-		whip_msg "GRUB" "GRUB fue instalado correctamente (EFI)."
+		echo_msg "GRUB fue instalado correctamente (EFI)."
 	else
 		echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
 		grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
 		grub-mkconfig -o /boot/grub/grub.cfg && \
-		whip_msg "GRUB" "GRUB fue instalado correctamente (BIOS)."
+		echo_msg "GRUB fue instalado correctamente (BIOS)."
 	fi
 }
 
@@ -212,31 +216,28 @@ user_create(){
 		fi
 	done
 
-	groups="wheel,lp,audio,kvm" # Definimos los grupos
-	useradd -m -G "$groups" "$username" # Añadimos el usuario a dichos grupos
+	useradd -m -G wheel,lp "$username" # Añadimos el usuario a los grupos wheel y lp
 	echo "$username:$user_password" | chpasswd # Establecemos la contraseña para el usuario
 }
 
-if timezoneset; then
-	whip_msg "Zona horaria configurada" "La zona horaria ha sido configurada como $region/$timezone."
-fi
+timezoneset
 
-if genlocale; then
-	whip_msg "Locale" "Se estableción el locale como en_US.UTF-8 UTF-8 y es_ES.UTF-8 UTF-8."
-fi
+genlocale
 
 if hostname_config; then
-	whip_msg "/etc/hosts" "El archivo /etc/hosts fue configurado correctamente"
+	echo_msg "El archivo /etc/hosts fue configurado correctamente"
 fi
 
-if root_password; then
-	whip_msg "Contraseña de Root Establecida" "La contraseña del usuario root ha sido establecida correctamente."
+root_password
+
+if user_create; then
+	echo_msg "El usuario $username ha sido creado exitosamente."
 fi
 
 # Si el sistema es UEFI, instalar efibootmgr
 if [ -d /sys/firmware/efi ]; then
 	pacinstall efibootmgr
-	whip_msg "Sistema EFI" "Sistema EFI detectado. Se ha instalado efibootmgr."
+	echo_msg "Sistema EFI detectado. Se ha instalado efibootmgr."
 fi
 
 pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo
@@ -244,15 +245,11 @@ pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfs
 install_grub
 
 if arch_support; then
-	whip_msg "Pacman" "Los repositorios de Arch fueron activados correctamente"
+	echo_msg "Los repositorios de Arch fueron activados correctamente"
 fi
 
 if services_install; then
-	whip_msg "Servicios" "Los servicios se configuraron correctamente"
-fi
-
-if user_create; then
-	whip_msg "$username" "El usuario $username ha sido creado exitosamente."
+	echo_msg "Los servicios se configuraron correctamente"
 fi
 
 # Sustituir sudo por doas

@@ -24,6 +24,10 @@ whip_menu(){
 	whiptail --title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
 }
 
+echo_msg(){
+	clear; echo $1; sleep 1
+}
+
 home_setup(){
 # Elegimos el disco para "/home" (Excluimos de la lista el disco ya elegido para "/").
 HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
@@ -188,9 +192,9 @@ else
 fi
 }
 
-# Hemos terminado de formatear nuestros discos, vamos a proceder a instalar el sistema operativo
+# Formateamos los discos duros
 if disk_setup && disk_partition && partition_mount; then
-	whip_msg "Formateo completado" "El formateo ha sido completado."
+	echo_msg "El formateo ha sido completado."
 fi
 
 # Instalar paquetes con basestrap
