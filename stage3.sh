@@ -498,6 +498,9 @@ service_add irqbalance
 service_add syslog-ng
 service_add xdm
 
+doas rfkill ublock wifi
+doas rfkill ublock bluetooth
+
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && \
 virt_conf
