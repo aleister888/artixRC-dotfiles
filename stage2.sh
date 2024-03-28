@@ -19,7 +19,7 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc realtime-privileges git linux-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo"
 
 # Establecer zona horaria
 timezoneset(){
@@ -81,7 +81,6 @@ user_create(){
 	set_password "$username"
 }
 
-
 # Detectamos el fabricante del procesador
 microcode_detect(){
 manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
@@ -94,32 +93,6 @@ elif [ "$manufacturer" == "AuthenticAMD" ]; then
 fi
 }
 
-# Activar repositorios de Arch Linux
-arch_support(){
-	# Activar lib32
-	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
-	# Instalar paquetes necesarios
-	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
-	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
-	# Activar repositorios de Arch
-	grep -q "^\[extra\]" /etc/pacman.conf || \
-echo '[extra]
-Include = /etc/pacman.d/mirrorlist-arch
-
-[multilib]
-Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
-	# Actualizar cambios
-	pacman -Sy --noconfirm && \
-	pacman-key --populate archlinux
-	pacinstall reflector
-	# Escoger mirrors más rápidos de los repositorios de Arch
-	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
-	# Configurar cronie para que se actualize automáticamente la selección de mirrors
-	grep "reflector" /etc/crontab || \
-echo "SHELL=/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
-}
 
 # Instalamos grub
 install_grub(){
@@ -157,6 +130,34 @@ hostname_config(){
 	echo "127.0.0.1 local"                           | tee -a /etc/hosts
 }
 
+
+# Activar repositorios de Arch Linux
+arch_support(){
+	# Activar lib32
+	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
+	# Instalar paquetes necesarios
+	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
+	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
+	# Activar repositorios de Arch
+	grep -q "^\[extra\]" /etc/pacman.conf || \
+echo '[extra]
+Include = /etc/pacman.d/mirrorlist-arch
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+	# Actualizar cambios
+	pacman -Sy --noconfirm && \
+	pacman-key --populate archlinux
+	pacinstall reflector
+	# Escoger mirrors más rápidos de los repositorios de Arch
+	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+	# Configurar cronie para que se actualize automáticamente la selección de mirrors
+	grep "reflector" /etc/crontab || \
+echo "SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
+}
+
 # Configurar la codificación del sistema
 genlocale(){
 sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
@@ -181,9 +182,6 @@ if [ -d /sys/firmware/efi ]; then
 	echo_msg "Sistema EFI detectado. Se ha instalado efibootmgr."
 fi
 
-# Activar repositorios de Arch Linux
-arch_support
-
 # Instalamos los paquetes necesarios
 pacinstall $packages
 
@@ -192,6 +190,10 @@ install_grub
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config
+
+# Activar repositorios de Arch Linux
+arch_support
+pacinstall realtime-privileges
 
 # Configurar la codificación del sistema
 genlocale
