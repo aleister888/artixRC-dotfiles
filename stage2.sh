@@ -94,6 +94,33 @@ elif [ "$manufacturer" == "AuthenticAMD" ]; then
 fi
 }
 
+# Activar repositorios de Arch Linux
+arch_support(){
+	# Activar lib32
+	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
+	# Instalar paquetes necesarios
+	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
+	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
+	# Activar repositorios de Arch
+	grep -q "^\[extra\]" /etc/pacman.conf || \
+echo '[extra]
+Include = /etc/pacman.d/mirrorlist-arch
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+	# Actualizar cambios
+	pacman -Sy --noconfirm && \
+	pacman-key --populate archlinux
+	pacinstall reflector
+	# Escoger mirrors más rápidos de los repositorios de Arch
+	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+	# Configurar cronie para que se actualize automáticamente la selección de mirrors
+	grep "reflector" /etc/crontab || \
+echo "SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
+}
+
 # Instalamos grub
 install_grub(){
 	boot_part=$(df / --output=source | tail -n1)
@@ -138,33 +165,6 @@ locale-gen
 echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 }
 
-# Activar repositorios de Arch Linux
-arch_support(){
-	# Activar lib32
-	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
-	# Instalar paquetes necesarios
-	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
-	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
-	# Activar repositorios de Arch
-	grep -q "^\[extra\]" /etc/pacman.conf || \
-echo '[extra]
-Include = /etc/pacman.d/mirrorlist-arch
-
-[multilib]
-Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
-	# Actualizar cambios
-	pacman -Sy --noconfirm && \
-	pacman-key --populate archlinux
-	pacinstall reflector
-	# Escoger mirrors más rápidos de los repositorios de Arch
-	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
-	# Configurar cronie para que se actualize automáticamente la selección de mirrors
-	grep "reflector" /etc/crontab || \
-echo "SHELL=/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
-}
-
 # Establecer zona horaria
 timezoneset
 
@@ -181,6 +181,9 @@ if [ -d /sys/firmware/efi ]; then
 	echo_msg "Sistema EFI detectado. Se ha instalado efibootmgr."
 fi
 
+# Activar repositorios de Arch Linux
+arch_support
+
 # Instalamos los paquetes necesarios
 pacinstall $packages
 
@@ -192,9 +195,6 @@ hostname_config
 
 # Configurar la codificación del sistema
 genlocale
-
-# Activar repositorios de Arch Linux
-arch_support
 
 service_add NetworkManager
 service_add bluetoothd
