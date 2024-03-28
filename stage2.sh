@@ -17,24 +17,9 @@ echo_msg(){
 	clear; echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"; sleep 1
 }
 
-# Detectar el fabricante del procesador
-manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
-
-# Vamos a instalar los paquetes en base-devel manualmente
-# para poder prescindir de sudo y tener solo doas instalado
-base_devel_doas="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-
-# Instalar el microcódigo correspondiente y paquetes de base-devel
-if [ "$manufacturer" == "GenuineIntel" ]; then
-	echo "Detectado procesador Intel."
-	pacinstall linux-headers intel-ucode $base_devel_doas
-elif [ "$manufacturer" == "AuthenticAMD" ]; then
-	echo "Detectado procesador AMD."
-	pacinstall linux-headers amd-ucode $base_devel_doas
-else
-	echo "No se pudo detectar el fabricante del procesador."
-	pacinstall linux-headers $base_devel_doas
-fi
+# Instalamos base-devel manualmente para usar doas en vez de sudo
+devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc realtime-privileges git linux-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo"
 
 # Establecer zona horaria
 timezoneset(){
@@ -69,56 +54,47 @@ timezoneset(){
 		hwclock --systohc
 }
 
-# Configurar la codificación del sistema
-genlocale(){
-sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
-sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
-locale-gen
-echo "LANG=es_ES.UTF-8" > /etc/locale.conf
-}
-
-hostname_config(){
-	# Definir el nombre de nuestra máquina
-	hostname=$(whiptail --title "Configuración de Hostname" --inputbox "Por favor, introduce el nombre que deseas para tu host:" 10 60 3>&1 1>&2 2>&3)
-	echo "$hostname" > /etc/hostname
-	# Descargar archivo hosts con bloqueo de sitios indeseados
-	curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-
-	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
-	echo "127.0.0.1 $hostname.localdomain $hostname" | tee -a /etc/hosts && \
-	echo "127.0.0.1 localhost.localdomain"           | tee -a /etc/hosts && \
-	echo "127.0.0.1 local"                           | tee -a /etc/hosts
-}
-
-root_password(){
+# Crear usuario y establecer la contraseña para el usuario root
+set_password() {
+	local username="$1"
+	local prompt="Contraseña: $1"
 	local password=""
 	local password_confirm=""
-	local match="false"
+	local match=false
 
-	# Bucle para pedir al usuario que ingrese la contraseña dos veces
-	while [ "$match" == false ]; do # Mientras las contraseñas no coincidan se volverá a pedir que se introduzcan
-		# Pedir al usuario que ingrese la contraseña
-		password=$(whiptail --title "Configuración de Contraseña de Root" \
-			--passwordbox "Por favor, ingresa la contraseña para el usuario root:" 10 60 3>&1 1>&2 2>&3)
-		# Pedir al usuario que confirme la contraseña
-		password_confirm=$(whiptail --title "Confirmar Contraseña de Root" \
-			--passwordbox "Por favor, confirma la contraseña para el usuario root:" 10 60 3>&1 1>&2 2>&3)
-		# Verificar si las contraseñas coinciden
-		if [ -n "$password" ]; then # Si una de las contraseñas es vacía, repetir el proceso
-			if [ "$password" == "$password_confirm" ]; then
-				match=true
-			else
-				whip_msg "Error" "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
-			fi
+	while [ "$match" == false ]; do
+		password=$(whiptail --title "$prompt" --passwordbox "Por favor, ingresa la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
+		password_confirm=$(whiptail --title "Confirmar Contraseña" --passwordbox "Por favor, confirma la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
+		if [ "$password" == "$password_confirm" ]; then
+			match=true
 		else
-			whip_msg "Error" "No se permiten contraseñas vacías. Por favor, inténtalo de nuevo."
+			whip_msg "Error" "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
 		fi
 	done
 
-	# Establecer la contraseña del usuario root
-	echo "root:$password" | chpasswd
+	echo "$username:$password" | chpasswd
 }
 
+user_create(){
+	username="$(whiptail --inputbox "Por favor, ingresa el nombre del usuario:" 10 60 3>&1 1>&2 2>&3)"
+	useradd -m -G wheel,lp "$username"
+	set_password "$username"
+}
+
+
+# Detectamos el fabricante del procesador
+microcode_detect(){
+manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
+if [ "$manufacturer" == "GenuineIntel" ]; then
+	echo_msg "Detectado procesador Intel."
+	packages="$packages intel-ucode"
+elif [ "$manufacturer" == "AuthenticAMD" ]; then
+	echo_msg "Detectado procesador AMD."
+	packages="$packages amd-ucode"
+fi
+}
+
+# Instalamos grub
 install_grub(){
 	boot_part=$(df / --output=source | tail -n1)
 
@@ -143,14 +119,32 @@ install_grub(){
 	fi
 }
 
+# Definimos el nombre de nuestra máquina y creamos el archivo hosts
+hostname_config(){
+	hostname=$(whiptail --title "Configuración de Hostname" --inputbox "Por favor, introduce el nombre que deseas para tu host:" 10 60 3>&1 1>&2 2>&3)
+	echo "$hostname" > /etc/hostname
+	curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
+	echo "127.0.0.1 $hostname.localdomain $hostname" | tee -a /etc/hosts && \
+	echo "127.0.0.1 localhost.localdomain"           | tee -a /etc/hosts && \
+	echo "127.0.0.1 local"                           | tee -a /etc/hosts
+}
+
+# Configurar la codificación del sistema
+genlocale(){
+sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
+sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
+locale-gen
+echo "LANG=es_ES.UTF-8" > /etc/locale.conf
+}
+
+# Activar repositorios de Arch Linux
 arch_support(){
 	# Activar lib32
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
-
 	# Instalar paquetes necesarios
 	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
 	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
-
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
 echo '[extra]
@@ -162,95 +156,51 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 	pacman -Sy --noconfirm && \
 	pacman-key --populate archlinux
 	pacinstall reflector
-
 	# Escoger mirrors más rápidos de los repositorios de Arch
 	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
-
 	# Configurar cronie para que se actualize automáticamente la selección de mirrors
-	if ! grep "reflector" /etc/crontab; then
-		echo "SHELL=/bin/bash
+	grep "reflector" /etc/crontab || \
+echo "SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" | tee -a /etc/crontab
-	fi
+0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
 }
 
-services_install(){
-# Instalar paquetes
-pacinstall tlp tlp-openrc cronie cronie-openrc realtime-privileges git
+# Establecer zona horaria
+timezoneset
 
-# Activar servicios
+# Crear usuario y establecer la contraseña para el usuario root
+set_password "root"
+user_create
+
+# Detectamos el fabricante del procesador
+microcode_detect
+
+# Si el sistema es UEFI, instalar efibootmgr
+if [ -d /sys/firmware/efi ]; then
+	packages="$packages efibootmgr"
+	echo_msg "Sistema EFI detectado. Se ha instalado efibootmgr."
+fi
+
+# Instalamos los paquetes necesarios
+pacinstall $packages
+
+# Instalamos grub
+install_grub
+
+# Definimos el nombre de nuestra máquina y creamos el archivo hosts
+hostname_config
+
+# Configurar la codificación del sistema
+genlocale
+
+# Activar repositorios de Arch Linux
+arch_support
+
 service_add NetworkManager
 service_add bluetoothd
 service_add cupsd
 service_add cronie
 service_add tlp
-}
-
-# Creamos nuestro usuario regular y le damos permisos de administrador
-user_create(){
-	# Elegir nombre de usuario
-	username=$(whiptail --inputbox "Por favor, ingresa el nombre de usuario:" 10 60 3>&1 1>&2 2>&3)
-
-	## Elegir contraseña
-
-	# Definimos nuestras variables
-	local user_password=""
-	local user_password_confirm=""
-	local match=false
-
-	# Bucle para pedir al usuario que ingrese la contraseña dos veces
-	while [ "$match" == false ]; do
-		# Pedir al usuario que ingrese la contraseña
-		user_password=$(whiptail --title "Configuración de Contraseña" --passwordbox "Por favor, ingresa la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
-		# Pedir al usuario que confirme la contraseña
-		user_password_confirm=$(whiptail --title "Confirmar Contraseña" --passwordbox "Por favor, confirma la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
-		# Verificar si las contraseñas coinciden
-		if [ -n "$user_password" ]; then # Si una de las contraseñas es vacía, repetir el proceso
-			if [ "$user_password" == "$user_password_confirm" ]; then
-				match=true
-			else
-				whip_msg "Error" "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
-			fi
-		else
-			whip_msg "Error" "No se permiten contraseñas vacías. Por favor, inténtalo de nuevo."
-		fi
-	done
-
-	useradd -m -G wheel,lp "$username" # Añadimos el usuario a los grupos wheel y lp
-	echo "$username:$user_password" | chpasswd # Establecemos la contraseña para el usuario
-}
-
-timezoneset
-
-genlocale
-
-if hostname_config; then
-	echo_msg "El archivo /etc/hosts fue configurado correctamente"
-fi
-
-root_password
-
-if user_create; then
-	echo_msg "El usuario $username ha sido creado exitosamente."
-fi
-
-# Si el sistema es UEFI, instalar efibootmgr
-if [ -d /sys/firmware/efi ]; then
-	pacinstall efibootmgr
-	echo_msg "Sistema EFI detectado. Se ha instalado efibootmgr."
-fi
-
-pacinstall grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo
-
-install_grub
-
-if arch_support; then
-	echo_msg "Los repositorios de Arch fueron activados correctamente"
-fi
-
-if services_install; then
-	echo_msg "Los servicios se configuraron correctamente"
-fi
 
 # Sustituir sudo por doas
 ln -s /usr/bin/doas /usr/bin/sudo
