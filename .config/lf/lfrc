@@ -164,14 +164,13 @@ cmd fzf_jump ${{
 
 cmd open ${{
     case $(xdg-mime query filetype "$(readlink -f $f)") in
-	image/svg+xml) display -- $f ;;
 	application/vnd.oasis.opendocument.spreadsheet) libreoffice "$fx" ;;
 	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) libreoffice "$fx" ;;
 	application/vnd.oasis.opendocument.text) libreoffice "$fx" ;;
 	application/pdf) zathura "$f" ;;
 	text/*|application/json|inode/x-empty) $EDITOR $fx ;;
 	application/x-shellscript) $EDITOR $fx ;;
-	image/*) $HOME/.local/bin/rotdir $f | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" |
+	image/*) $HOME/.local/bin/rotdir $f | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\|svg\)\(_large\)*$" |
 		nsxiv -aio | while read -r file; do
 			[ -z "$file" ] && continue
 			/usr/bin/lf -remote "send select \"$file\""
