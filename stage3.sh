@@ -149,6 +149,7 @@ suckless_install(){
 	doas make install --directory "$HOME/.dotfiles/dwm" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/dmenu" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
+	doas make install --directory "$HOME/.dotfiles/st" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
