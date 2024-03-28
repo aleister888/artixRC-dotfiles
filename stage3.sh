@@ -366,9 +366,7 @@ virt_conf(){
 	doas usermod -aG libvirt,libvirt-qemu,kvm "$USER"
 	# Activar sericios necesarios
 	service_add libvirtd
-	doas rc-service libvirtd start
 	service_add virtlogd
-	doas rc-service virtlogd start
 	# Autoinciar red virtual
 	doas virsh net-autostart default
 }

@@ -56,10 +56,10 @@
 
 \section{Introducción}
 
-Este documento pretende ser una guía para terminar de configurar nuestra isntalación de Artix, pues hay cosas que no son factibles auto-configurar. Así como puede ser una ayuda para terceros que se han animado a usar mi instalador y que ahora se encuentran ante la tarea de aprender a usar un entorno de trabajo que no es el suyo.
+Este documento pretende ser una guía para terminar de configurar nuestra instalación de Artix, pues hay cosas que no son factibles auto-configurar. Así como puede ser una ayuda para terceros que se han animado a usar mi instalador y que ahora se encuentran ante la tarea de aprender a usar un entorno de trabajo que no es el suyo.
 
 \begin{mybox}{Nota}
-Cualquier texto que veas coloreado en naranja es un hipervínculo \emph{(exceptuando los títulos)}, si haces doble click en él, te llevará a la página web a la que hace referencia o a una donde se explica de que estoy hablando.
+Cualquier texto que veas coloreado en naranja es un hiper-vínculo \emph{(exceptuando los títulos)}, si haces doble clic en él, te llevará a la página web a la que hace referencia o a una donde se explica de que estoy hablando.
 \end{mybox}
 
 \section{Atajos de teclado}
@@ -92,9 +92,9 @@ Cualquier texto que veas coloreado en naranja es un hipervínculo \emph{(exceptu
 \item D: Cortar archivos
 \item Y: Copiar archivos
 \item P: Pegar archivos
-\item Shift + E: Extrer archivo
+\item Shift + E: Extraer archivo
 \item Ctrl + E: Comprimir contenidos de la carpeta actual
-\item Shift + R: Renombrar los contenidos de la carpeta acutal
+\item Shift + R: Renombrar los contenidos de la carpeta actual
 \item R: Renombrar archivo
 \item S: Abrir shell
 \end{itemize}
@@ -111,10 +111,10 @@ Cualquier texto que veas coloreado en naranja es un hipervínculo \emph{(exceptu
 \item Alt Izq. + M: Subir Volumen
 \item Alt Izq. + Shift + N: Establecer volumen al 50\%
 \item Alt Izq. + Shift + M: Establecer volumen al 100\%
-\item Alt Izq. + Ctrl + N/M: Silenciar/desilenciar el audio
+\item Alt Izq. + Ctrl + N/M: Silenciar/des-silenciar el audio
 \item Alt Izq. + O: Captura de pantalla al portapapeles
 \item Alt Izq. + Ctrl + O: Guardar captura de pantalla
-\item Alt Izq. + Shift + O: Captura de un área de la pantalla al portapapeles
+\item Alt Izq. + Shift + O: Captura de un área de la pantalla al porta-papeles
 \item Alt Izq. + Ctrl + Shift + O: Guardar captura de un área de la pantalla
 \item Alt Izq. + B: Ocultar/Mostrar la barra de estado
 \item Alt Izq. + ,: Mover el foco a la posición anterior
@@ -138,15 +138,15 @@ Si has instalado el cliente de discord te darás cuenta de una funcionalidad que
 
 Para solucionar este problema, cuando inicias sesión se crea un \emph{micrófono virtual} al que puedes añadir tu micrófono real y el audio de las aplicaciones que desees. Para que la gente pueda escuchar el audio de las aplicaciones tendrás que elegir en discord el micrófono como \emph{my-virtualmic}, y, recomendablemente; desactivar al reducción de ruido. Pues esta detectará el audio de las aplicaciones como ruido.
 
-Para añadir tu micrófono, haz click en una parte vacía del escritorio y en la pestaña \emph{Compar. audio} haz click en \emph{Ajustes Mic.}. Aparecerá un menu para añadir o quitar dispositivos de audio del micrófono virtual.
+Para añadir tu micrófono, haz click en una parte vacía del escritorio y en la pestaña \emph{Compar. audio} haz clic en \emph{Ajustes Mic.}. Aparecerá un menu para añadir o quitar dispositivos de audio del micrófono virtual.
 
-También verás que en la pestaña \emph{Compar. audio} puedes hacer click en las diferentes opciones que hay para compartir o dejar de compartir el audio de las aplicaciones
+También verás que en la pestaña \emph{Compar. audio} puedes hacer clic en las diferentes opciones que hay para compartir o dejar de compartir el audio de las aplicaciones
 
 \section{Cronie y script útiles}
 
 Mi instalación viene con varios scripts para automatizar tareas pero que por defecto no se usan para nada.
 
-Con tu instalación base deberías de tener activado el servicio \href{https://wiki.archlinux.org/title/cron}{crond}. Este servicio se encarga de ejecutar comandos de forma automatica. El archivo de configuracion se encuentra en \emph{/etc/crontab} y tal como se ha configurado, debería verse como:
+Con tu instalación base deberías de tener activado el servicio \href{https://wiki.archlinux.org/title/cron}{crond}. Este servicio se encarga de ejecutar comandos de forma automática. El archivo de configuración se encuentra en \emph{/etc/crontab} y tal como se ha configurado, debería verse como:
 
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
@@ -159,7 +159,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 \begin{itemize}
 \setlength\itemsep{-0.2em}
-\item \emph{"0 8 * * *"} es la parte de donde definimos cuando se ejecutara el comando, si quieres investigar hay un montón de guias en youtube o cualquier otra plataforma sobre cual es la sintáxis para configurar la ejecución de los comandos. Puedes también comprobar si tu sintáxis es correcta en \href{https://crontab.guru/}{crontab.guru}.
+\item \emph{"0 8 * * *"} es la parte de donde definimos cuando se ejecutara el comando, si quieres investigar hay un montón de guías en youtube o cualquier otra plataforma sobre cual es la sintáxis para configurar la ejecución de los comandos. Puedes también comprobar si tu sintaxis es correcta en \href{https://crontab.guru/}{crontab.guru}.
 \item \emph{"root"} es el usuario que ejecuta el comando, y \emph{"reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch"}, el comando.
 \end{itemize}
 
@@ -182,7 +182,7 @@ Podemos automatizar este proceso, para que el usuario \emph{"usuario1"} conviert
 
 \subsection{corruption-check}
 
-Este script comprueba que no haya archivos corruptos en nuestra biblioteca de música, corrige falsos positivos de corrupción y nos escribe una lista con los archivos que realmente estan corruptos y no se pueden reproducir correctamente en \emph{/tmp/corruption.log}. Solo necesita como argumento el directorio cuyos archivos de audio queremos comprobar.
+Este script comprueba que no haya archivos corruptos en nuestra biblioteca de música, corrige falsos positivos de corrupción y nos escribe una lista con los archivos que realmente están corruptos y no se pueden reproducir correctamente en \emph{/tmp/corruption.log}. Solo necesita como argumento el directorio cuyos archivos de audio queremos comprobar.
 
 Podemos automatizar esta tarea añadiendo el comando a \emph{/etc/crontab}, aquí un ejemplo:
 
@@ -192,9 +192,9 @@ Podemos automatizar esta tarea añadiendo el comando a \emph{/etc/crontab}, aqu�
 
 \subsection{exif-remove}
 
-Este script necesita como argumento un directorio y borrará toda la información \href{https://en.wikipedia.org/wiki/Exif}{EXIF} de las imagenes que contiene el mismo.
+Este script necesita como argumento un directorio y borrará toda la información \href{https://en.wikipedia.org/wiki/Exif}{EXIF} de las imágenes que contiene el mismo.
 
-Los metadatos EXIF sirven para identificar el usuario que tomo la fotografía, por ejemplo, si tomas una fotografía con tu teléfono, el teléfono guarda como información EXIF datos como; el télefono desde el cual la fotografía fue tomada, o desde que coordenadas geográficas fue tomada la foto. Esto es útil para compartir imágenes guardadas en tu ordenador reduciendo la huella digital que dejas cuando las compartes.
+Los metadatos EXIF sirven para identificar el usuario que tomo la fotografía, por ejemplo, si tomas una fotografía con tu teléfono, el teléfono guarda como información EXIF datos como; el teléfono desde el cual la fotografía fue tomada, o desde que coordenadas geográficas fue tomada la foto. Esto es útil para compartir imágenes guardadas en tu ordenador reduciendo la huella digital que dejas cuando las compartes.
 
 Para borrar automaticamente los metadatos de una carpeta, puedes añadir a \emph{/etc/crontab} una línea parecida a:
 
@@ -206,7 +206,7 @@ Para borrar automaticamente los metadatos de una carpeta, puedes añadir a \emph
 
 \label{sec:wake}
 
-Este script comprueba si hay alguna máquina virtual en ejecucción, y si no encuentra niguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
+Este script comprueba si hay alguna máquina virtual en ejecucción, y si no encuentra ninguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
 
 Para suspender tu equipo automáticamente todos los dias a las 11:00 puedes añadir a tu crontab:
 
@@ -214,7 +214,7 @@ Para suspender tu equipo automáticamente todos los dias a las 11:00 puedes aña
 0 23 * * * root wake
 \end{verbatim}
 
-Y para notificar al usuario \emph{usuario1} de que el sistema se supenderá con 10 minutos de antelación:
+Y para notificar al usuario \emph{usuario1} de que el sistema se suspenderá con 10 minutos de antelación:
 
 \begin{verbatim}
 50 22 * * * usuario1 DISPLAY=:0 XDG_RUNTIME_DIR=/run/usr/$(id -u) notify-send
@@ -223,7 +223,7 @@ Y para notificar al usuario \emph{usuario1} de que el sistema se supenderá con 
 0 23 * * * root wake
 \end{verbatim}
 
-Para que este script funcione correctamente, es recomendable estalecer el reloj como \href{https://en.wikipedia.org/wiki/Time_Stamp_Counter}{TSC}. Puedes mirar como se hace esto en \ref{sec:tsc}
+Para que este script funcione correctamente, es recomendable establecer el reloj como \href{https://en.wikipedia.org/wiki/Time_Stamp_Counter}{TSC}. Puedes mirar como se hace esto en \ref{sec:tsc}
 
 \subsection{wakeme}
 
@@ -243,7 +243,7 @@ Si elegiste particionar tu disco con BTRFS es recomendable que se ejecuten tarea
 
 Esto realizará diversas tareas de mantenimiento en tu disco principal todos los viernes a las 14:00.
 
-Si tienens un disco diferente para tu partición home, también formateado en BTRFS, puede interesarte hacer lo mismo para tu disco /home
+Si tienes un disco diferente para tu partición home, también formateado en BTRFS, puede interesarte hacer lo mismo para tu disco /home
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
 0 14 * * 5 root btrfs balance start -dusage=95 /home && btrfs balance start -musage=95 /home
@@ -260,7 +260,7 @@ Puede interesarte limpiar periódicamente archivos de registro y cache antigua d
 
 \subsection{Reorganizar plugins}
 
-Si elegiste instalar herramientas de producción musical, deberas tener instalado \href{https://github.com/robbert-vdh/yabridge}{yabridge}, una aplicación para usar plugins \href{https://es.wikipedia.org/wiki/Virtual_Studio_Technology}{VST} de windows en linux. Es recomendable configurar el escaneo de nuevos plugins y el mantenimiento de tu librería de plugins para que se haga automáticamente.
+Si elegiste instalar herramientas de producción musical, deberás tener instalado \href{https://github.com/robbert-vdh/yabridge}{yabridge}, una aplicación para usar plugins \href{https://es.wikipedia.org/wiki/Virtual_Studio_Technology}{VST} de windows en linux. Es recomendable configurar el escaneo de nuevos plugins y el mantenimiento de tu librería de plugins para que se haga automáticamente.
 
 \begin{verbatim}
 15 23 * * * usuario1 yabridgectl sync --prune
@@ -365,7 +365,7 @@ for g in /sys/kernel/iommu_groups/*; do
 done;
 \end{verbatim}
 
-Una vez ejecutes este bloque de comandos, deberas obtener una salida parecida a la siguiente:
+Una vez ejecutes este bloque de comandos, deberás obtener una salida parecida a la siguiente:
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
 IOMMU Group 15:
@@ -403,15 +403,15 @@ Ejecutamos de nuevo:
 grub-mkconfig -o /boot/grub/grub.cfg
 \end{verbatim}
 
-Esto lo que hace es decirle al kernel que utilize el driver VFIO para todos esos dispositivos PCI, por el contrario, si no hicisemos esto, el kernel le asignaria el driver \emph{nvidia} o el correspondiente para un uso normal.
+Esto lo que hace es decirle al kernel que utilice el driver VFIO para todos esos dispositivos PCI, por el contrario, si no hiciésemos esto, el kernel le asignaría el driver \emph{nvidia} o el correspondiente para un uso normal.
 
 \subsection{Módulos del kernel}
 
-Ahora cada vez que iniciemos nuestro ordenador el kernel intentará asignarle a esos dispositivos PCI el driver VFIO, \emph{pero hay un problema}. El driver VFIO por defecto, no se carga en memoria a la hora del arranque del sistema \emph{(cosa que tiene sentido, poca es la gente que utiliza esta función del sistema operativo y cargarla en memoria por defecto sería un desperdicio)}.
+Ahora cada vez que iniciemos nuestro ordenador el kernel intentará asignarle a esos dispositivos PCI el driver VFIO, \emph{pero hay un problema}. El driver VFIO por defecto, no se carga en memoria a la hora del arranque del sistema \emph{(cosa que tiene sentido, poca es la gente que utiliza esta función del sistema operativo y cargarla en memoria por defecto sería un desperdicio de memoria)}.
 
-Debemos entonces configurar que cuando arranquemos el ordenador, se nos carge el driver VFIO, para poder asignarselo a nuestra gráfica.
+Debemos entonces configurar que cuando arranquemos el ordenador, se nos cargue el driver VFIO, para poder asignarselo a nuestra gráfica.
 
-Para esto debemos editar \emph{/etc/mkinitcpio.conf} y añadir los modulos del kernel que vamos a usar. El archivo se vería algo asi:
+Para esto debemos editar \emph{/etc/mkinitcpio.conf} y añadir los módulos del kernel que vamos a usar. El archivo se vería algo asi:
 
 \begin{verbatim}
 MODULES=()
@@ -422,13 +422,13 @@ HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)
 
 Esto es una simplificación, y el archivo real tendría un montón de lineas de comentario, encabezadas por \#, pero nos sirve para ilustrarnos.
 
-Debemos localiar la línea con \emph{MODULES=()} y añadir los módulos que queremos cargar con el arranque del ordenador. Si antes los paréntesis no contenian nada, ahora la línea pasaría a verse así:
+Debemos localizar la línea con \emph{MODULES=()} y añadir los módulos que queremos cargar con el arranque del ordenador. Si antes los paréntesis no contenían nada, ahora la línea pasaría a verse así:
 
 \begin{verbatim}
 MODULES=(vfio_pci vfio vfio_iommu_type1 )
 \end{verbatim}
 
-Una vez editado nuestro archivo debemos regenarar el \href{https://en.wikipedia.org/wiki/Initial\_ramdisk}{initramfs (Initial RAM File System)} ejecutando con permisos de administrador el comando:
+Una vez editado nuestro archivo debemos regenerar el \href{https://en.wikipedia.org/wiki/Initial\_ramdisk}{initramfs (Initial RAM File System)} ejecutando con permisos de administrador el comando:
 
 \begin{verbatim}
 mkinitcpio -P
@@ -449,7 +449,7 @@ Si tenemos como salida algo parecido a:
 [    3.466953] vfio_pci: add [10de:1aed[ffffffff:ffffffff]] class 0x000000/00000000
 \end{lstlisting}
 
-donde podemos ver que el driver vfio\_pci se ha añadido a nuestros dipositivos, entonces hemos realizado correctamente todos los pasos.
+donde podemos ver que el driver vfio\_pci se ha añadido a nuestros dispositivos, entonces hemos realizado correctamente todos los pasos.
 
 \subsection{Instalación del sistema operativo}
 
@@ -489,7 +489,7 @@ Ahora deberás hacer las siguientes modificaciones:
 \setlength\itemsep{-0.3em}
 \item Cambiar el chipset a \emph{Q35}, y elegir el firmware \emph{UEFI: x86\_64: /usr/share/edk2/x64/OVMF\_CODE.fd}
 \item En la pestaña \emph{CPUs} activa el recuadro \emph{Copiar configuración de la CPU del anfitrión}, despliega el menú \emph{Topología} y ajusta la topología de la forma siguiente:
-\subitem 1 \emph{Socket}, Tantos \emph{Centros} comos núcleos tenga tu procesador y tantos \emph{Hilos} como hilos tenga tu procesador por núcleo. Por ejemplo para un \emph{i7-10700k} con 8 núcleos y 16 hilos, eligiriamos: \emph{1 Socket, 8 Núcleos, 2 Hilos}. Esto es, si queremos asignar todos los núcleos a nuestra máquina virtual.
+\subitem 1 \emph{Socket}, Tantos \emph{Centros} comos núcleos tenga tu procesador y tantos \emph{Hilos} como hilos tenga tu procesador por núcleo. Por ejemplo para un \emph{i7-10700k} con 8 núcleos y 16 hilos, elegiríamos: \emph{1 Socket, 8 Núcleos, 2 Hilos}. Esto es, si queremos asignar todos los núcleos a nuestra máquina virtual.
 \item Nos dirigimos a \emph{SATA Disk 1} y cambiamos el bus a VirtIO, de forma que ahora aparezca \emph{VirtIO Disk 1}. Abrimos las opciones avanzadas, y cambiamos el modo de caché a \emph{writeback}.
 \item En los ajustes del \emph{NIC} cambiamos el modelo de dispositivo a \emph{virtio}
 \item Por último dale a \emph{Añadir hardware} y añade un almacenamiento de tipo de dispositivo CDROM y escribe al lado de \emph{Administrar...} la localización de el ISO con los drivers virtio, por ejemplo: \emph{/home/usuario/Downloads/virtio-win.iso}.
@@ -527,11 +527,11 @@ Selecciona el CD con los drivers virtio y la carpeta que contiene los drivers pa
 
 \subsection{Looking Glass en el Host}
 
-Para poder usar nuestra máquina virtual de forma cómoda vamos a configurar \href{https://looking-glass.io/}{Looking Glass}. Una aplicación que nos permite ver la pantalla conectada a nuestra gráfica através de una ventana y poder controlar nuestra máquina virtual sin necesidad de conectar teclado y ratón a nuestra máquina virtual. El único problema es que para usar looking glass sin necesidad de dos monitores, necesitamos comprar un \href{https://www.amazon.com/s?k=display+dummy}{display dummy}. Por lo menos, su precio suele rondar los 5-7€.
+Para poder usar nuestra máquina virtual de forma cómoda vamos a configurar \href{https://looking-glass.io/}{Looking Glass}. Una aplicación que nos permite ver la pantalla conectada a nuestra gráfica a través de una ventana y poder controlar nuestra máquina virtual sin necesidad de conectar teclado y ratón a nuestra máquina virtual. El único problema es que para usar looking glass sin necesidad de dos monitores, necesitamos comprar un \href{https://www.amazon.com/s?k=display+dummy}{display dummy}. Por lo menos, su precio suele rondar los 5-7€.
 
-Looking Glass nos muestra una imágen de lo que esta haciendo nuestra gráfica con una latencia muy baja, suficiente para poder jugar a juegos o editar video \emph{(y otros usos posibles)} sin problema en nuestra máquina virtual. Logra esto mandando la información através de un archivo compartido entre máquina virtual y host.
+Looking Glass nos muestra una imagen de lo que esta haciendo nuestra gráfica con una latencia muy baja, suficiente para poder jugar a juegos o editar video \emph{(y otros usos posibles)} sin problema en nuestra máquina virtual. Logra esto mandando la información através de un archivo compartido entre máquina virtual y host.
 
-Primero necesitamos configurar \href{dsada}{tmpfilesd} para que cada vez que iniciamos el sistema, cree el archivo que compartiran máquina virtual y host para enviarse información. Tenemos que ejecutar el siguiente comando \emph{(sustituyendo usuario por el nombre de tu usuario)}:
+Primero necesitamos configurar \href{dsada}{tmpfilesd} para que cada vez que iniciamos el sistema, cree el archivo que compartirán máquina virtual y host para enviarse información. Tenemos que ejecutar el siguiente comando \emph{(sustituyendo usuario por el nombre de tu usuario)}:
 
 \begin{verbatim}
 echo "f /dev/shm/looking-glass 0660 usuario kvm -" | \
@@ -548,7 +548,7 @@ doas pacman -Sy --noconfirm etmpfiles
 
 Ahora ya tenemos casi todo listo, queda instalar los drivers de video e instalar Looking Glass en nuestra máquina virtual \emph{(a la hora de la instalación debió de haberse instalado ya en nuestro linux)}.
 
-Primero tenemos que añadir nuestra tarjeta gráfica a nuestra máquina virtual. Para ello tenemos que ir a los ajustes de nuestra máquina virtual y en \emph{"Añadir Dispositivo"}, busca la pestaña para añadir dispostivos PCI y añade tu gráfica.
+Primero tenemos que añadir nuestra tarjeta gráfica a nuestra máquina virtual. Para ello tenemos que ir a los ajustes de nuestra máquina virtual y en \emph{"Añadir Dispositivo"}, busca la pestaña para añadir dispositivos PCI y añade tu gráfica.
 
 \emph{Pendiente: Añadir imagen de como añadimos la gráfica}
 
@@ -556,13 +556,13 @@ Ahora configura el servidor Spice para que use el puerto 6000 en vez de asignar 
 
 \emph{Pendiente: Añadir imagen de como configuramos spice}
 
-Ahora tenemos que activar la edición de XML en Virt-Manager y editar el código XML de nuestra máquina virtual. Añadiremos estas lineas de código al final para que el archivo acabe viendose así:
+Ahora tenemos que activar la edición de XML en Virt-Manager y editar el código XML de nuestra máquina virtual. Añadiremos estas lineas de código al final para que el archivo acabe viéndose así:
 
 \emph{Pendiente: Añadir imagen de como activamos edición del XML y como queda el XML modificado}
 
 Finalmente iniciamos nuestra máquina virtual e instalamos nuestros drivers de \href{https://www.nvidia.es/Download/index.aspx?lang=es}{NVIDIA} o \href{https://www.amd.com/es/support}{AMD} y \href{https://looking-glass.io/downloads}{Looking Glass Host}.
 
-Finalmente cambiamos el driver virtual de video de \emph{QXL} a \emph{None} y borramos el dispositivo de tableta táctil. La próxima vez que iniciemos la máquina virtual solo tenemos que iniciarla en Virt-Manager e interactuaremos con nuestra máquina virtual abriendo Looking Glass \emph{(Podemos abrirlo seleccionando "Looking Glass" en el menú que aparece cuando hacemos click derecho en alguna parte vacía del Escritorio)}.
+Finalmente cambiamos el driver virtual de video de \emph{QXL} a \emph{None} y borramos el dispositivo de tableta táctil. La próxima vez que iniciemos la máquina virtual solo tenemos que iniciarla en Virt-Manager e ínteractuaremos con nuestra máquina virtual abriendo Looking Glass \emph{(Podemos abrirlo seleccionando "Looking Glass" en el menú que aparece cuando hacemos clic derecho en alguna parte vacía del Escritorio)}.
 
 \emph{Pendiente: Añadir imagen de como realizamos los pasos mencionados}
 
@@ -596,7 +596,7 @@ También esto ayuda a que el script \ref{sec:wake} funcione correctamente.
 
 \section{SSH}
 
-Si queremos conectarnos a un equipo remoto atraves de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}. Por defecto incluyo un script que configura SSH de forma muy básica, configurando SSH para poder acceder a tu equipo remoto con una contraseña. Para activar ssh simplemente ejecuta:
+Si queremos conectarnos a un equipo remoto a través de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}. Por defecto incluyo un script que configura SSH de forma muy básica, configurando SSH para poder acceder a tu equipo remoto con una contraseña. Para activar SSH simplemente ejecuta:
 
 \begin{verbatim}
 ssh-configure
@@ -700,6 +700,12 @@ Pese a usar al configuración reforzada de firefox, \href{https://github.com/ark
 	\includegraphics[width=0.75\textwidth]{assets/search-engine.jpg}
 \end{center}
 
+\subsection{KeePassXC Browser}
+
+Por defecto tenemos instalado KeePassXC, un administrador de contraseñas. Podemos activar la integración con el navegador abriendo KeePassXC y en \emph{Herramientras/Parámetros} vamos a \emph{Integración con el Navegador}, la activamos y seleccionamos Firefox.
+
+Si tenemos activada nuestra extensión de KeepassXC en el navegador, cuando esten abiertas ambas aplicaciones y nuestra base de contraseñas este desbloqueada, podremos permitir a la extensión tener acceso a nuestra base de contraseñas para auto-completar los campos de inicio de sesión.
+
 \subsection{Desactivar baúl de contraseñas}
 
 Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usando la extensión de Keepass que viene incluida con nuestra isntalación, las ventanas de Firefox que aparecen preguntando si queremos guardar nuestra contraseña pueden ser bastante molestas.
@@ -707,7 +713,7 @@ Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usan
 Para desacrivarlas, simplemente busca \emph{Contraseña} en el menu de configuración de Firefox y desactiva el \emph{Ask to save passwords} o \emph{Preguntar para guardar contraseñas}, en español.
 
 \begin{center}
-	\includegraphics[width=0.75\textwidth]{assets/passwords.jpg}
+	\includegraphics[width=0.4\textwidth]{assets/passwords.jpg}
 \end{center}
 
 \subsection{Violentmonkey}
@@ -718,8 +724,8 @@ Violentmonkey es una extensión para cargar pequeños scripts de javascript desp
 ~/.dotfiles/violentmonkey.zip
 \end{verbatim}
 
-\includegraphics[width=\textwidth]{assets/violentmonkey.jpg}
-
-\subsection{KeePassXC Browser}
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{assets/violentmonkey.jpg}
+\end{center}
 
 \end{document}
