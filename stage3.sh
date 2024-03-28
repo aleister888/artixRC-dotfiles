@@ -63,7 +63,7 @@ virt_choose(){
 }
 
 # Elegimos distribución de teclado
-kb_layout(){
+kb_layout_select(){
 	# Hacer un array con las diferentes distribuciones posibles y elegir nuestro layout
 	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f | \
 	sed 's|/usr/share/X11/xkb/symbols/||' | sort | sed -n '/^.\{1,3\}$/p')
@@ -73,6 +73,9 @@ kb_layout(){
 	done
 	final_layout=$(whiptail --title "Teclado" --menu "Por favor, elige una distribución de teclado:" \
 	20 70 10 ${keyboard_array[@]} 3>&1 1>&2 2>&3)
+}
+
+kb_layout_conf(){
 	# Configurar el layout de teclado para Xorg
 echo "Section \"InputClass\"
         Identifier \"system-keyboard\"
@@ -82,7 +85,7 @@ echo "Section \"InputClass\"
         Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	# Si elegimos español, configurar el layout de la tty en español también
-	if [ $final_layout = "es" ]; then
+	if [ "$final_layout" = "es" ]; then
 		doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 	fi
 }
@@ -407,13 +410,15 @@ whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
 packages="$packages texlive-core texlive-bin $(pacman -Ssq texlive)"
 
 # Elegimos distribución de teclado
-kb_layout
-
-# Descargar e instalar nuestras fuentes
-fontdownload
+kb_layout_select
+kb_layout_conf
 
 # Instalamos todos nuestros paquetes
 yayinstall $packages
+echo $packages
+
+# Descargar e instalar nuestras fuentes
+fontdownload
 
 doas archlinux-java set java-17-openjdk
 
