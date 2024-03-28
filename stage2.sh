@@ -193,7 +193,6 @@ hostname_config
 
 # Activar repositorios de Arch Linux
 arch_support
-pacinstall realtime-privileges
 
 # Configurar la codificación del sistema
 genlocale

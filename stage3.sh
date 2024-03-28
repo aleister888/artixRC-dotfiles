@@ -21,7 +21,7 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber mesa lib32-mesa polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape"
+packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges"
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -148,7 +148,7 @@ fontdownload() {
 }
 
 # Instalar nuestras extensiones de navegador
-# Código extraido de larbs.xyz/larbs.sh
+# Código extraído de larbs.xyz/larbs.sh
 # Créditos para: <luke@lukesmith.xyz>
 installffaddons(){
 	addonlist="ublock-origin istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser video-downloadhelper clearurls"
@@ -307,15 +307,18 @@ Inherits=capitaine-cursors" > "$HOME/.local/share/icons/default/index.theme"
 keepass_configure(){
 [ ! -d $HOME/.config/keepassxc ] && \
 mkdir -p $HOME/.config/keepassxc
-echo "[Browser]
-Enabled=true
+echo "[General]
+ConfigVersion=2
+
+[Browser]
 CustomBrowserType=2
+Enabled=true
 
 [GUI]
 ApplicationTheme=classic" > $HOME/.config/keepassxc/keepassxc.ini
 }
 
-# Crear enlaces símbolicos a /usr/local/bin/ para ciertos scripts
+# Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link(){
 	files=(
 		"convert-2m4a"
@@ -354,7 +357,7 @@ audio_setup(){
 	doas tee -a /etc/security/limits.conf
 }
 
-# Si se eligió instalar virt-manager configurarlo adecuadamente
+# Si se eligió instalar virt-manager, configurarlo adecuadamente
 virt_conf(){
 	# Configurar QEMU para usar el usuario actual
 	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
@@ -386,7 +389,7 @@ driver_choose
 # Elegir si instalar virt-manager
 virt_choose
 
-# Preguntamos si quieremos instalar software-adicional
+# Preguntamos si queremos instalar software-adicional
 whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
 packages="$packages easytag picard atool flacon cuetools"
 #
@@ -407,7 +410,10 @@ packages="$packages libreoffice"
 whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
 packages="$packages texlive-core texlive-bin $(pacman -Ssq texlive)"
 
-pacinstall xkeyboard-config bc
+# Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
+# Instalamos pipewire antes de nada, porque si no tendremos conflictos
+# (Para algunos paquetes se instala jack2 en vez de pipewire-jack por defecto).
+pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber
 
 # Elegimos distribución de teclado
 kb_layout_select
@@ -451,7 +457,7 @@ nitrogen_configure
 cursor_configure
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure
-# Crear enlaces símbolicos a /usr/local/bin/ para ciertos scripts
+# Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir
@@ -461,7 +467,7 @@ syncthing_setup
 audio_setup
 
 # Si estamos usando una máquina virtual,
-# confiuramos X11 para usar 1080p como resolución
+# configuramos X11 para usar 1080p como resolución
 
 [ "$graphic_driver" == "virtual" ] && \
 echo 'Section    "Screen"
