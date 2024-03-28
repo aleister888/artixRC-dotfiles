@@ -614,7 +614,7 @@ ssh usuario1@255.255.255.255 -L 5900:localhost:5900
 
 Sustituye \emph{usuario1} por el usuario de tu máquina, y \emph{255.255.255.255} por la dirección IP de tu máquina.
 
-Para conectarte a tu torre debes tener instalado algun cliente VNC, mi recomendación es \href{https://github.com/FreeRDP/Remmina}{remmina}. Abre tu cliente VNC y conectate a \emph{localhost:5900}, eso es todo.
+Para conectarte a tu torre debes tener instalado algún cliente VNC, mi recomendación es \href{https://github.com/FreeRDP/Remmina}{remmina}. Abre tu cliente VNC y conéctate a \emph{localhost:5900}, eso es todo.
 
 \section{Firewall}
 
@@ -645,10 +645,9 @@ Viene instalado por defecto y se ejecuta cuando inicias tu ordenador. Para confi
 Aquí puedes encontrar documentación sobre como usar syncthing: \href{https://docs.syncthing.net/}{https://docs.syncthing.net/}
 \end{mybox}
 
-
 \section{Monitores de altas tasas de refresco}
 
-Por defecto dwm actualiza el movimiento de las ventanas a 60fps. Si tienes un monitor de mas de 60Hz esto puede hacer la experiencia de usar dwm insatisfactoria. Para cambiar este comportamiento, debes editar el archivo \emph{dwm.c}, primero debes ir a la función:
+Por defecto dwm actualiza el movimiento de las ventanas a 60 FPS. Si tienes un monitor de mas de 60 Hz esto puede hacer la experiencia de usar dwm insatisfactoria. Para cambiar este comportamiento, debes editar el archivo \emph{dwm.c}, primero debes ir a la función:
 
 \begin{verbatim}
 void
@@ -665,7 +664,7 @@ case MotionNotify:
     lasttime = ev.xmotion.time;
 \end{verbatim}
 
-Y cambiar el valor 60 por la tasa de refresco de tu monitor. Por ejemplo, para un monitor de 144Hz, la línea a cambiar debería verse así:
+Y cambiar el valor \emph{60} por la tasa de refresco de tu monitor. Por ejemplo, para un monitor de 144 Hz, la línea a cambiar debería verse así:
 
 \begin{verbatim}
 if ((ev.xmotion.time - lasttime) <= (1000 / 144))
@@ -686,7 +685,7 @@ y realizar el mismo tipo de modificación. Para hacer los cambios efectivos re-c
 
 Por defecto, nuestro Firefox viene instalado con varias extensiones útiles, pero estas vienen desactivadas.
 
-Para activarlas, pulsa en el icono con forma de pieza de puzzle, que esta situado a la derecha de la barra de búsqueda. Te encontrarás con una lista como la de la imagen de abajo. Simplemente activa cada extensión con haciendo click en el deslizador que hay a la izquierda de los 3 puntos y dale a aceptar en los menus flotantes que aparezcan pidiendo confirmación
+Para activarlas, pulsa en el icono con forma de pieza de puzle, que esta situado a la derecha de la barra de búsqueda. Te encontrarás con una lista como la de la imagen de abajo. Simplemente activa cada extensión con haciendo clic en el deslizador que hay a la izquierda de los 3 puntos y dale a aceptar en los menús flotantes que aparezcan pidiendo confirmación
 
 \begin{center}
 	\includegraphics[width=0.5\textwidth]{assets/extensions.jpg}
@@ -694,7 +693,7 @@ Para activarlas, pulsa en el icono con forma de pieza de puzzle, que esta situad
 
 \subsection{Cambiar buscador por defecto}
 
-Pese a usar al configuración reforzada de firefox, \href{https://github.com/arkenfox/user.js}{arkenfox}, esta no cambia el que el buscador por defecto de firefox es google. Mi recomendación es cambiar google por DuckDuckGo.
+Pese a usar al configuración reforzada de Firefox, \href{https://github.com/arkenfox/user.js}{arkenfox}, esta no cambia el que el buscador por defecto de Firefox es Google. Mi recomendación es cambiar Google por DuckDuckGo.
 
 \begin{center}
 	\includegraphics[width=0.75\textwidth]{assets/search-engine.jpg}
@@ -708,9 +707,9 @@ Si tenemos activada nuestra extensión de KeepassXC en el navegador, cuando este
 
 \subsection{Desactivar baúl de contraseñas}
 
-Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usando la extensión de Keepass que viene incluida con nuestra isntalación, las ventanas de Firefox que aparecen preguntando si queremos guardar nuestra contraseña pueden ser bastante molestas.
+Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usando la extensión de Keepass que viene incluida con nuestra instalación, las ventanas de Firefox que aparecen preguntando si queremos guardar nuestra contraseña pueden ser bastante molestas.
 
-Para desacrivarlas, simplemente busca \emph{Contraseña} en el menu de configuración de Firefox y desactiva el \emph{Ask to save passwords} o \emph{Preguntar para guardar contraseñas}, en español.
+Para desactivar esta función, simplemente busca \emph{Contraseña} en el menu de configuración de Firefox y desactiva el \emph{Ask to save passwords} o \emph{Preguntar para guardar contraseñas}, en español.
 
 \begin{center}
 	\includegraphics[width=0.4\textwidth]{assets/passwords.jpg}
