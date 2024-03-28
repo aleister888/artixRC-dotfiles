@@ -225,13 +225,7 @@ suckless_install(){
 }
 
 xinit_make(){
-echo '#!/bin/sh
-
-[ -f $HOME/.config/Xresources ] && xrdb $HOME/.config/Xresources
-
-while true; do
-	/usr/local/bin/dwm >/dev/null 2>&1
-done' | doas tee /etc/X11/xinit/xinitrc
+doas cp "$HOME/.dotfiles/assets/xinitrc" /etc/X11/xinit/xinitrc
 }
 
 # Configurar nuestro tema de QT
@@ -253,9 +247,7 @@ gtk_config() {
 	# Verificar si el directorio ~/.dotfiles/.config/gtk-4.0 no existe y crearlo si es necesario
 	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.config/gtk-4.0"
 	# Crear el archivo de configuración de GTK
-echo "[Settings]
-gtk-theme-name=Gruvbox-Dark-B
-gtk-icon-theme-name=gruvbox-dark-icons-gtk" > "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
+	cp "$HOME/.dotfiles/assets/settings.ini" "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
 	# Aplicar configuraciones utilizando stow
 	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
 	# Definimos nuestros directorios marca-páginas
@@ -273,11 +265,7 @@ file:///home/$(whoami)/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
 
 	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-echo 'gtk-theme-name="gruvbox-dark-gtk"
-gtk-icon-theme-name="Papirus-Dark"
-gtk-font-name="Iosevka Nerd Font 14"
-gtk-cursor-theme-name="capitaine-cursors"
-gtk-cursor-theme-size=64' | doas tee /root/.gtkrc-2.0
+	doas cp "$HOME/.dotfiles/assets/.gtkrc-2.0" /root/.gtkrc-2.0
 	doas mkdir -p /root/.config/gtk-3.0
 	doas mkdir -p /root/.config/gtk-4.0
 	doas cp $HOME/.dotfiles/.config/gtk-3.0/settings.ini /root/.config/gtk-3.0/
@@ -297,25 +285,14 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 # Configurar el tema del cursor
 cursor_configure(){
 mkdir -p "$HOME/.local/share/icons/default"
-echo "[Icon Theme]
-Name=Default
-Comment=Default Cursor Theme
-Inherits=capitaine-cursors" > "$HOME/.local/share/icons/default/index.theme"
+cp "$HOME/.dotfiles/assets/index.theme" "$HOME/.local/share/icons/default/index.theme"
 }
 
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 [ ! -d $HOME/.config/keepassxc ] && \
 mkdir -p $HOME/.config/keepassxc
-echo "[General]
-ConfigVersion=2
-
-[Browser]
-CustomBrowserType=2
-Enabled=true
-
-[GUI]
-ApplicationTheme=classic" > $HOME/.config/keepassxc/keepassxc.ini
+cp "$HOME/.dotfiles/assets/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
 }
 
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
@@ -470,14 +447,7 @@ audio_setup
 # configuramos X11 para usar 1080p como resolución
 
 [ "$graphic_driver" == "virtual" ] && \
-echo 'Section    "Screen"
-Identifier "Screen0"
-Device     "Card0"
-Monitor    "Monitor0"
-SubSection "Display"
-Modes      "1920x1080"
-EndSubSection
-EndSection' | doas tee /etc/X11/xorg.conf
+doas cp "$HOME/.dotfiles/assets/xorg.conf" /etc/X11/xorg.conf
 
 # Crear directorios
 mkdir -p $HOME/Documents

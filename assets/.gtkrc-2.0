@@ -1,0 +1,5 @@
+gtk-theme-name="gruvbox-dark-gtk"
+gtk-icon-theme-name="Papirus-Dark"
+gtk-font-name="Iosevka Nerd Font 14"
+gtk-cursor-theme-name="capitaine-cursors"
+gtk-cursor-theme-size=64
