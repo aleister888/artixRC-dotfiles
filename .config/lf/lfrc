@@ -87,7 +87,7 @@ cmd clean ${{
 
 cmd compress ${{
 	whiptail --title "$(echo $f |sed 's#/[^/]*$##')" \
-	--msgbox "Comprimir todos los archivos:\n  Archivos de => $(echo $f |sed 's#/[^/]*$##')\n  En el archivo => /tmp/$(echo $PWD | sed 's/\//\_/g').*" 10 60 && \
+	--yesno "Comprimir todos los archivos:\n  Archivos de => $(echo $f |sed 's#/[^/]*$##')\n  En el archivo => /tmp/$(echo $PWD | sed 's/\//\_/g').*" 10 60 && \
 	formato=$(whiptail --title "Formato" --menu "¿En que formato desea comprimirlos?" \
 	15 60 3 "tar" ".tar.gz" "zip" ".zip" "7z" ".7z" 3>&1 1>&2 2>&3)
 	case "$formato" in
@@ -199,7 +199,7 @@ cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
 cmd extract ${{
 	whiptail --title "¿Extraer archivo(s)?" \
-	--msgbox "¿Quieres extraer el archivo $f?" 10 60 && \
+	--yesno "¿Quieres extraer el archivo $f?" 10 60 && \
 	aunpack $f && \
 	whiptail --title "Operación Completada" \
 	--msgbox "Los archivos se extrajeron correctamente" 10 60
