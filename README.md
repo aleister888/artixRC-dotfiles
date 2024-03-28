@@ -11,8 +11,6 @@ Configuración de `Artix Linux` y auto-instalador
 
 # TODO
 
-- Terminar de escribir el documento de ayuda
 - Configurar LF como administrador de archivos por defecto
 - Adaptar el tamaño de las fuentes de dwm, dmenu y st en función de la resolución
-- Añadir mi propia build de xmenu
 - Añadir capturas y mejorar el README
