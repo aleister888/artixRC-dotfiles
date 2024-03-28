@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Instalar whiptail y parted
-pacman -Sy --noconfirm --needed parted libnewt >/dev/null
+pacman -Sy --noconfirm --needed parted libnewt
 # Detectar si el sitema es UEFI o BIOS.
 if [ ! -d /sys/firmware/efi ]; then
 	PART_TYPE='msdos' # MBR para BIOS
