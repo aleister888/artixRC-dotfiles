@@ -409,13 +409,14 @@ packages="$packages libreoffice"
 whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
 packages="$packages texlive-core texlive-bin $(pacman -Ssq texlive)"
 
+pacinstall xkeyboard-config
+
 # Elegimos distribución de teclado
 kb_layout_select
 kb_layout_conf
 
 # Instalamos todos nuestros paquetes
 yayinstall $packages
-echo $packages
 
 # Descargar e instalar nuestras fuentes
 fontdownload
