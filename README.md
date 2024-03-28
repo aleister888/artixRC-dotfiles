@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.svg" align="left" height="157px" hspace="0px" vspace="20px">
+<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.svg" align="left" height="140px" hspace="0px" vspace="0px">
 
 ## Artix (OpenRC) Dotfiles
 
