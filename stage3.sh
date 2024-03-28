@@ -77,6 +77,7 @@ kb_layout_select(){
 
 kb_layout_conf(){
 	# Configurar el layout de teclado para Xorg
+	doas mkdir -p /etc/X11/xorg.conf.d/
 echo "Section \"InputClass\"
         Identifier \"system-keyboard\"
         MatchIsKeyboard \"on\"
