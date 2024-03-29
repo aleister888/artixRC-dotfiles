@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Subir el volumen (Nunca por encima del 100%)
+
+current=$(pamixer --get-volume)
+increment=10
+
+# Calcular el nuevo volumen
+new=$((current + increment))
+
+# Verificar si el nuevo volumen supera el máximo
+if [ $new -gt 100 ]; then
+	exit
+fi
+
+# Establecer el nuevo volumen
+pactl set-sink-volume @DEFAULT_SINK@ "${new}%"
