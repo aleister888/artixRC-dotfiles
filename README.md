@@ -19,5 +19,5 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 # TODO
 
 - Configurar LF como administrador de archivos por defecto
-- Adaptar el tamaño de las fuentes de dwm, dmenu y st en función de la resolución
-- Añadir capturas y mejorar el README
+- Añadir capturas actualizadas y mejorar el README
+- Mejorar stage1.sh y añadir encriptación del disco duro
