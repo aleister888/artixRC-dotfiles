@@ -106,7 +106,12 @@ pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
 pgrep dunst		|| dunst &
 pgrep xautolock		|| xautolock -time 5 -locker "screensaver" &
 pgrep nm-applet		|| nm-applet &
-pgrep blueman-applet	|| blueman-applet &
+# Si se detecta una tarjeta bluetooth se inicia blueman-applet
+pgrep blueman-applet	|| \
+if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+	blueman-applet &
+fi
+# Si se detecta que el sistema funciona con una batería, añadir icono de batería
 battery_count=$(ls -l /sys/class/power_supply/ | grep -c BAT)
 if [ "$battery_count" -gt 0 ]; then
 	pgrep cbatticon || cbatticon &
