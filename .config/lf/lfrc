@@ -48,7 +48,7 @@ map <a-d> restore-trash
 map Z home
 # Extraer y comprimir Archivos
 map E extract
-map <a-e> compress
+map <c-e> compress
 # Limpiar pantalla
 map R :reload; clean
 # Abrir Archivos
@@ -232,7 +232,7 @@ cmd delete ${{
 	[ $ans = "s" ] && rm -rf -- $fx && \
 	notify-send -i \
 	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
-	"Archivos borrados"
+	"Archivo(s) borrado(s)"
 }}
 
 cmd trash ${{
@@ -244,7 +244,7 @@ cmd trash ${{
 	[ $ans = "s" ] && trash-put $fx &&
 	notify-send -i \
 	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
-	"Archivos movidos a la papelera"
+	"Archivo(s) movido(s) a la papelera"
 }}
 
 cmd clean-trash ${{
@@ -256,8 +256,8 @@ cmd clean-trash ${{
 	read ans
 	[ $ans = "s" ] && trash-empty -f && \
 	notify-send -i \
-	/usr/local/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
-	"Archivos borrados"
+	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
+	"Archivo(s) borrados"
 }}
 
 cmd restore-trash ${{
