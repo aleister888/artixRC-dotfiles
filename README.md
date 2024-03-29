@@ -2,7 +2,12 @@
 
 ## Artix (OpenRC) Dotfiles
 
-Configuración de `Artix Linux` y auto-instalador
+Configuración de `Artix Linux OpenRC` y auto-instalador
+
+<p float="left">
+    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot1.jpg" width="45%" />
+    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot2.jpg" width="45%" />
+</p>
 
 ## Instalación
 
