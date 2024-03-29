@@ -215,12 +215,18 @@ static const Key keys[] = {
 	// Cambiar volumen
 	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -2.5%; pkill -44 dwmblocks") },
 	{ 0,         XF86XK_AudioRaiseVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +2.5%; pkill -44 dwmblocks") },
+	{ 0,                XF86XK_AudioMute,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -44 dwmblocks") },
 	{ MODKEY,                       XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -44 dwmblocks") },
 	{ MODKEY,                       XK_m,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%; pkill -44 dwmblocks") },
 	{ MODKEY|ControlMask,           XK_n,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -44 dwmblocks") },
 	{ MODKEY|ControlMask,           XK_m,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -44 dwmblocks") },
 	{ MODKEY|ShiftMask,             XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 32768; pkill -44 dwmblocks") },
 	{ MODKEY|ShiftMask,             XK_m,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 65536; pkill -44 dwmblocks") },
+	// Cambiar brillo (Portátiles)
+	{ 0,        XF86XK_MonBrightnessDown,      spawn,            SHCMD("brightchange dec") },
+	{ 0,          XF86XK_MonBrightnessUp,      spawn,            SHCMD("brightchange inc") },
+	// Activar/Desactivar Micrófono (Portátiles)
+	{ 0,             XF86XK_AudioMicMute,      spawn,            SHCMD("amixer sset Capture toggle") },
 	// Forzar cerrar ventana
 	{ MODKEY|ShiftMask,             XK_c,      spawn,            SHCMD("xkill") },
 	// Tomar capturas de pantalla

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Obtener el nivel actual de brillo
+current=$(xbacklight -get)
+
+# Establecer el mínimo y el incremento/decremento
+minimum=20
+
+# Verificar el primer argumento para determinar si se debe incrementar o decrementar el brillo
+if [ "$1" = "inc" ]; then
+	# Incrementar el brillo
+	new=$(bc <<< "$current + 20")
+elif [ "$1" = "dec" ]; then
+	# Decrementar el brillo
+	new=$(bc <<< "$current - 20")
+	if (( $(bc <<< "$new < $minimum") )); then
+		new=$minimum
+	fi
+else
+	echo "Uso: $0 [inc | dec]"
+	exit 1
+fi
+
+# Establecer el nuevo nivel de brillo
+xbacklight -set $new
