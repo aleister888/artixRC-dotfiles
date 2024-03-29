@@ -1,6 +1,12 @@
 # dwm - dynamic window manager
 # See LICENSE file for copyright and license details.
 
+dist: 1080
+	cp -f 1080.h resolution.h
+
+dist: 2160
+	cp -f 2160.h resolution.h
+
 include config.mk
 
 SRC = drw.c dwm.c util.c
@@ -18,12 +24,6 @@ config.h:
 
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
-
-1080:
-	cp -f 1080.h resolution.h
-
-2160:
-	cp -f 2160.h resolution.h
 
 clean:
 	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
@@ -49,4 +49,4 @@ uninstall:
 		${DESTDIR}${PREFIX}/bin/layoutmenu.sh\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-.PHONY: all clean 1080 2160 dist install uninstall
+.PHONY: all clean dist install uninstall 1080 2160

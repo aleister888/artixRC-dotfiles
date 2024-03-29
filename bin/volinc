@@ -3,7 +3,7 @@
 # Subir el volumen (Nunca por encima del 100%)
 
 current=$(pamixer --get-volume)
-increment=10
+increment=$1
 
 # Calcular el nuevo volumen
 new=$((current + increment))
