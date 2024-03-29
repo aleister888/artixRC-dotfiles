@@ -30,7 +30,7 @@ dwm: ${OBJ}
 
 clean:
 	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
-	rm -rf resolution.h
+	rm -f resolution.h
 
 dist: clean
 	mkdir -p dwm-${VERSION}
@@ -39,7 +39,7 @@ dist: clean
 	tar -cf dwm-${VERSION}.tar dwm-${VERSION}
 	gzip dwm-${VERSION}.tar
 	rm -rf dwm-${VERSION}
-	rm -rf resolution.h
+	rm -f resolution.h
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
