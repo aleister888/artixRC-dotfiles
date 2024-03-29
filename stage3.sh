@@ -230,10 +230,6 @@ suckless_install(){
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
-xinit_make(){
-doas cp "$HOME/.dotfiles/assets/xinitrc" /etc/X11/xinit/xinitrc
-}
-
 # Configurar nuestro tema de QT
 qt_config(){
 echo "[Appearance]
@@ -322,11 +318,6 @@ trash_dir(){
 	doas mkdir --parent /.Trash
 	doas chmod a+rw /.Trash
 	doas chmod +t /.Trash
-}
-
-# Configurar syncthing para que se inicie con el ordenador
-syncthing_setup(){
-	echo "@reboot $(whoami) syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
 }
 
 # Configurar el audio de baja latencia
@@ -429,7 +420,7 @@ dotfiles_install
 # Instalamos dwm y otras utilidades
 suckless_install
 # Creamos nuestro xinitrc
-xinit_make
+doas cp "$HOME/.dotfiles/assets/xinitrc" /etc/X11/xinit/xinitrc
 # Configurar nuestro tema de QT
 qt_config
 # Configurar nuestro tema de GTK
@@ -445,7 +436,7 @@ scripts_link
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir
 # Configurar syncthing para que se inicie con el ordenador
-syncthing_setup
+echo "@reboot $(whoami) syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
 # Configurar el audio de baja latencia
 audio_setup
 

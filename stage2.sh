@@ -93,7 +93,6 @@ elif [ "$manufacturer" == "AuthenticAMD" ]; then
 fi
 }
 
-
 # Instalamos grub
 install_grub(){
 	boot_part=$(df / --output=source | tail -n1)
@@ -129,7 +128,6 @@ hostname_config(){
 	echo "127.0.0.1 localhost.localdomain"           | tee -a /etc/hosts && \
 	echo "127.0.0.1 local"                           | tee -a /etc/hosts
 }
-
 
 # Activar repositorios de Arch Linux
 arch_support(){
