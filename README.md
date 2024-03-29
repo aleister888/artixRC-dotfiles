@@ -1,12 +1,12 @@
-<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="110px" hspace="0px" vspace="0px">
+<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="100px" hspace="10px" vspace="0px">
 
 ## Artix (OpenRC) Dotfiles
 
 Configuración de `Artix Linux OpenRC` y auto-instalador
 
 <p float="center">
-    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot1.jpg" width="49.5%" />
-    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot2.jpg" width="49.5%" />
+    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot1.jpg" width="49.75%" />
+    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot2.jpg" width="49.75%" />
 </p>
 
 ## Instalación
