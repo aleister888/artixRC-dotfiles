@@ -20,16 +20,26 @@ options:
 config.h:
 	cp config.def.h $@
 
-$(OBJ): arg.h config.h config.mk drw.h
+font.h:
+	cp 1080.h $@
+
+$(OBJ): arg.h config.h config.mk drw.h font.h
 
 dmenu: dmenu.o drw.o util.o
 	$(CC) -o $@ dmenu.o drw.o util.o $(LDFLAGS)
+
+1080:
+	cp -f 1080.h font.h
+
+2160:
+	cp -f 2160.h font.h
 
 stest: stest.o
 	$(CC) -o $@ stest.o $(LDFLAGS)
 
 clean:
 	rm -f dmenu stest $(OBJ) dmenu-$(VERSION).tar.gz
+	rm -f font.h
 
 dist: clean
 	mkdir -p dmenu-$(VERSION)
@@ -39,6 +49,7 @@ dist: clean
 	tar -cf dmenu-$(VERSION).tar dmenu-$(VERSION)
 	gzip dmenu-$(VERSION).tar
 	rm -rf dmenu-$(VERSION)
+	rm -f font.h
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -61,4 +72,4 @@ uninstall:
 		$(DESTDIR)$(MANPREFIX)/man1/dmenu.1\
 		$(DESTDIR)$(MANPREFIX)/man1/stest.1
 
-.PHONY: all options clean dist install uninstall
+.PHONY: all options clean 1080 2160 dist install uninstall

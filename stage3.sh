@@ -219,10 +219,11 @@ suckless_install(){
 	# Instalar software suckless
 	if [ $resolution == "720p" ] || [ $resolution == "1080p" ]; then
 		doas make 1080 install --directory "$HOME/.dotfiles/dwm" >/dev/null
+		doas make 1080 install --directory "$HOME/.dotfiles/dmenu" >/dev/null
 	else
 		doas make 2160 install --directory "$HOME/.dotfiles/dwm" >/dev/null
+		doas make 2160 install --directory "$HOME/.dotfiles/dmenu" >/dev/null
 	fi
-	doas make install --directory "$HOME/.dotfiles/dmenu" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/st" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null

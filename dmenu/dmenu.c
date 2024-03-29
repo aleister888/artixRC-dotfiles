@@ -18,6 +18,7 @@
 
 #include "drw.h"
 #include "util.h"
+#include "font.h"
 
 /* macros */
 #define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
