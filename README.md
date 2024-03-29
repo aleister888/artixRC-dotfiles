@@ -21,3 +21,4 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Configurar LF como administrador de archivos por defecto
 - Añadir capturas actualizadas y mejorar el README
 - Mejorar stage1.sh y añadir encriptación del disco duro
+- Añadir capturas a la guía sobre VFIO
