@@ -5,8 +5,8 @@
 Configuración de `Artix Linux OpenRC` y auto-instalador
 
 <p float="center">
-    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot1.jpg" width="49.75%" />
-    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot2.jpg" width="49.75%" />
+    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot1.jpg" width="49%" />
+    <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot2.jpg" width="49%" />
 </p>
 
 ## Instalación
