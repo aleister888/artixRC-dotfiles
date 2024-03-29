@@ -20,6 +20,7 @@ char *argv0;
 #include "st.h"
 #include "win.h"
 #include "hb.h"
+#include "fonts.h"
 
 /* types used in config.h */
 typedef struct {

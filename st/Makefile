@@ -12,6 +12,9 @@ all: st
 config.h:
 	cp config.def.h config.h
 
+fonts.h:
+	cp 1080.h fonts.h
+
 .c.o:
 	$(CC) $(STCFLAGS) -c $<
 
@@ -19,13 +22,20 @@ st.o: config.h st.h win.h
 x.o: arg.h config.h st.h win.h hb.h
 hb.o: st.h
 
-$(OBJ): config.h config.mk
+$(OBJ): config.h config.mk fonts.h
 
 st: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(STLDFLAGS)
 
+1080:
+	cp -f 1080.h fonts.h
+
+2160:
+	cp -f 2160.h fonts.h
+
 clean:
 	rm -f st $(OBJ) st-$(VERSION).tar.gz
+	rm -f fonts.h
 
 dist: clean
 	mkdir -p st-$(VERSION)
@@ -34,6 +44,7 @@ dist: clean
 		st-$(VERSION)
 	tar -cf - st-$(VERSION) | gzip > st-$(VERSION).tar.gz
 	rm -rf st-$(VERSION)
+	rm -f fonts.h
 
 install: st
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
