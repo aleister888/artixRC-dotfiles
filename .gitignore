@@ -19,3 +19,8 @@ dmenu.o
 dmenu/dmenu
 dmenu/config.h
 stest
+hb.o
+st/config.h
+st/st
+st.o
+x.o
