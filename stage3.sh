@@ -468,6 +468,10 @@ service_add xdm
 doas rfkill ublock wifi
 doas rfkill ublock bluetooth
 
+# Configurar xdm
+doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && \
 virt_conf
