@@ -285,8 +285,8 @@ Podemos usar el comando \emph{rsync} para cerar copias de seguridad tipo mirror 
 Por ejemplo, añadir esta línea a nuestro \emph{/etc/crontab}:
 
 \begin{verbatim}
-0 16 * * */2 usuario1 rsync -av --delete /home/ /mnt/Mirror1
-0 16 * * */7 usuario1 rsync -av --delete /home/ /mnt/Mirror2
+0 16 * * */2 usuario1 rsync -av --delete /home/$(whoami)/ /mnt/Mirror1
+0 16 * * */7 usuario1 rsync -av --delete /home/$(whoami)/ /mnt/Mirror2
 \end{verbatim}
 
 Hará que se cree un mirror de nuestro directorio \emph{/home} en \emph{/mnt/Mirror1} cada 2 días y otro en \emph{/mnt/Mirror2} cada semana.
