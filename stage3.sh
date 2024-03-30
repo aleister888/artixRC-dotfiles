@@ -322,8 +322,7 @@ trash_dir(){
 
 # Configurar el audio de baja latencia
 audio_setup(){
-	doas gpasswd -a "$USER" realtime && \
-	doas gpasswd -a "$USER" audio && \
+	doas usermod -aG realtime,audio $USER
 	cat /etc/security/limits.conf | grep audio || \
 	echo "@audio - rtprio 95
 	@audio - memlock unlimited
@@ -399,6 +398,10 @@ xresources_make
 # A partir de aquí no se necesita interacción del usuario
 whip_msg "Tiempo de espera" "La instalación va a terminarse, esto tomará unos 20min aprox. (Depende de la velocidad de tu conexión a Internet)"
 
+# Antes de instalar los paquetes, configurar pacman para usar todos los nucleos en la compliación
+# Créditos para: <luke@lukesmith.xyz>
+doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
+
 # Instalamos todos nuestros paquetes
 yayinstall $packages
 
@@ -471,6 +474,25 @@ doas rfkill ublock bluetooth
 # Configurar xdm
 doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
 doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+
+# Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
+doas usermod -aG network $USER
+echo "polkit.addRule(function(action, subject) {
+  if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 && subject.isInGroup("network")) {
+    return polkit.Result.YES;
+  }
+});" | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
+
+# Permitir hacer click tocando el trackpad
+# Créditos para: <luke@lukesmith.xyz>
+printf 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        # Enable left mouse button by tapping
+        Option "Tapping" "on"
+EndSection' | doas tee /etc/X11/xorg.conf.d/40-libinput.conf
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && \
