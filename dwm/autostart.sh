@@ -117,6 +117,10 @@ if [ "$battery_count" -gt 0 ]; then
 	pgrep cbatticon || cbatticon &
 fi
 
+# Correct microphone level in ASUS laptops WIP
+#mic=$(pactl list short sources | grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | awk '{print $1}')
+#pactl set-source-volume $mic 20%
+
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
 virtualmic &
 ewwspawn &
