@@ -3,12 +3,11 @@
 # Define las opciones con iconos
 options=(
 	"  Bloquear"
-	"󰒲  Suspender"
+	"  Despertarse 7:00"
 	"  Cerrar sesión"
 	"  Reinciar"
 	"  Apagar"
 	"  Reinciar dwm"
-	"  Despertarse 7:00"
 )
 
 # Presenta las opciones usando dmenu
@@ -17,10 +16,9 @@ chosen=$(printf "%s\n" "${options[@]}" | dmenu -c -l ${#options[@]})
 # Maneja la opción elegida usando un caso
 case $chosen in
 	"${options[0]}") sleep 0.5; i3lock-fancy;;
-	"${options[1]}") loginctl suspend;;
-	"${options[2]}") pkill xinit;;
+	"${options[6]}") doas wake;;
+	"${options[2]}") doas pkill X;;
 	"${options[3]}") doas openrc-shutdown -r now;;
 	"${options[4]}") doas openrc-shutdown -p now;;
 	"${options[5]}") pkill dwm;;
-	"${options[6]}") doas wake;;
 esac
