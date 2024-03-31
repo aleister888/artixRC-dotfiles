@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/bash
 
 # Script para vincular microfonos a un microfono virtual para compartir audio
 
@@ -12,15 +12,28 @@ local sink2=my-combined-sink:playback_FR
 devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
 # Elegir fuente desde dmenu
 selected_device=$(echo "$devices" | dmenu -p "Select an input device to add:" -l 14 )
-[ -z "$selected_device" ] && exit 255
-pw-link "$selected_device" "$sink1"
-sink1_code=$?
-pw-link "$selected_device" "$sink2"
-sink2_code=$?
-if [ $sink1_code -eq 0 ] && [ $sink2_code -eq 0 ]; then
-notify-send -i "$ICON" "Dispositivo añadido correctamente"
+if [ -z "$selected_device" ]; then
+	exit 1
+elif echo $devices | grep "${selected_device%FL}FR"; then
+	pw-link "$selected_device" "$sink1"
+	sink1_code=$?
+	pw-link "${selected_device%FL}FR" "$sink2"
+	sink2_code=$?
+elif echo $devices | grep "${selected_device%FR}FL"; then
+	pw-link "${selected_device%FR}FL" "$sink1"
+	sink1_code=$?
+	pw-link "$selected_device" "$sink2"
+	sink2_code=$?
 else
-notify-send -i "$ICON" "Hubo un fallo al añadir el dispositivo"
+	pw-link "$selected_device" "$sink1"
+	sink1_code=$?
+	pw-link "$selected_device" "$sink2"
+	sink2_code=$?
+fi
+if [ $sink1_code -eq 0 ] && [ $sink2_code -eq 0 ]; then
+	notify-send -i "$ICON" "Dispositivo añadido correctamente"
+else
+	notify-send -i "$ICON" "Hubo un fallo al añadir el dispositivo"
 fi
 }
 
@@ -36,7 +49,7 @@ notify-send -i $ICON "Dispositivo borrado correctamente"
 }
 
 # Elegir si borrar conexión ya existente o vincular nuevo micrófono
-chosen=$(echo "Add Input to Audio-Sharing\nDelete Input from Audio-Sharing" | dmenu -l 10)
+chosen=$(echo -e "Add Input to Audio-Sharing\nDelete Input from Audio-Sharing" | dmenu -l 10)
 [ -z "$chosen" ] && exit 255
 if [ "$chosen" = "Add Input to Audio-Sharing" ]; then
 	device_add
