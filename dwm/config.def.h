@@ -110,6 +110,8 @@ static const Rule rules[] = {
 	{ "Virt-manager",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "steam",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
+	{ "MultiMC",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
+	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "Lutris",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	// Espacio 7: Guitarra/Producción MusicAudioPlayal

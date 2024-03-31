@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if pacman -Q multimc; then
+	if pacman -Q nvidia-prime; then
+		prime-run /usr/bin/multimc
+	else
+		/usr/bin/multimc
+	fi
+else
+	notify-send -i multimc 'MultiMC Not Installed'
+fi
