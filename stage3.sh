@@ -21,7 +21,7 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges xorg-xbacklight"
+packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin cbatticon ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift picom tigervnc dunst xautolock xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges"
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -312,7 +312,7 @@ trash_dir(){
 
 # Configurar el audio de baja latencia
 audio_setup(){
-	doas usermod -aG realtime,audio $USER
+	doas usermod -aG realtime,audio,video $USER
 	cat /etc/security/limits.conf | grep audio || \
 	echo "@audio - rtprio 95
 	@audio - memlock unlimited
@@ -475,6 +475,10 @@ echo "polkit.addRule(function(action, subject) {
     return polkit.Result.YES;
   }
 });" | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
+
+# Suspender de forma automatica cuando la bateria cae por debajo del 5%
+echo '# Suspend the system when battery level drops to 15% or lower
+SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | doas tee /etc/udev/rules.d/99-lowbat.rules
 
 # Permitir hacer click tocando el trackpad
 # Créditos para: <luke@lukesmith.xyz>

@@ -1,25 +1,29 @@
 #!/bin/bash
 
-# Obtener el nivel actual de brillo
-current=$(xbacklight -get)
-
-# Establecer el mínimo y el incremento/decremento
-minimum=20
-
-# Verificar el primer argumento para determinar si se debe incrementar o decrementar el brillo
-if [ "$1" = "inc" ]; then
-	# Incrementar el brillo
-	new=$(bc <<< "$current + 20")
-elif [ "$1" = "dec" ]; then
-	# Decrementar el brillo
-	new=$(bc <<< "$current - 20")
-	if (( $(bc <<< "$new < $minimum") )); then
-		new=$minimum
+# Calcular el nuevo valor para el brillo
+calculate_brightness() {
+	local max="$1"
+	local actual="$2"
+	local percentage="$3"
+	# Calcular el 20% del brillo (No podremos bajar de este valor)
+	local increment=$((max / 10 * 2))
+	# Calcular nuevo brillo en función del argumento que damos
+	if [ "$percentage" == "inc" ]; then
+		new_brightness=$((actual + increment))
+	elif [ "$percentage" == "dec" ]; then
+		new_brightness=$((actual - increment))
 	fi
-else
-	echo "Uso: $0 [inc | dec]"
-	exit 1
-fi
+	# Asegurarse que el nuevo brillo no baja de $increment
+	# Ensure brightness stays within bounds
+	if [ "$new_brightness" -lt "$increment" ] || [ "$new_brightness" -gt "$max" ]; then
+		exit 1
+	fi
 
-# Establecer el nuevo nivel de brillo
-xbacklight -set $new
+	echo "$new_brightness"
+}
+
+max_brightness=$(cat /sys/class/backlight/*/max_brightness)
+current_brightness=$(cat /sys/class/backlight/*/brightness)
+new_brightness=$(calculate_brightness "$max_brightness" "$current_brightness" "$1")
+
+echo "$new_brightness" | doas tee /sys/class/backlight/*/brightness 2>/dev/null
