@@ -369,8 +369,8 @@ packages="$packages easytag picard atool flacon cuetools"
 whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
 packages="$packages discord forkgram-bin"
 #
-whip_yes "Juegos" "¿Deseas instalar Steam y otros launchers?" && \
-packages="$packages steam lutris protonup-qt-bin heroic-games-launcher-bin"
+whip_yes "Steam" "¿Deseas instalar Steam?" && \
+packages="$packages steam protonup-qt-bin"
 #
 if whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?"; then
 	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
