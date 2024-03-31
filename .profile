@@ -5,36 +5,35 @@ if [ -d "$HOME/.local/bin" ] ; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
-if [ -x /usr/local/bin/dwm ]; then
-	# Añadir scripts de eww a $PATH
-	if [ -d "$HOME/.local/bin/eww" ]; then
+# Añadir scripts de eww a $PATH
+if [ -d "$HOME/.local/bin/eww" ]; then
 	PATH="$HOME/.local/bin/eww:$PATH"
-	fi
-	# Añadir scripts de dwmblocks a $PATH
-	if [ -d "$HOME/.local/bin/sb" ]; then
-		PATH="$HOME/.local/bin/sb:$PATH"
-	fi
-	# Definir cursor usado por X11
-	export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
-	export XCURSOR_PATH=/usr/share/icons/
-	export XCURSOR_THEME=capitaine-cursors
-	export XCURSOR_SIZE=64
-	# Usar el filechooser del portal GTK
-	export GDK_SCALE=1
-	export GTK_USE_PORTAL=1
-	# Fix for java apps
-	export _JAVA_AWT_WM_NONREPARENTING=1
-	# Make QT themes follow qt5ct settings
-	export QT_QPA_PLATFORMTHEME="qt5ct"
-	# XDG
-	export XDG_CURRENT_DESKTOP=X-Generic
-	export XDG_CONFIG_HOME="$HOME/.config"
-	export XDG_DATA_HOME="$HOME/.local/share"
-	export XDG_CACHE_HOME="$HOME/.cache"
-	export XDG_STATE_HOME="$HOME/.local/state"
-	# Apps
-	export PIPEWIRE_LATENCY="128/48000"
 fi
+# Añadir scripts de dwmblocks a $PATH
+if [ -d "$HOME/.local/bin/sb" ]; then
+	PATH="$HOME/.local/bin/sb:$PATH"
+fi
+
+# Definir cursor usado por X11
+export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
+export XCURSOR_PATH=/usr/share/icons/
+export XCURSOR_THEME=capitaine-cursors
+export XCURSOR_SIZE=64
+# Usar el filechooser del portal GTK
+export GDK_SCALE=1
+export GTK_USE_PORTAL=1
+# Fix for java apps
+export _JAVA_AWT_WM_NONREPARENTING=1
+# Make QT themes follow qt5ct settings
+export QT_QPA_PLATFORMTHEME="qt5ct"
+# XDG
+export XDG_CURRENT_DESKTOP=X-Generic
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_STATE_HOME="$HOME/.local/state"
+# Apps
+export PIPEWIRE_LATENCY="128/48000"
 
 export EDITOR="nvim"
 export SUDO_EDITOR="nvim"
@@ -50,6 +49,7 @@ export PAGER="less"
 export VIEWER="nsxiv"
 
 # Limpiar el directorio ~/ de archivos de configuración
+export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export GOPATH="$XDG_DATA_HOME"/go
 export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var
