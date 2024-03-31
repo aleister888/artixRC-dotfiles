@@ -33,15 +33,15 @@ driver_choose(){
 	${driver_options[@]} 3>&1 1>&2 2>&3)
 	case $graphic_driver in
 	amd)
-	packages="$packages xf86-video-amdgpu libva-mesa-driver" ;;
+	packages="$packages xf86-video-amdgpu libva-mesa-driver lib32-vulkan-radeon" ;;
 	nvidia)
-	packages="$packages nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver" ;;
+	packages="$packages nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver lib32-nvidia-utils" ;;
 	intel)
-	packages="$package xf86-video-intel libva-intel-driver" ;;
+	packages="$package xf86-video-intel libva-intel-driver lib32-vulkan-intel" ;;
 	virtual)
 	packages="$packages xf86-video-vmware xf86-input-vmmouse vulkan-virtio lib32-vulkan-virtio" ;;
 	optimus)
-	packages="$packages nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime"
+	packages="$packages nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils"
 	# Si elegimos la opción de portátil con optimus, elegir los drivers de la igpu
 	igpu_options=("amd" "AMD" "intel" "Intel") # Opciones
 	igpu_driver=$(whiptail --title "Elige una opción:" --menu "Selecciona tu tarjeta gráfica integrada" \
@@ -368,6 +368,9 @@ packages="$packages easytag picard atool flacon cuetools"
 #
 whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
 packages="$packages discord forkgram-bin"
+#
+whip_yes "Juegos" "¿Deseas instalar Steam y otros launchers?" && \
+packages="$packages steam lutris protonup-qt-bin heroic-games-launcher-bin"
 #
 if whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?"; then
 	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"

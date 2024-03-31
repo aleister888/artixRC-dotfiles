@@ -117,9 +117,12 @@ if [ "$battery_count" -gt 0 ]; then
 	pgrep cbatticon || cbatticon &
 fi
 
-# Correct microphone level in ASUS laptops WIP
-#mic=$(pactl list short sources | grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | awk '{print $1}')
-#pactl set-source-volume $mic 20%
+# Correct microphone level in ASUS laptops
+host=$(cat /sys/devices/virtual/dmi/id/product_name)
+if echo $host | grep "ASUS TUF Dash F15"; then
+	mic=$(pactl list short sources | grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | awk '{print $1}')
+	pactl set-source-volume $mic 20%
+fi
 
 # Wait for wireplumber to start to add virtual mic (For sharing apps audio).
 virtualmic &
