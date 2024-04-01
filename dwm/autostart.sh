@@ -106,17 +106,10 @@ if [ ! -e /sys/class/power_supply/BAT0 ]; then
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
 fi
 pgrep dunst		|| dunst &
-pgrep xautolock		|| xautolock -time 5 -locker i3lock-fancy &
 pgrep nm-applet		|| nm-applet &
 # Si se detecta una tarjeta bluetooth se inicia blueman-applet
-pgrep blueman-applet	|| \
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
-	blueman-applet &
-fi
-# Si se detecta que el sistema funciona con una batería, añadir icono de batería
-battery_count=$(ls -l /sys/class/power_supply/ | grep -c BAT)
-if [ "$battery_count" -gt 0 ]; then
-	pgrep cbatticon || cbatticon &
+	pgrep blueman-applet || blueman-applet &
 fi
 
 # Correct microphone level in ASUS laptops
