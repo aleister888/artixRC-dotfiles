@@ -114,6 +114,7 @@ static const Rule rules[] = {
 	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "heroic",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "MultiMC",		NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
+	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	// Espacio 7: Guitarra/Producción MusicAudioPlayal
 	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
