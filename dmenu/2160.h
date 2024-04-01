@@ -1,1 +1,1 @@
-static const char *fonts[] = { "Iosevka Nerd Font:bold:pixelsize=36:antialias=true:autohint=true" };
+static const char *fonts[] = { "Iosevka Nerd Font:bold:pixelsize=38:antialias=true:autohint=true" };
