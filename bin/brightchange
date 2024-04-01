@@ -15,7 +15,7 @@ calculate_brightness() {
 	fi
 	# Asegurarse que el nuevo brillo no baja de $increment
 	# Ensure brightness stays within bounds
-	if [ "$new_brightness" -lt "$increment" ] || [ "$new_brightness" -gt "$max" ]; then
+	if [ "$new_brightness" -lt "$increment" ]; then
 		exit 1
 	fi
 

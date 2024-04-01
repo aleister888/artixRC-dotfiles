@@ -156,7 +156,7 @@ static const Layout layouts[] = {
 };
 
 // Definiciones de las Teclas
-#define MODKEY Mod1Mask // Super (Win) como modificador
+#define MODKEY Mod1Mask // LAlt como modificador
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -187,6 +187,12 @@ static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; /
 
 static const Key keys[] = {
 	// Modificador                  Tecla      Función           Argumento
+	// Asus TUF F15
+	{ Mod4Mask|ShiftMask,           XK_s,      spawn,            SHCMD("screenshot all_clip") },
+	{ Mod4Mask,                     XK_p,      spawn,            SHCMD("monitor-layout && nitrogen --restore") },
+	{ 0,                  XF86XK_Launch3,      spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } }, // ASUS Key
+	{ ShiftMask,          XF86XK_Launch3,      spawn,            {.v = (const char*[]){ TERM, "lf", "/run/media/", NULL } } }, // ASUS Key
+	{ 0,                  XF86XK_Launch4,      spawn,            SHCMD("pipewire-virtualmic-select") }, // Aura Key
 	// Abrir dmenu
 	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/help.pdf") },
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
