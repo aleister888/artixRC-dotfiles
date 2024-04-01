@@ -470,15 +470,23 @@ doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
-echo "polkit.addRule(function(action, subject) {
+echo 'polkit.addRule(function(action, subject) {
   if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 && subject.isInGroup("network")) {
     return polkit.Result.YES;
   }
-});" | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
+  if (action.id == "org.freedesktop.NetworkManager.settings.modify.system" &&
+    subject.local && subject.active && 
+    subject.isInGroup("network")) {
+    return polkit.Result.YES;
+  }
+});' | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
 
 # Suspender de forma automatica cuando la bateria cae por debajo del 5%
 echo '# Suspend the system when battery level drops to 15% or lower
 SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | doas tee /etc/udev/rules.d/99-lowbat.rules
+
+# /etc/polkit-1/rules.d/99-artix.rules
+doas usermod -aG storage $USER
 
 # Permitir hacer click tocando el trackpad
 # Créditos para: <luke@lukesmith.xyz>
