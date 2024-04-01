@@ -78,9 +78,9 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
-static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "",  "󱁤",  "",  "" };
-static const int taglayouts[]	= {   0,   0,   0,   0,   2,   2,   0,   0,   2,    0,    0,    0 };
+static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󱁤",  "" };
+static const int taglayouts[]	= {   0,   0,   0,   0,   2,   2,   0,   0,   0,    0 };
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -110,11 +110,8 @@ static const Rule rules[] = {
 	{ "Virt-manager",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "steam",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "heroic",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "MultiMC",		NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
-	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "Lutris",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
+	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	// Espacio 7: Guitarra/Producción MusicAudioPlayal
 	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
@@ -124,22 +121,21 @@ static const Rule rules[] = {
 	{ "krita",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Fr.handbrake.ghb",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Gimp",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	// Espacio 9: Organizar/Descargar Música
+	// Espacio 9: Organizar/Descargar Música || Utilidades/Configuración
 	{ "Lrcget",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	{ "Easytag",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	{ "Picard",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	{ "transmission-gtk",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	// Espacio 10: Utilidades/Configuración
-	{ "KeePassXC",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "Timeshift-gtk",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "BleachBit",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "Gnome-disks",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "Nitrogen",		NULL,	NULL,	1 << 9,	1,	0,	0,	-1,     0},
-	{ "Blueman-manager",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "Arandr",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "Lxappearance",	NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "qt5ct",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
-	{ "baobab",		NULL,	NULL,	1 << 9,	0,	0,	0,	-1,     0},
+	{ "KeePassXC",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Timeshift-gtk",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "BleachBit",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Gnome-disks",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Nitrogen",		NULL,	NULL,	1 << 8,	1,	0,	0,	-1,     0},
+	{ "Blueman-manager",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Arandr",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Lxappearance",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "qt5ct",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "baobab",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
 	// Scratchpad
 	{ NULL,	NULL,"scratchpad",              0,      1,      1,      1,      -1,     's'},
 };
@@ -156,7 +152,7 @@ static const Layout layouts[] = {
 };
 
 // Definiciones de las Teclas
-#define MODKEY Mod1Mask // LAlt como modificador
+#define MODKEY Mod1Mask // Super (Win) como modificador
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -187,12 +183,6 @@ static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; /
 
 static const Key keys[] = {
 	// Modificador                  Tecla      Función           Argumento
-	// Asus TUF F15
-	{ Mod4Mask|ShiftMask,           XK_s,      spawn,            SHCMD("screenshot all_clip") },
-	{ Mod4Mask,                     XK_p,      spawn,            SHCMD("monitor-layout && nitrogen --restore") },
-	{ 0,                  XF86XK_Launch3,      spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } }, // ASUS Key
-	{ ShiftMask,          XF86XK_Launch3,      spawn,            {.v = (const char*[]){ TERM, "lf", "/run/media/", NULL } } }, // ASUS Key
-	{ 0,                  XF86XK_Launch4,      spawn,            SHCMD("pipewire-virtualmic-select") }, // Aura Key
 	// Abrir dmenu
 	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/help.pdf") },
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
@@ -297,8 +287,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                        7)
 	TAGKEYS(                        XK_9,                        8)
 	TAGKEYS(                        XK_0,                        9)
-	TAGKEYS(                        XK_apostrophe,              10)
-	TAGKEYS(                        XK_exclamdown,              11)
 };
 
 // Botónes del ratón
