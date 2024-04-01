@@ -104,7 +104,7 @@ pgrep picom		|| picom &
 pgrep dwmblocks		|| dwmblocks &
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
 pgrep dunst		|| dunst &
-pgrep xautolock		|| xautolock -time 5 -locker "screensaver" &
+pgrep xautolock		|| xautolock -time 5 -locker i3lock-fancy &
 pgrep nm-applet		|| nm-applet &
 # Si se detecta una tarjeta bluetooth se inicia blueman-applet
 pgrep blueman-applet	|| \

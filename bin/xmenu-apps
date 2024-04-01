@@ -75,8 +75,8 @@ IMG:$ICONPATH/apps/virt-manager.svg					Virt-Manager		virt-manager
 IMG:$ICONPATH/apps/remmina.svg						Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes
 
 IMG:$ICONPATH/apps/system-shutdown.svg					Power
-	IMG:$ICONPATH/apps/system-lock-screen.svg			Lock			i3lock-fancy
-	IMG:$ICONPATH/apps/preferences-desktop-screensaver.svg		Screensaver		xautolock -locknow
+	IMG:$ICONPATH/apps/system-lock-screen.svg			Lock			xautolock -locknow
+	IMG:$ICONPATH/apps/preferences-desktop-screensaver.svg		Screensaver		
 	IMG:$ICONPATH/apps/system-suspend.svg				Suspend			loginctl suspend
 	IMG:$ICONPATH/apps/system-reboot.svg				Reboot			pkexec openrc-shutdown -r now
 	IMG:$ICONPATH/apps/system-shutdown.svg				Shutdown		pkexec openrc-shutdown -p now
