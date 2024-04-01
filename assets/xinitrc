@@ -2,8 +2,6 @@
 
 [ -f $HOME/.config/Xresources ] && xrdb $HOME/.config/Xresources
 
-export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"
-
 while true; do
 	/usr/local/bin/dwm >/dev/null 2>&1
 done
