@@ -35,7 +35,7 @@ driver_choose(){
 	amd)
 		packages="$packages xf86-video-amdgpu libva-mesa-driver lib32-vulkan-radeon" ;;
 	nvidia)
-		packages="$packages nvidia nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
+		packages="$packages dkms nvidia-dkms nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
 	intel)
 		packages="$package xf86-video-intel libva-intel-driver lib32-vulkan-intel" ;;
 	virtual)

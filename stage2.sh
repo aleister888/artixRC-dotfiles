@@ -19,7 +19,7 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo"
 
 # Establecer zona horaria
 timezoneset(){

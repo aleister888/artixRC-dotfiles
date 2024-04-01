@@ -24,7 +24,7 @@ elif echo $devices | grep "${selected_device%FR}FL"; then
 	sink1_code=$?
 	pw-link "$selected_device" "$sink2"
 	sink2_code=$?
-elif echo $devices | grep _MONO; then
+else
 	pw-link "$selected_device" "$sink1"
 	sink1_code=$?
 	pw-link "$selected_device" "$sink2"
