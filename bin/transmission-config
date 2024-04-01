@@ -1,0 +1,14 @@
+#!/bin/sh
+
+transmission-gtk &
+
+sleep 1; pkill transmission
+sleep 1;
+
+# Añadir blocklist
+sed -i 's|"blocklist-enabled": false,|"blocklist-enabled": true,|' "$HOME/.config/transmission/settings.json"
+sed -i 's|http://www.example.com/blocklist|https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz|' "$HOME/.config/transmission/settings.json"
+# Desactivar UPnP y NAT-PMP
+sed -i 's|"port-forwarding-enabled": true,|"port-forwarding-enabled": false,|' "$HOME/.config/transmission/settings.json"
+# Puerto random
+sed -i 's|"peer-port-random-on-start": false,|"peer-port-random-on-start": true,|' "$HOME/.config/transmission/settings.json"

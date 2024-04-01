@@ -363,7 +363,7 @@ whip_yes "Steam" "¿Deseas instalar Steam?" && \
 packages="$packages steam protonup-qt-bin"
 #
 if whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?"; then
-	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth"
+	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth clap-plugins vst3-plugins surge-xt"
 	mkdir -p $HOME/Documents/Guitarra/Tabs && \
 	ln -s $HOME/Documents/Guitarra/Tabs $HOME/Documents/Tabs
 	mkdir -p $HOME/Documents/Guitarra/REAPER\ Media && \
@@ -405,6 +405,8 @@ doas archlinux-java set java-17-openjdk
 
 # Configurar firefox para proteger la privacidad
 firefox_configure
+# Configurar Transmission
+"$HOME/.dotfiles/bin/transmission-config"
 # Configurar neovim e instalar los plugins
 vim_configure
 
@@ -412,7 +414,7 @@ vim_configure
 dotfiles_install
 
 # Configuramos Tauon Music Box (Nuestro reproductor de música)
-"$HOME/.dotfiles/tauon-config.sh"
+"$HOME/.dotfiles/bin/tauon-config"
 # Instalamos dwm y otras utilidades
 suckless_install
 # Creamos nuestro xinitrc
