@@ -102,7 +102,9 @@ pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
 pgrep picom		|| picom &
 pgrep dwmblocks		|| dwmblocks &
+if [ ! -e /sys/class/power_supply/BAT0 ]; then
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
+fi
 pgrep dunst		|| dunst &
 pgrep xautolock		|| xautolock -time 5 -locker i3lock-fancy &
 pgrep nm-applet		|| nm-applet &
