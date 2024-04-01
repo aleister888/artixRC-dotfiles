@@ -100,7 +100,7 @@ dbus-update-activation-environment --all
 pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
-pgrep picom		|| picom &
+pgrep picom		|| picom -f --vsync --corner-radius 12 &
 pgrep dwmblocks		|| dwmblocks &
 if [ ! -e /sys/class/power_supply/BAT0 ]; then
 pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
