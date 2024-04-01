@@ -4,7 +4,9 @@ static unsigned int delimLen = 0;
 static const Block blocks[] = {
 	// Título                     Comando                Tiempo de Actualización Señal de Actualización
 	// ¿Que canción esta sonando?
-	{"^d^"                        ,"sb-tauon",                                1, 20},
+	{"^d^"                        ,"sb-tauon",                    1, 20},
+	// Estado de la batería (Si la hay)
+	{"^d^"                        ,"sb-bat",                    1, 0},
 	// Espacio libre
 	{" ^d^^c#D79921^ ^c#FABD2F^" ,"df -h /home | awk '/[0-9]/ {print $4}'", 30,  0},
 	// Version del kernel
