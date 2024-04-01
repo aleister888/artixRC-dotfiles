@@ -2,6 +2,10 @@
 
 # Script para vincular microfonos a un microfono virtual para compartir audio
 
+# Asociamos los sinks en caso de que no se asociaron correctamente
+pw-link my-combined-sink:monitor_FL my-virtualmic:input_FL 2>/dev/null
+pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR 2>/dev/null
+
 # Icono para las notificaciones
 ICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
 
