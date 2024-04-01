@@ -49,7 +49,6 @@ export PAGER="less"
 export VIEWER="nsxiv"
 
 # Limpiar el directorio ~/ de archivos de configuración
-export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export GOPATH="$XDG_DATA_HOME"/go
 export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var
