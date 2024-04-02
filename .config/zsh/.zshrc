@@ -20,8 +20,9 @@ autoload -U select-word-style
 select-word-style bash
 
 # Recuperación en caso de paquetes rotos
-recovery-pacman() {
+function recovery-pacman() {
     yay "$@"  \
+    --logfile /dev/null   \
     --noscriptlet     \
     --dbonly          \
     --overwrite "*"   \
