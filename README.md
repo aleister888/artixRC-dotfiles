@@ -24,3 +24,4 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Añadir capturas a la guía sobre VFIO
 - Clasificar paquetes en stage3, para mantener la lista mas fácilmente
 - Arreglar el script wakeme
+- Borde de color especial para ventanas sticky
