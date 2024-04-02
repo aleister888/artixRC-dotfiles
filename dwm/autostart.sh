@@ -102,9 +102,7 @@ pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
 pgrep compfy		|| compfy -c -f --vsync --corner-radius 12 --config=$HOME/.config/picom/picom.conf &
 pgrep dwmblocks		|| dwmblocks &
-if [ ! -e /sys/class/power_supply/BAT0 ]; then
-pgrep x0vncserver	|| x0vncserver -localhost -SecurityTypes none &
-fi
+[ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 pgrep dunst		|| dunst &
 pgrep nm-applet		|| nm-applet &
 # Si se detecta una tarjeta bluetooth se inicia blueman-applet

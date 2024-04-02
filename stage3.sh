@@ -179,6 +179,10 @@ vim_configure(){
 		   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" >/dev/null
 	# Instalar los plugins
 	nvim +'PlugInstall --sync' +qa >/dev/null 2>&1
+	# Descargar diccionarios
+	mkdir -p "$HOME/.local/share/nvim/site/spell/"
+	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
+	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
 # Instalar los archivos de configuración locales y en github
@@ -458,6 +462,9 @@ rm $HOME/.wget-hsts 2>/dev/null
 # Permitir a Steam controlar mandos de PlayStation 4
 doas cp $HOME/.dotfiles/assets/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
+# Descargar wordlist
+"$HOME/.dotfiles/bin/wordlist"
+
 # Activar servicios
 service_add irqbalance
 service_add syslog-ng
@@ -472,7 +479,7 @@ doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
-echo 'polkit.addRule(function(action, subject) {
+[ -e /sys/class/power_supply/BAT0 ] && echo 'polkit.addRule(function(action, subject) {
   if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 && subject.isInGroup("network")) {
     return polkit.Result.YES;
   }
@@ -484,7 +491,7 @@ echo 'polkit.addRule(function(action, subject) {
 });' | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
 
 # Suspender de forma automatica cuando la bateria cae por debajo del 5%
-echo '# Suspend the system when battery level drops to 15% or lower
+[ -e /sys/class/power_supply/BAT0 ] && echo '# Suspend the system when battery level drops to 15% or lower
 SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | doas tee /etc/udev/rules.d/99-lowbat.rules
 
 # /etc/polkit-1/rules.d/99-artix.rules
@@ -492,7 +499,7 @@ doas usermod -aG storage $USER
 
 # Permitir hacer click tocando el trackpad
 # Créditos para: <luke@lukesmith.xyz>
-printf 'Section "InputClass"
+[ -e /sys/class/power_supply/BAT0 ] && printf 'Section "InputClass"
         Identifier "libinput touchpad catchall"
         MatchIsTouchpad "on"
         MatchDevicePath "/dev/input/event*"

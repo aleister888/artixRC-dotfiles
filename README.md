@@ -22,3 +22,4 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Añadir capturas actualizadas y mejorar el README
 - Mejorar stage1.sh y añadir encriptación del disco duro
 - Añadir capturas a la guía sobre VFIO
+- Clasificar paquetes en stage3, para mantener la lista mas fácilmente
