@@ -49,7 +49,6 @@
 	(y) < term.scr ? term.hist[(term.histi + (y) - term.scr + 1 + HISTSIZE) % HISTSIZE] \
 	               : term.line[(y) - term.scr] \
 )
-
 #define TLINE_HIST(y)           ((y) <= HISTSIZE-term.row+2 ? term.hist[(y)] : term.line[(y-HISTSIZE+term.row-3)])
 
 #define TLINEABS(y) ( \
@@ -1058,11 +1057,6 @@ tattrset(int attr)
 	return 0;
 }
 
-int tisaltscr(void)
-{
-	return IS_SET(MODE_ALTSCREEN);
-}
-
 void
 tsetdirt(int top, int bot)
 {
@@ -1088,6 +1082,11 @@ tsetdirtattr(int attr)
 			}
 		}
 	}
+}
+
+int tisaltscr(void)
+{
+	return IS_SET(MODE_ALTSCREEN);
 }
 
 void
@@ -1278,7 +1277,7 @@ tscrolldown(int top, int n)
 	if (n <= 0)
 		return;
 	n = MIN(n, bot-top+1);
- 
+
 	tsetdirt(top, bot-n);
 	tclearregion(0, bot-n+1, term.col-1, bot, 1);
 
@@ -1892,7 +1891,7 @@ csihandle(void)
 			ttywrite(vtiden, strlen(vtiden), 0);
 		break;
 	case 'b': /* REP -- if last char is printable print it <n> more times */
-		DEFAULT(csiescseq.arg[0], 1);
+		LIMIT(csiescseq.arg[0], 1, 65535);
 		if (term.lastc)
 			while (csiescseq.arg[0]-- > 0)
 				tputc(term.lastc);
@@ -1986,6 +1985,7 @@ csihandle(void)
 		}
 		break;
 	case 'S': /* SU -- Scroll <n> line up */
+		if (csiescseq.priv) break;
 		DEFAULT(csiescseq.arg[0], 1);
 		/* xterm, urxvt, alacritty save this in history */
 		tscrollup(term.top, term.bot, csiescseq.arg[0], SCROLL_SAVEHIST);
@@ -3187,9 +3187,7 @@ draw(void)
 	drawregion(0, 0, term.col, term.row);
 	if (term.scr == 0)
 		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
-				term.ocx, term.ocy, term.line[term.ocy][term.ocx],
-				term.line[term.ocy], term.col);
-
+				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
 	term.ocx = cx;
 	term.ocy = term.c.y;
 	xfinishdraw();
