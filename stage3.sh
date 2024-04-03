@@ -469,8 +469,8 @@ service_add irqbalance
 service_add syslog-ng
 service_add xdm
 
-doas rfkill ublock wifi
-doas rfkill ublock bluetooth
+doas rfkill unblock wifi
+doas rfkill unblock bluetooth
 
 # Configurar xdm
 doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
@@ -494,7 +494,7 @@ doas usermod -aG network $USER
 SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | doas tee /etc/udev/rules.d/99-lowbat.rules
 
 # /etc/polkit-1/rules.d/99-artix.rules
-doas usermod -aG storage $USER
+doas usermod -aG storage,input,users $USER
 
 # Permitir hacer click tocando el trackpad
 # Créditos para: <luke@lukesmith.xyz>
