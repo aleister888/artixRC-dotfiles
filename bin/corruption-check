@@ -7,6 +7,7 @@ TMP_LOG_FILE="/tmp/check.log" # Fichero temporal para comprobar los errores
 FINAL_LOG="/tmp/flac_corrupted.log" # Fichero donde guardar los nombres de archivos corruptos
 RECODE_LOG="/tmp/recode.log"
 OUT_FOLDER="/tmp/flac" # Carpeta de salida para archivos cortados
+[ ! -d $OUT_FOLDER ] && mkdir $OUT_FOLDER
 
 # Limpiar los archivos de guardado
 > "$LOG_FILE"

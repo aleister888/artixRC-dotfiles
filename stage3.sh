@@ -21,7 +21,7 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar unrar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift compfy tigervnc dunst xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db atool dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges lib32-gnutls"
+packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar unrar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift compfy tigervnc dunst xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges lib32-gnutls"
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -286,9 +286,8 @@ cp "$HOME/.dotfiles/assets/index.theme" "$HOME/.local/share/icons/default/index.
 
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
-[ ! -d $HOME/.config/keepassxc ] && \
-mkdir -p $HOME/.config/keepassxc
-cp "$HOME/.dotfiles/assets/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
+	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
+	cp "$HOME/.dotfiles/assets/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
 }
 
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
@@ -327,11 +326,11 @@ audio_setup(){
 # Si se eligió instalar virt-manager, configurarlo adecuadamente
 virt_conf(){
 	# Configurar QEMU para usar el usuario actual
-	doas sed -i "s/^user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
-	doas sed -i "s/^group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
+	doas sed -i "s/^#user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
+	doas sed -i "s/^#group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
 	# Configurar libvirt
-	doas sed -i "s/^unix_sock_group = .*/unix_sock_group = \"$USER\"/" /etc/libvirt/libvirtd.conf
-	doas sed -i "s/^unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
+	doas sed -i "s/^#unix_sock_group = .*/unix_sock_group = \"$USER\"/" /etc/libvirt/libvirtd.conf
+	doas sed -i "s/^#unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
 	# Agregar el usuario al grupo libvirt
 	doas usermod -aG libvirt,libvirt-qemu,kvm "$USER"
 	# Activar sericios necesarios
@@ -358,7 +357,7 @@ virt_choose
 
 # Preguntamos si queremos instalar software-adicional
 whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
-packages="$packages easytag picard atool flacon cuetools"
+packages="$packages easytag picard flacon cuetools"
 #
 whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
 packages="$packages discord forkgram-bin"
@@ -367,7 +366,7 @@ whip_yes "Steam" "¿Deseas instalar Steam?" && \
 packages="$packages steam protonup-qt-bin"
 #
 if whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?"; then
-	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo fluidsynth clap-plugins vst3-plugins surge-xt"
+	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt"
 	mkdir -p $HOME/Documents/Guitarra/Tabs && \
 	ln -s $HOME/Documents/Guitarra/Tabs $HOME/Documents/Tabs
 	mkdir -p $HOME/Documents/Guitarra/REAPER\ Media && \
@@ -509,5 +508,4 @@ doas usermod -aG storage $USER
 EndSection' | doas tee /etc/X11/xorg.conf.d/40-libinput.conf
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
-[ "$isvirt" == "true" ] && \
-virt_conf
+[ "$isvirt" == "true" ] && virt_conf
