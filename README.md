@@ -18,11 +18,11 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 
 # TODO
 
+- Establecer apps por defecto en update.sh
 - Configurar LF como administrador de archivos por defecto
-- Añadir capturas actualizadas y mejorar el README
 - Mejorar stage1.sh y añadir encriptación del disco duro
 - Añadir capturas a la guía sobre VFIO
-- Clasificar paquetes en stage3, para mantener la lista mas fácilmente
+- Clasificar paquetes en stage3 (librerias, aplicaciones, etc), para mantener la lista mas fácilmente
 - Arreglar el script wakeme
 - Borde de color especial para ventanas sticky
 - Solo instalar bluetooth si se detecta un dispositivo bluetooth
