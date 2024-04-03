@@ -25,3 +25,4 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Clasificar paquetes en stage3, para mantener la lista mas fácilmente
 - Arreglar el script wakeme
 - Borde de color especial para ventanas sticky
+- Solo instalar bluetooth si se detecta un dispositivo bluetooth
