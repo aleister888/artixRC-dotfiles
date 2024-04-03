@@ -198,10 +198,7 @@ if disk_setup && disk_partition && partition_mount; then
 fi
 
 # Instalar paquetes con basestrap
-basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt"
-if [ "$INSTALL_FILESYSTEM" = "xfs" ] || [ "$HOME_FILESYSTEM" = "xfs" ]; then
-	basestrap_pkgs="$basestrap_pkgs xfsprogs"
-fi
+basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs"
 basestrap /mnt $basestrap_pkgs
 
 mkdir -p /mnt/etc
@@ -211,16 +208,9 @@ fstabgen -U /mnt >> /mnt/etc/fstab
 
 # Montar directorios importantes para el chroot
 for dir in dev proc sys run; do mount --rbind /$dir /mnt/$dir; mount --make-rslave /mnt/$dir; done
-#mount -t proc proc /mnt/proc
-#mount --bind /sys /mnt/sys
-#mount --bind /dev /mnt/dev
-#mount --bind /dev/pts /mnt/dev/pts
-#mount --bind /dev/shm /mnt/dev/shm
-#mount --bind /run /mnt/run
 
 # Hacer chroot y ejecutar la 2a parte del script
 
-chroot /mnt bash -c "cd /tmp &&
-wget https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh &&
-chmod 700 stage2.sh &&
-./stage2.sh"
+nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh"
+next="/tmp/stage2.sh"
+chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""

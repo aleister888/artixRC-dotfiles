@@ -72,7 +72,7 @@ set_password() {
 		fi
 	done
 
-	echo "$username:$password" | chpasswd
+	printf "%s:%s" "$username:$password"
 }
 
 user_create(){
@@ -86,10 +86,10 @@ microcode_detect(){
 manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
 if [ "$manufacturer" == "GenuineIntel" ]; then
 	echo_msg "Detectado procesador Intel."
-	packages="$packages intel-ucode"
+	packages+=" intel-ucode"
 elif [ "$manufacturer" == "AuthenticAMD" ]; then
 	echo_msg "Detectado procesador AMD."
-	packages="$packages amd-ucode"
+	packages+=" amd-ucode"
 fi
 }
 
@@ -175,10 +175,8 @@ user_create
 microcode_detect
 
 # Si el sistema es UEFI, instalar efibootmgr
-if [ -d /sys/firmware/efi ]; then
-	packages="$packages efibootmgr"
-	echo_msg "Sistema EFI detectado. Se ha instalado efibootmgr."
-fi
+[ -d /sys/firmware/efi ] && \
+packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
 
 # Instalamos los paquetes necesarios
 pacinstall $packages

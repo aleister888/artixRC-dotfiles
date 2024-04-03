@@ -21,7 +21,7 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar unrar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift compfy tigervnc dunst xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges lib32-gnutls"
+packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar unrar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift compfy tigervnc dunst xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges lib32-gnutls python-pypresence"
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -33,13 +33,13 @@ driver_choose(){
 	${driver_options[@]} 3>&1 1>&2 2>&3)
 	case $graphic_driver in
 	amd)
-		packages="$packages xf86-video-amdgpu libva-mesa-driver lib32-vulkan-radeon" ;;
+		packages+=" xf86-video-amdgpu libva-mesa-driver lib32-vulkan-radeon" ;;
 	nvidia)
-		packages="$packages dkms nvidia-dkms nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
+		packages+=" dkms nvidia-dkms nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
 	intel)
 		packages="$package xf86-video-intel libva-intel-driver lib32-vulkan-intel" ;;
 	virtual)
-		packages="$packages xf86-video-vmware xf86-input-vmmouse vulkan-virtio lib32-vulkan-virtio" ;;
+		packages+=" xf86-video-vmware xf86-input-vmmouse vulkan-virtio lib32-vulkan-virtio" ;;
 	esac
 }
 
@@ -47,7 +47,7 @@ driver_choose(){
 virt_choose(){
 	if whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?"; then
 		# Instalar paquetes para virtualización
-		packages="$packages looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
+		packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
 		isvirt="true"
 	fi
 }
@@ -355,29 +355,29 @@ driver_choose
 # Elegir si instalar virt-manager
 virt_choose
 
-# Preguntamos si queremos instalar software-adicional
+# Preguntamos que software-adicional queremos instalar
 whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
-packages="$packages easytag picard flacon cuetools"
+packages+=" easytag picard flacon cuetools"
 #
 whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
-packages="$packages discord forkgram-bin"
+packages+=" discord forkgram-bin"
 #
 whip_yes "Steam" "¿Deseas instalar Steam?" && \
-packages="$packages steam protonup-qt-bin"
+packages+=" steam protonup-qt-bin"
 #
 if whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?"; then
-	packages="$packages tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt"
-	mkdir -p $HOME/Documents/Guitarra/Tabs && \
-	ln -s $HOME/Documents/Guitarra/Tabs $HOME/Documents/Tabs
-	mkdir -p $HOME/Documents/Guitarra/REAPER\ Media && \
-	ln -s $HOME/Documents/Guitarra/REAPER\ Media $HOME/Documents/REAPER\ Media
+	packages+=" tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt"
+	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
+	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
+	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
+	ln -s "$HOME/Documents/Guitarra/REAPER Media" "$HOME/Documents/REAPER Media"
 fi
 #
 whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && \
-packages="$packages libreoffice"
+packages+=" libreoffice"
 #
 whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
-packages="$packages texlive-core texlive-bin $(pacman -Ssq texlive)"
+packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 
 # Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
 # Instalamos pipewire antes de nada, porque si no tendremos conflictos
@@ -394,11 +394,12 @@ xresources_make
 # A partir de aquí no se necesita interacción del usuario
 whip_msg "Tiempo de espera" "La instalación va a terminarse, esto tomará unos 20min aprox. (Depende de la velocidad de tu conexión a Internet)"
 
-# Antes de instalar los paquetes, configurar pacman para usar todos los nucleos en la compliación
+# Antes de instalar los paquetes, configurar makepkg para
+# usar todos los núcleos durante la compliación
 # Créditos para: <luke@lukesmith.xyz>
 doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
-# Instalamos todos nuestros paquetes
+# Instalamos todos los paquetes a la vez
 yayinstall $packages
 
 # Descargar e instalar nuestras fuentes
@@ -448,12 +449,7 @@ audio_setup
 doas cp "$HOME/.dotfiles/assets/xorg.conf" /etc/X11/xorg.conf
 
 # Crear directorios
-mkdir -p $HOME/Documents
-mkdir -p $HOME/Downloads
-mkdir -p $HOME/Music
-mkdir -p $HOME/Pictures
-mkdir -p $HOME/Public
-mkdir -p $HOME/Videos
+for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
 
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
@@ -478,7 +474,8 @@ doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
-[ -e /sys/class/power_supply/BAT0 ] && echo 'polkit.addRule(function(action, subject) {
+[ -e /sys/class/power_supply/BAT0 ] && \
+echo 'polkit.addRule(function(action, subject) {
   if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 && subject.isInGroup("network")) {
     return polkit.Result.YES;
   }
@@ -490,15 +487,18 @@ doas usermod -aG network $USER
 });' | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
 
 # Suspender de forma automatica cuando la bateria cae por debajo del 5%
-[ -e /sys/class/power_supply/BAT0 ] && echo '# Suspend the system when battery level drops to 15% or lower
-SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | doas tee /etc/udev/rules.d/99-lowbat.rules
+[ -e /sys/class/power_supply/BAT0 ] && \
+echo '# Suspend the system when battery level drops to 15% or lower
+SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | \
+doas tee /etc/udev/rules.d/99-lowbat.rules
 
 # /etc/polkit-1/rules.d/99-artix.rules
 doas usermod -aG storage,input,users $USER
 
 # Permitir hacer click tocando el trackpad
 # Créditos para: <luke@lukesmith.xyz>
-[ -e /sys/class/power_supply/BAT0 ] && printf 'Section "InputClass"
+[ -e /sys/class/power_supply/BAT0 ] && \
+printf 'Section "InputClass"
         Identifier "libinput touchpad catchall"
         MatchIsTouchpad "on"
         MatchDevicePath "/dev/input/event*"
