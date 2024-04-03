@@ -18,7 +18,7 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 
 # TODO
 
-- Establecer apps por defecto en update.sh
+- Establecer apps por defecto en update.sh con xdg-mime
 - Configurar LF como administrador de archivos por defecto
 - Mejorar stage1.sh y añadir encriptación del disco duro
 - Añadir capturas a la guía sobre VFIO
