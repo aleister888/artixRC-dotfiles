@@ -56,23 +56,16 @@ timezoneset(){
 
 # Crear usuario y establecer la contraseña para el usuario root
 set_password() {
-	local username="$1"
+	local user="$1"
 	local prompt="Contraseña: $1"
 	local password=""
-	local password_confirm=""
-	local match=false
+	local confirm=""
 
-	while [ "$match" == false ]; do
-		password=$(whiptail --title "$prompt" --passwordbox "Por favor, ingresa la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
-		password_confirm=$(whiptail --title "Confirmar Contraseña" --passwordbox "Por favor, confirma la contraseña para el usuario $username:" 10 60 3>&1 1>&2 2>&3)
-		if [ "$password" == "$password_confirm" ]; then
-			match=true
-		else
-			whip_msg "Error" "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
-		fi
+	while true; do
+		whip_msg "$user" "A continuación, se te pedirá la contraseña de $user:"
+		passwd "$user" && break
+		whip_msg "$user" "Hubo un fallo, se te pedirá de nuevo la contraseña"
 	done
-
-	printf "%s:%s" "$username:$password"
 }
 
 user_create(){
