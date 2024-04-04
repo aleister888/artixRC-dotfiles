@@ -21,16 +21,16 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-# Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jre17-openjdk-headless jdk-openjdk realtime-privileges lib32-gnutls"
+# Paquetes
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jre17-openjdk-headless jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo"
 # X11
-packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg-xclock xterm xorg xorg-xinit xdotool xclip"
+packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
 packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans noto-fonts-emoji gnu-free-fonts"
 # Archivos comprimidos
-packages+=" atool tar unrar gzip unzip zip"
+packages+=" atool tar unrar gzip unzip zip p7zip"
 # Servicios
-packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc p7zip"
+packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc"
 # Documentos
 packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
@@ -41,8 +41,10 @@ packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv 
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt dragon-drop"
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen compfy gruvbox-dark-gtk lxappearance"
+# Aplicaciones GUI
+packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
 # Misc
-packages+=" syncthing keepassxc transmission-gtk handbrake mate-calc wine-staging wine-mono wine-gecko winetricks bleachbit baobab perl-file-mimeinfo fluidsynth extra/github-cli udiskie redshift tigervnc gcolor2 eww gnome-disk-utility pamixer playerctl lf imagemagick ueberzug inkscape go"
+packages+=" syncthing wine-staging wine-mono wine-gecko winetricks fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -199,9 +201,6 @@ firefox_configure(){
 
 # Configurar neovim e instalar los plugins
 vim_configure(){
-	# Instalar VimPlug
-	mkdir -p "$HOME/.local/share/nvim/site/autoload"
-	curl -Ls "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > "$HOME/.local/share/nvim/site/autoload/plug.vim"
 	# Descargar diccionarios
 	mkdir -p "$HOME/.local/share/nvim/site/spell/"
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
