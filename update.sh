@@ -50,6 +50,7 @@ rm -f /home/aleister/.local/share/applications/defaults.list
 update-mime-database ~/.local/share/mime
 doas update-mime-database /usr/share/mime
 
+[ ! -d "$HOME/.local/share/applications" ] && mkdir -p "$HOME/.local/share/applications"
 # Creamos el archivo .desktop para lf
 [ ! -e "$HOME/.local/share/applications/lft.desktop" ] && \
 echo '[Desktop Entry]

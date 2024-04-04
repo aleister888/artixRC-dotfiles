@@ -213,4 +213,4 @@ for dir in dev proc sys run; do mount --rbind /$dir /mnt/$dir; mount --make-rsla
 
 nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh"
 next="/tmp/stage2.sh"
-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
+artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
