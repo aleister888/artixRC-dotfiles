@@ -16,7 +16,7 @@ chosen=$(printf "%s\n" "${options[@]}" | dmenu -c -l ${#options[@]})
 # Maneja la opción elegida usando un caso
 case $chosen in
 	"${options[0]}") sleep 0.5; i3lock-fancy;;
-	"${options[1]}") doas wake;;
+	"${options[1]}") doas wake now;;
 	"${options[2]}") doas pkill X;;
 	"${options[3]}") doas openrc-shutdown -r now;;
 	"${options[4]}") doas openrc-shutdown -p now;;

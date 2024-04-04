@@ -22,3 +22,4 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Añadir capturas a la guía sobre VFIO
 - Borde de color especial para ventanas sticky
 - Añadir layout fibonacci a dwm
+- Mejorar wake (Tener en cuenta los 10 minutos al calcular $day cuando $1 != now)

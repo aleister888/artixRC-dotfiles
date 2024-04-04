@@ -77,5 +77,5 @@ IMG:$ICONPATH/apps/system-shutdown.svg					Power
 	IMG:$ICONPATH/apps/system-suspend.svg				Suspend			loginctl suspend
 	IMG:$ICONPATH/apps/system-reboot.svg				Reboot			pkexec openrc-shutdown -r now
 	IMG:$ICONPATH/apps/system-shutdown.svg				Shutdown		pkexec openrc-shutdown -p now
-	IMG:$ICONPATH/apps/system-suspend-hibernate.svg			Wake			doas wake
+	IMG:$ICONPATH/apps/system-suspend-hibernate.svg			Wake			doas wake now
 EOF
