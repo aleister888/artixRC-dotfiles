@@ -42,7 +42,7 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen compfy gruvbox-dark-gtk lxappearance"
 # Misc
-packages+=" syncthing keepassxc transmission-gtk handbrake mate-calc wine-staging wine-mono wine-gecko winetricks bleachbit baobab perl-file-mimeinfo fluidsynth extra/github-cli udiskie redshift tigervnc gcolor2 eww gnome-disk-utility pamixer playerctl lf imagemagick ueberzug inkscape"
+packages+=" syncthing keepassxc transmission-gtk handbrake mate-calc wine-staging wine-mono wine-gecko winetricks bleachbit baobab perl-file-mimeinfo fluidsynth extra/github-cli udiskie redshift tigervnc gcolor2 eww gnome-disk-utility pamixer playerctl lf imagemagick ueberzug inkscape go"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -202,8 +202,6 @@ vim_configure(){
 	# Instalar VimPlug
 	mkdir -p "$HOME/.local/share/nvim/site/autoload"
 	curl -Ls "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > "$HOME/.local/share/nvim/site/autoload/plug.vim"
-	# Instalar los plugins
-	nvim -c "PlugInstall|q|q"
 	# Descargar diccionarios
 	mkdir -p "$HOME/.local/share/nvim/site/spell/"
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
