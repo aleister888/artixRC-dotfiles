@@ -45,10 +45,10 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull"
 ############################
 
 # Borramos ajustes ya guardados
-rm -f /home/aleister/.config/mimeapps.list
-rm -f /home/aleister/.local/share/applications/defaults.list
+rm -f $HOME/.config/mimeapps.list
+rm -f $HOME/.local/share/applications/defaults.list
+doas rm -f /user/share/applications/mimeinfo.cache
 update-mime-database ~/.local/share/mime
-doas update-mime-database /usr/share/mime
 
 [ ! -d "$HOME/.local/share/applications" ] && mkdir -p "$HOME/.local/share/applications"
 # Creamos el archivo .desktop para lf

@@ -22,3 +22,4 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Añadir capturas a la guía sobre VFIO
 - Borde de color especial para ventanas sticky
 - Arreglar nvim no instalando los plugins
+- Usar picom en vez de compfy en maquinas virtuales
