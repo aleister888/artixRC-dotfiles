@@ -21,5 +21,3 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Mejorar stage1.sh y añadir encriptación del disco duro
 - Añadir capturas a la guía sobre VFIO
 - Borde de color especial para ventanas sticky
-- Arreglar nvim no instalando los plugins
-- Usar picom en vez de compfy en maquinas virtuales
