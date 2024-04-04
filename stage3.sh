@@ -200,10 +200,10 @@ firefox_configure(){
 # Configurar neovim e instalar los plugins
 vim_configure(){
 	# Instalar VimPlug
-	curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" --create-dirs \
-		   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null
+	mkdir -p "$HOME/.local/share/nvim/site/autoload"
+	curl -Ls "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > "$HOME/.local/share/nvim/site/autoload/plug.vim"
 	# Instalar los plugins
-	nvim +'PlugInstall --sync' +qa
+	nvim -c "PlugInstall|q|q"
 	# Descargar diccionarios
 	mkdir -p "$HOME/.local/share/nvim/site/spell/"
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"

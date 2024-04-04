@@ -93,6 +93,7 @@ set_default_mime_types "^text" "nvimt.desktop"
 # Establecemos por defecto el administrador de archivos
 xdg-mime default lfst.desktop inode/directory
 xdg-mime default lfst.desktop x-directory/normal
+update-desktop-database "$HOME/.local/share/applications"
 # Usar xdg-open para firefox
 mkdir -p "$HOME/.local/share/dbus-1/services/"
 echo "Exec=/bin/false" > "$HOME/.local/share/dbus-1/services/org.freedesktop.FileManager1.service"
