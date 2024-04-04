@@ -2,6 +2,8 @@
 # Script de alarma
 
 export LC_TIME=en_US.UTF-8
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
 
 DAY=$(date +%A)
 

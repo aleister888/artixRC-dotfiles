@@ -208,30 +208,19 @@ Para borrar automaticamente los metadatos de una carpeta, puedes añadir a \emph
 
 Este script comprueba si hay alguna máquina virtual en ejecucción, y si no encuentra ninguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
 
-Para suspender tu equipo automáticamente todos los dias a las 11:00 puedes añadir a tu crontab:
+El script te avisa de que el sistema se va suspender y a los 10 minutos lo suspende. Así que tienes que ejecutarlo 10 minutos antes de la hora a la que quieres que el ordenador se suspenda. Para suspender tu equipo automáticamente todos los dias a las 11:00 puedes añadir a tu crontab:
 
 \begin{verbatim}
-0 23 * * * root wake
+50 22 * * * root wake
 \end{verbatim}
-
-Y para notificar al usuario \emph{usuario1} de que el sistema se suspenderá con 10 minutos de antelación:
-
-\begin{verbatim}
-50 22 * * * usuario1 DISPLAY=:0 XDG_RUNTIME_DIR=/run/usr/$(id -u) notify-send
--u critical -i system-error "El sistema se suspenderá en 10min"
-5 7 usuario1 dunstctl close-all
-0 23 * * * root wake
-\end{verbatim}
-
-Para que este script funcione correctamente, es recomendable establecer el reloj como \href{https://en.wikipedia.org/wiki/Time_Stamp_Counter}{TSC}. Puedes mirar como se hace esto en \ref{sec:tsc}
 
 \subsection{wakeme}
 
 Este script es un despertador, hace sonar un archivo de audio hasta que le damos al un botón que apaga nuestra alarma. Necesita como único argumento el archivo de audio que queremos usar como despertador. Si queremos que este despertador suene todas las mañanas a las 7:30, podemos añadir una linea parecida a esta a \emph{/etc/crontab}:
 
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
-30 7 * * * usuario1 DISPLAY=:0 XDG_RUNTIME_DIR=/run/usr/$(id -u) wakeme ~/musica/alarma.mp3
-\end{lstlisting}
+\begin{verbatim}
+30 7 * * * usuario1 wakeme ~/musica/alarma.mp3
+\end{verbatim}
 
 \subsection{Mantenimiento btrfs}
 

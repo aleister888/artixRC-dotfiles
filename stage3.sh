@@ -21,7 +21,32 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-packages="libx11 libxft libxinerama ttf-dejavu ttf-liberation alsa-plugins alsa-tools alsa-utils alsa-utils atool dash dashbinsh dosfstools feh eza lostfiles syncthing dashbinsh jq simple-mtpfs pfetch-rs-bin zathura zathura-pdf-poppler zathura-cb vlc keepassxc ttf-linux-libertine ttf-opensans pacman-contrib ntfs-3g noto-fonts-emoji network-manager-applet rsync mailcap gawk desktop-file-utils tar unrar gzip unzip firefox-arkenfox-autoconfig firefox syslog-ng syslog-ng-openrc mpv timeshift irqbalance-openrc transmission-gtk handbrake blueman htop xdotool thunderbird thunderbird-dark-reader mate-calc xdg-user-dirs nodejs xclip papirus-icon-theme qt5ct capitaine-cursors pavucontrol wine-staging wine-mono wine-gecko winetricks gimp i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool bleachbit baobab perl-file-mimeinfo fluidsynth gnu-free-fonts qt5-tools zip shellcheck-bin ca-certificates ca-certificates-mozilla java-environment-common jdk-openjdk extra/github-cli zsh dash stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring nitrogen udiskie redshift compfy tigervnc dunst xorg xorg-xinit xorg-xkill net-tools arandr gruvbox-dark-gtk nsxiv xorg-twm xorg-xclock xterm xdg-desktop-portal-gtk gcolor2 eww j4-dmenu-desktop gnome-disk-utility lxappearance pamixer playerctl lf imagemagick bat cdrtools ffmpegthumbnailer poppler ueberzug odt2txt gnupg mediainfo trash-cli fzf ripgrep sxiv man-db dragon-drop mpv tauon-music-box jre17-openjdk jre17-openjdk-headless jdk-openjdk xorg-xdm xdm-openrc inkscape realtime-privileges lib32-gnutls python-pypresence p7zip"
+# Sistema
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jre17-openjdk-headless jdk-openjdk realtime-privileges lib32-gnutls"
+# X11
+packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg-xclock xterm xorg xorg-xinit xdotool xclip"
+# Fuentes
+packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans noto-fonts-emoji gnu-free-fonts"
+# Archivos comprimidos
+packages+=" atool tar unrar gzip unzip zip"
+# Servicios
+packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc p7zip"
+# Documentos
+packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
+# Firefox y thunderbird
+packages+=" firefox-arkenfox-autoconfig firefox thunderbird thunderbird-dark-reader ca-certificates ca-certificates-mozilla"
+# Multimedia
+packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv tauon-music-box mediainfo feh vlc pavucontrol gimp sxiv nsxiv"
+# Herramientas de terminal
+packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt dragon-drop"
+# Apariencia
+packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen compfy gruvbox-dark-gtk lxappearance"
+# Misc
+packages+=" syncthing keepassxc transmission-gtk handbrake mate-calc wine-staging wine-mono wine-gecko winetricks bleachbit baobab perl-file-mimeinfo fluidsynth extra/github-cli udiskie redshift tigervnc gcolor2 eww gnome-disk-utility pamixer playerctl lf imagemagick ueberzug inkscape"
+
+if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+	packages+=" blueman"
+fi
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -466,7 +491,9 @@ service_add syslog-ng
 service_add xdm
 
 doas rfkill unblock wifi
-doas rfkill unblock bluetooth
+if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+	doas rfkill unblock bluetooth
+fi
 
 # Configurar xdm
 doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources

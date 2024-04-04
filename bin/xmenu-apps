@@ -52,7 +52,6 @@ IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
 	IMG:$ICONPATH/apps/gimp.svg					GIMP			gimp
 
 IMG:$ICONPATH/apps/applications-office.svg				Oficina
-	IMG:$ICONPATH/apps/zim.svg					Zim			zim
 	IMG:$ICONPATH/apps/libreoffice-writer.svg			LibreOffice Writer	libreoffice --writer
 	IMG:$ICONPATH/apps/libreoffice-calc.svg				LibreOffice Calc	libreoffice --calc
 	IMG:$ICONPATH/apps/libreoffice-draw.svg				LibreOffice Draw	libreoffice --draw

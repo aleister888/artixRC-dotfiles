@@ -19,7 +19,7 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools bluez-openrc bluez-utils cups cups-openrc freetype2 libjpeg-turbo"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo"
 
 # Establecer zona horaria
 timezoneset(){
@@ -171,6 +171,11 @@ microcode_detect
 [ -d /sys/firmware/efi ] && \
 packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
 
+if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+	packages+=" bluez-openrc bluez-utils"
+	echo_msg "Bluetooth detectado. Se instalará bluez."
+fi
+
 # Instalamos los paquetes necesarios
 pacinstall $packages
 
@@ -187,10 +192,12 @@ arch_support
 genlocale
 
 service_add NetworkManager
-service_add bluetoothd
 service_add cupsd
 service_add cronie
 service_add tlp
+if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+	service_add bluetoothd
+fi
 
 # Sustituir sudo por doas
 ln -s /usr/bin/doas /usr/bin/sudo
