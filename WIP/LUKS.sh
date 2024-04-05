@@ -179,7 +179,7 @@ format_disks(){
 	if [ "$ROOT_FILESYSTEM" = "ext4" ]; then
 		mkfs.ext4 "/dev/$rootpart"
 	elif [ "$ROOT_FILESYSTEM" = "xfs" ]; then
-		mkfs.xfs -f "/dev/$PART3"
+		mkfs.xfs -f "/dev/$rootpart"
 	elif [ "$ROOT_FILESYSTEM" = "btrfs" ]; then
 		mkfs.btrfs -f "/dev/$rootpart"
 		mount "/dev/$rootpart" /mnt
