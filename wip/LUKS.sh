@@ -254,3 +254,26 @@ scheme_setup
 format_disks
 # Montamos nuestras particiones
 mount_partitions
+
+# Instalar paquetes con basestrap
+basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs"
+basestrap /mnt $basestrap_pkgs
+
+mkdir -p /mnt/etc
+echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
+
+fstabgen -U /mnt >> /mnt/etc/fstab
+
+# Montar directorios importantes para el chroot
+for dir in dev proc sys run; do mount --rbind /$dir /mnt/$dir; mount --make-rslave /mnt/$dir; done
+
+# Hacer chroot y ejecutar la 2a parte del script
+
+nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh"
+next="/tmp/stage2.sh"
+artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
+
+# NOTAS PARA MODIFICAR LAS SIGUIENTES PARTES
+# Añadir keyboard, keymap y encrypt a /etc/mkinitcpio.conf
+# Añadir a CMDLINE_LINUX="cryptdevice=UUID=12345678-1234-1234-1234-123456789012:cryptroot root=/dev/mapper/cryptroot"
+# Tener en cuenta que grub tiene que instalarse en /boot como directorio efi si el disco esta encriptado
