@@ -200,6 +200,7 @@ service_add tlp
 # Sustituir sudo por doas
 ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
+ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
