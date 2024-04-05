@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Instalar whiptail y parted
-pacman -Sy --noconfirm --needed parted libnewt
+pacman -Sy --noconfirm --needed parted libnewt xfsprogs
 
 # Detectar si el sitema es UEFI o BIOS.
 if [ ! -d /sys/firmware/efi ]; then
@@ -43,6 +43,7 @@ scheme_show(){
 	bootmount= # Punto de montaje con la partición de arranque
 	bootpart= # Partición de arranque
 	rootpart= # Partición con el sistema
+	homepart= # Partición para /home (Si es que esta en otro disco)
 	local roottype # Tipo de / ( Encriptado o sin encriptación)
 	# Establecemos la partición de arranque en función del tipo de sistema
 	if [ "$PART_TYPE" == "msdos" ]; then
@@ -63,7 +64,6 @@ scheme_show(){
 	# Definimos el nombre de las particiones
 	# de nuestro disco /home (Si lo hay)
 	if [ "$home_partition" == "true" ]; then
-		local homepart
 		case "$HOME_DISK" in
 		*"nvme"*)
 			homepart="$HOME_DISK"p1 ;;
@@ -144,6 +144,7 @@ while true; do
 	cryptsetup luksFormat -q --verify-passphrase "/dev/$rootpart" && break
 	whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 done
+	cryptsetup open "/dev/$rootpart" cryptroot
 }
 
 home_delete_confirm(){
@@ -154,8 +155,8 @@ En caso contrario se utilizará el disco duro tal cual esta ahora (Si esque ya s
 
 format_disks(){
 	# Borramos todas las firmas de nuestros discos
-	wipefs --all /dev/$ROOT_DISK
-	if [ "$home_partition" = "true" ] && home_delete_confirm; then
+	wipefs --all "/dev/$ROOT_DISK"
+	if [ "$home_partition" == "true" ] && home_delete_confirm; then
 		home_fresh="true"
 		wipefs --all /dev/$HOME_DISK
 	else
@@ -163,15 +164,76 @@ format_disks(){
 	fi
 	# Creamos nuestra tabla de particionado y partición de arranque
 	if [ "$PART_TYPE" == "msdos" ]; then # BIOS -> MBR
-		echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | sfdisk -f "/dev/$ROOT_DISK" >/dev/null
-		mkfs.ext4 "/dev/$bootpart"
+		echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | \
+		sfdisk -f "/dev/$ROOT_DISK"; mkfs.ext4 "/dev/$bootpart"
 	else # UEFI -> GPT
 		echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | \
-		sfdisk -f "/dev/$ROOT_DISK" >/dev/null; mkfs.fat -F32 "/dev/$bootpart"
+		sfdisk -f "/dev/$ROOT_DISK"; mkfs.fat -F32 "/dev/$bootpart"
 	fi
+
 	# Creamos la partición root
 	parted -s "/dev/$ROOT_DISK" mkpart primary 513MiB 100%
-	[ "$crypt_root" == "true" ] && root_encrypt
+	[ "$crypt_root" == "true" ] && root_encrypt && rootpart="mapper/cryptroot"
+
+	# Formateamos nuestra partición "/"
+	if [ "$ROOT_FILESYSTEM" = "ext4" ]; then
+		mkfs.ext4 "/dev/$rootpart"
+	elif [ "$ROOT_FILESYSTEM" = "xfs" ]; then
+		mkfs.xfs -f "/dev/$PART3"
+	elif [ "$ROOT_FILESYSTEM" = "btrfs" ]; then
+		mkfs.btrfs -f "/dev/$rootpart"
+		btrfs subvolume create "/dev/$rootpart/@"
+		# Se crea el subvolumen @home si no hay un disco para "/home".
+		[ "$home_partition" != "true" ] && btrfs subvolume create "/dev/$rootpart/@home"
+	fi
+
+	# Formateamos nuestra partición "/home" (Si es necesario)
+	if [ "$home_partition" = true ]; then
+		if [ "$PART_TYPE" == "msdos" ]; then # Creamos la tabla de particionado
+			parted "/dev/$HOME_DISK" mklabel msdos
+		else
+			parted "/dev/$HOME_DISK" mklabel gpt
+		fi
+		parted -a optimal "/dev/$HOME_DISK" mkpart primary ext4 1MiB 100%
+		if [ "$HOME_FILESYSTEM" = "ext4" ]; then
+			mkfs.ext4 "/dev/$homepart"
+		elif [ "$HOME_FILESYSTEM" = "xfs" ]; then
+			mkfs.xfs -f "/dev/$homepart"
+		elif [ "$HOME_FILESYSTEM" = "btrfs" ]; then
+			mkfs.btrfs -f "/dev/$homepart" # Sin sub-volúmenes, pues raramente se usan para /home
+		fi
+	fi
+}
+
+# Función para montar nuestras particiones
+mount_partitions(){
+	if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
+		mount -o noatime,compress=zstd,subvol=@ "/dev/$rootpart" /mnt
+		mkdir -p /mnt/home
+		if [ "$home_partition" == "true" ]; then
+			mount -o noatime "/dev/$homepart" /mnt/home
+		else
+			mount -o noatime,compress=zstd,subvol=@home "/dev/$root" /mnt/home
+		fi
+	else
+		mount -o noatime "/dev/$rootpart" /mnt
+		if [ "$home_partition" == "true" ]; then
+			mkdir -p /mnt/home
+			mount -o noatime "/dev/$homepart" /mnt/home
+		fi
+	fi
+
+	if [ "$crypt_root" == "true" ] || [ "$PART_TYPE" == "msdos" ]; then
+		mkdir /mnt/boot
+		mount "/dev/$bootpart" /mnt/boot
+	else
+		mkdir -p /mnt/boot/efi
+		mount "/dev/$bootpart" /mnt/boot/efi
+	fi
+}
+
+make_fstab(){
+	fstabgen -U /mnt >> /mnt/etc/fstab
 }
 
 ##########
@@ -187,3 +249,5 @@ ROOT_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de arch
 	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 # Formateamos los discos
 format_disks
+# Montamos nuestras particiones
+mount_partitions
