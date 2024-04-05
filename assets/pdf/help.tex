@@ -208,7 +208,7 @@ Para borrar automaticamente los metadatos de una carpeta, puedes añadir a \emph
 
 Este script comprueba si hay alguna máquina virtual en ejecucción, y si no encuentra ninguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
 
-El script te avisa de que el sistema se va suspender y a los 10 minutos lo suspende. Así que tienes que ejecutarlo 10 minutos antes de la hora a la que quieres que el ordenador se suspenda. Para suspender tu equipo automáticamente todos los dias a las 11:00 puedes añadir a tu crontab:
+El script te avisa de que el sistema se va suspender y a los 10 minutos lo suspende. Así que tienes que ejecutarlo 10 minutos antes de la hora a la que quieres que el ordenador se suspenda \emph{(También puedes hacer que no avise al usuario y el ordenador se suspenda inmediatamente pasándole el argumento "now"\ al script, de forma que quede así: "wake now")}. Para suspender tu equipo automáticamente todos los días a las 11:00 puedes añadir a tu crontab:
 
 \begin{verbatim}
 50 22 * * * root wake
@@ -451,11 +451,11 @@ Una vez descargada la ISO, abriremos \emph{virt-manager} y crearemos una máquin
 \begin{multicols}{2}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=0.75\textwidth]{assets/vmm_iso_selection.png}
+\includegraphics[width=0.75\textwidth]{images/vm-iso-selection.png}
 \end{minipage}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=0.75\textwidth]{assets/vmm_disk_creation.png}
+\includegraphics[width=0.75\textwidth]{images/vm-disk-creation.png}
 \end{minipage}
 \end{multicols}
 
@@ -464,11 +464,11 @@ Vamos a asignarle la memoria RAM \emph{(mi recomendación es asignar, como míni
 \begin{multicols}{2}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=0.75\textwidth]{assets/vmm_memory_setup.png}
+\includegraphics[width=0.75\textwidth]{images/vm-memory-setup.png}
 \end{minipage}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
-\includegraphics[width=0.75\textwidth]{assets/vmm_name.png}
+\includegraphics[width=0.75\textwidth]{images/vm-name.png}
 \end{minipage}
 \end{multicols}
 
@@ -488,12 +488,12 @@ Ahora deberás hacer las siguientes modificaciones:
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
 \centering
-\includegraphics[width=\textwidth]{assets/Screenshot_win10-7.png}
+\includegraphics[width=\textwidth]{images/windows-setup-01.png}
 \end{minipage}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
 \centering
-\includegraphics[width=\textwidth]{assets/Screenshot_win10-9.png}
+\includegraphics[width=\textwidth]{images/windows-setup-02.png}
 \end{minipage}
 \end{multicols}
 
@@ -505,12 +505,12 @@ Selecciona el CD con los drivers virtio y la carpeta que contiene los drivers pa
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
 \centering
-\includegraphics[width=\textwidth]{assets/Screenshot_win10-91.png}
+\includegraphics[width=\textwidth]{images/windows-setup-03.png}
 \end{minipage}
 \begin{minipage}[t]{\linewidth}%
 \vspace{0pt}
 \centering
-\includegraphics[width=\textwidth]{assets/Screenshot_win10-92.png}
+\includegraphics[width=\textwidth]{images/windows-setup-04.png}
 \end{minipage}
 \end{multicols}
 
@@ -677,7 +677,7 @@ Por defecto, nuestro Firefox viene instalado con varias extensiones útiles, per
 Para activarlas, pulsa en el icono con forma de pieza de puzle, que esta situado a la derecha de la barra de búsqueda. Te encontrarás con una lista como la de la imagen de abajo. Simplemente activa cada extensión con haciendo clic en el deslizador que hay a la izquierda de los 3 puntos y dale a aceptar en los menús flotantes que aparezcan pidiendo confirmación
 
 \begin{center}
-	\includegraphics[width=0.5\textwidth]{assets/extensions.jpg}
+	\includegraphics[width=0.5\textwidth]{images/extensions.jpg}
 \end{center}
 
 \subsection{Cambiar buscador por defecto}
@@ -685,7 +685,7 @@ Para activarlas, pulsa en el icono con forma de pieza de puzle, que esta situado
 Pese a usar al configuración reforzada de Firefox, \href{https://github.com/arkenfox/user.js}{arkenfox}, esta no cambia el que el buscador por defecto de Firefox es Google. Mi recomendación es cambiar Google por DuckDuckGo.
 
 \begin{center}
-	\includegraphics[width=0.75\textwidth]{assets/search-engine.jpg}
+	\includegraphics[width=0.75\textwidth]{images/search-engine.jpg}
 \end{center}
 
 \subsection{KeePassXC Browser}
@@ -701,7 +701,7 @@ Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usan
 Para desactivar esta función, simplemente busca \emph{Contraseña} en el menu de configuración de Firefox y desactiva el \emph{Ask to save passwords} o \emph{Preguntar para guardar contraseñas}, en español.
 
 \begin{center}
-	\includegraphics[width=0.4\textwidth]{assets/passwords.jpg}
+	\includegraphics[width=0.4\textwidth]{images/passwords.jpg}
 \end{center}
 
 \subsection{Violentmonkey}
@@ -709,11 +709,11 @@ Para desactivar esta función, simplemente busca \emph{Contraseña} en el menu d
 Violentmonkey es una extensión para cargar pequeños scripts de javascript después de cargar la página para automatizar ciertas tareas o añadir funcionalidades. Si vas a los ajustes de la extensión, verás que hay una pestaña donde puedes importar tus ajustes. Podemos importar nuestros ajustes que están en el archivo:
 
 \begin{verbatim}
-~/.dotfiles/violentmonkey.zip
+~/.dotfiles/assets/violentmonkey.zip
 \end{verbatim}
 
 \begin{center}
-	\includegraphics[width=0.8\textwidth]{assets/violentmonkey.jpg}
+	\includegraphics[width=0.8\textwidth]{images/violentmonkey.jpg}
 \end{center}
 
 \subsection{Desactivar las cuentas de Mozilla}

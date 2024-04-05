@@ -111,7 +111,7 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make(){
 	XRES_FILE="$HOME/.config/Xresources"
-	cp $HOME/.dotfiles/assets/Xresources $XRES_FILE
+	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
 	resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" \
 	15 60 4 "720p" "" "1080p" "" "1440p" "" "4K" "" 3>&1 1>&2 2>&3)
 	size=$(whiptail --title "Tamaño del Monitor" --menu "Seleccione el tamaño de su monitor (en pulgadas):" \
@@ -265,7 +265,7 @@ gtk_config() {
 	# Verificar si el directorio ~/.dotfiles/.config/gtk-4.0 no existe y crearlo si es necesario
 	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.config/gtk-4.0"
 	# Crear el archivo de configuración de GTK
-	cp "$HOME/.dotfiles/assets/settings.ini" "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
+	cp "$HOME/.dotfiles/assets/configs/settings.ini" "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
 	# Aplicar configuraciones utilizando stow
 	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
 	# Definimos nuestros directorios marca-páginas
@@ -283,11 +283,10 @@ file:///home/$(whoami)/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
 
 	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-	doas cp "$HOME/.dotfiles/assets/.gtkrc-2.0" /root/.gtkrc-2.0
-	doas mkdir -p /root/.config/gtk-3.0
-	doas mkdir -p /root/.config/gtk-4.0
-	doas cp $HOME/.dotfiles/.config/gtk-3.0/settings.ini /root/.config/gtk-3.0/
-	doas cp $HOME/.dotfiles/.config/gtk-4.0/settings.ini /root/.config/gtk-4.0/
+	doas cp "$HOME/.dotfiles/assets/configs/.gtkrc-2.0" /root/.gtkrc-2.0
+	doas mkdir -p /root/.config
+	doas cp -r $HOME/.dotfiles/.config/gtk-3.0 /root/.config/gtk-3.0/
+	doas cp -r $HOME/.dotfiles/.config/gtk-4.0 /root/.config/gtk-4.0/
 }
 
 # Configurar el fondo de pantalla
@@ -303,13 +302,13 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 # Configurar el tema del cursor
 cursor_configure(){
 mkdir -p "$HOME/.local/share/icons/default"
-cp "$HOME/.dotfiles/assets/index.theme" "$HOME/.local/share/icons/default/index.theme"
+cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 }
 
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
-	cp "$HOME/.dotfiles/assets/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
+	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
 }
 
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
@@ -444,7 +443,7 @@ dotfiles_install
 # Instalamos dwm y otras utilidades
 suckless_install
 # Creamos nuestro xinitrc
-doas cp "$HOME/.dotfiles/assets/xinitrc" /etc/X11/xinit/xinitrc
+doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
 # Configurar nuestro tema de QT
 qt_config
 # Configurar nuestro tema de GTK
@@ -468,7 +467,7 @@ audio_setup
 # configuramos X11 para usar 1080p como resolución
 
 [ "$graphic_driver" == "virtual" ] && \
-doas cp "$HOME/.dotfiles/assets/xorg.conf" /etc/X11/xorg.conf
+doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 # Crear directorios
 for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
@@ -477,7 +476,7 @@ rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
 
 # Permitir a Steam controlar mandos de PlayStation 4
-doas cp $HOME/.dotfiles/assets/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
+doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
 # Descargar wordlist
 "$HOME/.dotfiles/bin/wordlist"
@@ -504,7 +503,7 @@ echo 'polkit.addRule(function(action, subject) {
     return polkit.Result.YES;
   }
   if (action.id == "org.freedesktop.NetworkManager.settings.modify.system" &&
-    subject.local && subject.active && 
+    subject.local && subject.active &&
     subject.isInGroup("network")) {
     return polkit.Result.YES;
   }

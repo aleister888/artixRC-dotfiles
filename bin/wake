@@ -3,13 +3,18 @@
 REGULARUSER="$(getent passwd 1000 | cut -d: -f1)"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR=/run/user/1000
+if [ "$1" = "now" ];
+	date=$(date -d "+10 minutes" +%H)
+else
+	date=$(+%H)
+fi
 
 warning(){
 	su $REGULARUSER -c "notify-send -u critical -i system-error \"$1\""
 }
 
 wake(){
-if [ $(date +%H) -ge 7 ]; then
+if [ "$date" -ge 7 ]; then
 	day=tomorrow
 else
 	day=today
