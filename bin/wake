@@ -3,7 +3,7 @@
 REGULARUSER="$(getent passwd 1000 | cut -d: -f1)"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR=/run/user/1000
-if [ "$1" = "now" ];
+if [ "$1" = "now" ]; then
 	date=$(date -d "+10 minutes" +%H)
 else
 	date=$(+%H)
