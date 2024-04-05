@@ -187,7 +187,7 @@ static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; /
 static const Key keys[] = {
 	// Modificador                  Tecla      Función           Argumento
 	// Abrir dmenu
-	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/help.pdf") },
+	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/assets/pdf/help.pdf") },
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 16'") },
 	// Abrir terminal
