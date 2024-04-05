@@ -209,7 +209,7 @@ format_disks(){
 
 # Función para montar nuestras particiones
 mount_partitions(){
-	if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
+	if [ "$ROOT_FILESYSTEM" = "btrfs" ]; then
 		mount -o noatime,compress=zstd,subvol=@ "/dev/$rootpart" /mnt && \
 		mkdir -p /mnt/home
 		if [ "$home_partition" == "true" ]; then
