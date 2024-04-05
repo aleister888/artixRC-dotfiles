@@ -1,0 +1,2 @@
+# Suspend the system when battery level drops to 15% or lower
+SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"

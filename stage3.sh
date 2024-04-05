@@ -269,12 +269,12 @@ gtk_config() {
 	# Aplicar configuraciones utilizando stow
 	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
 	# Definimos nuestros directorios marca-páginas
-echo "file:///home/$(whoami)
-file:///home/$(whoami)/Downloads
-file:///home/$(whoami)/Documents
-file:///home/$(whoami)/Pictures
-file:///home/$(whoami)/Videos
-file:///home/$(whoami)/Music" > "$HOME/.config/gtk-3.0/bookmarks"
+echo "file:///home/$USER
+file:///home/$USER/Downloads
+file:///home/$USER/Documents
+file:///home/$USER/Pictures
+file:///home/$USER/Videos
+file:///home/$USER/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 
 	local THEME_DIR="/usr/share/themes"
 	# Clona el tema de gtk4
@@ -340,7 +340,7 @@ audio_setup(){
 	cat /etc/security/limits.conf | grep audio || \
 	echo "@audio - rtprio 95
 	@audio - memlock unlimited
-	$(whoami) hard nofile 524288" | \
+	$USER hard nofile 524288" | \
 	doas tee -a /etc/security/limits.conf
 }
 
@@ -459,7 +459,7 @@ scripts_link
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir
 # Configurar syncthing para que se inicie con el ordenador
-echo "@reboot $(whoami) syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
+echo "@reboot $USER syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
 # Configurar el audio de baja latencia
 audio_setup
 
@@ -498,22 +498,11 @@ doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
 [ -e /sys/class/power_supply/BAT0 ] && \
-echo 'polkit.addRule(function(action, subject) {
-  if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 && subject.isInGroup("network")) {
-    return polkit.Result.YES;
-  }
-  if (action.id == "org.freedesktop.NetworkManager.settings.modify.system" &&
-    subject.local && subject.active &&
-    subject.isInGroup("network")) {
-    return polkit.Result.YES;
-  }
-});' | doas tee /etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules
+doas cp "$HOME/.dotfiles/assets/configs/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
 # Suspender de forma automatica cuando la bateria cae por debajo del 5%
 [ -e /sys/class/power_supply/BAT0 ] && \
-echo '# Suspend the system when battery level drops to 15% or lower
-SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-1][0-5]", RUN+="/usr/bin/loginctl suspend"' | \
-doas tee /etc/udev/rules.d/99-lowbat.rules
+doas cp "$HOME/.dotfiles/assets/configs/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
 
 # /etc/polkit-1/rules.d/99-artix.rules
 doas usermod -aG storage,input,users $USER
@@ -521,14 +510,7 @@ doas usermod -aG storage,input,users $USER
 # Permitir hacer click tocando el trackpad
 # Créditos para: <luke@lukesmith.xyz>
 [ -e /sys/class/power_supply/BAT0 ] && \
-printf 'Section "InputClass"
-        Identifier "libinput touchpad catchall"
-        MatchIsTouchpad "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-        # Enable left mouse button by tapping
-        Option "Tapping" "on"
-EndSection' | doas tee /etc/X11/xorg.conf.d/40-libinput.conf
+doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && virt_conf
