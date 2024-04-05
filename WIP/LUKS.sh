@@ -210,12 +210,12 @@ format_disks(){
 # Función para montar nuestras particiones
 mount_partitions(){
 	if [ "$INSTALL_FILESYSTEM" = "btrfs" ]; then
-		mount -o noatime,compress=zstd,subvol=@ "/dev/$rootpart" /mnt
+		mount -o noatime,compress=zstd,subvol=@ "/dev/$rootpart" /mnt && \
 		mkdir -p /mnt/home
 		if [ "$home_partition" == "true" ]; then
 			mount -o noatime "/dev/$homepart" /mnt/home
 		else
-			mount -o noatime,compress=zstd,subvol=@home "/dev/$root" /mnt/home
+			mount -o noatime,compress=zstd,subvol=@home "/dev/$rootpart" /mnt/home
 		fi
 	else
 		mount -o noatime "/dev/$rootpart" /mnt
