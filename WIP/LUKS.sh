@@ -182,9 +182,11 @@ format_disks(){
 		mkfs.xfs -f "/dev/$PART3"
 	elif [ "$ROOT_FILESYSTEM" = "btrfs" ]; then
 		mkfs.btrfs -f "/dev/$rootpart"
-		btrfs subvolume create "/dev/$rootpart/@"
+		mount "/dev/$rootpart" /mnt
+		btrfs subvolume create /mnt/@
 		# Se crea el subvolumen @home si no hay un disco para "/home".
-		[ "$home_partition" != "true" ] && btrfs subvolume create "/dev/$rootpart/@home"
+		[ "$home_partition" != "true" ] && btrfs subvolume create /mnt/@home
+		umount /mnt
 	fi
 
 	# Formateamos nuestra partición "/home" (Si es necesario)
