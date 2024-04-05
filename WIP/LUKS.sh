@@ -79,17 +79,17 @@ scheme_show(){
 	fi
 	# Creamos el esquema que whiptail nos mostrará
 	scheme="/dev/$ROOT_DISK $(lsblk -dn -o size /dev/"$ROOT_DISK")
-	$bootmount  /dev/$bootpart
-	$roottype  /dev/$rootpart
+   /dev/$bootpart  $bootmount
+   /dev/$rootpart  $roottype
 	"
 	if [ "$crypt_root" == "true" ]; then
-	scheme+="   /  /dev/mapper/root"
+	scheme+="   /dev/mapper/root  /"
 	fi
 
 	if [ "$home_partition" == "true" ]; then
 	scheme+="
 /dev/$HOME_DISK $(lsblk -dn -o size /dev/"$HOME_DISK")
-	/home  /dev/$homepart"
+   /dev/$homepart  /home"
 	fi
 	scheme+="
 Aceptar los cambios borrará el contenido de todos los discos mostrados"
@@ -158,7 +158,7 @@ format_disks(){
 	wipefs --all "/dev/$ROOT_DISK"
 	if [ "$home_partition" == "true" ] && home_delete_confirm; then
 		home_fresh="true"
-		wipefs --all /dev/$HOME_DISK
+		wipefs --all "/dev/$HOME_DISK"
 	else
 		home_fresh="false"
 	fi
@@ -176,11 +176,11 @@ format_disks(){
 	[ "$crypt_root" == "true" ] && root_encrypt && rootpart="mapper/cryptroot"
 
 	# Formateamos nuestra partición "/"
-	if [ "$ROOT_FILESYSTEM" = "ext4" ]; then
+	if [ "$ROOT_FILESYSTEM" == "ext4" ]; then
 		mkfs.ext4 "/dev/$rootpart"
-	elif [ "$ROOT_FILESYSTEM" = "xfs" ]; then
+	elif [ "$ROOT_FILESYSTEM" == "xfs" ]; then
 		mkfs.xfs -f "/dev/$rootpart"
-	elif [ "$ROOT_FILESYSTEM" = "btrfs" ]; then
+	elif [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 		mkfs.btrfs -f "/dev/$rootpart"
 		mount "/dev/$rootpart" /mnt
 		btrfs subvolume create /mnt/@
@@ -190,26 +190,27 @@ format_disks(){
 	fi
 
 	# Formateamos nuestra partición "/home" (Si es necesario)
-	if [ "$home_partition" = true ]; then
+	if [ "$home_partition" = true ] && [ "$home_fresh" == "true" ]; then
 		if [ "$PART_TYPE" == "msdos" ]; then # Creamos la tabla de particionado
 			parted "/dev/$HOME_DISK" mklabel msdos
 		else
 			parted "/dev/$HOME_DISK" mklabel gpt
 		fi
 		parted -a optimal "/dev/$HOME_DISK" mkpart primary ext4 1MiB 100%
-		if [ "$HOME_FILESYSTEM" = "ext4" ]; then
-			mkfs.ext4 "/dev/$homepart"
-		elif [ "$HOME_FILESYSTEM" = "xfs" ]; then
-			mkfs.xfs -f "/dev/$homepart"
-		elif [ "$HOME_FILESYSTEM" = "btrfs" ]; then
-			mkfs.btrfs -f "/dev/$homepart" # Sin sub-volúmenes, pues raramente se usan para /home
+			if [ "$HOME_FILESYSTEM" == "ext4" ]; then
+				mkfs.ext4 "/dev/$homepart"
+			elif [ "$HOME_FILESYSTEM" == "xfs" ]; then
+				mkfs.xfs -f "/dev/$homepart"
+			elif [ "$HOME_FILESYSTEM" == "btrfs" ]; then
+				# Sin sub-volúmenes, pues raramente se usan para /home
+				mkfs.btrfs -f "/dev/$homepart"
+			fi
 		fi
-	fi
 }
 
 # Función para montar nuestras particiones
 mount_partitions(){
-	if [ "$ROOT_FILESYSTEM" = "btrfs" ]; then
+	if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 		mount -o noatime,compress=zstd,subvol=@ "/dev/$rootpart" /mnt && \
 		mkdir -p /mnt/home
 		if [ "$home_partition" == "true" ]; then
