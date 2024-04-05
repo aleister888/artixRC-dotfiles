@@ -154,9 +154,14 @@ En caso contrario se utilizará el disco duro tal cual esta ahora (Si esque ya s
 }
 
 format_disks(){
-	# Borramos todas las firmas de nuestros discos
+	# Borramos todas las firmas de nuestros discos y elegimos los tipos de particiones
+	ROOT_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /:" \
+	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 	wipefs --all "/dev/$ROOT_DISK"
+	# Borramos las firmas de /home
 	if [ "$home_partition" == "true" ] && home_delete_confirm; then
+		HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
+		"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 		home_fresh="true"
 		wipefs --all "/dev/$HOME_DISK"
 	else
@@ -197,15 +202,15 @@ format_disks(){
 			parted "/dev/$HOME_DISK" mklabel gpt
 		fi
 		parted -a optimal "/dev/$HOME_DISK" mkpart primary ext4 1MiB 100%
-			if [ "$HOME_FILESYSTEM" == "ext4" ]; then
-				mkfs.ext4 "/dev/$homepart"
-			elif [ "$HOME_FILESYSTEM" == "xfs" ]; then
-				mkfs.xfs -f "/dev/$homepart"
-			elif [ "$HOME_FILESYSTEM" == "btrfs" ]; then
-				# Sin sub-volúmenes, pues raramente se usan para /home
-				mkfs.btrfs -f "/dev/$homepart"
-			fi
+		if [ "$HOME_FILESYSTEM" == "ext4" ]; then
+			mkfs.ext4 "/dev/$homepart"
+		elif [ "$HOME_FILESYSTEM" == "xfs" ]; then
+			mkfs.xfs -f "/dev/$homepart"
+		elif [ "$HOME_FILESYSTEM" == "btrfs" ]; then
+			# Sin sub-volúmenes, pues raramente se usan para /home
+			mkfs.btrfs -f "/dev/$homepart"
 		fi
+	fi
 }
 
 # Función para montar nuestras particiones
@@ -245,11 +250,6 @@ make_fstab(){
 
 # Elegimos como se formatearán nuestros discos
 scheme_setup
-# Elegimos el formato que queremos para nuestros discos
-ROOT_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /:" \
-	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
-[ "$home_partition" = true ] && HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
-	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 # Formateamos los discos
 format_disks
 # Montamos nuestras particiones
