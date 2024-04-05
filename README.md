@@ -18,7 +18,9 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 
 # TODO
 
-- Mejorar stage1.sh y añadir encriptación del disco duro
+- Mejorar stage1.sh y añadir encriptación del disco duro (Casi hecho)
 - Añadir capturas a la guía sobre VFIO
-- Borde de color especial para ventanas sticky
-- Añadir layout fibonacci a dwm
+- dwm:
+    - Borde de color especial para ventanas sticky
+    - Alternar scratchpad con `Alt+Shift+S` y alternar sticky con `Alt+Ctrl+S`
+    - Añadir layout fibonacci a dwm
