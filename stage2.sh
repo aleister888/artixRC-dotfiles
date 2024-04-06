@@ -198,12 +198,15 @@ if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt;
 	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi
 
-
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	pacinstall bluez-openrc bluez-utils && \
 	service_add bluetoothd
 	echo_msg "Bluetooth detectado. Se instaló bluez."
 fi
+
+##########
+# SCRIPT #
+##########
 
 # Instalamos grub
 install_grub
