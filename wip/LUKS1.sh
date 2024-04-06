@@ -101,34 +101,42 @@ Aceptar los cambios borrará el contenido de todos los discos mostrados"
 # Función para elegir como se formatearán nuestros discos
 scheme_setup(){
 local scheme_confirm="false"
+
 while [ "$scheme_confirm" == "false" ]; do
+
 	# Elegimos el disco para /
 	local root_selected="false"
+
 	while [ "$root_selected" == "false" ]; do
-	ROOT_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalación:" \
-	"$(lsblk -dn -o name,size | tr '\n' ' ')" ) && \
-	root_selected=true
+		ROOT_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalación:" \
+		"$(lsblk -dn -o name,size | tr '\n' ' ')" ) && \
+		root_selected=true
 	done
+
 	# Preguntamos si queremos un disco dedicado para /home
 	if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
 		home_partition=true
 	else
 		home_partition=false
 	fi
+
 	# Si queremos un disco para /home, elegimos cual
 	local home_selected="false"
+
 	[ "$home_partition" = true ] && \
 	while [ "$home_selected" == "false" ]; do
-	HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
-	"$(lsblk -dn -o name,size | grep -v "$ROOT_DISK" | tr '\n' ' ')") && \
-	home_selected=true
+		HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
+		"$(lsblk -dn -o name,size | grep -v "$ROOT_DISK" | tr '\n' ' ')") && \
+		home_selected=true
 	done
+
 	# Elegimos si queremos encriptación en el disco /
 	if whip_yes "LUKS" "¿Desea usar encriptación para la partición /?"; then
 		crypt_root=true
 	else
 		crypt_root=false
 	fi
+
 	# Confirmamos los cambios
 	if scheme_show; then
 		scheme_confirm=true
@@ -158,6 +166,7 @@ format_disks(){
 	ROOT_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /:" \
 	"ext4" "Ext4" "btrfs" "Btrfs" "xfs" "XFS")
 	wipefs --all "/dev/$ROOT_DISK"
+
 	# Borramos las firmas de /home
 	if [ "$home_partition" == "true" ] && home_delete_confirm; then
 		HOME_FILESYSTEM=$(whip_menu "Sistema de archivos" "Selecciona el sistema de archivos para /home:" \
@@ -167,6 +176,7 @@ format_disks(){
 	else
 		home_fresh="false"
 	fi
+
 	# Creamos nuestra tabla de particionado y partición de arranque
 	if [ "$PART_TYPE" == "msdos" ]; then # BIOS -> MBR
 		echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | \
@@ -215,6 +225,7 @@ format_disks(){
 
 # Función para montar nuestras particiones
 mount_partitions(){
+	# Montamos las particiones "/" y "/home"
 	if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 		mount -o noatime,compress=zstd,subvol=@ "/dev/$rootpart" /mnt && \
 		mkdir -p /mnt/home
@@ -231,13 +242,14 @@ mount_partitions(){
 		fi
 	fi
 
+	# Creamos el directorio /boot
 	if [ "$PART_TYPE" == "msdos" ]; then
 		mkdir /mnt/boot
 	else
 		mkdir -p /mnt/boot/efi
 	fi
 
-
+	# Montamos nuestra partición de arranque
 	if [ "$PART_TYPE" == "msdos" ] || [ "$crypt_root" == "true" ]; then
 		mount "/dev/$bootpart" /mnt/boot
 	else
@@ -260,16 +272,17 @@ mount_partitions
 basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs"
 basestrap /mnt $basestrap_pkgs
 
+# Configuramos Opendoas
 mkdir -p /mnt/etc
 echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
+# Creamos el fstab
 fstabgen -U /mnt >> /mnt/etc/fstab
 
 # Montar directorios importantes para el chroot
 for dir in dev proc sys run; do mount --rbind /$dir /mnt/$dir; mount --make-rslave /mnt/$dir; done
 
 # Hacer chroot y ejecutar la 2a parte del script
-
 nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/wip/LUKS2.sh"
 next="/tmp/stage2.sh"
 artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""

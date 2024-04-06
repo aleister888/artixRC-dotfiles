@@ -25,23 +25,29 @@ packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers 
 timezoneset(){
 	valid_timezone=false
 	while [ "$valid_timezone" = false ]; do
+
 		# Obtener la lista de regiones disponibles
 		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort -u | grep -v "right")
+
 		# Crear un array con las regiones
 		regions_array=()
 		for region in $regions; do
 			regions_array+=("$region" "$region")
 		done
+
 		# Utilizar Whiptail para presentar las opciones de región al usuario
 		region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+
 		# Obtener la lista de zonas horarias disponibles para la región seleccionada
 		timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
 		timezones_array=()
 		for timezone in $timezones; do
 			timezones_array+=("$timezone" "$timezone")
 		done
+
 		# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
 		timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
+
 		# Verificar si la zona horaria seleccionada es válida
 		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
 			valid_timezone=true
@@ -86,7 +92,7 @@ elif [ "$manufacturer" == "AuthenticAMD" ]; then
 fi
 }
 
-# Instalamos grub
+# Instalamos GRUB
 install_grub(){
 	boot_drive=$(df / --output=source | tail -n1)
 	case "$boot_drive" in
@@ -96,14 +102,18 @@ install_grub(){
 	        boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
 	esac
 
+	# Instalar GRUB
 	if [ ! -d /sys/firmware/efi ]; then
-		grub-install --target=i386-pc --boot-directory=/boot "/dev/$boot_drive" --bootloader-id=GRUB --recheck --removable
+		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=GRUB --recheck --removable "/dev/$boot_drive"
 	else
 		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=GRUB --recheck --removable
 	fi
 
+	# Configurar grub si este esta en una instalación encriptada
 	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
 	lsblk -f | grep crypt && sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT=".*\)"/\1 rd.auto=1"/' /etc/default/grub
+
+	# Crear el archivo de configuración
 	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
@@ -121,10 +131,13 @@ hostname_config(){
 # Activar repositorios de Arch Linux
 arch_support(){
 	# Activar lib32
+	#
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
+
 	# Instalar paquetes necesarios
 	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
 	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
+
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
 echo '[extra]
@@ -132,13 +145,16 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
 	pacman-key --populate archlinux
 	pacinstall reflector
+
 	# Escoger mirrors más rápidos de los repositorios de Arch
 	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
-	# Configurar cronie para que se actualize automáticamente la selección de mirrors
+
+	# Configurar cronie para actualizar automáticamente los mirrors de Arch
 	grep "reflector" /etc/crontab || \
 echo "SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -147,10 +163,10 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Configurar la codificación del sistema
 genlocale(){
-sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
-sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
-locale-gen
-echo "LANG=es_ES.UTF-8" > /etc/locale.conf
+	sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
+	sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
+	locale-gen
+	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 }
 
 # Establecer zona horaria
@@ -189,24 +205,24 @@ fi
 # Instalamos grub
 install_grub
 
-# Definimos el nombre de nuestra máquina y creamos el archivo hosts
-hostname_config
-
-# Activar repositorios de Arch Linux
-arch_support
-
-# Configurar la codificación del sistema
-genlocale
-
-service_add NetworkManager
-service_add cupsd
-service_add cronie
-service_add tlp
-
-# Sustituir sudo por doas
-ln -s /usr/bin/doas /usr/bin/sudo
-ln -s /usr/bin/nvim /usr/local/bin/vim
-ln -s /usr/bin/nvim /usr/local/bin/vi
+## Definimos el nombre de nuestra máquina y creamos el archivo hosts
+#hostname_config
+#
+## Activar repositorios de Arch Linux
+#arch_support
+#
+## Configurar la codificación del sistema
+#genlocale
+#
+#service_add NetworkManager
+#service_add cupsd
+#service_add cronie
+#service_add tlp
+#
+## Sustituir sudo por doas
+#ln -s /usr/bin/doas /usr/bin/sudo
+#ln -s /usr/bin/nvim /usr/local/bin/vim
+#ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 #if [ ! -d /home/"$username"/.dotfiles ]; then
