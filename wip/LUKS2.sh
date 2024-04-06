@@ -94,7 +94,10 @@ fi
 
 # Instalamos GRUB
 install_grub(){
-	boot_drive=$(df / --output=source | tail -n1)
+	local cryptdisk="$(lsblk -lf -o NAME,FSTYPE | awk '$2 == "crypto_LUKS" {print $1}')"
+	local cryptid="$(lsblk -nd -o UUID /dev/$cryptdisk)"
+	local decryptid="$(lsblk -n -o UUID /dev/mapper/cryptroot)"
+	local boot_drive=$(df / --output=source | tail -n1)
 	case "$boot_drive" in
 	*"nvme"*)
 	        boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
@@ -104,14 +107,14 @@ install_grub(){
 
 	# Instalar GRUB
 	if [ ! -d /sys/firmware/efi ]; then
-		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=GRUB --recheck "/dev/$boot_drive"
+		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
 	else
-		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=GRUB --recheck "/dev/$boot_drive"
+		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=Artix --recheck "/dev/$boot_drive"
 	fi
 
 	# Configurar grub si este esta en una instalación encriptada
 	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
-	lsblk -f | grep crypt && sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT=".*\)"/\1 rd.auto=1"/' /etc/default/grub
+	lsblk -f | grep crypt && sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
 
 	# Crear el archivo de configuración
 	grub-mkconfig -o /boot/grub/grub.cfg
