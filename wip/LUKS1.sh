@@ -79,17 +79,17 @@ scheme_show(){
 	fi
 	# Creamos el esquema que whiptail nos mostrará
 	scheme="/dev/$ROOT_DISK $(lsblk -dn -o size /dev/"$ROOT_DISK")
-   /dev/$bootpart  $bootmount
-   /dev/$rootpart  $roottype
+  /dev/$bootpart  $bootmount
+  /dev/$rootpart  $roottype
 	"
 	if [ "$crypt_root" == "true" ]; then
-	scheme+="   /dev/mapper/root  /"
+	scheme+="/dev/mapper/root  /"
 	fi
 
 	if [ "$home_partition" == "true" ]; then
 	scheme+="
 /dev/$HOME_DISK $(lsblk -dn -o size /dev/"$HOME_DISK")
-   /dev/$homepart  /home"
+  /dev/$homepart  /home"
 	fi
 	scheme+="
 Aceptar los cambios borrará el contenido de todos los discos mostrados"
@@ -242,17 +242,14 @@ mount_partitions(){
 		fi
 	fi
 
-	# Creamos el directorio /boot
-	if [ "$PART_TYPE" == "msdos" ]; then
-		mkdir /mnt/boot
-	else
-		mkdir -p /mnt/boot/efi
-	fi
+	mkdir /mnt/boot
 
 	# Montamos nuestra partición de arranque
 	if [ "$PART_TYPE" == "msdos" ] || [ "$crypt_root" == "true" ]; then
 		mount "/dev/$bootpart" /mnt/boot
+		[ "$PART_TYPE" == "gpt" ] && mkdir /mnt/boot/efi
 	else
+		mkdir /mnt/boot/efi
 		mount "/dev/$bootpart" /mnt/boot/efi
 	fi
 }
