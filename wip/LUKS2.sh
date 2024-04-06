@@ -98,16 +98,34 @@ install_grub(){
 	esac
 
 	# Verificar si el sistema es EFI
-	if [ -d /sys/firmware/efi ]; then
+	if [ -d /sys/firmware/efi ] && lsblk -f | grep crypt; then
+
+		echo "Sistema EFI encriptado detectado. Instalando GRUB para EFI..."
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
+		grub-mkconfig -o /boot/grub/grub.cfg && \
+		echo_msg "GRUB fue instalado correctamente (EFI y LUKS)."
+
+	elif [ ! -d /sys/firmware/efi ] && lsblk -f | grep crypt; then
+
+		echo "Sistema no BIOS encriptado detectado. Instalando GRUB para BIOS..."
+		grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
+		grub-mkconfig -o /boot/grub/grub.cfg && \
+		echo_msg "GRUB fue instalado correctamente (BIOS y LUKS)."
+
+	elif [ -d /sys/firmware/efi ]; then
+
 		echo "Sistema EFI detectado. Instalando GRUB para EFI..."
 		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
 		grub-mkconfig -o /boot/grub/grub.cfg && \
 		echo_msg "GRUB fue instalado correctamente (EFI)."
+
 	else
+
 		echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
 		grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
 		grub-mkconfig -o /boot/grub/grub.cfg && \
 		echo_msg "GRUB fue instalado correctamente (BIOS)."
+
 	fi
 }
 
@@ -174,6 +192,16 @@ packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efiboo
 # Instalamos los paquetes necesarios
 pacinstall $packages
 
+# Si se utiliza encriptación, añadir estos módulos a la imagen del kernel
+if ! grep -q "^HOOKS=.*keyboard.*keymap.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
+	# Insertar los hooks después de la entrada "autodetect" y "block"
+	sed -i -e '/^HOOKS=/ s/autodetect/& keyboard keymap/' \
+	-e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
+fi
+
+# Regenerar el initramfs
+mkinitcpio -p linux
+
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	pacinstall bluez-openrc bluez-utils && \
 	service_add bluetoothd
@@ -203,10 +231,10 @@ ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
-if [ ! -d /home/"$username"/.dotfiles ]; then
-	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-else
-	su "$username" -c "cd /home/$username/.dotfiles && git pull"
-fi
+#if [ ! -d /home/"$username"/.dotfiles ]; then
+#	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+#else
+#	su "$username" -c "cd /home/$username/.dotfiles && git pull"
+#fi
 
-su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
+#su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
