@@ -109,7 +109,11 @@ install_grub(){
 	if [ ! -d /sys/firmware/efi ]; then
 		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
 	else
-		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=Artix --recheck "/dev/$boot_drive"
+		if lsblk -f | grep crypt; then
+			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
+		else
+			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck "/dev/$boot_drive"
+		fi
 	fi
 
 	# Configurar grub si este esta en una instalación encriptada
@@ -189,11 +193,9 @@ packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efiboo
 # Instalamos los paquetes necesarios
 pacinstall $packages
 
-# Si se utiliza encriptación, añadir estos módulos a la imagen del kernel
-if ! grep -q "^HOOKS=.*keyboard.*keymap.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
-	# Insertar los módulos después de la entradas "autodetect" y "block"
-	sed -i -e '/^HOOKS=/ s/autodetect/& keyboard keymap/' \
-	-e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
+# Si se utiliza encriptación, añadir el módulo encrypt a la imagen del kernel
+if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
+	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi
 
 # Regenerar el initramfs
