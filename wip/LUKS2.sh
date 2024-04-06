@@ -19,7 +19,7 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup"
 
 # Establecer zona horaria
 timezoneset(){
@@ -88,45 +88,17 @@ fi
 
 # Instalamos grub
 install_grub(){
-	boot_part=$(df / --output=source | tail -n1)
-
-	case "$boot_part" in
+	boot_drive=$(df / --output=source | tail -n1)
+	case "$boot_drive" in
 	*"nvme"*)
-	        boot_part=$(echo $boot_part | sed 's/p[0-9]*$//') ;;
+	        boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
 	*)
-	        boot_part=$(echo $boot_part | sed 's/[0-9]*$//') ;;
+	        boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
 	esac
-
-	# Verificar si el sistema es EFI
-	if [ -d /sys/firmware/efi ] && lsblk -f | grep crypt; then
-
-		echo "Sistema EFI encriptado detectado. Instalando GRUB para EFI..."
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
-		grub-mkconfig -o /boot/grub/grub.cfg && \
-		echo_msg "GRUB fue instalado correctamente (EFI y LUKS)."
-
-	elif [ ! -d /sys/firmware/efi ] && lsblk -f | grep crypt; then
-
-		echo "Sistema no BIOS encriptado detectado. Instalando GRUB para BIOS..."
-		grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
-		grub-mkconfig -o /boot/grub/grub.cfg && \
-		echo_msg "GRUB fue instalado correctamente (BIOS y LUKS)."
-
-	elif [ -d /sys/firmware/efi ]; then
-
-		echo "Sistema EFI detectado. Instalando GRUB para EFI..."
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
-		grub-mkconfig -o /boot/grub/grub.cfg && \
-		echo_msg "GRUB fue instalado correctamente (EFI)."
-
-	else
-
-		echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-		grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
-		grub-mkconfig -o /boot/grub/grub.cfg && \
-		echo_msg "GRUB fue instalado correctamente (BIOS)."
-
-	fi
+	grub-install "/dev/$boot_drive"
+	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
+	lsblk -f | grep crypt && sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT=".*\)"/\1 rd.auto=1"/' /etc/default/grub
+	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
@@ -194,7 +166,7 @@ pacinstall $packages
 
 # Si se utiliza encriptación, añadir estos módulos a la imagen del kernel
 if ! grep -q "^HOOKS=.*keyboard.*keymap.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
-	# Insertar los hooks después de la entrada "autodetect" y "block"
+	# Insertar los módulos después de la entradas "autodetect" y "block"
 	sed -i -e '/^HOOKS=/ s/autodetect/& keyboard keymap/' \
 	-e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi

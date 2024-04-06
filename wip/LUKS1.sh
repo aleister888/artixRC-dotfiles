@@ -226,22 +226,18 @@ mount_partitions(){
 	else
 		mount -o noatime "/dev/$rootpart" /mnt
 		if [ "$home_partition" == "true" ]; then
-			mkdir -p /mnt/home
+			mkdir /mnt/home
 			mount -o noatime "/dev/$homepart" /mnt/home
 		fi
 	fi
 
-	if [ "$crypt_root" == "true" ] || [ "$PART_TYPE" == "msdos" ]; then
+	if [ "$PART_TYPE" == "msdos" ]; then
 		mkdir /mnt/boot
 		mount "/dev/$bootpart" /mnt/boot
 	else
 		mkdir -p /mnt/boot/efi
 		mount "/dev/$bootpart" /mnt/boot/efi
 	fi
-}
-
-make_fstab(){
-	fstabgen -U /mnt >> /mnt/etc/fstab
 }
 
 ##########
@@ -269,11 +265,6 @@ for dir in dev proc sys run; do mount --rbind /$dir /mnt/$dir; mount --make-rsla
 
 # Hacer chroot y ejecutar la 2a parte del script
 
-#nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/wip/LUKS2.sh"
-#next="/tmp/stage2.sh"
-#artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
-
-# NOTAS PARA MODIFICAR LAS SIGUIENTES PARTES
-# Añadir keyboard, keymap y encrypt a /etc/mkinitcpio.conf
-# Añadir a CMDLINE_LINUX="cryptdevice=UUID=12345678-1234-1234-1234-123456789012:cryptroot root=/dev/mapper/cryptroot"
-# Tener en cuenta que grub tiene que instalarse en /boot como directorio efi si el disco esta encriptado
+nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/wip/LUKS2.sh"
+next="/tmp/stage2.sh"
+artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
