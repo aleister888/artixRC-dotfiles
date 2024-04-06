@@ -95,7 +95,13 @@ install_grub(){
 	*)
 	        boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
 	esac
-	grub-install "/dev/$boot_drive"
+
+	if [ ! -d /sys/firmware/efi ]; then
+		grub-install --target=i386-pc --boot-directory=/boot "/dev/$boot_drive" --bootloader-id=GRUB --recheck --removable
+	else
+		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=GRUB --recheck --removable
+	fi
+
 	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
 	lsblk -f | grep crypt && sed -i 's/\(^GRUB_CMDLINE_LINUX_DEFAULT=".*\)"/\1 rd.auto=1"/' /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg

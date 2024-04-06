@@ -233,9 +233,14 @@ mount_partitions(){
 
 	if [ "$PART_TYPE" == "msdos" ]; then
 		mkdir /mnt/boot
-		mount "/dev/$bootpart" /mnt/boot
 	else
 		mkdir -p /mnt/boot/efi
+	fi
+
+
+	if [ "$PART_TYPE" == "msdos" ] || [ "$crypt_root" == "true" ]; then
+		mount "/dev/$bootpart" /mnt/boot
+	else
 		mount "/dev/$bootpart" /mnt/boot/efi
 	fi
 }
