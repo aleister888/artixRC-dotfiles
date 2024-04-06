@@ -18,7 +18,7 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 
 # TODO
 
-- Mejorar stage1.sh y añadir encriptación del disco duro (Casi hecho)
+_ Añadir partición SWAP
 - Añadir capturas a la guía sobre VFIO
 - dwm:
     - Borde de color especial para ventanas sticky

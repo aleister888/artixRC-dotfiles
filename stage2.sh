@@ -19,29 +19,35 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup"
 
 # Establecer zona horaria
 timezoneset(){
 	valid_timezone=false
 	while [ "$valid_timezone" = false ]; do
+
 		# Obtener la lista de regiones disponibles
 		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort -u | grep -v "right")
+
 		# Crear un array con las regiones
 		regions_array=()
 		for region in $regions; do
 			regions_array+=("$region" "$region")
 		done
+
 		# Utilizar Whiptail para presentar las opciones de región al usuario
 		region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+
 		# Obtener la lista de zonas horarias disponibles para la región seleccionada
 		timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
 		timezones_array=()
 		for timezone in $timezones; do
 			timezones_array+=("$timezone" "$timezone")
 		done
+
 		# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
 		timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
+
 		# Verificar si la zona horaria seleccionada es válida
 		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
 			valid_timezone=true
@@ -86,29 +92,36 @@ elif [ "$manufacturer" == "AuthenticAMD" ]; then
 fi
 }
 
-# Instalamos grub
+# Instalamos GRUB
 install_grub(){
-	boot_part=$(df / --output=source | tail -n1)
-
-	case "$boot_part" in
+	local cryptdisk="$(lsblk -lf -o NAME,FSTYPE | awk '$2 == "crypto_LUKS" {print $1}')"
+	local cryptid="$(lsblk -nd -o UUID /dev/$cryptdisk)"
+	local decryptid="$(lsblk -n -o UUID /dev/mapper/cryptroot)"
+	local boot_drive=$(df / --output=source | tail -n1)
+	case "$boot_drive" in
 	*"nvme"*)
-	        boot_part=$(echo $boot_part | sed 's/p[0-9]*$//') ;;
+	        boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
 	*)
-	        boot_part=$(echo $boot_part | sed 's/[0-9]*$//') ;;
+	        boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
 	esac
 
-	# Verificar si el sistema es EFI
-	if [ -d /sys/firmware/efi ]; then
-		echo "Sistema EFI detectado. Instalando GRUB para EFI..."
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable && \
-		grub-mkconfig -o /boot/grub/grub.cfg && \
-		echo_msg "GRUB fue instalado correctamente (EFI)."
+	# Instalar GRUB
+	if [ ! -d /sys/firmware/efi ]; then
+		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
 	else
-		echo "Sistema no EFI detectado. Instalando GRUB para BIOS..."
-		grub-install --target=i386-pc --boot-directory=/boot "$boot_part" --bootloader-id=GRUB --removable && \
-		grub-mkconfig -o /boot/grub/grub.cfg && \
-		echo_msg "GRUB fue instalado correctamente (BIOS)."
+		if lsblk -f | grep crypt; then
+			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
+		else
+			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck "/dev/$boot_drive"
+		fi
 	fi
+
+	# Configurar grub si este esta en una instalación encriptada
+	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
+	lsblk -f | grep crypt && sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
+
+	# Crear el archivo de configuración
+	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
@@ -125,10 +138,13 @@ hostname_config(){
 # Activar repositorios de Arch Linux
 arch_support(){
 	# Activar lib32
+	#
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
+
 	# Instalar paquetes necesarios
 	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring artix-archlinux-support \
 	lib32-artix-archlinux-support pacman-contrib rsync lib32-elogind
+
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
 echo '[extra]
@@ -136,13 +152,16 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 [multilib]
 Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
 	pacman-key --populate archlinux
 	pacinstall reflector
+
 	# Escoger mirrors más rápidos de los repositorios de Arch
 	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
-	# Configurar cronie para que se actualize automáticamente la selección de mirrors
+
+	# Configurar cronie para actualizar automáticamente los mirrors de Arch
 	grep "reflector" /etc/crontab || \
 echo "SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -151,10 +170,10 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Configurar la codificación del sistema
 genlocale(){
-sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
-sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
-locale-gen
-echo "LANG=es_ES.UTF-8" > /etc/locale.conf
+	sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
+	sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
+	locale-gen
+	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 }
 
 # Establecer zona horaria
@@ -174,6 +193,12 @@ packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efiboo
 # Instalamos los paquetes necesarios
 pacinstall $packages
 
+# Si se utiliza encriptación, añadir el módulo encrypt a la imagen del kernel
+if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
+	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
+fi
+
+
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	pacinstall bluez-openrc bluez-utils && \
 	service_add bluetoothd
@@ -182,6 +207,9 @@ fi
 
 # Instalamos grub
 install_grub
+
+# Regenerar el initramfs
+mkinitcpio -P
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config
@@ -202,7 +230,7 @@ ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 
-# Clonar el repositorio completo e iniciar la última parte de la instalación
+ Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
 	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
 else
