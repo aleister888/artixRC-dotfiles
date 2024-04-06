@@ -198,8 +198,6 @@ if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt;
 	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi
 
-# Regenerar el initramfs
-mkinitcpio -p linux
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	pacinstall bluez-openrc bluez-utils && \
@@ -209,6 +207,9 @@ fi
 
 # Instalamos grub
 install_grub
+
+# Regenerar el initramfs
+mkinitcpio -p linux
 
 ## Definimos el nombre de nuestra máquina y creamos el archivo hosts
 #hostname_config
