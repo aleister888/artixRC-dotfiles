@@ -104,9 +104,9 @@ install_grub(){
 
 	# Instalar GRUB
 	if [ ! -d /sys/firmware/efi ]; then
-		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=GRUB --recheck --removable "/dev/$boot_drive"
+		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=GRUB --recheck "/dev/$boot_drive"
 	else
-		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=GRUB --recheck --removable "/dev/$boot_drive"
+		grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=GRUB --recheck "/dev/$boot_drive"
 	fi
 
 	# Configurar grub si este esta en una instalación encriptada
