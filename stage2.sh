@@ -107,7 +107,7 @@ install_grub(){
 
 	# Instalar GRUB
 	if [ ! -d /sys/firmware/efi ]; then
-		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
+		grub-install "/dev/$boot_drive"
 	else
 		if lsblk -f | grep crypt; then
 			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck "/dev/$boot_drive"
@@ -234,10 +234,10 @@ ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
-#if [ ! -d /home/"$username"/.dotfiles ]; then
-#	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-#else
-#	su "$username" -c "cd /home/$username/.dotfiles && git pull"
-#fi
-#
-#su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
+if [ ! -d /home/"$username"/.dotfiles ]; then
+	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+else
+	su "$username" -c "cd /home/$username/.dotfiles && git pull"
+fi
+
+su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
