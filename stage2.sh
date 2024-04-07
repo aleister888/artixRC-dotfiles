@@ -197,6 +197,10 @@ genlocale(){
 	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 }
 
+##########
+# SCRIPT #
+##########
+
 # Establecer zona horaria
 timezoneset
 
@@ -224,10 +228,6 @@ if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null;
 	service_add bluetoothd
 	echo_msg "Bluetooth detectado. Se instaló bluez."
 fi
-
-##########
-# SCRIPT #
-##########
 
 # Instalamos grub
 install_grub
@@ -257,7 +257,7 @@ ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 
- Clonar el repositorio completo e iniciar la última parte de la instalación
+# Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
 	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
 else
