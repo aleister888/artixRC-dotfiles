@@ -185,10 +185,11 @@ format_disks(){
 	# Creamos nuestra tabla de particionado y partición de arranque
 	if [ "$PART_TYPE" == "msdos" ]; then # BIOS -> MBR
 		echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | \
+		sfdisk -f "/dev/$ROOT_DISK"; mkfs.fat -F32 "/dev/$bootpart"
 	else # UEFI -> GPT
 		echo -e "label: gpt\nstart=1MiB, size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n" | \
+		sfdisk -f "/dev/$ROOT_DISK"; mkfs.fat -F32 "/dev/$bootpart"
 	fi
-	sfdisk -f "/dev/$ROOT_DISK"; mkfs.fat -F32 "/dev/$bootpart"
 
 	# Creamos la partición root
 	parted -s "/dev/$ROOT_DISK" mkpart primary 513MiB 100%
