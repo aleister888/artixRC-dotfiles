@@ -280,6 +280,6 @@ fstabgen -U /mnt >> /mnt/etc/fstab
 for dir in dev proc sys run; do mount --rbind /$dir /mnt/$dir; mount --make-rslave /mnt/$dir; done
 
 # Hacer chroot y ejecutar la 2a parte del script
-nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/wip/LUKS2.sh"
+nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh"
 next="/tmp/stage2.sh"
 artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
