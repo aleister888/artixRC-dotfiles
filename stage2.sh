@@ -124,6 +124,27 @@ install_grub(){
 	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
+# Creamos nuestro swap
+swap_create(){
+	# Detectamos el tipo de partición que tenemos
+	local rootype=$( lsblk -nlf -o FSTYPE $( df / | awk 'NR==2 {print $1}' ) )
+
+	# Btrfs necesita un volumen solo para el swapfile, porque no puede hacer snapshots
+	# de volúmenes con swapfiles
+	if [ "$rootype" == "btrfs" ]; then
+		btrfs subvolume create /swap
+		btrfs filesystem mkswapfile --size 4g --uuid clear /swap/swapfile
+		swapon /swap/swapfile
+		echo "/swap/swapfile none swap defaults 0 0" | tee -a /etc/fstab
+	else
+		fallocate -l 4GB /swapfile
+		chmod 0600 /swapfile
+		mkswap /swapfile
+		swapon /swapfile
+		echo "/swapfile none swap defaults 0 0" | tee -a /etc/fstab
+	fi
+}
+
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config(){
 	hostname=$(whiptail --title "Configuración de Hostname" --inputbox "Por favor, introduce el nombre que deseas para tu host:" 10 60 3>&1 1>&2 2>&3)
@@ -211,6 +232,9 @@ fi
 # Instalamos grub
 install_grub
 
+# Creamos nuestro swap
+swap_create
+
 # Regenerar el initramfs
 mkinitcpio -P
 
@@ -233,11 +257,11 @@ ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 
-# Clonar el repositorio completo e iniciar la última parte de la instalación
-#if [ ! -d /home/"$username"/.dotfiles ]; then
-#	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-#else
-#	su "$username" -c "cd /home/$username/.dotfiles && git pull"
-#fi
+ Clonar el repositorio completo e iniciar la última parte de la instalación
+if [ ! -d /home/"$username"/.dotfiles ]; then
+	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+else
+	su "$username" -c "cd /home/$username/.dotfiles && git pull"
+fi
 
-#su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
+su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"

@@ -271,7 +271,7 @@ format_disks
 mount_partitions
 
 # Instalar paquetes con basestrap
-basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs"
+basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs btrfs-progs"
 basestrap /mnt $basestrap_pkgs
 
 # Configuramos Opendoas
