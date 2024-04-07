@@ -377,7 +377,7 @@ driver_choose
 virt_choose
 
 # Preguntamos que software-adicional queremos instalar
-whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?" && \
+whip_yes "Musica" "¿Deseas instalar software para manejar tu colección de música?" && \
 packages+=" easytag picard flacon cuetools"
 #
 whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
