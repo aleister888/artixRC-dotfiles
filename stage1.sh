@@ -155,7 +155,7 @@ done
 
 while true; do
 	whip_msg "LUKS" "Se te pedirá la contraseña para poder desencriptar el disco temporalmente y comenzar la instalación."
-	cryptsetup open "/dev/$rootpart" cryptroot
+	cryptsetup open "/dev/$rootpart" cryptroot && break
 	whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 done
 }
