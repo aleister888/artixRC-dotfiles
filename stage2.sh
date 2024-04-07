@@ -97,7 +97,7 @@ install_grub(){
 	local cryptdisk="$(lsblk -lf -o NAME,FSTYPE | awk '$2 == "crypto_LUKS" {print $1}')"
 	local cryptid="$(lsblk -nd -o UUID /dev/$cryptdisk)"
 	local decryptid="$(lsblk -n -o UUID /dev/mapper/cryptroot)"
-	local boot_drive=$(df / | awk 'NR==2 {print $1}')
+	local boot_drive=$(df /boot | awk 'NR==2 {print $1}')
 	case "$boot_drive" in
 	*"nvme"*)
 	        boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
@@ -107,7 +107,7 @@ install_grub(){
 
 	# Instalar GRUB
 	if [ ! -d /sys/firmware/efi ]; then
-		grub-install $boot_drive --recheck
+		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix $boot_drive --recheck
 	else
 		if lsblk -f | grep crypt; then
 			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck $boot_drive
