@@ -110,9 +110,9 @@ install_grub(){
 		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix $boot_drive --recheck
 	else
 		if lsblk -f | grep crypt; then
-			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck $boot_drive
+			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable $boot_drive
 		else
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck $boot_drive
+			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck --removable $boot_drive
 		fi
 	fi
 
