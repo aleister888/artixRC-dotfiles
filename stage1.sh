@@ -252,7 +252,7 @@ format_disks(){
 home_keyfile(){
 	local crypthome_parent
 	local crypthome_parent_UUID
-	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1)
+	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1 | grep -oE "[a-z].*")
 	crypthome_parent_UUID=$(lsblk -nd -o UUID "/dev/$crypthome_parent")
 	dd bs=515 count=4 if=/dev/urandom of=/boot/keyfile.bin
 	while true; do
