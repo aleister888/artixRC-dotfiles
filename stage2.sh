@@ -237,10 +237,10 @@ microcode_detect
 [ -d /sys/firmware/efi ] && \
 packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
 
-lsblk -nl -o NAME | grep crypthome && home_keyfile
-
 # Instalamos los paquetes necesarios
 pacinstall $packages
+
+lsblk -nl -o NAME | grep crypthome && home_keyfile
 
 # Si se utiliza encriptación, añadir el módulo encrypt a la imagen del kernel
 if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
