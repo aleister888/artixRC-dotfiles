@@ -47,7 +47,7 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull"
 # Borramos ajustes ya guardados
 rm -f $HOME/.config/mimeapps.list
 rm -f $HOME/.local/share/applications/defaults.list
-doas rm -f /user/share/applications/mimeinfo.cache
+doas rm -f /usr/share/applications/mimeinfo.cache
 update-mime-database ~/.local/share/mime
 
 [ ! -d "$HOME/.local/share/applications" ] && mkdir -p "$HOME/.local/share/applications"

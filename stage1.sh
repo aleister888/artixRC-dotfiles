@@ -254,15 +254,15 @@ home_keyfile(){
 	local crypthome_parent_UUID
 	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1 | grep -oE "[a-z].*")
 	crypthome_parent_UUID=$(lsblk -nd -o UUID "/dev/$crypthome_parent")
-	dd bs=515 count=4 if=/dev/urandom of=/boot/keyfile.bin
+	dd bs=512 count=4 if=/dev/urandom of=/mnt/boot/keyfile.bin
 	while true; do
 		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuación se te pedirá la contraseña del disco /home"
-		cryptsetup -v luksAddKey "/dev/$crypthome_parent" && break
+		cryptsetup -v luksAddKey "/dev/$crypthome_parent" /mnt/boot/keyfile.bin && break
 		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 	done
-	chmod 0400 /boot/keyfile.bin
-	chmod -R g-rwx,o-rwx /boot
-	echo "crypthome UUID=$crypthome_parent_UUID /boot/keyfile.bin luks" | tee -a /etc/crypttab
+	chmod 0400 /mnt/boot/keyfile.bin
+	chmod -R g-rwx,o-rwx /mnt/boot
+	echo "crypthome UUID=$crypthome_parent_UUID /boot/keyfile.bin luks" | tee -a /mnt/etc/crypttab
 }
 
 # Función para montar nuestras particiones
@@ -304,10 +304,10 @@ mount_partitions(){
 scheme_setup
 # Formateamos los discos
 format_disks
-# Auto desencriptar /home
-[ "$crypt_home" == "true" ] && home_keyfile
 # Montamos nuestras particiones
 mount_partitions
+# Auto desencriptar /home
+[ "$crypt_home" == "true" ] && home_keyfile
 
 # Instalar paquetes con basestrap
 basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs btrfs-progs"
