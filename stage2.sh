@@ -19,7 +19,7 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup"
+packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc"
 
 # Establecer zona horaria
 timezoneset(){
@@ -197,6 +197,28 @@ genlocale(){
 	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 }
 
+home_keyfile(){
+	local crypthome_parent
+	local crypthome_parent_UUID
+	local keyfile
+	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1 | grep -oE "[a-z].*")
+	crypthome_parent_UUID=$(lsblk -nd -o UUID "/dev/$crypthome_parent")
+	keyfile="/etc/keys/home.key"
+	mkdir /etc/keys
+	dd bs=512 count=4 if=/dev/urandom of=$keyfile
+	while true; do
+		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuación se te pedirá la contraseña del disco /home"
+		cryptsetup -v luksAddKey "/dev/$crypthome_parent" $keyfile && break
+		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
+	done
+	chmod 000 $keyfile
+	chmod -R g-rwx,o-rwx /boot
+echo "target=home
+source=UUID=\"$crypthome_parent_UUID\"
+key=$keyfile
+" | tee /etc/conf.d/dmcrypt
+}
+
 ##########
 # SCRIPT #
 ##########
@@ -214,6 +236,8 @@ microcode_detect
 # Si el sistema es UEFI, instalar efibootmgr
 [ -d /sys/firmware/efi ] && \
 packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
+
+lsblk -nl -o NAME | grep crypthome && home_keyfile
 
 # Instalamos los paquetes necesarios
 pacinstall $packages
@@ -251,6 +275,10 @@ service_add NetworkManager
 service_add cupsd
 service_add cronie
 service_add tlp
+service_add acpid
+rc-update add device-mapper boot
+rc-update add dmcrypt boot
+rc-update add dmeventd boot
 
 # Sustituir sudo por doas
 ln -s /usr/bin/doas /usr/bin/sudo
