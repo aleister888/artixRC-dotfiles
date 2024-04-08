@@ -77,8 +77,9 @@ scheme_show(){
 	else
 		roottype="/"
 	fi
+
 	# Creamos el esquema que whiptail nos mostrará
-	scheme="/dev/$ROOT_DISK $(lsblk -dn -o size /dev/"$ROOT_DISK")
+	scheme="/dev/$ROOT_DISK    $(lsblk -dn -o size /dev/"$ROOT_DISK")
   /dev/$bootpart  $bootmount
   /dev/$rootpart  $roottype
 	"
@@ -86,15 +87,27 @@ scheme_show(){
 	scheme+="/dev/mapper/root  /"
 	fi
 
+	if [ "$crypt_home" == "true" ]; then
+		hometype="LUKS"
+	else
+		hometype="/home"
+	fi
+
 	if [ "$home_partition" == "true" ]; then
 	scheme+="
-/dev/$HOME_DISK $(lsblk -dn -o size /dev/"$HOME_DISK")
-  /dev/$homepart  /home"
+/dev/$HOME_DISK    $(lsblk -dn -o size /dev/"$HOME_DISK")
+  /dev/$homepart  $hometype"
 	fi
+
+	if [ "$crypt_home" == "true" ]; then
+	scheme+="
+    /dev/mapper/home  /home"
+	fi
+
 	scheme+="
 Aceptar los cambios borrará el contenido de todos los discos mostrados"
 	# Mostramos el esquema para confirmar los cambios
-	whiptail --title "Confirmar particionado" --yesno "$scheme" 14 60 ||
+	whiptail --title "Confirmar particionado" --yesno "$scheme" 15 60 ||
 	script_exit
 }
 
@@ -131,10 +144,16 @@ while [ "$scheme_confirm" == "false" ]; do
 	done
 
 	# Elegimos si queremos encriptación en el disco /
-	if whip_yes "LUKS" "¿Desea usar encriptación para la partición /?"; then
+	if whip_yes "LUKS" "¿Desea encriptar la partición /?"; then
 		crypt_root=true
 	else
 		crypt_root=false
+	fi
+
+	[ "$home_partition" == "true"  ] && if whip_yes "LUKS" "¿Desea encriptar la partición /home?"; then
+		crypt_home=true
+	else
+		crypt_home=false
 	fi
 
 	# Confirmamos los cambios
@@ -146,16 +165,17 @@ while [ "$scheme_confirm" == "false" ]; do
 done
 }
 
-root_encrypt(){
+
+part_encrypt(){
 while true; do
-	whip_msg "LUKS" "Se va a encriptar el disco /. A continuación se te pedirá la contraseña del disco"
-	cryptsetup luksFormat -q --verify-passphrase "/dev/$rootpart" && break
+	whip_msg "LUKS" "Se va a encriptar el disco $1. A continuación se te pedirá la contraseña del disco"
+	cryptsetup luksFormat -q --verify-passphrase "/dev/$2" && break
 	whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 done
 
 while true; do
 	whip_msg "LUKS" "Se te pedirá la contraseña para poder desencriptar el disco temporalmente y comenzar la instalación."
-	cryptsetup open "/dev/$rootpart" cryptroot && break
+	cryptsetup open "/dev/$2" "$3" && break
 	whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 done
 }
@@ -193,7 +213,7 @@ format_disks(){
 
 	# Creamos la partición root
 	parted -s "/dev/$ROOT_DISK" mkpart primary 513MiB 100%
-	[ "$crypt_root" == "true" ] && root_encrypt && rootpart="mapper/cryptroot"
+	[ "$crypt_root" == "true" ] && part_encrypt "/" "$rootpart" "cryptroot" && rootpart="mapper/cryptroot"
 
 	# Formateamos nuestra partición "/"
 	if [ "$ROOT_FILESYSTEM" == "ext4" ]; then
@@ -216,7 +236,8 @@ format_disks(){
 		else
 			parted "/dev/$HOME_DISK" mklabel gpt
 		fi
-		parted -a optimal "/dev/$HOME_DISK" mkpart primary ext4 1MiB 100%
+		parted -a optimal "/dev/$HOME_DISK" mkpart primary 1MiB 100%
+		[ "$crypt_home" == "true" ] && part_encrypt "/home" "$homepart" "crypthome" && homepart="mapper/crypthome"
 		if [ "$HOME_FILESYSTEM" == "ext4" ]; then
 			mkfs.ext4 "/dev/$homepart"
 		elif [ "$HOME_FILESYSTEM" == "xfs" ]; then
@@ -226,6 +247,22 @@ format_disks(){
 			mkfs.btrfs -f "/dev/$homepart"
 		fi
 	fi
+}
+
+home_keyfile(){
+	local crypthome_parent
+	local crypthome_parent_UUID
+	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1)
+	crypthome_parent_UUID=$(lsblk -nd -o UUID "/dev/$crypthome_parent")
+	dd bs=515 count=4 if=/dev/urandom of=/boot/keyfile.bin
+	while true; do
+		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuación se te pedirá la contraseña del disco /home"
+		cryptsetup -v luksAddKey "/dev/$crypthome_parent" && break
+		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
+	done
+	chmod 0400 /boot/keyfile.bin
+	chmod -R g-rwx,o-rwx /boot
+	echo "crypthome UUID=$crypthome_parent_UUID /boot/keyfile.bin luks" | tee -a /etc/crypttab
 }
 
 # Función para montar nuestras particiones
@@ -267,6 +304,8 @@ mount_partitions(){
 scheme_setup
 # Formateamos los discos
 format_disks
+# Auto desencriptar /home
+[ "$crypt_home" == "true" ] && home_keyfile
 # Montamos nuestras particiones
 mount_partitions
 

@@ -94,7 +94,7 @@ fi
 
 # Instalamos GRUB
 install_grub(){
-	local cryptdisk="$(lsblk -lf -o NAME,FSTYPE | awk '$2 == "crypto_LUKS" {print $1}')"
+	local cryptdisk="$(lsblk -fn -o NAME | grep cryptroot -B 1 | grep -oE "[a-z].*")"
 	local cryptid="$(lsblk -nd -o UUID /dev/$cryptdisk)"
 	local decryptid="$(lsblk -n -o UUID /dev/mapper/cryptroot)"
 	local boot_drive=$(df /boot | awk 'NR==2 {print $1}')
