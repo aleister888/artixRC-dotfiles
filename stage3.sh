@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -44,7 +44,7 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen compfy
 # Aplicaciones GUI
 packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
 # Misc
-packages+=" syncthing wine-staging wine-mono wine-gecko winetricks fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go"
+packages+=" syncthing wine-staging wine-mono wine-gecko winetricks fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"

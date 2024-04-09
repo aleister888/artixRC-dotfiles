@@ -2,7 +2,7 @@
 
 # https://www.ssh-audit.com/hardening_guides.html
 # Install OpenSSH
-doas pacman -S openssh openssh-openrc
+doas pacman -S --noconfirm openssh openssh-openrc
 # Activate OpenSSH service
 doas rc-update add sshd default
 # Generate RSA and ED25519 keys
@@ -25,6 +25,17 @@ doas sed -i 's|#X11Forwarding no|X11Forwarding no|' /etc/ssh/sshd_config
 doas sed -i 's|#PermitEmptyPasswords no|PermitEmptyPasswords no|' /etc/ssh/sshd_config
 # Desactivar inicios de sesión sin contraseña
 doas sed -i 's|#PermitEmptyPasswords no|PermitEmptyPasswords no|' /etc/ssh/sshd_config
+
+# Instalar y configurar UFW
+doas pacman -Sy --noconfirm ufw-openrc
+doas rc-update add ufw default
+doas ufw enable
+doas ufw allow 80/tcp
+doas ufw allow 443/tcp
+doas ufw limit ssh
+doas ufw allow syncthing
+doas ufw default deny incoming
+doas ufw default allow outgoing
 
 # Install fail2ban
 doas pacman -S fail2ban-openrc
