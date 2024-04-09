@@ -152,6 +152,8 @@ static const Layout layouts[] = {
 	{ "|M|",      centeredmaster }, // 3 Columnas (Zona principal centrada)
 	{ "|||",      col },            // Columnas (Zona principal a la izquierda)
 	{ "TTT",      bstack },         // Zona principal en la parte superior
+ 	{ "[@]",      spiral },         // Layouts fibonacci
+ 	{ "[\\]",     dwindle },
 };
 
 // Definiciones de las Teclas
