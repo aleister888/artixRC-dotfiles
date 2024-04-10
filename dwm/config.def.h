@@ -270,8 +270,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_dead_acute, tagmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_ccedilla,   tagmon,       {.i = +1 } },
 	// Scratchpads
-        { MODKEY,                       XK_s,      togglescratch,    {.v = scratchpadcmd } },
-        { MODKEY|ShiftMask,             XK_s,      scratchtoggle,    {.v = scratchpadcmd } },
+	{ MODKEY,                       XK_s,      togglescratch,    {.v = scratchpadcmd } },
+	{ MODKEY|ShiftMask,             XK_s,      scratchtoggle,    {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_f,      spawn,            {.v = spawnscratchpadcmd } },
 	// Hacer/Deshacer ventana permamente
 	{ MODKEY|ControlMask,           XK_s,      togglesticky,     {0} },
