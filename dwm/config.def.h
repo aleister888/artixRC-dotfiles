@@ -43,29 +43,29 @@ static const char col_orange[]           = "#FE8019";
 
 static const char *colors[][3]      = {
 	// Colores:             Fuente          Fondo       Borde
-	[SchemeNorm]        = { foreground, background,     col_blue    }, // Color de las ventanas normales
-	[SchemeSel]         = { foreground, background_sel, col_orange  }, // Color de las ventanas selccionadas
-	[SchemeStatus]      = { foreground, background,     "#000000"   }, // Color de los espacios por defecto
-	[SchemeTagsNorm]    = { foreground, background,     "#000000"   }, // Información (Normal)
-	[SchemeTagsSel]     = { foreground, background_sel, "#000000"   }, // Color de los espacios seleccionados
-	[SchemeInfoNorm]    = { foreground, background,     "#000000"   }, // Estado/información
-	[SchemeInfoSel]     = { foreground, background_sel, "#000000"   }, // Información (Seleccionada)
-	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue    }, // Scratchpad (Normal)
-	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple  }, // Scratchpad (Selecteccionado)
-	[SchemeStickyNorm]  = { "#000000",  "#000000",      col_red     }, // Scratchpad (Normal)
-	[SchemeStickySel]   = { "#000000",  "#000000",      col_purple  }, // Scratchpad (Selecteccionado)
-	[SchemeTag1]        = { col_purple, background_sel, "#000000"   }, // Colores de los espacios 1-12
-	[SchemeTag2]        = { col_aqua,   background_sel, "#000000"   },
-	[SchemeTag3]        = { col_orange, background_sel, "#000000"   },
-	[SchemeTag4]        = { col_red,    background_sel, "#000000"   },
-	[SchemeTag5]        = { col_aqua,   background_sel, "#000000"   },
-	[SchemeTag6]        = { col_blue,   background_sel, "#000000"   },
-	[SchemeTag7]        = { col_green,  background_sel, "#000000"   },
-	[SchemeTag8]        = { col_yellow, background_sel, "#000000"   },
-	[SchemeTag9]        = { col_blue,   background_sel, "#000000"   },
-	[SchemeTag10]       = { col_purple, background_sel, "#000000"   },
-	[SchemeTag11]       = { col_aqua,   background_sel, "#000000"   },
-	[SchemeTag12]       = { col_orange, background_sel, "#000000"   },
+	[SchemeNorm]        = { foreground, background,     col_blue   }, // Color de las ventanas normales
+	[SchemeSel]         = { foreground, background_sel, col_orange }, // Color de las ventanas selccionadas
+	[SchemeStatus]      = { foreground, background,     "#000000"  }, // Color de los espacios por defecto
+	[SchemeTagsNorm]    = { foreground, background,     "#000000"  }, // Información (Normal)
+	[SchemeTagsSel]     = { foreground, background_sel, "#000000"  }, // Color de los espacios seleccionados
+	[SchemeInfoNorm]    = { foreground, background,     "#000000"  }, // Estado/información
+	[SchemeInfoSel]     = { foreground, background_sel, "#000000"  }, // Información (Seleccionada)
+	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue   }, // Scratchpad (Normal)
+	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple }, // Scratchpad (Selecteccionado)
+	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
+	[SchemeStickySel]   = { "#000000",  "#000000",      col_yellow }, // Scratchpad (Selecteccionado)
+	[SchemeTag1]        = { col_purple, background_sel, "#000000"  }, // Colores de los espacios 1-12
+	[SchemeTag2]        = { col_aqua,   background_sel, "#000000"  },
+	[SchemeTag3]        = { col_orange, background_sel, "#000000"  },
+	[SchemeTag4]        = { col_red,    background_sel, "#000000"  },
+	[SchemeTag5]        = { col_aqua,   background_sel, "#000000"  },
+	[SchemeTag6]        = { col_blue,   background_sel, "#000000"  },
+	[SchemeTag7]        = { col_green,  background_sel, "#000000"  },
+	[SchemeTag8]        = { col_yellow, background_sel, "#000000"  },
+	[SchemeTag9]        = { col_blue,   background_sel, "#000000"  },
+	[SchemeTag10]       = { col_purple, background_sel, "#000000"  },
+	[SchemeTag11]       = { col_aqua,   background_sel, "#000000"  },
+	[SchemeTag12]       = { col_orange, background_sel, "#000000"  },
 	// Los valores con "#000000" no son usados pero no pueden estar vacios
 };
 

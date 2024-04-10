@@ -67,21 +67,23 @@ Cualquier texto que veas coloreado en naranja es un hiper-vínculo \emph{(except
 \href{https://dwm.suckless.org}{Dwm} es el programa que se encarga de repartir el espacio de trabajo entre nuestras ventanas \emph{(aplicaciones gráficas)}. Hay una cantidad enorme de \href{https://www.youtube.com/results?search_query=dwm}{videos sobre dwm}, como funciona y sus ventajas. Aquí veremos simplemente los atajos de teclado que tengo configurados:
 
 \begin{itemize}
-\setlength\itemsep{-0.2em}
-\item Alt Izq. + Ctrl + F1: Abrir este documento
+\setlength\itemsep{-0.4em}
+\item Alt Izq. + Ctrl + S: Abrir este documento
 \item Alt Izq. + P: Abrir lanzador de comandos
 \item Alt Izq. + Shift + P: Abrir lanzador de aplicaciones
 \item Alt Izq. + Shift + Intro: Abrir terminal
 \begin{itemize}
-\setlength\itemsep{-0.2em}
+\setlength\itemsep{-0.3em}
 \item Alt Izq. + C: Copiar texto
 \item Alt Izq. + V: Pegar texto
+\item Alt Izq. + L: Abrir link en el navegador
 \end{itemize}
 \item Alt Izq. + F1 / Alt + Shift + F1: Configurar pantallas
 \item Alt Izq. + F2: Abrir Navegador \emph{(Firefox)}
 \item Alt Izq. + F3: Abrir Administrador de archivos
+\item Alt Izq. + Shift + F3: Abrir Administrador de archivos (En /run/media, donde se montan los pendrives y discos externos)
 \begin{itemize}
-\setlength\itemsep{-0.2em}
+\setlength\itemsep{-0.3em}
 \item Espacio: Seleccionar archivos
 \item Shift + S: Borrar archivos
 \item Shift + D: Mover archivos a la papelera
@@ -111,7 +113,7 @@ Cualquier texto que veas coloreado en naranja es un hiper-vínculo \emph{(except
 \item Alt Izq. + M: Subir Volumen
 \item Alt Izq. + Shift + N: Establecer volumen al 50\%
 \item Alt Izq. + Shift + M: Establecer volumen al 100\%
-\item Alt Izq. + Ctrl + N/M: Silenciar/des-silenciar el audio
+\item Alt Izq. + Ctrl + N/M: Silenciar/activar el sonido
 \item Alt Izq. + O: Captura de pantalla al portapapeles
 \item Alt Izq. + Ctrl + O: Guardar captura de pantalla
 \item Alt Izq. + Shift + O: Captura de un área de la pantalla al porta-papeles
@@ -130,11 +132,17 @@ Cualquier texto que veas coloreado en naranja es un hiper-vínculo \emph{(except
 \item Alt Izq. + \}: Mover el foco al monitor siguiente
 \item Alt Izq. + Shift + \}: Mover ventana al monitor anterior
 \item Alt Izq. + Shift + \{: Mover ventana al monitor siguiente
+\item Alt Izq. + F: Abrir \emph{terminal scratchpad}
+\item Alt Izq. + S: Mostrar/Ocultar \emph{scratchpads}
+\item Alt Izq. + Shift + S: Marcar/desmarcar la ventana seleccionada como \emph{strachpad}
+\item Alt Izq. + Ctrl + S: Marcar/desmarcar la ventana seleccionada como \emph{sticky}
+\item Alt Izq. + Ctrl + Clic Izq.: Mover ventana
+\item Alt Izq. + Ctrl + Clic Der.: Re-dimensionar ventana
 \end{itemize}
 
 \section{Compartir audio en Discord}
 
-Si has instalado el cliente de discord te darás cuenta de una funcionalidad que esta en la versión de Windows y no en la de Linux. En Linux, no puedes compartir el audio cuando compartes tu escritorio o video.
+Si has instalado el cliente de discord te darás cuenta de una funcionalidad que esta en la versión de Windows y no en la de Linux. En Linux, no puedes compartir el audio cuando compartes tu escritorio o una ventana.
 
 Para solucionar este problema, cuando inicias sesión se crea un \emph{micrófono virtual} al que puedes añadir tu micrófono real y el audio de las aplicaciones que desees. Para que la gente pueda escuchar el audio de las aplicaciones tendrás que elegir en discord el micrófono como \emph{my-virtualmic}, y, recomendablemente; desactivar al reducción de ruido. Pues esta detectará el audio de las aplicaciones como ruido.
 
@@ -203,8 +211,6 @@ Para borrar automaticamente los metadatos de una carpeta, puedes añadir a \emph
 \end{verbatim}
 
 \subsection{wake}
-
-\label{sec:wake}
 
 Este script comprueba si hay alguna máquina virtual en ejecucción, y si no encuentra ninguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
 
@@ -571,18 +577,6 @@ doas install -g kvm -o $(whoami) -m 0660 /dev/null /dev/shm/looking-glass
 	\end{itemize}
 \end{mybox}
 
-\section{GRUB config}
-
-\label{sec:tsc}
-
-Para un mayor rendimiento es recomendable añadir a las opciones de arranque de GRUB \emph{tsc-reliable} y \emph{clocksource=tsc}:
-
-\begin{verbatim}
-GRUB_CMDLINE_LINUX="tsc-reliable clocksource=tsc"
-\end{verbatim}
-
-También esto ayuda a que el script \ref{sec:wake} funcione correctamente.
-
 \section{SSH}
 
 Si queremos conectarnos a un equipo remoto a través de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}. Por defecto incluyo un script que configura SSH de forma muy básica, configurando SSH para poder acceder a tu equipo remoto con una contraseña. Para activar SSH simplemente ejecuta:
@@ -624,6 +618,10 @@ doas ufw default deny incoming
 doas ufw default allow outgoing
 \end{verbatim}
 
+\begin{mybox}{Nota}
+Si ejecutaste \emph{ssh-configure} el firewall ya se configuró automaticamente
+\end{mybox}
+
 \section{Syncthing}
 
 \href{https://github.com/syncthing/syncthing}{Syncthing} es un software para sincronizar archivos entre dispositivos, es lo que uso para poder trabajar en todos mis equipos sin necesidad de estar intercambiando pen-drives como un troglodita.
@@ -636,48 +634,33 @@ Aquí puedes encontrar documentación sobre como usar syncthing: \href{https://d
 
 \section{Monitores de altas tasas de refresco}
 
-Por defecto dwm actualiza el movimiento de las ventanas a 60 FPS. Si tienes un monitor de mas de 60 Hz esto puede hacer la experiencia de usar dwm insatisfactoria. Para cambiar este comportamiento, debes editar el archivo \emph{dwm.c}, primero debes ir a la función:
+Por defecto dwm actualiza el movimiento de las ventanas a 60 FPS. Si tienes un monitor de mas de 60 Hz esto puede hacer la experiencia de usar dwm insatisfactoria. Para cambiar este comportamiento, debes editar el archivo \emph{dwm.c}. En el encontrarás varias funciones con esta misma linea de código:
 
 \begin{verbatim}
-void
-movemouse(const Arg *arg)
+if ((ev.xmotion.time - lasttime) <= (1000 / 60))
 \end{verbatim}
 
-Encontrar las lineas:
-
-\begin{verbatim}
-    break;
-case MotionNotify:
-    if ((ev.xmotion.time - lasttime) <= (1000 / 60))
-        continue;
-    lasttime = ev.xmotion.time;
-\end{verbatim}
-
-Y cambiar el valor \emph{60} por la tasa de refresco de tu monitor. Por ejemplo, para un monitor de 144 Hz, la línea a cambiar debería verse así:
+Deberás cambiar el valor \emph{60} por la tasa de refresco de tu monitor en cada aparición de esta linea. Por ejemplo, para un monitor de \emph{144 Hz}, la líneas a cambiar deberían verse así:
 
 \begin{verbatim}
 if ((ev.xmotion.time - lasttime) <= (1000 / 144))
 \end{verbatim}
 
-Ahora debes encontrar la misma línea en:
-
-\begin{verbatim}
-void
-resizemouse(const Arg *arg)
-\end{verbatim}
-
-y realizar el mismo tipo de modificación. Para hacer los cambios efectivos re-compila dwm ejecutando \emph{doas make install} desde la carpeta de dwm, y reinicia dwm pulsando \emph{Alt Izq. + Shift + F11}.
-
 \section{Firefox}
 
 \subsection{Activar extensiones}
 
+\begin{multicols}{2}
+\begin{minipage}[t]{0.45\textwidth}
 Por defecto, nuestro Firefox viene instalado con varias extensiones útiles, pero estas vienen desactivadas.
-
+\vspace{10pt}\\
 Para activarlas, pulsa en el icono con forma de pieza de puzle, que esta situado a la derecha de la barra de búsqueda. Te encontrarás con una lista como la de la imagen de abajo. Simplemente activa cada extensión con haciendo clic en el deslizador que hay a la izquierda de los 3 puntos y dale a aceptar en los menús flotantes que aparezcan pidiendo confirmación
+\end{minipage}%
+\hfill\includegraphics[width=0.5\textwidth]{images/extensions.jpg}
+\end{multicols}
 
 \begin{center}
-	\includegraphics[width=0.5\textwidth]{images/extensions.jpg}
+	
 \end{center}
 
 \subsection{Cambiar buscador por defecto}
@@ -696,13 +679,14 @@ Si tenemos activada nuestra extensión de KeepassXC en el navegador, cuando este
 
 \subsection{Desactivar baúl de contraseñas}
 
+\begin{multicols}{2}
+\begin{minipage}[t]{0.45\textwidth}
 Por defecto Firefox intentará manejar nuestras contraseñas, si ya estamos usando la extensión de Keepass que viene incluida con nuestra instalación, las ventanas de Firefox que aparecen preguntando si queremos guardar nuestra contraseña pueden ser bastante molestas.
-
+\vspace{10pt}\\
 Para desactivar esta función, simplemente busca \emph{Contraseña} en el menu de configuración de Firefox y desactiva el \emph{Ask to save passwords} o \emph{Preguntar para guardar contraseñas}, en español.
-
-\begin{center}
-	\includegraphics[width=0.4\textwidth]{images/passwords.jpg}
-\end{center}
+\end{minipage}%
+\hfill\includegraphics[width=0.45\textwidth]{images/passwords.jpg}
+\end{multicols}
 
 \subsection{Violentmonkey}
 
@@ -727,6 +711,7 @@ Cuando abras por primera vez esta página aparecera una aviso advirtiendo de los
 \end{mybox}
 
 \begin{itemize}
+\setlength\itemsep{-0.1em}
 \item identity.fxaccounts.enabled
 \item identity.fxaccounts.toolbar.enabled
 \end{itemize}
@@ -742,11 +727,10 @@ Aquí tienes una lista de buscadores útiles, para añadirlos a tu buscador simp
 \begin{multicols}{2}
 \begin{itemize}
 \setlength\itemindent{-0.5em}
-\setlength\itemsep{0.25em}
+\setlength\itemsep{-0.35em}
 \item \href{https://wiki.archlinux.org/}{Arch Wiki}
 \item \href{https://wiki.gentoo.org/wiki/Main_Page}{Gentoo Wiki}
 \item \href{https://wiki.alpinelinux.org/wiki/Main_Page}{Alpine Wiki}
-\item Las Wikis de Gentoo y Alpine nos resultan útiles, pues ambas distribuciones funcionan con OpenRC. De hecho, si no encuentras un script de OpenRC para algun servicio en los repositorios de Artix, puedes copiar el script que utilizan Alpine o Gentoo.
 \item \href{https://www.youtube.com/}{YouTube}
 \item \href{https://nyc1.pi.ggtyler.dev/trending}{Piped (Alternativa FOSS a YouTube)}
 \item \href{https://iv.ggtyler.dev/feed/popular}{Invidious (Alternativa FOSS a YouTube)}
@@ -756,5 +740,7 @@ Aquí tienes una lista de buscadores útiles, para añadirlos a tu buscador simp
 \item \href{https://stackoverflow.com/}{Stack Overflow}
 \end{itemize}
 \end{multicols}
+
+Las Wikis de Gentoo y Alpine nos resultarán de utilidad, pues ambas distribuciones utilizan OpenRC en vez de SystemD. De hecho, si no encuentras un script de OpenRC para algún servicio en los repositorios de Artix, puedes copiar el script que utilizan Alpine o Gentoo.
 
 \end{document}
