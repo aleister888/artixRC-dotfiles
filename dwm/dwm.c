@@ -87,7 +87,7 @@
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm,
-	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm, SchemeScratchSel,
+	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm, SchemeScratchSel, SchemeStickyNorm, SchemeStickySel,
 	SchemeTag1, SchemeTag2,  SchemeTag3,  SchemeTag4,
 	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8,
 	SchemeTag9, SchemeTag10, SchemeTag11, SchemeTag12}; /* color schemes */
@@ -267,6 +267,7 @@ static void setlayout(const Arg *arg);
 static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setscratch(const Arg *arg);
+static void scratchtoggle(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
 static void shiftviewclients(const Arg *arg);
@@ -1195,6 +1196,8 @@ focus(Client *c)
 		grabbuttons(c, 1);
 		if (c->scratchkey != 0)
 			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
+		else if (c->issticky != 0)
+			XSetWindowBorder(dpy, c->win, scheme[SchemeStickySel][ColBorder].pixel);
 		else
 			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
 		setfocus(c);
@@ -2160,17 +2163,18 @@ setgaps(const Arg *arg)
 void
 setsticky(Client *c, int sticky)
 {
-
-    if(sticky && !c->issticky) {
-        XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
-                PropModeReplace, (unsigned char *) &netatom[NetWMSticky], 1);
-        c->issticky = 1;
-    } else if(!sticky && c->issticky){
-        XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
-                PropModeReplace, (unsigned char *)0, 0);
-        c->issticky = 0;
-        arrange(c->mon);
-    }
+	if (sticky && !c->issticky) {
+		XSetWindowBorder(dpy, c->win, scheme[SchemeStickySel][ColBorder].pixel);
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+			PropModeReplace, (unsigned char *) &netatom[NetWMSticky], 1);
+		c->issticky = 1;
+	} else if (!sticky && c->issticky) {
+		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+			PropModeReplace, (unsigned char *)0, 0);
+		c->issticky = 0;
+		arrange(c->mon);
+	}
 }
 
 
@@ -2720,6 +2724,8 @@ unfocus(Client *c, int setfocus)
 	grabbuttons(c, 0);
 	if (c->scratchkey != 0)
 		XSetWindowBorder(dpy, c->win, scheme[SchemeScratchNorm][ColBorder].pixel);
+	else if (c->issticky != 0)
+		XSetWindowBorder(dpy, c->win, scheme[SchemeStickyNorm][ColBorder].pixel);
 	else
 		XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
 	if (setfocus) {
@@ -3437,4 +3443,21 @@ main(int argc, char *argv[])
 	cleanup();
 	XCloseDisplay(dpy);
 	return EXIT_SUCCESS;
+}
+
+void
+scratchtoggle(const Arg *arg)
+{
+	Client *c = selmon->sel;
+	if (!c) {
+		return;
+	} else {
+		if (c->scratchkey == 0) {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
+			c->scratchkey = ((char**)arg->v)[0][0];
+		} else {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+			c->scratchkey = 0;
+		}
+	}
 }

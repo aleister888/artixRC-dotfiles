@@ -27,6 +27,3 @@ chmod +x stage1.sh && ./stage1.sh
 
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
-- dwm:
-    - Borde de color especial para ventanas sticky
-    - Alternar scratchpad con `Alt+Shift+S` y alternar sticky con `Alt+Ctrl+S`
