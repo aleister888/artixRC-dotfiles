@@ -436,6 +436,7 @@ firefox_configure
 vim_configure
 
 # Instalar los archivos de configuración locales y en github
+mkdir -p "$HOME/.config"
 dotfiles_install
 
 # Configuramos Tauon Music Box (Nuestro reproductor de música)
