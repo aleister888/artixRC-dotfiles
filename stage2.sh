@@ -212,7 +212,8 @@ home_keyfile(){
 		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 	done
 	chmod 000 $keyfile
-	chmod -R g-rwx,o-rwx /boot
+	chmod g-rwx,o-rwx /etc/keys
+
 echo "target=home
 source=UUID=\"$crypthome_parent_UUID\"
 key=$keyfile
