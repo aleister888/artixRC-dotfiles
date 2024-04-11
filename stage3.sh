@@ -40,7 +40,7 @@ packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv 
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt dragon-drop"
 # Apariencia
-packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen compfy gruvbox-dark-gtk lxappearance"
+packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom gruvbox-dark-gtk lxappearance"
 # Aplicaciones GUI
 packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
 # Misc
