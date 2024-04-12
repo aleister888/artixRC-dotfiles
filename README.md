@@ -49,6 +49,12 @@ dd if=/dev/zero of=/home/usuario/archivo
 
 Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobrescrito la información que había en el disco _(Este metodo no es tan seguro porque no garantiza que se sobrescriba por completo todos los sectores del disco, tenemos el sistema de ficheros como intermediario)_.
 
+`El mejor balance entre eficiente y seguridad viene de llenar la partición ya encriptada con ceros, y el cipher se encargará de llenar /dev/mapper/ejemplo de información aleatoria`
+
+[1] https://wiki.archlinux.org/title/Dm-crypt/Drive_preparation
+
+[2] https://unix.stackexchange.com/questions/403174/why-do-you-need-to-clean-free-space-before-creating-a-luks-partition
+
 # Restaurar partición /home encriptada
 
 Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volumen con `cryptsetup luksOpen` y al elegir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
