@@ -67,6 +67,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - _Añadir buscadores que usan OpenSearch (Arch Wiki, Github, ...)_
     - _Activar extensiones instaladas_
 - Elegir las apps a instalar en un bucle que se acaba cuando confirmamos los cambios (Como el formateo de los discos en stage1.sh)
+- Utilizar una función para todos los menús de whiptail
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
 
