@@ -61,6 +61,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # Cosas por hacer
 
+- Preguntar si hacer `/dev/zero` a la partición encriptada durante la instalación
 - Configurar automáticamente Firefox con user-overrides.js
     - _DuckDuckGO como buscador predeterminado_
     - _Desactivar el baúl de contraseñas, cuentas de Mozilla y Pocket_
