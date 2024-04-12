@@ -23,7 +23,12 @@ chmod +x stage1.sh && ./stage1.sh
 
 - Una vez instalado el sistema, después de iniciar sesión; puedes pulsar `Ctrl+Alt+H` para abrir un PDF con información de como usar tu instalación y otra información útil.
 
+# Restaurar partición /home encriptada
+
+Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volúmen con `cryptsetup luksOpen` y al elejir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
+
 # TODO
 
+- Elegir las apps a instalar en un bucle que se acaba cuando confirmamos los cambios (Como el formateo de los discos en stage1.sh)
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
