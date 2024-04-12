@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="100px" hspace="10px" vspace="0px">
 
-## Artix (OpenRC) Dotfiles
+# Artix (OpenRC) Dotfiles
 
 Configuración de `Artix Linux OpenRC` y auto-instalador
 
@@ -32,3 +32,13 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 - Elegir las apps a instalar en un bucle que se acaba cuando confirmamos los cambios (Como el formateo de los discos en stage1.sh)
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
+
+# Referencias
+
+[1] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
+
+[2] https://wiki.gentoo.org/wiki/Dm-crypt
+
+[3] https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system
+
+[4] https://jpedmedia.com/tutorials/installations/void_install/index.html
