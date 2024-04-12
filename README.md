@@ -23,11 +23,35 @@ chmod +x stage1.sh && ./stage1.sh
 
 - Una vez instalado el sistema, y después de iniciar sesión, pulsa `Ctrl+Alt+H` para abrir un PDF con información de como usar tu instalación y otra información útil.
 
+# Características
+
+- Encriptación (`/` y `/home`. `/boot` no esta encriptado) de disco
+- Soporte para `btrfs`, `ext4` y `xfs`
+- Soporte para `BIOS` y `UEFI`
+
+# Atención!
+
+Si quieres utilizar encriptación para proteger tus datos, es __obligatorio__ vaciar el disco antes de la instalación llenándolo con información aleatoria. En caso contrario, la información que no se haya sobrescrito después de encriptar el disco _seguirá estando disponible para ser analizada con herramientas forensicas_.
+
+Para borrar toda la información contenida en el disco ejecuta: (Sustituye el ejemplo por tu dipositivo)
+
+```
+dd if=/dev/urandom of=/dev/ejemplo
+```
+
+Este proceso tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con:
+
+```
+dd if=/dev/zero of=/home/usuario/archivo
+```
+
+Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobrescrito la información que había en el disco _(Este metodo no es tan seguro porque no garantiza que se sobrescriba por completo todos los sectores del disco, tenemos el sistema de ficheros como intermediario)_.
+
 # Restaurar partición /home encriptada
 
 Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volumen con `cryptsetup luksOpen` y al elegir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
 
-# TODO
+# Cosas por hacer
 
 - Configurar automáticamente firefox.
 - Elegir las apps a instalar en un bucle que se acaba cuando confirmamos los cambios (Como el formateo de los discos en stage1.sh)
