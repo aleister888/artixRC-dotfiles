@@ -9,7 +9,7 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
     <img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshot2.jpg" width="49%" />
 </p>
 
-## Instalación
+# Instalación
 
 - Ejecuta el script con:
 
@@ -25,7 +25,7 @@ chmod +x stage1.sh && ./stage1.sh
 
 # Restaurar partición /home encriptada
 
-Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volúmen con `cryptsetup luksOpen` y al elejir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
+Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volumen con `cryptsetup luksOpen` y al elegir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
 
 # TODO
 
