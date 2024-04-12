@@ -28,18 +28,20 @@ chmod +x stage1.sh && ./stage1.sh
 - Encriptación (`/` y `/home`. `/boot` no esta encriptado) de disco
 - Soporte para `btrfs`, `ext4` y `xfs`
 - Soporte para `BIOS` y `UEFI`
+- Configuración de `Xorg` y `eww` automática basada en tu DPI y resolución
+    - _Además; dwm, st y dmenu se compilan con el tamaño de fuente recomendado_
 
 # Atención!
 
 Si quieres utilizar encriptación para proteger tus datos, es __obligatorio__ vaciar el disco antes de la instalación llenándolo con información aleatoria. En caso contrario, la información que no se haya sobrescrito después de encriptar el disco _seguirá estando disponible para ser analizada con herramientas forensicas_.
 
-Para borrar toda la información contenida en el disco ejecuta: (Sustituye el ejemplo por tu dipositivo)
+Para borrar toda la información contenida en el disco ejecuta: _(Sustituye el ejemplo por tu dipositivo)_
 
 ```
 dd if=/dev/urandom of=/dev/ejemplo
 ```
 
-Este proceso tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con:
+Este proceso tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con: _(Sustituye el archivo por uno que se encuentre en un directorio contenido por el disco que quieres asegurar)_
 
 ```
 dd if=/dev/zero of=/home/usuario/archivo
