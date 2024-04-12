@@ -49,7 +49,7 @@ dd if=/dev/zero of=/home/usuario/archivo
 
 Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobrescrito la información que había en el disco _(Este metodo no es tan seguro porque no garantiza que se sobrescriba por completo todos los sectores del disco, tenemos el sistema de ficheros como intermediario)_.
 
-`El mejor balance entre eficiente y seguridad viene de llenar la partición ya encriptada con ceros, y el cipher se encargará de llenar /dev/mapper/ejemplo de información aleatoria`
+`El mejor balance entre eficiente y seguridad viene de llenar la partición ya encriptada con ceros, y el cipher se encargará de llenar /dev/mapper/ejemplo de información aleatoria [1]`
 
 [1] https://wiki.archlinux.org/title/Dm-crypt/Drive_preparation
 
