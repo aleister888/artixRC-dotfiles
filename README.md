@@ -28,7 +28,7 @@ chmod +x stage1.sh && ./stage1.sh
 - Encriptación (`/` y `/home`. `/boot` no esta encriptado) de disco
 - Soporte para `btrfs`, `ext4` y `xfs`
 - Soporte para `BIOS` y `UEFI`
-- Configuración de `Xorg` y `eww` automática basada en tu DPI y resolución
+- Configuración de `Xorg` y `eww` automática, basada en el DPI y resolución de la pantalla.
     - _Además; dwm, st y dmenu se compilan con el tamaño de fuente recomendado_
 
 # Atención!
@@ -61,7 +61,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # Cosas por hacer
 
-- Preguntar si hacer `/dev/zero` a la partición encriptada durante la instalación
+- Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Configurar automáticamente Firefox con user-overrides.js
     - _DuckDuckGO como buscador predeterminado_
     - _Desactivar el baúl de contraseñas, cuentas de Mozilla y Pocket_
