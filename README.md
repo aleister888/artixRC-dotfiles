@@ -21,7 +21,7 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 chmod +x stage1.sh && ./stage1.sh
 ```
 
-- Una vez instalado el sistema, después de iniciar sesión; puedes pulsar `Ctrl+Alt+H` para abrir un PDF con información de como usar tu instalación y otra información útil.
+- Una vez instalado el sistema, y después de iniciar sesión, pulsa `Ctrl+Alt+H` para abrir un PDF con información de como usar tu instalación y otra información útil.
 
 # Restaurar partición /home encriptada
 
@@ -29,11 +29,12 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # TODO
 
+- Configurar automáticamente firefox.
 - Elegir las apps a instalar en un bucle que se acaba cuando confirmamos los cambios (Como el formateo de los discos en stage1.sh)
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
 
-# Referencias
+# Referencias y créditos
 
 [1] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
 
@@ -42,3 +43,5 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 [3] https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system
 
 [4] https://jpedmedia.com/tutorials/installations/void_install/index.html
+
+[5] larbs.xyz/larbs.sh
