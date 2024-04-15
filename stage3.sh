@@ -77,13 +77,84 @@ driver_choose(){
 	esac
 }
 
-# Elegir si instalar virt-manager
-virt_choose(){
+# Elegimos que paquetes instalar
+packages_show(){
+	local scheme # Variable con la lista de paquetes a instalar
+	scheme="Se instalarán:\n"
+[ "$virt"   == "true" ] && scheme+="Virt-Manager\n"
+[ "$music"  == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
+[ "$music"  == "true" ] && scheme+="Telegram Discord\n"
+[ "$daw"    == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
+[ "$office" == "true" ] && scheme+="Libreoffice\n"
+[ "$latex"  == "true" ] && scheme+="TeX-live\n"
+	whiptail --title "Confirmar paquetes" --yesno "$scheme" 15 60 
+}
+
+packages_choose(){
+local packages_confirm="false"
+local virt
+local music
+local noprivacy
+local daw
+local office
+local latex
+
+while [ "$packages_confirm" == "false" ]; do
 	if whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?"; then
-		# Instalar paquetes para virtualización
-		packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
-		isvirt="true"
+		virt="true"
+	else
+		virt="false"
 	fi
+
+	if whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?"; then
+		music="true"
+	else
+		music="false"
+	fi
+
+	if whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?"; then
+		noprivacy="true"
+	else
+		noprivacy="false"
+	fi
+
+	if whip_yes "DAW" "¿Deseas instalar un lector de partituras?"; then
+		daw="true"
+	else
+		daw="false"
+	fi
+
+	if whip_yes "Oficina" "¿Deseas instalar software de ofimática?"; then
+		office="true"
+	else
+		office="false"
+	fi
+
+	if whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevará mucho tiempo)"; then
+		latex="true"
+	else
+		latex="false"
+	fi
+
+	if packages_show; then
+		packages_confirm=true
+	else
+		whip_msg "Cancelación" "Se te volverá a preguntar que software desea instalar"
+	fi
+done
+
+[ "$virt"   == "true" ] && \
+packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq" && isvirt="true"
+[ "$music"  == "true" ] && packages+=" easytag picard flacon cuetools"
+[ "$music"  == "true" ] && packages+=" discord forkgram-bin"
+[ "$daw"    == "true" ] && \
+packages+=" tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
+	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
+	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
+	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
+	ln -s "$HOME/Documents/Guitarra/REAPER Media" "$HOME/Documents/REAPER Media"
+[ "$office" == "true" ] && packages+=" libreoffice"
+[ "$latex"  == "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 }
 
 # Elegimos distribución de teclado
@@ -380,32 +451,9 @@ sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 
 # Escogemos que drivers de video instalar
 driver_choose
-# Elegir si instalar virt-manager
-virt_choose
 
-# Preguntamos que software-adicional queremos instalar
-whip_yes "Musica" "¿Deseas instalar software para manejar tu colección de música?" && \
-packages+=" easytag picard flacon cuetools"
-#
-whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
-packages+=" discord forkgram-bin"
-#
-whip_yes "Steam" "¿Deseas instalar Steam?" && \
-packages+=" steam protonup-qt-bin"
-#
-if whip_yes "DAW" "¿Deseas instalar herramientas de producción musical?"; then
-	packages+=" tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt"
-	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
-	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
-	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
-	ln -s "$HOME/Documents/Guitarra/REAPER Media" "$HOME/Documents/REAPER Media"
-fi
-#
-whip_yes "Oficina" "¿Deseas instalar software de ofimática?" && \
-packages+=" libreoffice"
-#
-whip_yes "laTeX" "¿Deseas instalar laTeX?" && \
-packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
+# Elegimos que paquetes instalar
+packages_choose
 
 # Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
 # Instalamos pipewire antes de nada, porque si no tendremos conflictos
