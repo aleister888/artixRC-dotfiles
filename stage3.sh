@@ -513,5 +513,9 @@ doas usermod -aG storage,input,users $USER
 [ -e /sys/class/power_supply/BAT0 ] && \
 doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
 
+# Crear directorio para montar dispositivos android
+doas mkdir /mnt/ANDROID
+doas chown $USER /mnt/ANDROID
+
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && virt_conf

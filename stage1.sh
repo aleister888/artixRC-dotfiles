@@ -107,7 +107,7 @@ scheme_show(){
 	scheme+="
 Aceptar los cambios borrará el contenido de todos los discos mostrados"
 	# Mostramos el esquema para confirmar los cambios
-	whiptail --title "Confirmar particionado" --yesno "$scheme" 15 60 ||
+	whiptail --title "Confirmar particionado" --yesno "$scheme" 15 60 || \
 	script_exit
 }
 
