@@ -5,7 +5,6 @@ alias wget='wget --hsts-file="$XDG_CONFIG_HOME"/wget-hsts'
 alias yarn='yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config'
 alias gpg2='gpg2 --homedir "$XDG_DATA_HOME"/gnupg'
 alias svn='svn --config-dir $XDG_CONFIG_HOME/subversion'
-alias monerod='monerod --data-dir "$XDG_DATA_HOME"/bitmonero'
 
 # Alias de comandos básicos
 alias v='nvim'
