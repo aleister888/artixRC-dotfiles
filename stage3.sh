@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -15,6 +15,13 @@ pacinstall() {
 
 yayinstall() {
 	yay -Sy --noconfirm --needed "$@"
+}
+
+whip_menu(){
+	local TITLE=$1
+	local MENU=$2
+	shift 2
+	whiptail --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 
 service_add(){
@@ -56,8 +63,8 @@ driver_choose(){
 	# Opciones posibles
 	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM" "optimus" "Portátil")
 	# Elegimos nuestra tarjeta gráfica
-	graphic_driver=$(whiptail --title "Selecciona tu tarjeta gráfica" --menu "Elige una opción:" 15 60 5 \
-	${driver_options[@]} 3>&1 1>&2 2>&3)
+	graphic_driver=$(whip_menu "Selecciona tu tarjeta gráfica" "Elige una opción:" \
+	${driver_options[@]})
 	case $graphic_driver in
 	amd)
 		packages+=" xf86-video-amdgpu libva-mesa-driver lib32-vulkan-radeon" ;;
@@ -88,8 +95,8 @@ kb_layout_select(){
 	for key_layout in $key_layouts; do
 		keyboard_array+=("$key_layout" "$key_layout")
 	done
-	final_layout=$(whiptail --title "Teclado" --menu "Por favor, elige una distribución de teclado:" \
-	20 70 10 ${keyboard_array[@]} 3>&1 1>&2 2>&3)
+	final_layout=$(whip_menu "Teclado" "Por favor, elige una distribución de teclado:" \
+	${keyboard_array[@]})
 }
 
 kb_layout_conf(){
@@ -112,10 +119,10 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 xresources_make(){
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
-	resolution=$(whiptail --title "Resolución del Monitor" --menu "Seleccione la resolución de su monitor:" \
-	15 60 4 "720p" "" "1080p" "" "1440p" "" "4K" "" 3>&1 1>&2 2>&3)
-	size=$(whiptail --title "Tamaño del Monitor" --menu "Seleccione el tamaño de su monitor (en pulgadas):" \
-	15 60 5 "14" "" "15.6" "" "17" "" "24" "" "27" "" 3>&1 1>&2 2>&3)
+	resolution=$(whip_menu "Resolución del Monitor" "Seleccione la resolución de su monitor:" \
+	"720p" "" "1080p" "" "1440p" "" "4K" "")
+	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
+	"14" "" "15.6" "" "17" "" "24" "" "27" "")
 	case $resolution in
 		"720p")
 			width=1280 height=720 ;;
