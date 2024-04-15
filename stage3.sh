@@ -191,9 +191,9 @@ xresources_make(){
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
 	resolution=$(whip_menu "Resolución del Monitor" "Seleccione la resolución de su monitor:" \
-	"720p" "" "1080p" "" "1440p" "" "4K" "")
+	"720p" "720p" "1080p" "1080p" "1440p" "1440p" "4K" "4K")
 	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
-	"14" "" "15.6" "" "17" "" "24" "" "27" "")
+	"14" "14" "15.6" "15.6" "17" "17" "24" "24" "27" "27")
 	case $resolution in
 		"720p")
 			width=1280 height=720 ;;
