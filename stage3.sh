@@ -81,12 +81,12 @@ driver_choose(){
 packages_show(){
 	local scheme # Variable con la lista de paquetes a instalar
 	scheme="Se instalarán:\n"
-[ "$virt"   == "true" ] && scheme+="Virt-Manager\n"
-[ "$music"  == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
-[ "$music"  == "true" ] && scheme+="Telegram Discord\n"
-[ "$daw"    == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
-[ "$office" == "true" ] && scheme+="Libreoffice\n"
-[ "$latex"  == "true" ] && scheme+="TeX-live\n"
+[ "$virt"      == "true" ] && scheme+="Virt-Manager\n"
+[ "$music"     == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
+[ "$noprivacy" == "true" ] && scheme+="Telegram Discord\n"
+[ "$daw"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
+[ "$office"    == "true" ] && scheme+="Libreoffice\n"
+[ "$latex"     == "true" ] && scheme+="TeX-live\n"
 	whiptail --title "Confirmar paquetes" --yesno "$scheme" 15 60 
 }
 
@@ -143,18 +143,18 @@ while [ "$packages_confirm" == "false" ]; do
 	fi
 done
 
-[ "$virt"   == "true" ] && \
+[ "$virt"      == "true" ] && \
 packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq" && isvirt="true"
-[ "$music"  == "true" ] && packages+=" easytag picard flacon cuetools"
-[ "$music"  == "true" ] && packages+=" discord forkgram-bin"
-[ "$daw"    == "true" ] && \
+[ "$music"     == "true" ] && packages+=" easytag picard flacon cuetools"
+[ "$noprivacy" == "true" ] && packages+=" discord forkgram-bin"
+[ "$daw"       == "true" ] && \
 packages+=" tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
 	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
 	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
 	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
 	ln -s "$HOME/Documents/Guitarra/REAPER Media" "$HOME/Documents/REAPER Media"
-[ "$office" == "true" ] && packages+=" libreoffice"
-[ "$latex"  == "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
+[ "$office"    == "true" ] && packages+=" libreoffice"
+[ "$latex"     == "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 }
 
 # Elegimos distribución de teclado
