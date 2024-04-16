@@ -272,10 +272,9 @@ makeuserjs(){
 	overrides="$pdir/user-overrides.js"
 	userjs="$pdir/user.js"
 	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
-	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" | \
-	tee "$arkenfox"
+	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
 	cat "$arkenfox" "$overrides" | tee "$userjs"
-	doas chown "$USER:wheel" "$arkenfox" "$userjs"
+	doas chown "$USER" "$arkenfox" "$userjs"
 	# Install the updating script.
 	doas mkdir -p /usr/local/lib /etc/pacman.d/hooks
 	doas install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
