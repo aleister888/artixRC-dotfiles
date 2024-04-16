@@ -41,7 +41,7 @@ packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc"
 # Documentos
 packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
-packages+=" firefox-arkenfox-autoconfig firefox thunderbird thunderbird-dark-reader ca-certificates ca-certificates-mozilla"
+packages+=" firefox thunderbird thunderbird-dark-reader ca-certificates ca-certificates-mozilla"
 # Multimedia
 packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv tauon-music-box mediainfo feh vlc pavucontrol gimp sxiv nsxiv"
 # Herramientas de terminal
@@ -266,6 +266,33 @@ installffaddons(){
 	done
 	chown -R "$USER:$USER" "$pdir/extensions"
 }
+makeuserjs(){
+	# Get the Arkenfox user.js and prepare it.
+	arkenfox="$pdir/arkenfox.js"
+	overrides="$pdir/user-overrides.js"
+	userjs="$pdir/user.js"
+	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
+	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" | \
+	tee "$arkenfox"
+	cat "$arkenfox" "$overrides" | tee "$userjs"
+	doas chown "$USER:wheel" "$arkenfox" "$userjs"
+	# Install the updating script.
+	doas mkdir -p /usr/local/lib /etc/pacman.d/hooks
+	doas install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
+	# Trigger the update when needed via a pacman hook.
+	echo "[Trigger]
+Operation = Upgrade
+Type = Package
+Target = firefox
+Target = librewolf
+Target = librewolf-bin
+[Action]
+Description=Update Arkenfox user.js
+When=PostTransaction
+Depends=arkenfox-user.js
+Exec=/usr/local/lib/arkenfox-auto-update" | doas tee /etc/pacman.d/hooks/arkenfox.hook
+}
+}
 firefox_configure(){
 	browserdir="/home/$USER/.mozilla/firefox"
 	profilesini="$browserdir/profiles.ini"
@@ -273,6 +300,7 @@ firefox_configure(){
 	sleep 1
 	profile="$(grep "Default=.." "$profilesini" | sed 's/Default=//')"
 	pdir="$browserdir/$profile"
+	[ -d "$pdir" ] && makeuserjs
 	[ -d "$pdir" ] && installffaddons
 	killall firefox
 }
