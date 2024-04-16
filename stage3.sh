@@ -41,7 +41,7 @@ packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc"
 # Documentos
 packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
-packages+=" firefox thunderbird thunderbird-dark-reader ca-certificates ca-certificates-mozilla"
+packages+=" arkenfox-user.js firefox thunderbird thunderbird-dark-reader ca-certificates ca-certificates-mozilla"
 # Multimedia
 packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv tauon-music-box mediainfo feh vlc pavucontrol gimp sxiv nsxiv"
 # Herramientas de terminal
