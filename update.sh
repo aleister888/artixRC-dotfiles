@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Auto-instalador para Artix OpenRC (Actualizar Ajustes)
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
 #######################################
 # Archivos de configuración y scripts #
 #######################################

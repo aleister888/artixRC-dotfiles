@@ -21,3 +21,6 @@ user_pref("privacy.clearOnShutdown.cookies", false);
 
 // Arreglar problemas con algunos logins
 user_pref("network.http.referer.XOriginPolicy", 0);
+
+// Mostrar siempre los marcadores
+user_pref("browser.toolbars.bookmarks.visibility", "always");

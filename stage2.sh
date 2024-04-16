@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Auto-instalador para Artix OpenRC (Parte 2)
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
 # Funciones que invocaremos a menudo
 whip_msg(){
 	whiptail --title "$1" --msgbox "$2" 10 60

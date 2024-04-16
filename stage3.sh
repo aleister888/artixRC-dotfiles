@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Auto-instalador para Artix OpenRC (Parte 3)
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
 # Funciones que invocaremos a menudo
 whip_msg(){
 	whiptail --title "$1" --msgbox "$2" 10 60
@@ -244,7 +248,8 @@ fontdownload() {
 
 # Instalar nuestras extensiones de navegador
 # Código extraído de larbs.xyz/larbs.sh
-# Créditos para: <luke@lukesmith.xyz>
+# https://github.com/LukeSmithxyz/voidrice
+# Créditos para: Luke Smith <luke@lukesmith.xyz>
 installffaddons(){
 	addonlist="ublock-origin istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser video-downloadhelper clearurls"
 	addontmp="$(mktemp -d)"

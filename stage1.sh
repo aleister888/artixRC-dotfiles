@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Auto-instalador para Artix OpenRC (Parte 1)
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
 # Instalar whiptail y parted
 pacman -Sy --noconfirm --needed parted libnewt xfsprogs
 

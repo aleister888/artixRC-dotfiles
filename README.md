@@ -63,10 +63,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Configurar automáticamente Firefox con user-overrides.js
-    - _DuckDuckGO como buscador predeterminado_
-    - _Desactivar el baúl de contraseñas, cuentas de Mozilla y Pocket_
-    - _Añadir buscadores que usan OpenSearch (Arch Wiki, Github, ...)_
-    - _Activar extensiones instaladas_
+    - _Desactivar el baúl de contraseñas_
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
 
