@@ -292,7 +292,6 @@ When=PostTransaction
 Depends=arkenfox-user.js
 Exec=/usr/local/lib/arkenfox-auto-update" | doas tee /etc/pacman.d/hooks/arkenfox.hook
 }
-}
 firefox_configure(){
 	browserdir="/home/$USER/.mozilla/firefox"
 	profilesini="$browserdir/profiles.ini"
