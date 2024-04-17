@@ -192,6 +192,7 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make(){
+	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
 	resolution=$(whip_menu "Resolución del Monitor" "Seleccione la resolución de su monitor:" \
