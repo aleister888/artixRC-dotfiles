@@ -1,11 +1,14 @@
 #!/bin/bash
 
 battery(){
-local battery_level=$(cat /sys/class/power_supply/BAT0/capacity)
-local icon_seq='^d^^c#98971a^'
-local level_seq='^c#b8bb26^'
+battery_level=$(cat /sys/class/power_supply/BAT$1/capacity)
+if [ $1 == 0 ]; then
+	icon_seq='^f10^^d^^c#A79983^'
+else
+	icon_seq='^c#928374^'
+fi
 
-if [ "$(cat /sys/class/power_supply/BAT0/status)" = "Charging" ]; then
+if [ "$(cat /sys/class/power_supply/BAT$1/status)" = "Charging" ]; then
 	baticon=""
 else
 	case $battery_level in
@@ -24,9 +27,8 @@ else
 	esac
 fi
 
-echo " $icon_seq$baticon $level_seq$battery_level%"
+echo " $icon_seq$baticon $battery_level%"
 }
 
-if [ -e /sys/class/power_supply/BAT0 ]; then
-	battery
-fi
+echo  $([ -e /sys/class/power_supply/BAT0 ] && battery 0
+[ -e /sys/class/power_supply/BAT1 ] && battery 1)
