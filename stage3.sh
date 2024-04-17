@@ -75,7 +75,7 @@ driver_choose(){
 	nvidia)
 		packages+=" dkms nvidia-dkms nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
 	intel)
-		packages="$package xf86-video-intel libva-intel-driver lib32-vulkan-intel" ;;
+		packages+=" xf86-video-intel libva-intel-driver lib32-vulkan-intel" ;;
 	virtual)
 		packages+=" xf86-video-vmware xf86-input-vmmouse vulkan-virtio lib32-vulkan-virtio" ;;
 	esac
