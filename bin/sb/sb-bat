@@ -2,6 +2,7 @@
 
 battery(){
 battery_level=$(cat /sys/class/power_supply/BAT$1/capacity)
+local baticon
 if [ $1 == 0 ]; then
 	icon_seq='^f10^^d^^c#689D6A^'
 else
@@ -9,25 +10,27 @@ else
 fi
 
 if [ "$(cat /sys/class/power_supply/BAT$1/status)" = "Charging" ]; then
-	baticon=""
+	baticon=" "
 else
-	case $battery_level in
-		[0-9])
-			baticon="" ;;
-		[0-1][0-9])
-			baticon="" ;;
-		[2-3][0-9])
-			baticon="" ;;
-		[4-5][0-9])
-			baticon="" ;;
-		[6-7][0-9])
-			baticon="" ;;
-		*)
-			baticon="" ;;
-	esac
+	if [ $1 == 0 ]; then
+		case $battery_level in
+			[0-9])
+				baticon=" " ;;
+			[0-1][0-9])
+				baticon=" " ;;
+			[2-3][0-9])
+				baticon=" " ;;
+			[4-5][0-9])
+				baticon=" " ;;
+			[6-7][0-9])
+				baticon=" " ;;
+			*)
+				baticon=" " ;;
+		esac
+	fi
 fi
 
-echo " $icon_seq$baticon $battery_level%"
+echo " $icon_seq$baticon$battery_level%"
 }
 
 echo  $([ -e /sys/class/power_supply/BAT0 ] && battery 0
