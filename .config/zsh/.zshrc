@@ -61,7 +61,7 @@ bindkey "^[[1;5D" backward-word
 
 # Funcion para imprimir la dirección IP local en el prompt
 function get_local_ip {
-	adress=$(ip addr show | grep inet | grep -v 127.0.0.1 | awk '{print $2}' | grep -oE '[0-9]*\.168\.[0-9]*\.[0-9]*' | head -1)
+	adress=$(ip addr show | grep inet | grep -v 127.0.0.1 | awk '{print $2}' | grep -oE '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*' | head -1)
 	if [ ! -z $adress ]; then
 		echo $adress
 	else

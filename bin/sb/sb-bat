@@ -3,9 +3,9 @@
 battery(){
 battery_level=$(cat /sys/class/power_supply/BAT$1/capacity)
 if [ $1 == 0 ]; then
-	icon_seq='^f10^^d^^c#A79983^'
+	icon_seq='^f10^^d^^c#689D6A^'
 else
-	icon_seq='^c#928374^'
+	icon_seq='^c#689D6A^'
 fi
 
 if [ "$(cat /sys/class/power_supply/BAT$1/status)" = "Charging" ]; then
