@@ -609,3 +609,6 @@ doas chown $USER /mnt/ANDROID
 [ "$isvirt" == "true" ] && virt_conf
 
 doas install -m 755 "$HOME/.dotfiles/assets/configs/nm-restart" /lib/elogind/system-sleep/nm-restart
+
+# Install mfc42
+WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
