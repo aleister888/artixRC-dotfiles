@@ -55,7 +55,7 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom 
 # Aplicaciones GUI
 packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
 # Misc
-packages+=" syncthing wine-staging wine-mono wine-gecko winetricks fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv"
+packages+=" syncthing wine-staging wine-mono wine-gecko winetricks fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -572,6 +572,7 @@ doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/
 # Activar servicios
 service_add irqbalance
 service_add syslog-ng
+service_add elogind
 service_add xdm
 
 doas rfkill unblock wifi
