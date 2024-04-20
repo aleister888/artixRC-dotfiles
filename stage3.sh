@@ -606,3 +606,5 @@ doas chown $USER /mnt/ANDROID
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && virt_conf
+
+doas install -m 755 "$HOME/.dotfiles/assets/configs/nm-restart" /lib/elogind/system-sleep/nm-restart
