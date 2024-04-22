@@ -19,8 +19,7 @@
 
 % Colores
 \usepackage{xcolor}
-\definecolor{myorange}{RGB}{214,93,14}
-\definecolor{myblue}{RGB}{0,102,204}
+\definecolor{myblue}{RGB}{45,174,211}
 
 % Encabezado y pie de página
 \usepackage{fancyhdr}
@@ -34,19 +33,19 @@
 % Títulos de sección
 \usepackage{titlesec}
 \titleformat{\section}
-	{\normalfont\Large\bfseries\color{myorange}}
+	{\normalfont\Large\bfseries\color{myblue}}
 	{\thesection}{1em}{}
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
 % Notas de colores
 \usepackage{tcolorbox}
 \tcbuselibrary{skins}
-\newtcolorbox{mybox}[1]{colback=myorange!5!white,colframe=myorange!75!black,fonttitle=\bfseries,title=#1}
+\newtcolorbox{mybox}[1]{colback=myblue!5!white,colframe=myblue!75!black,fonttitle=\bfseries,title=#1}
 
 % Enlaces clicables
-\usepackage[colorlinks=true, linkcolor=myorange, urlcolor=myorange]{hyperref}
+\usepackage[colorlinks=true, linkcolor=myblue, urlcolor=myblue]{hyperref}
 
-\title{\textcolor{myorange}{\bfseries Configuración de Artix OpenRC}} % Título del documento
+\title{\textcolor{myblue}{\bfseries Configuración de Artix OpenRC}} % Título del documento
 \date{\today} % Fecha actual
 \author{aleister888}
 
@@ -59,7 +58,7 @@
 Este documento pretende ser una guía para terminar de configurar nuestra instalación de Artix, pues hay cosas que no son factibles auto-configurar. Así como puede ser una ayuda para terceros que se han animado a usar mi instalador y que ahora se encuentran ante la tarea de aprender a usar un entorno de trabajo que no es el suyo.
 
 \begin{mybox}{Nota}
-Cualquier texto que veas coloreado en naranja es un hiper-vínculo \emph{(exceptuando los títulos)}, si haces doble clic en él, te llevará a la página web a la que hace referencia o a una donde se explica de que estoy hablando.
+Cualquier texto que veas coloreado en azul es un hiper-vínculo \emph{(exceptuando los títulos)}, si haces doble clic en él, te llevará a la página web a la que hace referencia o a una donde se explica de que estoy hablando.
 \end{mybox}
 
 \section{Atajos de teclado}

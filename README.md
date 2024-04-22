@@ -11,7 +11,7 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 
 # Instalación
 
-- Ejecuta el script con:
+- Ejecuta como root:
 
 ```
 curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh
