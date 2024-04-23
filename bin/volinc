@@ -10,7 +10,7 @@ new=$((current + increment))
 
 # Verificar si el nuevo volumen supera el máximo
 if [ $new -gt 100 ]; then
-	exit
+	new=100
 fi
 
 # Establecer el nuevo volumen
