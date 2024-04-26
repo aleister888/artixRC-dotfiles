@@ -33,7 +33,7 @@ service_add(){
 }
 
 # Paquetes
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-btrfs"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
