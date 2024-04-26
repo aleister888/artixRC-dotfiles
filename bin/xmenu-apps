@@ -46,7 +46,7 @@ IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
 	IMG:$ICONPATH/apps/telegram.svg					Telegram	pw-links telegram
 
 IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
-	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar		tuxguitar
+	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar		tuxguitar-bin
 	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER			reaper
 	IMG:$ICONPATH/apps/metronome.svg				Metronome		gmetronome
 	IMG:$ICONPATH/apps/gimp.svg					GIMP			gimp

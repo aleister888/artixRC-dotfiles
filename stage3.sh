@@ -152,7 +152,7 @@ packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmas
 [ "$music"     == "true" ] && packages+=" easytag picard flacon cuetools"
 [ "$noprivacy" == "true" ] && packages+=" discord forkgram-bin"
 [ "$daw"       == "true" ] && \
-packages+=" tuxguitar reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
+packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
 	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
 	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
 	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
