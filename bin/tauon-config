@@ -30,12 +30,7 @@ sed -i 's/auto-search-lyrics = false/auto-search-lyrics = true/g' "$CONF"
 # Desactivar el recordar la posición para hacer la aplicación mas amigable con DWM
 sed -i 's/restore-window-position = true/restore-window-position = false/g' "$CONF"
 
-# Cambiar el Tema
-if [ "$1" == "light" ]; then
-	sed -i 's/theme-name = ".*"/theme-name = "aleister-light"/g' "$CONF"
-else
-	sed -i 's/theme-name = ".*"/theme-name = "aleister-gruvbox"/g' "$CONF"
-fi
+sed -i 's/theme-name = ".*"/theme-name = "aleister-gruvbox"/g' "$CONF"
 
 # Cambiar las fuentes usadas
 sed -i 's/use-custom-fonts = false/use-custom-fonts = true/g' "$CONF"

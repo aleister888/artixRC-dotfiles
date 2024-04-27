@@ -190,21 +190,6 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	fi
 }
 
-# Elegir entorno de escritorio
-desktop_choose(){
-	# Opciones posibles
-	desktop_options=("dwm" "dwm" "kde" "kde" "gnome" "gnome")
-	# Elegimos nuestra tarjeta gráfica
-	desktop=$(whip_menu "Entorno de escritorio" "Elige tu entorno de escritorio:" \
-	${desktop_options[@]})
-	case $desktop in
-	kde)
-		packages+=" plasma-meta sddm sddm-openrc dolphin konsole" ;;
-	gnome)
-		packages+=" gnome gdm gdm-openrc " ;;
-	esac
-}
-
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make(){
 	mkdir -p "$HOME/.config"
@@ -446,7 +431,6 @@ scripts_link(){
 		"wake"
 		"wakeme"
 		"compressed-backup"
-		"pipewire-start"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
@@ -512,10 +496,8 @@ pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-ja
 kb_layout_select
 kb_layout_conf
 
-desktop_choose
-
 # Calcular el DPI de nuestra pantalla y configurar Xresources
-[ "$desktop" == "dwm" ] && xresources_make
+xresources_make
 
 # A partir de aquí no se necesita interacción del usuario
 whip_msg "Tiempo de espera" "La instalación va a terminarse, esto tomará unos 20min aprox. (Depende de la velocidad de tu conexión a Internet)"
@@ -544,25 +526,22 @@ vim_configure
 mkdir -p "$HOME/.config"
 dotfiles_install
 
+# Configuramos Tauon Music Box (Nuestro reproductor de música)
+"$HOME/.dotfiles/bin/tauon-config"
 # Instalamos dwm y otras utilidades
 suckless_install
 # Creamos nuestro xinitrc
 doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-
-# Configurar la apariencia del sistema (Sólo para dwm)
-if [ "$desktop" == "dwm" ]; then
-	# Configurar nuestro tema de QT
-	qt_config
-	# Configurar nuestro tema de GTK
-	gtk_config
-	# Configurar el fondo de pantalla
-	nitrogen_configure
-	# Configurar el tema del cursor
-	cursor_configure
-	# Configurar keepassxc para que siga el tema de QT
-	keepass_configure
-fi
-
+# Configurar nuestro tema de QT
+qt_config
+# Configurar nuestro tema de GTK
+gtk_config
+# Configurar el fondo de pantalla
+nitrogen_configure
+# Configurar el tema del cursor
+cursor_configure
+# Configurar keepassxc para que siga el tema de QT
+keepass_configure
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link
 # Crear el directorio /.Trash con permisos adecuados
@@ -579,8 +558,7 @@ audio_setup
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 # Crear directorios
-[ "$desktop" == "dwm" ] && \
-	for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
+for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
 
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
@@ -595,24 +573,7 @@ doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/
 service_add irqbalance
 service_add syslog-ng
 service_add elogind
-
-# Activar pantalla de incio y otras configuraciones
-if [ "$desktop" == "dwm" ]; then
-	service_add xdm
-	# Configuramos Tauon Music Box (Nuestro reproductor de música)
-	"$HOME/.dotfiles/bin/tauon-config"
-else
-	# Iniciar el servidor de audio al iniciar el Entorno de Escritorio
-	ln -s "$HOME/.dotfiles/assets/configs/pipewire.desktop" \
-	"$HOME/.config/autostart/pipewire.desktop"
-	# Configuramos Tauon Music Box (Nuestro reproductor de música)
-	"$HOME/.dotfiles/bin/tauon-config" light
-	if [ "$desktop" == "kde" ]; then
-		service_add sddm
-	elif [ "$desktop" == "gnome" ]; then
-		service_add gdm
-	fi
-fi
+service_add xdm
 
 doas rfkill unblock wifi
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
@@ -640,9 +601,9 @@ doas usermod -aG storage,input,users $USER
 [ -e /sys/class/power_supply/BAT0 ] && \
 doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
 
-# Crear directorio para montar dispositivos android (Sólo para dwm)
-[ "$desktop" == "dwm" ] && doas mkdir /mnt/ANDROID
-[ "$desktop" == "dwm" ] && doas chown $USER /mnt/ANDROID
+# Crear directorio para montar dispositivos android
+doas mkdir /mnt/ANDROID
+doas chown $USER /mnt/ANDROID
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && virt_conf
