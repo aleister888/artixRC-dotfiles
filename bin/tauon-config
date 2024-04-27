@@ -31,9 +31,13 @@ sed -i 's/auto-search-lyrics = false/auto-search-lyrics = true/g' "$CONF"
 sed -i 's/restore-window-position = true/restore-window-position = false/g' "$CONF"
 
 # Cambiar el Tema
-sed -i 's/theme-name = ".*"/theme-name = "aleister-gruvbox"/g' "$CONF"
+if [ "$1" == "light" ]; then
+	sed -i 's/theme-name = ".*"/theme-name = "aleister-light"/g' "$CONF"
+else
+	sed -i 's/theme-name = ".*"/theme-name = "aleister-gruvbox"/g' "$CONF"
+fi
 
-# Ccambiar las fuentes usadas
+# Cambiar las fuentes usadas
 sed -i 's/use-custom-fonts = false/use-custom-fonts = true/g' "$CONF"
 sed -i 's/font-main-standard = ".*"/font-main-standard = "Iosevka Nerd Font"/g' "$CONF"
 sed -i 's/font-main-medium = ".*"/font-main-medium = "Iosevka Nerd Font Medium"/g' "$CONF"

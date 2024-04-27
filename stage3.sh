@@ -199,7 +199,7 @@ desktop_choose(){
 	${desktop_options[@]})
 	case $desktop in
 	kde)
-		packages+=" plasma-meta sddm-kcm sddm sddm-openrc" ;;
+		packages+=" plasma-meta sddm sddm-openrc dolphin konsole" ;;
 	gnome)
 		packages+=" gnome gdm gdm-openrc " ;;
 	esac
@@ -446,6 +446,7 @@ scripts_link(){
 		"wake"
 		"wakeme"
 		"compressed-backup"
+		"pipewire-start"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
@@ -543,8 +544,6 @@ vim_configure
 mkdir -p "$HOME/.config"
 dotfiles_install
 
-# Configuramos Tauon Music Box (Nuestro reproductor de música)
-"$HOME/.dotfiles/bin/tauon-config"
 # Instalamos dwm y otras utilidades
 suckless_install
 # Creamos nuestro xinitrc
@@ -596,13 +595,23 @@ doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/
 service_add irqbalance
 service_add syslog-ng
 service_add elogind
-# Activar pantalla de incio
+
+# Activar pantalla de incio y otras configuraciones
 if [ "$desktop" == "dwm" ]; then
 	service_add xdm
-elif [ "$desktop" == "kde" ]; then
-	service_add sddm
-elif [ "$desktop" == "gnome" ]; then
-	service_add gdm
+	# Configuramos Tauon Music Box (Nuestro reproductor de música)
+	"$HOME/.dotfiles/bin/tauon-config"
+else
+	# Iniciar el servidor de audio al iniciar el Entorno de Escritorio
+	ln -s "$HOME/.dotfiles/assets/configs/pipewire.desktop" \
+	"$HOME/.config/autostart/pipewire.desktop"
+	# Configuramos Tauon Music Box (Nuestro reproductor de música)
+	"$HOME/.dotfiles/bin/tauon-config" light
+	if [ "$desktop" == "kde" ]; then
+		service_add sddm
+	elif [ "$desktop" == "gnome" ]; then
+		service_add gdm
+	fi
 fi
 
 doas rfkill unblock wifi
