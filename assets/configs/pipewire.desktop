@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Pipewire Server
-Exec=pipewire-start
-Terminal=false
-Type=Application
