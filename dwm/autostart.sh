@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Auto-instalador para Artix OpenRC
+# (Script Iniciador del entorno de escritorio)
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
 nitrogen --restore
 
 . "$XDG_CONFIG_HOME/zsh/.zprofile"
@@ -69,7 +74,7 @@ virtualmic(){
 	else
 		# En caso contrario, intentar crear el sink cada 5 segundos durante un máximo de 12 intentos
 		while [ $counter -lt 6 ]; do
-			# Verificar si WirePlumber está en ejecución
+			# Verificar si Wireplumber está en ejecución
 			if pgrep wireplumber; then
 				~/.local/bin/pipewire-virtualmic &
 			fi
@@ -97,42 +102,55 @@ picomstart(){
 if [ "$(pgrep -c dbus)" -lt 5 ]; then
 	export "$(dbus-launch)" && dbus-update-activation-environment --all &
 fi
-# Disable screen diming
+# Desactivar el atenuado de la pantalla
 xset -dpms && xset s off &
 
-# Read Xresources
+# Leer la configuración Xresources
 [ -f "$XDG_CONFIG_HOME"/Xresources ] && xrdb -merge "$XDG_CONFIG_HOME/Xresources"
 
 # Pipewire
 pgrep pipewire || pipewire-start &
 
-# Wallpaper
+# Iniciar el compositor (Solo en hardware real. Desactivar para máquinas virtuales)
+cat /sys/devices/virtual/dmi/id/product_name | grep "Q35\|VMware" || \
+pgrep picom || picomstart &
+
+# Servicios del sistema
 dbus-update-activation-environment --all
 pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
+# Auto-montador de discos
 pgrep udiskie		|| udiskie -t -a &
-cat /sys/devices/virtual/dmi/id/product_name | grep "Q35\|VMware" || \
-pgrep picom		|| picomstart &
+# Barra de estado
 pgrep dwmblocks		|| dwmblocks &
-[ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
-pgrep dunst		|| dunst &
+# Applet de red
 pgrep nm-applet		|| nm-applet &
+
 # Si se detecta una tarjeta bluetooth se inicia blueman-applet
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	pgrep blueman-applet || blueman-applet &
 fi
 
-# Correct microphone level in ASUS laptops
-host=$(cat /sys/devices/virtual/dmi/id/product_name)
-if echo $host | grep "ASUS TUF Dash F15"; then
-	mic=$(pactl list short sources | grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | awk '{print $1}')
-	pactl set-source-volume $mic 20%
+# Corregir el nivel del micrófono en portátiles
+if [ -e /sys/class/power_supply/BAT0 ]; then
+	mic=$(pactl list short sources | \
+	grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | \
+	awk '{print $1}')
+	pactl set-source-volume $mic 25%
 fi
 
-# Wait for wireplumber to start to add virtual mic (For sharing apps audio).
+# Servicio de notificaciones
+pgrep dunst || dunst &
+
+# Esperar a que se incie wireplumber para activar el micrófono virtual
+# (Para compartir el audio de las aplicaciones através del micrófono)
 virtualmic &
 ewwspawn &
 
+# Servidor VNC Local (Excluir portátiles)
+[ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
+
+# Borrar el archivo ~/.xsession-errors
 if [ "$HOME/.xsession-errors" ]; then
 	mkdir -p "$HOME/.cache"
 	mv "$HOME/.xsession-errors" "$HOME/.cache/xerror"

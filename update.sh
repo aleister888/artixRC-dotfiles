@@ -4,6 +4,8 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+find $HOME/ -type d -exec chmod 700 {} +
+
 #######################################
 # Archivos de configuración y scripts #
 #######################################
