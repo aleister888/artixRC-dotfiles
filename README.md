@@ -51,9 +51,8 @@ Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobre
 
 `El mejor balance entre eficiencia y seguridad viene de llenar la partición ya encriptada con ceros, y el cipher se encargará de llenar /dev/mapper/ejemplo de información aleatoria [1]`
 
-[1] https://wiki.archlinux.org/title/Dm-crypt/Drive_preparation
-
-[2] https://unix.stackexchange.com/questions/403174/why-do-you-need-to-clean-free-space-before-creating-a-luks-partition
+- [1] https://wiki.archlinux.org/title/Dm-crypt/Drive_preparation
+- [2] https://unix.stackexchange.com/questions/403174/why-do-you-need-to-clean-free-space-before-creating-a-luks-partition
 
 # Restaurar partición /home encriptada
 
