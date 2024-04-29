@@ -161,7 +161,6 @@ pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/
 [ -d "$HOME/.gnupg" ]		&& mv -f "$HOME/.gnupg" "$HOME/.local/share/gnupg"
 [ -d "$HOME/.java" ]		&& mv -f "$HOME/.java" "$HOME/.config/java"
 [ -d "$HOME/.cargo" ]		&& mv -f "$HOME/.cargo" "$HOME/.local/share/cargo"
-#[ -f "$HOME/.xsession-errors" ]	&& mv -f "$HOME/.xsession-errors" "$HOME/.cache/xsession-errors"
 
 [ -f "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"
 
