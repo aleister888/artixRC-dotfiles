@@ -431,6 +431,7 @@ scripts_link(){
 		"wake"
 		"wakeme"
 		"compressed-backup"
+		"crypt-backup"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
