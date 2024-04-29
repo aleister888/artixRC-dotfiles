@@ -30,6 +30,8 @@ chmod +x stage1.sh && ./stage1.sh
 - Soporte para `BIOS` y `UEFI`
 - Configuración de `Xorg` y `eww` automática, basada en el DPI y resolución de la pantalla.
     - _Además; dwm, st y dmenu se compilan con el tamaño de fuente recomendado_
+- Entorno configurado para minimizar el número de archivos en `~/` 
+    - https://wiki.archlinux.org/title/XDG_Base_Directory
 
 # Atención!
 
