@@ -82,6 +82,17 @@ virtualmic(){
 	exit 0
 }
 
+picomstart(){
+	PICOMOPTS="-c -f --vsync --config=$HOME/.config/picom/picom.conf --corner-radius"
+	if [[ $resolution -le 1080 ]]; then
+		picom $PICOMOPTS 12
+	elif [[ $resolution -le 1440 ]]; then
+		picom $PICOMOPTS 18
+	else
+		picom $PICOMOPTS 24
+	fi
+}
+
 # Dbus
 if [ "$(pgrep -c dbus)" -lt 5 ]; then
 	export "$(dbus-launch)" && dbus-update-activation-environment --all &
@@ -101,7 +112,7 @@ pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a &
 cat /sys/devices/virtual/dmi/id/product_name | grep "Q35\|VMware" || \
-pgrep picom || picom -c -f --vsync --corner-radius 24 --config=$HOME/.config/picom/picom.conf &
+pgrep picom		|| picomstart &
 pgrep dwmblocks		|| dwmblocks &
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 pgrep dunst		|| dunst &
