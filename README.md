@@ -80,4 +80,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - Créditos a Luke Smith por sus scripts, que sirvieron de referncia y base para implementar algunas de las funciones de este autoinstalador. Y por su build de st.
 - [7] https://suckless.org
     - Créditos al equipo de suckless.org por todo el software suyo utilizado en este repositorio
-- [8] https://github.com/George-lewis/DVDBounce
+- [8] https://github.com/siduck/dotfiles
+    - Créditos a Sidhanth Rathod, de quien saque código para el widget de eww
+- [9] https://github.com/phillbush/xmenu
+- [10] https://github.com/George-lewis/DVDBounce
