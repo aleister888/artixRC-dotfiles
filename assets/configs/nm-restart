@@ -1,16 +1,10 @@
 #!/bin/sh
 
 case "$1" in
-	pre)
-		/usr/bin/rc-service libvirtd "stop"
-		/usr/bin/rc-service netmount "stop"
-		/usr/bin/rc-service nptd "stop"
-		/usr/bin/rc-service NetworkManager "stop"
-		;;
 	post)
-		/usr/bin/rc-service NetworkManager "start"
-		/usr/bin/rc-service nptd "start"
-		/usr/bin/rc-service netmount "start"
-		/usr/bin/rc-service libvirtd "start"
+		/usr/bin/rc-service NetworkManager "restart"
+		/usr/bin/rc-service nptd "restart"
+		/usr/bin/rc-service netmount "restart"
+		/usr/bin/rc-service libvirtd "restart"
 	;;
 esac
