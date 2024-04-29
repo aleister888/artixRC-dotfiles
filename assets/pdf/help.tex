@@ -272,18 +272,15 @@ Por ejemplo, añadir esta linea a nuestro \emph{/etc/crontab}:
 
 Nos crearía todos los miércoles a las 16:00 una copia de seguridad de la carpeta \emph{~/Música} en un archivo comprimido en \emph{/Resguardos/Música}
 
-\subsection{Copias de seguridad}
+\subsection{crypt-backup}
 
-Podemos usar el comando \emph{rsync} para cerar copias de seguridad tipo mirror de nuestro directorio /home en otro disco duro.
+Este script crea una copia de seguridad de nuestros archivos mas importantes, necesita como argumento el directorio donde esta montado el disco que albergara nuestra copia de seguridad.
 
-Por ejemplo, añadir esta línea a nuestro \emph{/etc/crontab}:
+El script solo se ejecutará si el directorio dado como argumento es el punto de montaje de un disco \emph{encriptado}. \emph{El script no se ejecutará si el disco no esta motado o no esta encriptado, pues en este se harán copias de la llave de encriptado de nuestra instalación.} Para hacer una copia periódicamente en \emph{/mnt/backup} debemos añadir una linea parecida a nuestro \emph{crontab}:
 
 \begin{verbatim}
-0 16 * * */2 usuario1 rsync -av --delete /home/$(whoami)/ /mnt/Mirror1
-0 16 * * */7 usuario1 rsync -av --delete /home/$(whoami)/ /mnt/Mirror2
+0 16 * * 3 usuario1 crypt-backup /mnt/backup
 \end{verbatim}
-
-Hará que se cree un mirror de nuestro directorio \emph{/home} en \emph{/mnt/Mirror1} cada 2 días y otro en \emph{/mnt/Mirror2} cada semana.
 
 \section{VFIO GPU passthrough}
 
