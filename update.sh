@@ -10,6 +10,8 @@
 
 [ ! -d "$HOME/.config" ] && mkdir -p "$HOME/.config"
 [ ! -d "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
+[ ! -d "$HOME/.local/share" ] && mkdir -p "$HOME/.local/share"
+[ ! -d "$HOME/.cache" ] && mkdir -p "$HOME/.cache"
 sh -c "cd $HOME/.dotfiles && stow --target="${HOME}/.local/bin/" bin/" >/dev/null
 sh -c "cd $HOME/.dotfiles && stow --target="${HOME}/.config/" .config/" >/dev/null
 ln -s $HOME/.dotfiles/.profile $HOME/ 2>/dev/null
@@ -180,19 +182,8 @@ if [ -e "$HOME/.gitconfig" ]; then
 	mv "$HOME/.gitconfig" "$HOME/.config/git/config"
 fi
 
-if [ -e "$HOME/.gnupg" ]; then
-	mkdir -p "$HOME/.local/share"
-	mv -fv "$HOME/.gnupg" "$HOME/.local/share/gnupg"
-fi
-
-if [ -e "$HOME/.java" ]; then
-	mkdir -p "$HOME/.config"
-	mv "$HOME/.java" "$HOME/.config/java"
-fi
-
-if [ -e "$HOME/.xsession-errors" ]; then
-	mkdir -p "$HOME/.cache"
-	mv "$HOME/.xsession-errors" "$HOME/.cache/xsession-errors"
-fi
-
+[ -e "$HOME/.gnupg" ] && mv -fv "$HOME/.gnupg" "$HOME/.local/share/gnupg"
+[ -e "$HOME/.java" ] && mv "$HOME/.java" "$HOME/.config/java"
+[ -e "$HOME/.xsession-errors" ] && mv "$HOME/.xsession-errors" "$HOME/.cache/xsession-errors"
+[ -e "$HOME/.cargo" ] && mv "$HOME/.cargo" "$HOME/.local/share/cargo"
 [ -e "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"
