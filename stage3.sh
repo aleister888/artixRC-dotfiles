@@ -33,7 +33,7 @@ service_add(){
 }
 
 # Paquetes
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-btrfs font-manager gnome-firmware"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-btrfs font-manager gnome-firmware glow"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -583,6 +583,7 @@ fi
 # Configurar xdm
 doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
 doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+echo 'DisplayManager.DISPLAY.userAuthDir:	/tmp' | doas tee -a /etc/X11/xdm/xdm-config
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
@@ -609,6 +610,11 @@ doas chown $USER /mnt/ANDROID
 [ "$isvirt" == "true" ] && virt_conf
 
 doas install -m 755 "$HOME/.dotfiles/assets/configs/nm-restart" /lib/elogind/system-sleep/nm-restart
+
+# Añadir entradas a /etc/environment
+echo 'CARGO_HOME="~/.local/share/cargo"
+GNUPGHOME="~/.local/share/gnupg"
+_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/environment
 
 # Install mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42

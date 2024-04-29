@@ -122,5 +122,11 @@ fi
 virtualmic &
 ewwspawn &
 
+[ -e "$HOME/.Xauthority-n" ] && rm "$HOME/.Xauthority-n"
+if [ "$HOME/.xsession-errors" ]; then
+	mkdir -p "$HOME/.cache"
+	mv "$HOME/.xsession-errors" "$HOME/.cache/xerror"
+fi
+
 # Iniciar redshift
 pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"')" -m vidmode
