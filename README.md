@@ -66,6 +66,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - _Desactivar el baúl de contraseñas_
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
+- Añadir la opción de instalar KDE con SDDM en vez de dwm
 
 # Referencias y créditos
 
