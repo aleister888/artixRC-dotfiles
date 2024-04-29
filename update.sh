@@ -174,18 +174,3 @@ done
 for association in "${word_associations[@]}"; do
 	xdg-mime default libreoffice-writer.desktop "$association"
 done
-
-############################
-# Limpiar directorio $HOME #
-############################
-
-if [ -e "$HOME/.gitconfig" ]; then
-	mkdir -p "$HOME/.config/git"
-	mv "$HOME/.gitconfig" "$HOME/.config/git/config"
-fi
-
-[ -e "$HOME/.gnupg" ] && mv -fv "$HOME/.gnupg" "$HOME/.local/share/gnupg"
-[ -e "$HOME/.java" ] && mv "$HOME/.java" "$HOME/.config/java"
-[ -e "$HOME/.xsession-errors" ] && mv "$HOME/.xsession-errors" "$HOME/.cache/xsession-errors"
-[ -e "$HOME/.cargo" ] && mv "$HOME/.cargo" "$HOME/.local/share/cargo"
-[ -e "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"

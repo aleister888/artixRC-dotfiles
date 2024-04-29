@@ -150,11 +150,22 @@ ewwspawn &
 # Servidor VNC Local (Excluir portátiles)
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 
-# Borrar el archivo ~/.xsession-errors
-if [ "$HOME/.xsession-errors" ]; then
-	mkdir -p "$HOME/.cache"
-	mv "$HOME/.xsession-errors" "$HOME/.cache/xerror"
-fi
-
 # Iniciar redshift
 pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"')" -m vidmode
+
+############################
+# Limpiar directorio $HOME #
+############################
+
+[ -d "$HOME/.pki" ]		&& mv -f "$HOME/.pki" "$HOME/.local/share/pki"
+[ -d "$HOME/.gnupg" ]		&& mv -f "$HOME/.gnupg" "$HOME/.local/share/gnupg"
+[ -d "$HOME/.java" ]		&& mv -f "$HOME/.java" "$HOME/.config/java"
+[ -d "$HOME/.cargo" ]		&& mv -f "$HOME/.cargo" "$HOME/.local/share/cargo"
+[ -f "$HOME/.xsession-errors" ]	&& mv -f "$HOME/.xsession-errors" "$HOME/.cache/xsession-errors"
+
+[ -f "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"
+
+if [ -f "$HOME/.gitconfig" ]; then
+	mkdir -p "$HOME/.config/git"
+	mv -f "$HOME/.gitconfig" "$HOME/.config/git/config"
+fi
