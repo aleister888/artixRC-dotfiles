@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 case "$1" in
 	post)
 		/usr/bin/rc-service NetworkManager "restart"
-		/usr/bin/rc-service nptd "restart"
 		/usr/bin/rc-service netmount "restart"
-		/usr/bin/rc-service libvirtd "restart"
+		/usr/bin/rc-service nptd "restart"
+		[ -e "/usr/bin/libvirtd" ] && /usr/bin/rc-service libvirtd "restart"
 	;;
 esac
