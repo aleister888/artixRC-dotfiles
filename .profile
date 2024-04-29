@@ -57,6 +57,7 @@ export DVDCSS_CACHE="$XDG_DATA_HOME"/dvdcss
 export GNUPGHOME="${XDG_DATA_HOME:-$HOME/.local/share}/gnupg"
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/nv"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc:${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkfilechooser.ini"
+export GTK_THEME=Gruvbox-Dark-B
 export WINEPREFIX="${XDG_CONFIG_HOME:-$HOME/.config}/wineprefixes"
 export TERMINFO_DIRS="${XDG_CONFIG_HOME:-$HOME/.config}/terminfo:/usr/share/terminfo"
 export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"

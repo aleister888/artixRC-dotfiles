@@ -44,7 +44,7 @@ alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/
 alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
 
 # Alias para encontrar archivos pac de pacman
-alias pac='find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
+alias pac='doas find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
 
 wininfo(){
 xprop | awk '

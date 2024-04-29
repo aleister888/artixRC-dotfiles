@@ -59,6 +59,7 @@ IMG:$ICONPATH/apps/applications-office.svg				Oficina
 	IMG:$ICONPATH/apps/libreoffice-math.svg				LibreOffice Math	libreoffice --math
 
 IMG:$ICONPATH/apps/applications-utilities.svg				Ajustes/Sistema
+	IMG:$ICONPATH/apps/firmware-manager.svg				Firmware		gnome-firmware
 	IMG:$ICONPATH/apps/rustdesk.svg					Escritrio Remoto	rustdesk
 	IMG:$ICONPATH/apps/timeshift.svg				Copias de seguridad	timeshift-launcher
 	IMG:$ICONPATH/apps/cheese.svg					Visualizar Webcam	mpv /dev/video0
