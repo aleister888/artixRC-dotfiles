@@ -122,7 +122,6 @@ fi
 virtualmic &
 ewwspawn &
 
-[ -e "$HOME/.Xauthority"* ] && rm "$HOME/.Xauthority"*
 if [ "$HOME/.xsession-errors" ]; then
 	mkdir -p "$HOME/.cache"
 	mv "$HOME/.xsession-errors" "$HOME/.cache/xerror"

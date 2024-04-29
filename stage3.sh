@@ -583,7 +583,6 @@ fi
 # Configurar xdm
 doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
 doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
-echo 'DisplayManager.DISPLAY.userAuthDir:	/tmp' | doas tee -a /etc/X11/xdm/xdm-config
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
