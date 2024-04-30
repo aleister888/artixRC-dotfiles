@@ -55,7 +55,9 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom 
 # Aplicaciones GUI
 packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
 # Misc
-packages+=" syncthing wine-git wine-mono wine-gecko winetricks fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook"
+packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook"
+# Compilar Wine
+packages+=" desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gnutls lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-lib alsa-plugins cups dosbox gnutls gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly lib32-alsa-lib lib32-alsa-plugins lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -317,6 +319,32 @@ vim_configure(){
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
+# Compilar wine stable
+wine_compile(){
+	# Instalar winetricks y otros paquetes sin instalar ninguna versión de wine
+	doas pacman -Sdd \
+	wine-gecko wine-mono winetricks \
+	--ignore wine --ignore wine-staging \
+	--nodeps --asexplicit
+
+	local REPO_DIR="$HOME/.local/src/wine"
+	local REPO_URL="https://gitlab.winehq.org/wine/wine.git"
+
+	# Clonamos el repositorio e instalamos las dependencias
+	git clone $REPO_URL $REPO_DIR --branch stable
+
+	# Compilamos wine con soporte para 32 y 64 bits
+	sh -c "cd $REPO_DIR; mkdir -p ./builds/64; cd ./builds/64
+	../../configure --enable-win64; make -j $(nproc)
+	cd $REPO_DIR
+	mkdir -p ./builds/32; cd ./builds/32
+	PKG_CONFIG_PATH=/usr/lib32 ../../configure --with-wine64=../64; make -j $(nproc)"
+
+	# Instalamos wine
+	doas make install --directory "$REPO_DIR/builds/32"
+	doas make install --directory "$REPO_DIR/builds/64"
+}
+
 # Instalar los archivos de configuración locales y en github
 dotfiles_install(){
 	# Plugins de zsh a clonar
@@ -522,6 +550,8 @@ firefox_configure
 "$HOME/.dotfiles/bin/transmission-config"
 # Configurar neovim e instalar los plugins
 vim_configure
+# Compilar wine
+wine_compile
 
 # Instalar los archivos de configuración locales y en github
 mkdir -p "$HOME/.config"
