@@ -39,7 +39,7 @@ packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotoo
 # Fuentes
 packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans noto-fonts-emoji gnu-free-fonts"
 # Archivos comprimidos
-packages+=" atool tar unrar gzip unzip zip p7zip"
+packages+=" xarchiver atool tar unrar gzip unzip zip p7zip lha lrzip lzip lzop unarj"
 # Servicios
 packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc"
 # Documentos

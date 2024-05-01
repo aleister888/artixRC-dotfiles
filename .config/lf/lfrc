@@ -164,6 +164,9 @@ cmd fzf_jump ${{
 
 cmd open ${{
     case $(xdg-mime query filetype "$(readlink -f $f)") in
+	application/x-7z-compressed) xarchiver "$fx" ;;
+	application/vnd.rar) xarchiver "$fx" ;;
+	application/zip) xarchiver "$fx" ;;
 	application/vnd.oasis.opendocument.spreadsheet) libreoffice "$fx" ;;
 	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) libreoffice "$fx" ;;
 	application/vnd.oasis.opendocument.text) libreoffice "$fx" ;;
@@ -189,7 +192,6 @@ cmd open ${{
 	application/x-gnuplot) tuxguitar "$fx" ;;
 	application/x-gtp) tuxguitar "$fx" ;;
 	application/x-openzim) zim "$fx" ;;
-	application/zip) xdg-open $fx ;;
         *) for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done;;
     esac
 }}
