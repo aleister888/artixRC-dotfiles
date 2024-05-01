@@ -1,13 +1,5 @@
 #!/bin/bash
 
-system_sleep(){
-	if [ -e "/sys/class/power_supply/BAT0" ]; then
-		loginctl suspend
-	else
-		sync && echo mem | doas tee /sys/power/state
-	fi
-}
-
 # Define las opciones con iconos
 options=(
 	"  Bloquear"
@@ -25,7 +17,7 @@ chosen=$(printf "%s\n" "${options[@]}" | dmenu -c -l ${#options[@]})
 # Maneja la opción elegida usando un caso
 case $chosen in
 	"${options[0]}") sleep 0.25; i3lock-fancy;;
-	"${options[1]}") system_sleep;;
+	"${options[1]}") sync && echo mem | doas tee /sys/power/state;;
 	"${options[2]}") doas wake now;;
 	"${options[3]}") doas pkill X;;
 	"${options[4]}") doas openrc-shutdown -r now;;
