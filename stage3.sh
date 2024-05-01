@@ -57,7 +57,7 @@ packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udis
 # Misc
 packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook"
 # Compilar Wine
-packages+=" desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gnutls lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-lib alsa-plugins cups dosbox gnutls gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly lib32-alsa-lib lib32-alsa-plugins lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils"
+packages+=" wine-gecko wine-mono winetricks desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gnutls lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-lib alsa-plugins cups dosbox gnutls gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly lib32-alsa-lib lib32-alsa-plugins lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -321,12 +321,6 @@ vim_configure(){
 
 # Compilar wine stable
 wine_compile(){
-	# Instalar winetricks y otros paquetes sin instalar ninguna versión de wine
-	doas pacman -Sdd \
-	wine-gecko wine-mono winetricks \
-	--ignore wine --ignore wine-staging \
-	--nodeps --asexplicit
-
 	local REPO_DIR="$HOME/.local/src/wine"
 	local REPO_URL="https://gitlab.winehq.org/wine/wine.git"
 
