@@ -55,9 +55,9 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom 
 # Aplicaciones GUI
 packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook"
+packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook wine-staging wine-mono wine-gecko winetricks"
 # Compilar Wine
-packages+=" wine-gecko wine-mono winetricks desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gnutls lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-lib alsa-plugins cups dosbox gnutls gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly lib32-alsa-lib lib32-alsa-plugins lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils"
+wine_packages="desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gnutls lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-lib alsa-plugins cups dosbox gnutls gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly lib32-alsa-lib lib32-alsa-plugins lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -69,7 +69,7 @@ driver_choose(){
 	# Opciones posibles
 	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM" "optimus" "Portátil")
 	# Elegimos nuestra tarjeta gráfica
-	graphic_driver=$(whip_menu "Selecciona tu tarjeta gráfica" "Elige una opción:" \
+	graphic_driver=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
 	${driver_options[@]})
 	case $graphic_driver in
 	amd)
@@ -86,16 +86,17 @@ driver_choose(){
 # Elegimos que paquetes instalar
 packages_show(){
 	local scheme # Variable con la lista de paquetes a instalar
-	scheme="Se instalarán:\n"
-[ "$virt"      == "true" ] && scheme+="Virt-Manager\n"
-[ "$music"     == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
-[ "$noprivacy" == "true" ] && scheme+="Telegram Discord\n"
-[ "$daw"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
-[ "$office"    == "true" ] && scheme+="Libreoffice\n"
-[ "$latex"     == "true" ] && scheme+="TeX-live\n"
+	scheme="Se instalaran:\n"
+	[ "$virt"      == "true" ] && scheme+="Virt-Manager\n"
+	[ "$music"     == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
+	[ "$noprivacy" == "true" ] && scheme+="Telegram Discord\n"
+	[ "$daw"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
+	[ "$office"    == "true" ] && scheme+="Libreoffice\n"
+	[ "$latex"     == "true" ] && scheme+="TeX-live\n"
 	whiptail --title "Confirmar paquetes" --yesno "$scheme" 15 60 
 }
 
+# Elegir el software a instalar
 packages_choose(){
 local packages_confirm="false"
 local virt
@@ -106,13 +107,13 @@ local office
 local latex
 
 while [ "$packages_confirm" == "false" ]; do
-	if whip_yes "Virtualización" "¿Planeas en usar maquinas virtuales?"; then
+	if whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?"; then
 		virt="true"
 	else
 		virt="false"
 	fi
 
-	if whip_yes "Música" "¿Deseas instalar software para manejar tu colección de música?"; then
+	if whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?"; then
 		music="true"
 	else
 		music="false"
@@ -130,13 +131,13 @@ while [ "$packages_confirm" == "false" ]; do
 		daw="false"
 	fi
 
-	if whip_yes "Oficina" "¿Deseas instalar software de ofimática?"; then
+	if whip_yes "Oficina" "¿Deseas instalar software de ofimatica?"; then
 		office="true"
 	else
 		office="false"
 	fi
 
-	if whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevará mucho tiempo)"; then
+	if whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)"; then
 		latex="true"
 	else
 		latex="false"
@@ -145,7 +146,7 @@ while [ "$packages_confirm" == "false" ]; do
 	if packages_show; then
 		packages_confirm=true
 	else
-		whip_msg "Cancelación" "Se te volverá a preguntar que software desea instalar"
+		whip_msg "Operacion cancelada" "Se te volvera a preguntar que software desea instalar"
 	fi
 done
 
@@ -172,7 +173,7 @@ kb_layout_select(){
 	for key_layout in $key_layouts; do
 		keyboard_array+=("$key_layout" "$key_layout")
 	done
-	final_layout=$(whip_menu "Teclado" "Por favor, elige una distribución de teclado:" \
+	final_layout=$(whip_menu "Teclado" "Por favor, elige una distribucion de teclado:" \
 	${keyboard_array[@]})
 }
 
@@ -197,7 +198,7 @@ xresources_make(){
 	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
-	resolution=$(whip_menu "Resolución del Monitor" "Seleccione la resolución de su monitor:" \
+	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
 	"720p" "720p" "1080p" "1080p" "1440p" "1440p" "4K" "4K")
 	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
 	"14" "14" "15.6" "15.6" "17" "17" "24" "24" "27" "27")
@@ -523,7 +524,7 @@ kb_layout_conf
 xresources_make
 
 # A partir de aquí no se necesita interacción del usuario
-whip_msg "Tiempo de espera" "La instalación va a terminarse, esto tomará unos 20min aprox. (Depende de la velocidad de tu conexión a Internet)"
+whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20min aprox. (Depende de la velocidad de tu conexion a Internet)"
 
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
@@ -531,7 +532,14 @@ whip_msg "Tiempo de espera" "La instalación va a terminarse, esto tomará unos 
 doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
-yayinstall $packages
+if [ "$daw" != "true" ]; then
+	yayinstall $packages
+else # Si se eleigió instalar herramientas de edición de audio, compilar una versión de wine que sea compatible con VST de windows.
+	# Instalar dependencias
+	yayinstall $packages $wine_packages
+	# Compilar wine
+	wine_compile
+fi
 
 # Descargar e instalar nuestras fuentes
 fontdownload
@@ -544,8 +552,6 @@ firefox_configure
 "$HOME/.dotfiles/bin/transmission-config"
 # Configurar neovim e instalar los plugins
 vim_configure
-# Compilar wine
-wine_compile
 
 # Instalar los archivos de configuración locales y en github
 mkdir -p "$HOME/.config"
