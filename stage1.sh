@@ -35,7 +35,7 @@ echo_msg(){
 
 # Función para salirnos del script
 script_exit(){
-	whip_yes "Salir" "¿Desea cancelar la instalación? En caso contrario re-eligiera su esquema de particiones" &&
+	whip_yes "Salir" "¿Desea cancelar la instalacion? En caso contrario, volvera a elegir su esquema de particiones" &&
 	exit 1
 }
 
@@ -109,7 +109,7 @@ scheme_show(){
 	fi
 
 	scheme+="
-Aceptar los cambios borrará el contenido de todos los discos mostrados"
+Aceptar los cambios borrara el contenido de todos los discos mostrados"
 	# Mostramos el esquema para confirmar los cambios
 	whiptail --title "Confirmar particionado" --yesno "$scheme" 15 60 || \
 	script_exit
@@ -125,13 +125,13 @@ while [ "$scheme_confirm" == "false" ]; do
 	local root_selected="false"
 
 	while [ "$root_selected" == "false" ]; do
-		ROOT_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalación:" \
+		ROOT_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalacion:" \
 		"$(lsblk -dn -o name,size | tr '\n' ' ')" ) && \
 		root_selected=true
 	done
 
 	# Preguntamos si queremos un disco dedicado para /home
-	if whip_yes "Partición /home" "¿Tiene un disco dedicado para su partición /home?"; then
+	if whip_yes "Particion /home" "¿Tiene un disco dedicado para su particion /home?"; then
 		home_partition=true
 	else
 		home_partition=false
@@ -142,19 +142,19 @@ while [ "$scheme_confirm" == "false" ]; do
 
 	[ "$home_partition" = true ] && \
 	while [ "$home_selected" == "false" ]; do
-		HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su partición /home:" \
+		HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su particion /home:" \
 		"$(lsblk -dn -o name,size | grep -v "$ROOT_DISK" | tr '\n' ' ')") && \
 		home_selected=true
 	done
 
 	# Elegimos si queremos encriptación en el disco /
-	if whip_yes "LUKS" "¿Desea encriptar la partición /?"; then
+	if whip_yes "LUKS" "¿Desea encriptar la particion /?"; then
 		crypt_root=true
 	else
 		crypt_root=false
 	fi
 
-	[ "$home_partition" == "true"  ] && if whip_yes "LUKS" "¿Desea encriptar la partición /home?"; then
+	[ "$home_partition" == "true"  ] && if whip_yes "LUKS" "¿Desea encriptar la particion /home?"; then
 		crypt_home=true
 	else
 		crypt_home=false
@@ -164,7 +164,7 @@ while [ "$scheme_confirm" == "false" ]; do
 	if scheme_show; then
 		scheme_confirm=true
 	else
-		whip_msg "ERROR" "Hubo un error al comprobar el esquema de particiones elegido, o el usuario canceló la operación."
+		whip_msg "ERROR" "Hubo un error al comprobar el esquema de particiones elegido, o el usuario cancelo la operación."
 	fi
 done
 }
@@ -172,22 +172,22 @@ done
 
 part_encrypt(){
 while true; do
-	whip_msg "LUKS" "Se va a encriptar el disco $1. A continuación se te pedirá la contraseña del disco"
+	whip_msg "LUKS" "Se va a encriptar el disco $1. A continuacion se te pedira la contraseña del disco"
 	cryptsetup luksFormat -q --verify-passphrase "/dev/$2" && break
-	whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
+	whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
 done
 
 while true; do
-	whip_msg "LUKS" "Se te pedirá la contraseña para poder desencriptar el disco temporalmente y comenzar la instalación."
+	whip_msg "LUKS" "Se te pedira la contraseña para poder desencriptar el disco temporalmente y comenzar la instalacion."
 	cryptsetup open "/dev/$2" "$3" && break
-	whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
+	whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
 done
 }
 
 home_delete_confirm(){
 whiptail --title "$HOME_DISK" --yesno \
-"¿Desea borrar todos los datos de $HOME_DISK? Esto borrara toda la información que este contiene (Documentos, imágenes, videos, etc).\n
-En caso contrario se utilizará el disco duro tal cual esta ahora (Si esque ya se uso en otra instalación como /home)" 13 60
+"¿Desea borrar todos los datos de $HOME_DISK? Esto borrara toda la información que este contiene (Documentos, imagenes, videos, etc).\n
+En caso contrario se utilizara el disco duro tal cual esta ahora (Si es que ya se uso en otra instalacion como particion /home)" 13 60
 }
 
 format_disks(){

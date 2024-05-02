@@ -67,7 +67,7 @@ fi
 
 driver_choose(){
 	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM" "optimus" "Portátil")
+	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM" "optimus" "Portatil")
 	# Elegimos nuestra tarjeta gráfica
 	graphic_driver=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
 	${driver_options[@]})

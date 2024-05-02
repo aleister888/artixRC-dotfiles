@@ -40,7 +40,7 @@ timezoneset(){
 		done
 
 		# Utilizar Whiptail para presentar las opciones de región al usuario
-		region=$(whiptail --title "Selecciona una región" --menu "Por favor, elige una región:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+		region=$(whiptail --title "Selecciona una region" --menu "Por favor, elige una region:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
 
 		# Obtener la lista de zonas horarias disponibles para la región seleccionada
 		timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
@@ -56,7 +56,7 @@ timezoneset(){
 		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
 			valid_timezone=true
 		else
-			whip_msg "Zona horaria no válida" "Zona horaria no válida. Asegúrate de elegir una zona horaria válida."
+			whip_msg "Zona horaria no valida" "Zona horaria no valida. Asegurate de elegir una zona horaria valida."
 		fi
 	done
 		ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
@@ -72,9 +72,9 @@ set_password() {
 	local confirm=""
 
 	while true; do
-		whip_msg "$user" "A continuación, se te pedirá la contraseña de $user:"
+		whip_msg "$user" "A continuacion, se te pedira la contraseña de $user:"
 		passwd "$user" && break
-		whip_msg "$user" "Hubo un fallo, se te pedirá de nuevo la contraseña"
+		whip_msg "$user" "Hubo un fallo, se te pedira de nuevo la contraseña"
 	done
 }
 
@@ -151,7 +151,7 @@ swap_create(){
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config(){
-	hostname=$(whiptail --title "Configuración de Hostname" --inputbox "Por favor, introduce el nombre que deseas para tu host:" 10 60 3>&1 1>&2 2>&3)
+	hostname=$(whiptail --title "Configuracion de Hostname" --inputbox "Por favor, introduce el nombre que deseas darle a tu ordenador:" 10 60 3>&1 1>&2 2>&3)
 	echo "$hostname" > /etc/hostname
 	curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
 	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
@@ -211,9 +211,9 @@ home_keyfile(){
 	mkdir /etc/keys
 	dd bs=512 count=4 if=/dev/urandom of=$keyfile
 	while true; do
-		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuación se te pedirá la contraseña del disco /home"
+		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuacion se te pedirá la contraseña del disco /home"
 		cryptsetup -v luksAddKey "/dev/$crypthome_parent" $keyfile && break
-		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
+		whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
 	done
 	chmod 000 $keyfile
 	chmod g-rwx,o-rwx /etc/keys
