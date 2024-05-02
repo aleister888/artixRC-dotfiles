@@ -89,4 +89,6 @@ convert_file "$file"
 done
 
 # Borrar directorios vacios en la carpeta de destino
-find $BK_DIR -type d -empty -print
+echo "Se borraron $(find $BK_DIR -type d -empty -not -path "*/.stfolder" -delete -print | wc -l) carpetas vacias."
+
+echo "El script terminó de ejecutarse"

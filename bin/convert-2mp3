@@ -87,3 +87,8 @@ convert_file() {
 find "$OG_DIR" -type f \( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' -o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) -printf '%P\n' | while read -r file; do
 convert_file "$file"
 done
+
+# Borrar directorios vacios en la carpeta de destino
+echo "Se borraron $(find $BK_DIR -type d -empty -not -path "*/.stfolder" -delete -print | wc -l) carpetas vacias."
+
+echo "El script terminó de ejecutarse"
