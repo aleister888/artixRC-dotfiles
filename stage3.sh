@@ -53,7 +53,7 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom gruvbox-dark-gtk lxappearance"
 # Aplicaciones GUI
-packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww gnome-disk-utility"
+packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww-x11 gnome-disk-utility"
 # Misc
 packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook wine-staging wine-mono wine-gecko winetricks"
 # Compilar Wine
@@ -532,13 +532,14 @@ whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20
 doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
-if [ "$daw" != "true" ]; then
-	yayinstall $packages
-else # Si se eleigió instalar herramientas de edición de audio, compilar una versión de wine que sea compatible con VST de windows.
+if [ "$daw" == "true" ]; then
+	# Si se eleigió instalar herramientas de edición de audio, compilar una versión de wine que sea compatible con VST de windows.
 	# Instalar dependencias
 	yayinstall $packages $wine_packages
 	# Compilar wine
 	wine_compile
+else
+	yayinstall $packages
 fi
 
 # Descargar e instalar nuestras fuentes
