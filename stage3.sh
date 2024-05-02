@@ -125,7 +125,7 @@ while [ "$packages_confirm" == "false" ]; do
 		noprivacy="false"
 	fi
 
-	if whip_yes "DAW" "¿Deseas instalar un lector de partituras?"; then
+	if whip_yes "DAW" "¿Deseas instalar software de produccion de audio?"; then
 		daw="true"
 	else
 		daw="false"
