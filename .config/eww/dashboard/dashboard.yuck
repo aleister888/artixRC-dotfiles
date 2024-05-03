@@ -53,7 +53,7 @@
            :spacing 6
            :halign "center"
         (button :onclick "playerctl -p tauon previous && kill -54 $(pidof dwmblocks)" "")
-        (button :class "pause" :onclick "playerctl -p tauon play-pause" "${music_status == 'Playing' ? '' : ''}")
+        (button :class "pause" :onclick "playerctl -p tauon play-pause" "${music_status == "Playing" ? "" : ""}")
         (button :onclick "playerctl -p tauon next && kill -54 $(pidof dwmblocks)" "")
       )
     )

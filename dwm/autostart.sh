@@ -89,9 +89,9 @@ virtualmic(){
 
 picomstart(){
 	PICOMOPTS="-c -f --vsync --config=$HOME/.config/picom/picom.conf --corner-radius"
-	if [[ "$current_link" != "$file_1080" ]]; then
+	if [[ "$current_link" == "$file_1080" ]]; then
 		picom $PICOMOPTS 12
-	elif [[ "$current_link" != "$file_1440" ]]; then
+	elif [[ "$current_link" == "$file_1440" ]]; then
 		picom $PICOMOPTS 18
 	else
 		picom $PICOMOPTS 24

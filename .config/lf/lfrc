@@ -68,6 +68,10 @@ map <c-z> $setsid -f dragon-drop -a -x $fx
 map P size
 # Ejecutar comandos
 map s shell
+map q ${{
+	printf '\033]0;\007'
+	/usr/bin/lf -remote "send $id quit"
+}}
 
 cmd on-cd &{{
 	# '&' commands run silently in background (which is what we want here),
@@ -167,6 +171,7 @@ cmd open ${{
 	application/x-7z-compressed) xarchiver "$fx" ;;
 	application/vnd.rar) xarchiver "$fx" ;;
 	application/zip) xarchiver "$fx" ;;
+	application/x-tar) xarchiver "$fx" ;;
 	application/vnd.oasis.opendocument.spreadsheet) libreoffice "$fx" ;;
 	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) libreoffice "$fx" ;;
 	application/vnd.oasis.opendocument.text) libreoffice "$fx" ;;
