@@ -1,4 +1,7 @@
 #!/bin/sh
+
+# Script para descargar un wordlist con palabras para generar frases de contraseñas
+
 location="$HOME/.local/share/wordlist"
 spanish="$location/spanish.wordlist"
 

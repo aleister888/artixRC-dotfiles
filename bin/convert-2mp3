@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# Script para crear mirrors en formato .m4a de una biblioteca de música.
+
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
 OG_DIR="$1"
 BK_DIR="$2"
 TMP_DIR="/tmp"

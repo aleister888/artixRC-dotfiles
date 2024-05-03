@@ -1,5 +1,9 @@
 #!/bin/bash
+
 # Script para comprobar y corregir la corrupción de los archivos flac de un directorio
+
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
 
 OG_DIR="$1" # Directorio a Verificar
 LOG_FILE="/tmp/corruption.log" # Fichero donde guardar los errores

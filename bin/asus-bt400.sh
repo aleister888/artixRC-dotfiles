@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Script para instalar los drivers de:
+# https://www.asus.com/networking-iot-servers/adapters/all-series/usbbt400/
+
 curl 'https://dlcdnets.asus.com/pub/ASUS/wireless/USB-BT400/DR_USB_BT400_1201710_Windows.zip' \
 	-o /tmp/bt400-driver.zip
 

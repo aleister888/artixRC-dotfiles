@@ -1,6 +1,8 @@
 #!/bin/sh
 
+# Script para instalar y configurar SSH en sistema Arch/Artix Linux
 # https://www.ssh-audit.com/hardening_guides.html
+
 # Install OpenSSH
 doas pacman -S --noconfirm openssh openssh-openrc
 # Activate OpenSSH service

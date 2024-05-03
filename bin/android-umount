@@ -1,5 +1,5 @@
 #!/bin/sh
-# Script for unmounting android devices
+# Script para desmontar dispositivos android
 
 user="$(whoami)"
 

@@ -5,8 +5,10 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+# Mostramos el fondo de pantalla
 nitrogen --restore
 
+# Leemos nuestro perfil de zsh
 . "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 # Cerrar instancias previas del script
@@ -15,10 +17,15 @@ for i in $(seq $(($INSTANCIAS - 1))); do
 	pkill -o "$(basename "$0")"
 done
 
+# Cerramos eww
 pkill eww
 
-# Función para ajustar el tamaño del widget de eww y abrirlo
-# si solo hay un monitor y ninguna ventana abierta
+#############
+# Funciones #
+#############
+
+# Función para ajustar el tamaño del widget de eww en función de la resolución
+# y abrirlo solo si hay un único monitor y ninguna ventana abierta
 ewwspawn(){
 	while true; do
 	# Contamos el numero de monitores activos
@@ -32,7 +39,7 @@ ewwspawn(){
 	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
 
 	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
-	resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
+	local resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
 
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
 	if [[ $resolution -le 1080 ]]; then
@@ -67,7 +74,7 @@ ewwspawn(){
 
 virtualmic(){
 	# Contador para evitar bucles infinitos
-	counter=0
+	local counter=0
 	# Realizar la comprobación una vez y salir si se encuentra el sink
 	if pactl list | grep '\(Name\|Monitor Source\): my-combined-sink'; then
 		exit
@@ -87,6 +94,8 @@ virtualmic(){
 	exit 0
 }
 
+# Ejecutar picom, ajustando el radio de las esquinas en función de la resolución
+# (Aprovechamos el link simbólico que usamos para ajustar eww según la resolución)
 picomstart(){
 	PICOMOPTS="-c -f --vsync --config=$HOME/.config/picom/picom.conf --corner-radius"
 	if [[ "$current_link" == "$file_1080" ]]; then
@@ -98,10 +107,15 @@ picomstart(){
 	fi
 }
 
+##########
+# Script #
+##########
+
 # Dbus
 if [ "$(pgrep -c dbus)" -lt 5 ]; then
 	export "$(dbus-launch)" && dbus-update-activation-environment --all &
 fi
+
 # Desactivar el atenuado de la pantalla
 xset -dpms && xset s off &
 
@@ -126,7 +140,7 @@ pgrep dwmblocks		|| dwmblocks &
 # Applet de red
 pgrep nm-applet		|| nm-applet &
 
-# Si se detecta una tarjeta bluetooth se inicia blueman-applet
+# Si se detecta una tarjeta bluetooth, iniciar blueman-applet
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	pgrep blueman-applet || blueman-applet &
 fi
@@ -147,20 +161,20 @@ pgrep dunst || dunst &
 virtualmic &
 ewwspawn &
 
-# Servidor VNC Local (Excluir portátiles)
+# Servidor VNC Local (Solo para equipos que no lleven batería)
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 
-# Iniciar redshift
+# Iniciar redshift (Filtro de la luz azul)
 pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"')" -m vidmode
 
 ############################
 # Limpiar directorio $HOME #
 ############################
 
-[ -d "$HOME/.pki" ]		&& mv -f "$HOME/.pki" "$HOME/.local/share/pki"
-[ -d "$HOME/.gnupg" ]		&& mv -f "$HOME/.gnupg" "$HOME/.local/share/gnupg"
-[ -d "$HOME/.java" ]		&& mv -f "$HOME/.java" "$HOME/.config/java"
-[ -d "$HOME/.cargo" ]		&& mv -f "$HOME/.cargo" "$HOME/.local/share/cargo"
+[ -d "$HOME/.pki" ]	&& mv -f "$HOME/.pki" "$HOME/.local/share/pki"
+[ -d "$HOME/.gnupg" ]	&& mv -f "$HOME/.gnupg" "$HOME/.local/share/gnupg"
+[ -d "$HOME/.java" ]	&& mv -f "$HOME/.java" "$HOME/.config/java"
+[ -d "$HOME/.cargo" ]	&& mv -f "$HOME/.cargo" "$HOME/.local/share/cargo"
 
 [ -f "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"
 

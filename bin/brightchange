@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Script para cambiar el brillo directamente usando /sys/class/backlight/intel_backlight/brightness
+# (Solo funciona en portátiles con procesadores intel)
+
 # Calcular el nuevo valor para el brillo
 calculate_brightness() {
 	local max="$1"
