@@ -1,5 +1,3 @@
 #!/bin/sh
 
-xautolock -disable
 ~/.dotfiles/bin/DVDBounce/dvdbounce --fullscreen --screensaver
-xautolock -enable
