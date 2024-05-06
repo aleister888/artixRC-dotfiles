@@ -23,7 +23,7 @@ chmod +x stage1.sh && ./stage1.sh
 
 - Una vez instalado el sistema, y después de iniciar sesión, pulsa `Ctrl+Alt+H` para abrir un PDF con información de como usar tu instalación y otra información útil.
 
-La instalación toma, con una conexión de `40mb/s`, unos `25 minutos` (aproximadamente). Si decides instalar un DAW y plugins de audio, se compilará `wine-stable`, lo que tardará unos `30min` adicionales _(Esto con 6 núcleos/12 hilos, en un procesador menos potente esto tomará más tiempo)_.
+La instalación toma, con una conexión de `40mb/s`, unos `25 minutos` (aproximadamente). Si decides instalar un DAW y plugins de audio, se compilará `wine-stable`, lo que tardará unos `15min` adicionales _(Esto con 6 núcleos/12 hilos. En un procesador menos potente esto tomará más tiempo)_.
 
 # Características
 
