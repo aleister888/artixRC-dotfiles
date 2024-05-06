@@ -102,10 +102,10 @@ packages_show(){
 # Elegir el software a instalar
 packages_choose(){
 local packages_confirm="false"
+# Definimos todas las variables menos $daw como locales
 local virt
 local music
 local noprivacy
-local daw
 local office
 local latex
 
@@ -201,18 +201,18 @@ xresources_make(){
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
 	# Elegimos la resolución de nuestro monitor
 	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
-	"720p" "HD" "1080p" "Full HD" "1440p" "QHD" "2160p" "4K")
+	"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K")
 	# Elegimos el tamaño de nuestro monitor
 	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
 	"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
 	case $resolution in # Elegimos la resolución y establecemos variables con las dimensiones
-		720p)
+		"720p")
 			width=1280 height=720 ;;
-		1080p)
+		"1080p")
 			width=1920 height=1080 ;;
-		1440p)
+		"1440p")
 			width=2560 height=1440 ;;
-		2160p)
+		"2160p")
 			width=3840 height=2160 ;;
 	esac
 	# Calculamos el DPI en función de la resolución y el tamaño de la pantalla
