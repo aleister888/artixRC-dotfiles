@@ -24,3 +24,6 @@ user_pref("network.http.referer.XOriginPolicy", 0);
 
 // Mostrar siempre los marcadores
 user_pref("browser.toolbars.bookmarks.visibility", "always");
+
+// Barra de tareas del sistema
+user_pref("browser.tabs.inTitlebar", 0);

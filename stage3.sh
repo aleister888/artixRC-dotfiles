@@ -191,7 +191,7 @@ echo "Section \"InputClass\"
         Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	# Si elegimos español, configurar el layout de la tty en español también
-	doas sed -i "s|keymap=\"us\"|keymap=\"$final_layout\"|" /etc/conf.d/keymaps
+	doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 }
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
