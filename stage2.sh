@@ -29,7 +29,7 @@ packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers 
 # Establecer zona horaria
 timezoneset(){
 	valid_timezone=false
-	while [ "$valid_timezone" = false ]; do
+	while [ "$valid_timezone" == "false" ]; do
 
 		# Obtener la lista de regiones disponibles
 		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort -u | grep -v "right")

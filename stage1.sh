@@ -141,7 +141,7 @@ while [ "$scheme_confirm" == "false" ]; do
 	# Si queremos un disco para /home, elegimos cual
 	local home_selected="false"
 
-	[ "$home_partition" = true ] && \
+	[ "$home_partition" == "true" ] && \
 	while [ "$home_selected" == "false" ]; do
 		HOME_DISK=$(whip_menu "Discos disponibles" "Seleccione un disco para su particion /home:" \
 		"$(lsblk -dn -o name,size | grep -v "$ROOT_DISK" | tr '\n' ' ')") && \
@@ -235,7 +235,7 @@ format_disks(){
 	fi
 
 	# Formateamos nuestra partición "/home" (Si es necesario)
-	if [ "$home_partition" = true ] && [ "$home_fresh" == "true" ]; then
+	if [ "$home_partition" == "true" ] && [ "$home_fresh" == "true" ]; then
 		if [ "$PART_TYPE" == "msdos" ]; then # Creamos la tabla de particionado
 			parted "/dev/$HOME_DISK" mklabel msdos
 		else

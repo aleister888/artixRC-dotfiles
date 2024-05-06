@@ -273,7 +273,7 @@ installffaddons(){
 	IFS=' '
 	mkdir -p "$pdir/extensions/"
 	for addon in $addonlist; do
-		if [ "$addon" = "ublock-origin" ]; then
+		if [ "$addon" == "ublock-origin" ]; then
 			addonurl="$(curl -sL https://api.github.com/repos/gorhill/uBlock/releases/latest | grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4)"
 		else
 			addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
