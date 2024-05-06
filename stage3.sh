@@ -6,11 +6,13 @@
 
 # Funciones que invocaremos a menudo
 whip_msg(){
-	whiptail --title "$1" --msgbox "$2" 10 60
+	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	--title "$1" --msgbox "$2" 10 60
 }
 
 whip_yes(){
-	whiptail --title "$1" --yesno "$2" 10 60
+	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	--title "$1" --yesno "$2" 10 60
 }
 
 pacinstall() {
@@ -57,7 +59,8 @@ packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udis
 # Misc
 packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook wine-staging wine-mono wine-gecko winetricks"
 # Compilar Wine
-wine_packages="desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gnutls lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-lib alsa-plugins cups dosbox gnutls gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly lib32-alsa-lib lib32-alsa-plugins lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils"
+wine_packages="desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-plugins cups dosbox gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly lib32-alsa-plugins lib32-gst-plugins-good"
+devel_packages="lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 mingw-w64-gcc samba sane unixodbc dosbox gst-plugins-bad gst-plugins-ugly lib32-alsa-plugins lib32-gst-plugins-base lib32-gst-plugins-good libgphoto2"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -150,25 +153,25 @@ while [ "$packages_confirm" == "false" ]; do
 	fi
 done
 
-[ "$virt"      == "true" ] && \
+[ "$virt"	== "true" ] && \
 packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq" && isvirt="true"
-[ "$music"     == "true" ] && packages+=" easytag picard flacon cuetools"
-[ "$noprivacy" == "true" ] && packages+=" discord forkgram-bin"
-[ "$daw"       == "true" ] && \
+[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
+[ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
+[ "$daw"	== "true" ] && \
 packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
 	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
 	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
 	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
 	ln -s "$HOME/Documents/Guitarra/REAPER Media" "$HOME/Documents/REAPER Media"
-[ "$office"    == "true" ] && packages+=" libreoffice"
-[ "$latex"     == "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
+[ "$office"	== "true" ] && packages+=" libreoffice"
+[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 }
 
 # Elegimos distribución de teclado
 kb_layout_select(){
 	# Hacer un array con las diferentes distribuciones posibles y elegir nuestro layout
-	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f | \
-	sed 's|/usr/share/X11/xkb/symbols/||' | sort | sed -n '/^.\{1,3\}$/p')
+	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f  -printf "%f\n" | \
+	sort | grep -v '...')
 	keyboard_array=()
 	for key_layout in $key_layouts; do
 		keyboard_array+=("$key_layout" "$key_layout")
@@ -188,9 +191,7 @@ echo "Section \"InputClass\"
         Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	# Si elegimos español, configurar el layout de la tty en español también
-	if [ "$final_layout" = "es" ]; then
-		doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
-	fi
+	doas sed -i "s|keymap=\"us\"|keymap=\"$final_layout\"|" /etc/conf.d/keymaps
 }
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
@@ -198,56 +199,67 @@ xresources_make(){
 	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
+	# Elegimos la resolución de nuestro monitor
 	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
-	"720p" "720p" "1080p" "1080p" "1440p" "1440p" "4K" "4K")
+	"720p" "HD" "1080p" "Full HD" "1440p" "QHD" "2160p" "4K")
+	# Elegimos el tamaño de nuestro monitor
 	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
-	"14" "14" "15.6" "15.6" "17" "17" "24" "24" "27" "27")
-	case $resolution in
-		"720p")
+	"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
+	case $resolution in # Elegimos la resolución y establecemos variables con las dimensiones
+		720p)
 			width=1280 height=720 ;;
-		"1080p")
+		1080p)
 			width=1920 height=1080 ;;
-		"1440p")
+		1440p)
 			width=2560 height=1440 ;;
-		"4K")
+		2160p)
 			width=3840 height=2160 ;;
 	esac
+	# Calculamos el DPI en función de la resolución y el tamaño de la pantalla
 	display_dpi=$(echo "scale=2; sqrt($width^2 + $height^2) / $size" | bc)
-	rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc)
-	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 1.5
-	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE"
+	rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc) # Redondeamos el DPI
+	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 0.75
+	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE" # Añadimos nuestro DPI a el arcivo Xresources
 }
 
 # Descargar e instalar nuestras fuentes
 fontdownload() {
 	# Definir las URLs de descarga y los nombres de archivo
-	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
-	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
-	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
+	local AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
+	local SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
+	local IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
 	# Archivos temporales
-	AGAVE_ZIP="/tmp/Agave.zip"
-	SYMBOLS_ZIP="/tmp/Symbols.zip"
-	IOSEVKA_ZIP="/tmp/Iosevka.zip"
+	local AGAVE_ZIP="/tmp/Agave.zip"
+	local SYMBOLS_ZIP="/tmp/Symbols.zip"
+	local IOSEVKA_ZIP="/tmp/Iosevka.zip"
 	# Definir directorios de destino
-	AGAVE_DIR="/usr/share/fonts/Agave"
-	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
-	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
+	local AGAVE_DIR="/usr/share/fonts/Agave"
+	local SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
+	local IOSEVKA_DIR="/usr/share/fonts/Iosevka"
 	# Descargar fuentes
-	echo "Descargando fuentes..."
-	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
-	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
-	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
+	download(){ # Total: 698,8M
+		doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"; echo 33 # 0.7% (4,7M)
+		doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"; echo 66 # 2% (9,9M) + 4,7M
+		doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"; echo 100 # 100%
+	}
+	# Mostrar progreso con whiptail
+	download | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	--title "Descargando fuentes" --gauge "Se están descargando las fuentes..." 8 50 0
+
+	mkdir -p "$HOME/.local/share/fonts"
+
 	# Extraer fuentes
-	echo "Extrayendo fuentes..."
-	doas unzip -q "$AGAVE_ZIP" -d "$AGAVE_DIR"
-	doas unzip -q "$SYMBOLS_ZIP" -d "$SYMBOLS_DIR"
-	doas unzip -q "$IOSEVKA_ZIP" -d "$IOSEVKA_DIR"
-	#
-	if [ ! -d "$HOME/.local/share/fonts" ]; then
-		mkdir -p "$HOME/.local/share/fonts"
-		ln -s /usr/local/share/fonts/Iosevka "$HOME/.local/share/fonts/Iosevka"
-		ln -s /usr/local/share/fonts/Agave "$HOME/.local/share/fonts/Agave"
-	fi
+	extract(){
+		doas unzip -q "$AGAVE_ZIP" -d "$AGAVE_DIR"
+		ln -sf /usr/share/fonts/Agave "$HOME/.local/share/fonts/Agave" 2>/dev/null; echo 33
+		doas unzip -q "$SYMBOLS_ZIP" -d "$SYMBOLS_DIR"
+		ln -sf /usr/share/fonts/NerdFontsSymbolsOnly "$HOME/.local/share/fonts/NerdFontsSymbolsOnly" 2>/dev/null; echo 66
+		doas unzip -q "$IOSEVKA_ZIP" -d "$IOSEVKA_DIR"
+		ln -sf /usr/share/fonts/Iosevka "$HOME/.local/share/fonts/Iosevka" 2>/dev/null; echo 100
+	}
+	# Mostrar progreso con whiptail
+	extract | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	--title "Extrayendo fuentes" --gauge "Se están extrayendo las fuentes..." 8 50 0
 }
 
 # Instalar nuestras extensiones de navegador
@@ -538,6 +550,7 @@ if [ "$daw" == "true" ]; then
 	yayinstall $packages $wine_packages
 	# Compilar wine
 	wine_compile
+	yay -Rcns $devel_packages
 else
 	yayinstall $packages
 fi

@@ -6,7 +6,8 @@
 
 # Funciones que invocaremos a menudo
 whip_msg(){
-	whiptail --title "$1" --msgbox "$2" 10 60
+	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	--title "$1" --msgbox "$2" 10 60
 }
 
 pacinstall() {
@@ -163,7 +164,6 @@ hostname_config(){
 # Activar repositorios de Arch Linux
 arch_support(){
 	# Activar lib32
-	#
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
 
 	# Instalar paquetes necesarios
@@ -184,13 +184,13 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 	pacinstall reflector
 
 	# Escoger mirrors más rápidos de los repositorios de Arch
-	reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+	reflector --verbose --latest 10 --sort rate --download-timeout 1 --connection-timeout 1 --threads $(nproc) --save /etc/pacman.d/mirrorlist-arch
 
 	# Configurar cronie para actualizar automáticamente los mirrors de Arch
 	grep "reflector" /etc/crontab || \
 echo "SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
+0 8 * * * root reflector --verbose --latest 10 --sort rate --download-timeout 1 --connection-timeout 1 --threads $(nproc) --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
 }
 
 # Configurar la codificación del sistema

@@ -26,7 +26,8 @@ whip_menu(){
 	local TITLE=$1
 	local MENU=$2
 	shift 2
-	whiptail --title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
+	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	--title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
 }
 
 echo_msg(){
