@@ -32,7 +32,7 @@ timezoneset(){
 	while [ "$valid_timezone" == "false" ]; do
 
 		# Obtener la lista de regiones disponibles
-		regions=$(find /usr/share/zoneinfo -mindepth 1 -type d | sed 's|/usr/share/zoneinfo/||' | sort -u | grep -v "right")
+		regions=$( find /usr/share/zoneinfo -mindepth 2 -type d -printf "%f\n" | sort -u )
 
 		# Crear un array con las regiones
 		regions_array=()
@@ -44,7 +44,7 @@ timezoneset(){
 		region=$(whiptail --title "Selecciona una region" --menu "Por favor, elige una region:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
 
 		# Obtener la lista de zonas horarias disponibles para la región seleccionada
-		timezones=$(find "/usr/share/zoneinfo/$region" -type f | sed "s|/usr/share/zoneinfo/$region/||" | sort)
+		timezones=$( find "/usr/share/zoneinfo/$region" -mindepth 1 -type f -printf "%f\n" | sort -u )
 		timezones_array=()
 		for timezone in $timezones; do
 			timezones_array+=("$timezone" "$timezone")
