@@ -34,8 +34,12 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-# Paquetes
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli java-environment-common jdk-openjdk dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-btrfs font-manager gnome-firmware glow"
+############
+# Paquetes #
+############
+
+# Sistema
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -55,12 +59,12 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom gruvbox-dark-gtk lxappearance"
 # Aplicaciones GUI
-packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww-git gnome-disk-utility"
+packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww-git gnome-firmware gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv grub-hook wine-staging wine-mono wine-gecko winetricks"
+packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine-staging wine-mono wine-gecko winetricks"
 # Compilar Wine
 wine_packages="desktop-file-utils fontconfig freetype2 gcc-libs gettext lib32-fontconfig lib32-freetype2 lib32-gcc-libs lib32-gettext lib32-libpcap lib32-libunwind lib32-libxcursor lib32-libxi lib32-libxkbcommon lib32-libxrandr lib32-wayland libpcap libunwind libxcursor libxi libxkbcommon libxrandr wayland alsa-lib git gnutls gst-plugins-base-libs lib32-alsa-lib lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-libxxf86vm lib32-mesa lib32-mesa-libgl lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils lib32-vulkan-icd-loader libcups libgphoto2 libpulse libxcomposite libxinerama libxxf86vm mesa mesa-libgl mingw-w64-gcc opencl-headers opencl-icd-loader pcsclite perl samba sane sdl2 unixodbc v4l-utils vulkan-headers vulkan-icd-loader alsa-plugins cups dosbox gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly lib32-alsa-plugins lib32-gst-plugins-good"
-devel_packages="lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 mingw-w64-gcc samba sane unixodbc dosbox gst-plugins-bad gst-plugins-ugly lib32-alsa-plugins lib32-gst-plugins-base lib32-gst-plugins-good libgphoto2"
+wine_devel_packages="lib32-gst-plugins-base-libs lib32-libcups lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 mingw-w64-gcc samba sane unixodbc dosbox gst-plugins-bad gst-plugins-ugly lib32-alsa-plugins lib32-gst-plugins-base lib32-gst-plugins-good libgphoto2"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -550,7 +554,7 @@ if [ "$daw" == "true" ]; then
 	yayinstall $packages $wine_packages
 	# Compilar wine
 	wine_compile
-	yay -Rcns $devel_packages
+	yay -Rcns $wine_devel_packages
 else
 	yayinstall $packages
 fi

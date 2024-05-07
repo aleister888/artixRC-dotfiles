@@ -167,6 +167,11 @@ ewwspawn &
 # Iniciar redshift (Filtro de la luz azul)
 pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"')" -m vidmode
 
+# Iniciar hydroxide si está instalado
+# https://github.com/emersion/hydroxide?tab=readme-ov-file#usage
+# IMAP: localhost, 1143, None, Normal password (Servidores Incoming & Outgoing)
+[ -f /usr/bin/hydroxide ] && hydroxide imap &
+
 ############################
 # Limpiar directorio $HOME #
 ############################
