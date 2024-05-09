@@ -36,11 +36,11 @@ chmod +x stage1.sh && ./stage1.sh
 
 # Atención!
 
-Si quieres encriptar tu disco duro para proteger la infromación que contiene, es __muy recomendado__ que vacies la información sin encriptar que contenia antes. Para esto puedes llenar el disco duro de información aleatoria antes de encriptarlo _(ejecutando `dd if=/dev/urandom of=/dev/ejemplo`)_, o para mas eficiencia, llenarlo de ceros una vez encriptado y que el cipher se encarge de que el disco se llene de información aleatoria _(ejecutando `dd if=/dev/zero of=/dev/mapper/ejemplo`)_.
+Si quieres encriptar tu disco duro para proteger la infromación que contiene, es __muy recomendado__ que vacies la información sin encriptar que contenia antes. Para esto puedes llenar el disco duro de información aleatoria antes de encriptarlo _(ejecutando `dd if=/dev/urandom of=/dev/ejemplo`)_, o para mas eficiencia, llenarlo de ceros una vez encriptado y que el cipher se encarge de que el disco se llene de información aleatoria _(ejecutando `dd if=/dev/zero of=/dev/mapper/ejemplo`) [1]_.
 
-Si no se realiza este proceso, una vez encriptado el disco duro, toda la información que se guarde a partir de encriptarlo estará protegida. Sin embargo, toda la infromación que se guardó en el disco duro anteriormente y que no ha sido sobrescrita todavía, _seguirá estando disponible (sin encriptar) para ser analizada con herramientas forensicas_.
+Una vez encriptado el disco duro, toda la información que se guarde a partir de encriptarlo estará protegida. Sin embargo, si no se realiza este proceso antes, toda la infromación que se guardó en el disco duro anteriormente y que no ha sido sobrescrita todavía, _seguirá estando disponible (sin encriptar) para ser analizada con herramientas forensicas_.
 
-Este proceso mencionado anteriormente tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información antes de instalar nada, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con `dd if=/dev/zero of=/home/usuario/archivo`.
+El proceso mencionado anteriormente tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información antes de instalar nada, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con `dd if=/dev/zero of=/home/usuario/archivo`.
 
 Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobrescrito la información que había en el disco _(Este metodo no es tan seguro porque no garantiza que se sobrescriba por completo todos los sectores del disco, tenemos el sistema de ficheros como intermediario, que puede estar dejando espacios libres en el disco duro)_.
 
