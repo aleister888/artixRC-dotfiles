@@ -36,7 +36,7 @@ chmod +x stage1.sh && ./stage1.sh
 
 # Atención!
 
-Si quieres encriptar tu disco duro para proteger la infromación que contiene, es __muy recomendado__ que vacies la información sin encriptar que contenia antes. Para esto puedes llenar el disco duro de información aleatoria antes de encriptarlo _(ejecutando `dd if=/dev/urandom of=/dev/ejemplo`)_, o para mas eficiencia, llenarlo de ceros una vez encriptado y que el cipher se encarge de que el disco se llene de información aleatoria _(ejecutando `dd if=/dev/zero of=/dev/mapper/ejemplo`) [1]_.
+Si quieres encriptar tu disco duro para proteger la infromación que contiene, es __muy recomendado__ que vacies la información sin encriptar que contenia antes. Para esto puedes llenar el disco duro de información aleatoria antes de encriptarlo _(ejecutando `dd if=/dev/urandom of=/dev/ejemplo`)_, o para mas eficiencia, llenarlo de ceros una vez encriptado y que el cipher se encarge de que el disco se llene de información aleatoria _(ejecutando `dd if=/dev/zero of=/dev/mapper/ejemplo`)_ __[1]__.
 
 Una vez encriptado el disco duro, toda la información que se guarde a partir de encriptarlo estará protegida. Sin embargo, si no se realiza este proceso antes, toda la infromación que se guardó en el disco duro anteriormente y que no ha sido sobrescrita todavía, _seguirá estando disponible (sin encriptar) para ser analizada con herramientas forensicas_.
 
@@ -64,16 +64,16 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # Referencias y créditos
 
-- [1] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
-- [2] https://wiki.gentoo.org/wiki/Dm-crypt
-- [3] https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system
-- [4] https://jpedmedia.com/tutorials/installations/void_install/index.html
-- [5] https://github.com/LukeSmithxyz/LARBS
-- [6] https://github.com/LukeSmithxyz/voidrice
-    - Créditos a Luke Smith por sus scripts, que sirvieron de referncia y base para implementar algunas de las funciones de este autoinstalador. Y por su build de st.
-- [7] https://suckless.org
-    - Créditos al equipo de suckless.org por todo el software suyo utilizado en este repositorio
-- [8] https://github.com/siduck/dotfiles
+- [3] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
+- [4] https://wiki.gentoo.org/wiki/Dm-crypt
+- [5] https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system
+- [6] https://jpedmedia.com/tutorials/installations/void_install/index.html
+- [7] https://github.com/LukeSmithxyz/LARBS
+- [8] https://github.com/LukeSmithxyz/voidrice
+   - Créditos a Luke Smith por sus scripts, que sirvieron de referncia y base para implementar algunas de las funciones de este autoinstalador. Y por su build de st.
+- [9] https://suckless.org
+   - Créditos al equipo de suckless.org por todo el software suyo utilizado en este repositorio
+- [10] https://github.com/siduck/dotfiles
     - Créditos a Sidhanth Rathod, de quien saque código para el widget de eww
-- [9] https://github.com/phillbush/xmenu
-- [10] https://github.com/George-lewis/DVDBounce
+- [11] https://github.com/phillbush/xmenu
+- [12] https://github.com/George-lewis/DVDBounce
