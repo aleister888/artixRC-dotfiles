@@ -21,37 +21,28 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 chmod +x stage1.sh && ./stage1.sh
 ```
 
-- Una vez instalado el sistema, y después de iniciar sesión, pulsa `Ctrl+Alt+H` para abrir un PDF con información de como usar tu instalación y otra información útil.
-
-La instalación toma, con una conexión de `40mb/s`, unos `25 minutos` (aproximadamente).
+- La instalación toma, con una conexión de `40mb/s`, unos `25 minutos` (aproximadamente).
+- Una vez instalado el sistema, y después de iniciar sesión, pulsa `Ctrl+Alt+H` para abrir un PDF con información sobre como usar el administrador de ventanas _(dwm)_ y otra información útil _(como configurar ssh, firefox, etc.)_.
 
 # Características
 
-- Encriptación (`/` y `/home`. `/boot` no esta encriptado) de disco
+- Encriptación (`/` y `/home`) de disco (`/boot` queda sin encriptar).
 - Soporte para `btrfs`, `ext4` y `xfs`
 - Soporte para `BIOS` y `UEFI`
 - Configuración de `Xorg` y `eww` automática, basada en el DPI y resolución de la pantalla.
-    - _Además; dwm, st y dmenu se compilan con el tamaño de fuente recomendado_
+    - _Además; dwm, st y dmenu se compilan con el tamaño de fuente recomendado para tu resolución_
 - Entorno configurado para minimizar el número de archivos en `~/` 
     - https://wiki.archlinux.org/title/XDG_Base_Directory
 
 # Atención!
 
-Si quieres utilizar encriptación para proteger tus datos, es __obligatorio__ vaciar el disco antes de la instalación llenándolo con información aleatoria. En caso contrario, la información que no se haya sobrescrito después de encriptar el disco _seguirá estando disponible para ser analizada con herramientas forensicas_.
+Si quieres encriptar tu disco duro para proteger la infromación que contiene, es __muy recomendado__ que vacies la información sin encriptar que contenia antes. Para esto puedes llenar el disco duro de información aleatoria antes de encriptarlo _(ejecutando `dd if=/dev/urandom of=/dev/ejemplo`)_, o para mas eficiencia, llenarlo de ceros una vez encriptado y que el cipher se encarge de que el disco se llene de información aleatoria _(ejecutando `dd if=/dev/zero of=/dev/mapper/ejemplo`)_.
 
-Para borrar toda la información contenida en el disco ejecuta: _(Sustituye el ejemplo por tu dipositivo)_
+Si no se realiza este proceso, una vez encriptado el disco duro, toda la información que se guarde a partir de encriptarlo estará protegida. Sin embargo, toda la infromación que se guardó en el disco duro anteriormente y que no ha sido sobrescrita todavía, _seguirá estando disponible (sin encriptar) para ser analizada con herramientas forensicas_.
 
-```
-dd if=/dev/urandom of=/dev/ejemplo
-```
+Este proceso mencionado anteriormente tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información antes de instalar nada, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con `dd if=/dev/zero of=/home/usuario/archivo`.
 
-Este proceso tomará horas, dependiendo de la velocidad y tamaño de tu dispositivo de almacenamiento. Si no tienes el tiempo para borrar toda la información, puedes instalar el sistema operativo de manera normal y una vez instalado llenar el disco crendo un archivo que lo llene _(menos seguro)_ con: _(Sustituye el archivo por uno que se encuentre en un directorio contenido por el disco que quieres asegurar)_
-
-```
-dd if=/dev/zero of=/home/usuario/archivo
-```
-
-Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobrescrito la información que había en el disco _(Este metodo no es tan seguro porque no garantiza que se sobrescriba por completo todos los sectores del disco, tenemos el sistema de ficheros como intermediario)_.
+Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobrescrito la información que había en el disco _(Este metodo no es tan seguro porque no garantiza que se sobrescriba por completo todos los sectores del disco, tenemos el sistema de ficheros como intermediario, que puede estar dejando espacios libres en el disco duro)_.
 
 `El mejor balance entre eficiencia y seguridad viene de llenar la partición ya encriptada con ceros, y el cipher se encargará de llenar /dev/mapper/ejemplo de información aleatoria [1]`
 

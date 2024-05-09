@@ -21,7 +21,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Actualizar el sistema
-alias update='yay -Syuu --removemake --ignore i3lock-fancy-git --ignore i3lock-fancy-rapid-git --ignore eww-git'
+alias update='yay -Syuu --removemake --ignore i3lock-fancy-git --ignore i3lock-fancy-rapid-git --ignore eww-git --ignore hydroxide-git'
 
 # Herramientas
 alias xdotool_table='xmodmap -pk'
