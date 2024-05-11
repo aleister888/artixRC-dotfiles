@@ -28,8 +28,10 @@ pkill eww
 # y abrirlo solo si hay un único monitor y ninguna ventana abierta
 ewwspawn(){
 	while true; do
+	local monitors
+	local resolution
 	# Contamos el numero de monitores activos
-	local monitors=$(xrandr --listmonitors | grep -c " .:")
+	monitors=$(xrandr --listmonitors | grep -c " .:")
 	# Definir el archivo al que apunta el enlace simbólico actual
 	current_link=$(readlink -f "$HOME/.config/eww/dashboard.scss")
 
@@ -39,7 +41,7 @@ ewwspawn(){
 	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
 
 	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
-	local resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
+	resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
 
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
 	if [[ $resolution -le 1080 ]]; then
@@ -126,7 +128,7 @@ xset -dpms && xset s off &
 pgrep pipewire || pipewire-start &
 
 # Iniciar el compositor (Solo en hardware real. Desactivar para máquinas virtuales)
-cat /sys/devices/virtual/dmi/id/product_name | grep "Q35\|VMware" || \
+grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
 pgrep picom || picomstart &
 
 # Servicios del sistema
@@ -150,7 +152,7 @@ if [ -e /sys/class/power_supply/BAT0 ]; then
 	mic=$(pactl list short sources | \
 	grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | \
 	awk '{print $1}')
-	pactl set-source-volume $mic 25%
+	pactl set-source-volume "$mic" 25%
 fi
 
 # Servicio de notificaciones
@@ -180,6 +182,7 @@ pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/
 [ -d "$HOME/.gnupg" ]	&& mv -f "$HOME/.gnupg" "$HOME/.local/share/gnupg"
 [ -d "$HOME/.java" ]	&& mv -f "$HOME/.java" "$HOME/.config/java"
 [ -d "$HOME/.cargo" ]	&& mv -f "$HOME/.cargo" "$HOME/.local/share/cargo"
+[ -d "$HOME/go" ]	&& mv -f "$HOME/go" "$HOME/.local/share/go"
 
 [ -f "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"
 
@@ -187,3 +190,6 @@ if [ -f "$HOME/.gitconfig" ]; then
 	mkdir -p "$HOME/.config/git"
 	mv -f "$HOME/.gitconfig" "$HOME/.config/git/config"
 fi
+
+rm -rf "$HOME/.local/share/desktop-directories"
+rm -rf "$HOME/.local/share/applications/wine"*
