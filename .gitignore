@@ -25,3 +25,5 @@ st/st
 st.o
 x.o
 fonts.h
+xmenu/xmenu
+xmenu.o
