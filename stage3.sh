@@ -238,15 +238,10 @@ fontdownload() {
 	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
 	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
 	
-	( # Descargar fuentes (Mostrar progreso con whiptail) [Total: 698,8M]
-		doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"     ; echo 33 # 0.7% (4,7M)
-		doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP" ; echo 66 # 2% (9,9M) + 4,7M
-		doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP" ; echo 100 # 100%
-	) | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
-	--title "Descargando fuentes" --gauge "Se están descargando las fuentes..." 8 50 0
-	
-	mkdir -p "$HOME/.local/share/fonts"
-	
+	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
+	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
+	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
+
 	doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
 	doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
 	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
@@ -399,6 +394,14 @@ gtk_config() {
 	doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
 	doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
 	doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
+
+	# Definimos nuestros directorios marca-páginas
+echo "file:///home/$USER
+file:///home/$USER/Downloads
+file:///home/$USER/Documents
+file:///home/$USER/Pictures
+file:///home/$USER/Videos
+file:///home/$USER/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 }
 
 # Configurar el fondo de pantalla
@@ -499,6 +502,8 @@ else
 
 	kde="false"
 	packages+=" tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring"
+	# Crear directorios
+	for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
 
 fi
 
@@ -578,9 +583,6 @@ audio_setup
 
 [ "$graphic_driver" == "virtual" ] && \
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
-
-# Crear directorios
-#for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
 
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
