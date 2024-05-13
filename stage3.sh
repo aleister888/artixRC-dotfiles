@@ -39,7 +39,7 @@ service_add(){
 ############
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils polkit-gnome gnome-keyring gnupg trash-cli dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -57,11 +57,11 @@ packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv 
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt dragon-drop"
 # Apariencia
-packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools nitrogen picom gruvbox-dark-gtk lxappearance"
+packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gtk"
 # Aplicaciones GUI
-packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab udiskie gcolor2 eww-git gnome-firmware gnome-disk-utility"
+packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab gcolor2 eww-git gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift tigervnc pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine-staging wine-mono wine-gecko winetricks"
+packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine-staging wine-mono wine-gecko winetricks"
 
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	packages+=" blueman"
@@ -172,7 +172,7 @@ packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-
 kb_layout_select(){
 	# Hacer un array con las diferentes distribuciones posibles y elegir nuestro layout
 	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f  -printf "%f\n" | \
-	sort | grep -v '...')
+	sort -u | grep -v '...')
 	keyboard_array=()
 	for key_layout in $key_layouts; do
 		keyboard_array+=("$key_layout" "$key_layout")
@@ -247,12 +247,9 @@ fontdownload() {
 	
 	mkdir -p "$HOME/.local/share/fonts"
 	
-	( # Extraer fuentes (Mostrar progreso con whiptail)
-		[ ! -d $AGAVE_DIR ]   && doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR     ; echo 33  ; sleep 1
-		[ ! -d $SYMBOLS_DIR ] && doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR ; echo 66  ; sleep 1
-		[ ! -d $IOSEVKA_DIR ] && doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR ; echo 100 ; sleep 1
-	) | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
-	--title "Extrayendo fuentes" --gauge "Se están extrayendo las fuentes..." 8 50 0
+	doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
+	doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
+	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
 }
 
 # Instalar nuestras extensiones de navegador
@@ -493,12 +490,16 @@ driver_choose
 
 # Elegir si instalar KDE
 if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
-	packages+=" sddm-openrc plasma-desktop dolphin wl-clipboard discover fwupd packagekit-qt6"
-	mkdir -p $HOME/.config/autostart
-	cp $HOME/.dotfiles/assets/configs/pipewire.desktop $HOME/.config/autostart/pipewire.desktop
+
 	kde="true"
+	packages+=" sddm-openrc plasma-desktop dolphin wl-clipboard discover fwupd packagekit-qt6"
+	mkdir -p $HOME/.config/autostart; cp $HOME/.dotfiles/assets/configs/pipewire.desktop $HOME/.config/autostart/pipewire.desktop
+
 else
+
 	kde="false"
+	packages+=" tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring"
+
 fi
 
 # Elegimos que paquetes instalar
@@ -543,12 +544,12 @@ vim_configure
 mkdir -p "$HOME/.config"
 dotfiles_install
 
-# Configuramos Tauon Music Box (Nuestro reproductor de música)
-"$HOME/.dotfiles/bin/tauon-config"
+# Instalamos dwm y otras utilidades
+suckless_install
 
 if [ $kde == "false" ]; then
-	# Instalamos dwm y otras utilidades
-	suckless_install
+	# Configuramos Tauon Music Box (Nuestro reproductor de música)
+	"$HOME/.dotfiles/bin/tauon-config"
 	# Creamos nuestro xinitrc
 	doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
 	# Configurar nuestro tema de QT
