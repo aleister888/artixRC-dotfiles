@@ -14,14 +14,10 @@ Configuración de `Artix Linux OpenRC` y auto-instalador
 - Ejecuta como root:
 
 ```
-curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh
+curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh && chmod +x stage1.sh && ./stage1.sh
 ```
 
-```
-chmod +x stage1.sh && ./stage1.sh
-```
-
-- La instalación toma, con una conexión de `40mb/s`, unos `25 minutos` (aproximadamente).
+- La instalación toma _(con una conexión de `40mb/s`)_ unos `25 minutos` aproximadamente.
 - Una vez instalado el sistema, y después de iniciar sesión, pulsa `Ctrl+Alt+H` para abrir un PDF con información sobre como usar el administrador de ventanas _(dwm)_ y otra información útil _(como configurar ssh, firefox, etc.)_.
 
 # Características
