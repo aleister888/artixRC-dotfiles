@@ -491,7 +491,7 @@ driver_choose
 if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
 
 	kde="true"
-	packages+=" sddm-openrc plasma-meta dolphin wl-clipboard discover fwupd packagekit-qt6 kscreen sddm-kcm pipewire-autostart spectacle"
+	packages+=" sddm-openrc plasma-meta dolphin wl-clipboard discover fwupd packagekit-qt6 kscreen sddm-kcm pipewire-autostart spectacle gvfs-mtp gvfs-gphoto2 gvfs-afc kdegraphics-thumbnailers kimageformats libheif qt6-imageformats ffmpegthumbs taglib"
 
 else
 
