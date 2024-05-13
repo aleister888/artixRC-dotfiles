@@ -226,40 +226,32 @@ xresources_make(){
 # Descargar e instalar nuestras fuentes
 fontdownload() {
 	# Definir las URLs de descarga y los nombres de archivo
-	local AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
-	local SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
-	local IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
+	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
+	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
+	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
 	# Archivos temporales
-	local AGAVE_ZIP="/tmp/Agave.zip"
-	local SYMBOLS_ZIP="/tmp/Symbols.zip"
-	local IOSEVKA_ZIP="/tmp/Iosevka.zip"
+	AGAVE_ZIP="/tmp/Agave.zip"
+	SYMBOLS_ZIP="/tmp/Symbols.zip"
+	IOSEVKA_ZIP="/tmp/Iosevka.zip"
 	# Definir directorios de destino
-	local AGAVE_DIR="/usr/share/fonts/Agave"
-	local SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
-	local IOSEVKA_DIR="/usr/share/fonts/Iosevka"
-	# Descargar fuentes
-	download(){ # Total: 698,8M
-		doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"; echo 33 # 0.7% (4,7M)
-		doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"; echo 66 # 2% (9,9M) + 4,7M
-		doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"; echo 100 # 100%
-	}
-	# Mostrar progreso con whiptail
-	download | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	AGAVE_DIR="/usr/share/fonts/Agave"
+	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
+	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
+	
+	( # Descargar fuentes (Mostrar progreso con whiptail) [Total: 698,8M]
+		doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"     ; echo 33 # 0.7% (4,7M)
+		doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP" ; echo 66 # 2% (9,9M) + 4,7M
+		doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP" ; echo 100 # 100%
+	) | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
 	--title "Descargando fuentes" --gauge "Se están descargando las fuentes..." 8 50 0
-
+	
 	mkdir -p "$HOME/.local/share/fonts"
-
-	# Extraer fuentes
-	extract(){
-		doas unzip -q "$AGAVE_ZIP" -d "$AGAVE_DIR"
-		ln -sf /usr/share/fonts/Agave "$HOME/.local/share/fonts/Agave" 2>/dev/null; echo 33
-		doas unzip -q "$SYMBOLS_ZIP" -d "$SYMBOLS_DIR"
-		ln -sf /usr/share/fonts/NerdFontsSymbolsOnly "$HOME/.local/share/fonts/NerdFontsSymbolsOnly" 2>/dev/null; echo 66
-		doas unzip -q "$IOSEVKA_ZIP" -d "$IOSEVKA_DIR"
-		ln -sf /usr/share/fonts/Iosevka "$HOME/.local/share/fonts/Iosevka" 2>/dev/null; echo 100
-	}
-	# Mostrar progreso con whiptail
-	extract | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	
+	( # Extraer fuentes (Mostrar progreso con whiptail)
+		[ ! -d $AGAVE_DIR ]   && doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR     ; echo 33  ; sleep 1
+		[ ! -d $SYMBOLS_DIR ] && doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR ; echo 66  ; sleep 1
+		[ ! -d $IOSEVKA_DIR ] && doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR ; echo 100 ; sleep 1
+	) | whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
 	--title "Extrayendo fuentes" --gauge "Se están extrayendo las fuentes..." 8 50 0
 }
 
@@ -388,31 +380,28 @@ general=\"Iosevka Nerd Font,12,-1,5,63,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/
 
 # Configurar nuestro tema de GTK
 gtk_config() {
-	# Verificar si el directorio ~/.dotfiles/.config/gtk-4.0 no existe y crearlo si es necesario
-	[ ! -d "$HOME/.dotfiles/.config/gtk-4.0" ] && mkdir "$HOME/.dotfiles/.config/gtk-4.0"
-	# Crear el archivo de configuración de GTK
-	cp "$HOME/.dotfiles/assets/configs/settings.ini" "$HOME/.dotfiles/.config/gtk-4.0/settings.ini"
+	local ASSETDIR="$HOME/.dotfiles/assets/configs"
+	local THEME_DIR="/usr/share/themes"
+
+	# Copiar la configuración de GTK
+	cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
+	cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
+	cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
+	cp $ASSETDIR/settings.ini $HOME/.config/gtk-4.0/settings.ini
+
 	# Aplicar configuraciones utilizando stow
 	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
-	# Definimos nuestros directorios marca-páginas
-echo "file:///home/$USER
-file:///home/$USER/Downloads
-file:///home/$USER/Documents
-file:///home/$USER/Pictures
-file:///home/$USER/Videos
-file:///home/$USER/Music" > "$HOME/.config/gtk-3.0/bookmarks"
 
-	local THEME_DIR="/usr/share/themes"
 	# Clona el tema de gtk4
 	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
 	# Copia el tema deseado a la carpeta de temas
 	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
 
 	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-	doas cp "$HOME/.dotfiles/assets/configs/.gtkrc-2.0" /root/.gtkrc-2.0
 	doas mkdir -p /root/.config
-	doas cp -r $HOME/.dotfiles/.config/gtk-3.0 /root/.config/gtk-3.0/
-	doas cp -r $HOME/.dotfiles/.config/gtk-4.0 /root/.config/gtk-4.0/
+	doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
+	doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
+	doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
 }
 
 # Configurar el fondo de pantalla
@@ -448,6 +437,7 @@ scripts_link(){
 		"wakeme"
 		"compressed-backup"
 		"crypt-backup"
+		"pipewire-start"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
@@ -501,6 +491,16 @@ sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 # Escogemos que drivers de video instalar
 driver_choose
 
+# Elegir si instalar KDE
+if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
+	packages+=" sddm-openrc plasma-desktop dolphin wl-clipboard discover fwupd packagekit-qt6"
+	mkdir -p $HOME/.config/autostart
+	cp $HOME/.dotfiles/assets/configs/pipewire.desktop $HOME/.config/autostart/pipewire.desktop
+	kde="true"
+else
+	kde="false"
+fi
+
 # Elegimos que paquetes instalar
 packages_choose
 
@@ -514,7 +514,7 @@ kb_layout_select
 kb_layout_conf
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
-xresources_make
+[ $kde == "false" ] && xresources_make
 
 # A partir de aquí no se necesita interacción del usuario
 whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20min aprox. (Depende de la velocidad de tu conexion a Internet)"
@@ -545,18 +545,22 @@ dotfiles_install
 
 # Configuramos Tauon Music Box (Nuestro reproductor de música)
 "$HOME/.dotfiles/bin/tauon-config"
-# Instalamos dwm y otras utilidades
-suckless_install
-# Creamos nuestro xinitrc
-doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-# Configurar nuestro tema de QT
-qt_config
-# Configurar nuestro tema de GTK
-gtk_config
-# Configurar el fondo de pantalla
-nitrogen_configure
-# Configurar el tema del cursor
-cursor_configure
+
+if [ $kde == "false" ]; then
+	# Instalamos dwm y otras utilidades
+	suckless_install
+	# Creamos nuestro xinitrc
+	doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
+	# Configurar nuestro tema de QT
+	qt_config
+	# Configurar nuestro tema de GTK
+	gtk_config
+	# Configurar el fondo de pantalla
+	nitrogen_configure
+	# Configurar el tema del cursor
+	cursor_configure
+fi
+
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
@@ -575,7 +579,7 @@ audio_setup
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 # Crear directorios
-for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
+#for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
 
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
@@ -590,16 +594,20 @@ doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/
 service_add irqbalance
 service_add syslog-ng
 service_add elogind
-service_add xdm
+
+if [ $kde == "false" ]; then
+	# Configurar y activar xdm
+	service_add xdm
+	doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+	doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+else
+	service_add sddm
+fi
 
 doas rfkill unblock wifi
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 	doas rfkill unblock bluetooth
 fi
-
-# Configurar xdm
-doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER

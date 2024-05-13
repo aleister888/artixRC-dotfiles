@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment=Pipewire Audio Server
+Name=Pipewire
+Exec=/usr/local/bin/pipewire-start
+Terminal=false
+Type=Application
