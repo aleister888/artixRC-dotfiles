@@ -27,3 +27,4 @@ x.o
 fonts.h
 xmenu/xmenu
 xmenu.o
+.config/zsh/zsh-you-should-use

@@ -39,7 +39,7 @@ service_add(){
 ############
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -51,7 +51,7 @@ packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc"
 # Documentos
 packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
-packages+=" arkenfox-user.js firefox thunderbird thunderbird-dark-reader ca-certificates ca-certificates-mozilla"
+packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates-mozilla"
 # Multimedia
 packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv tauon-music-box mediainfo feh vlc pavucontrol gimp sxiv nsxiv"
 # Herramientas de terminal
@@ -489,20 +489,16 @@ driver_choose
 
 # Elegir si instalar KDE
 if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
-
 	kde="true"
 	packages+=" sddm-openrc plasma-meta dolphin wl-clipboard discover fwupd packagekit-qt6 kscreen sddm-kcm pipewire-autostart spectacle gvfs-mtp gvfs-gphoto2 gvfs-afc kdegraphics-thumbnailers kimageformats libheif qt6-imageformats ffmpegthumbs taglib"
-
 else
-
 	kde="false"
-	packages+=" tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst"
+	packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop"
 	if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
 		packages+=" blueman"
 	fi
 	# Crear directorios
-	for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
-
+	for dir in Escritorio Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
 fi
 
 # Elegimos que paquetes instalar
@@ -582,9 +578,6 @@ audio_setup
 [ "$graphic_driver" == "virtual" ] && \
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
-rm $HOME/.bash* 2>/dev/null
-rm $HOME/.wget-hsts 2>/dev/null
-
 # Permitir a Steam controlar mandos de PlayStation 4
 doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
@@ -643,3 +636,6 @@ _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/en
 
 # Install mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
+
+rm $HOME/.bash* 2>/dev/null
+rm $HOME/.wget-hsts 2>/dev/null
