@@ -4,6 +4,8 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+
 # Instalar whiptail y parted
 pacman -Sy --noconfirm --needed parted libnewt xfsprogs
 
@@ -15,18 +17,18 @@ else
 fi
 
 whip_msg(){
-	whiptail --title "$1" --msgbox "$2" 10 60
+	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60
 }
 
 whip_yes(){
-	whiptail --title "$1" --yesno "$2" 10 60
+	whiptail --backtitle "$REPO_URL" --title "$1" --yesno "$2" 10 60
 }
 
 whip_menu(){
 	local TITLE=$1
 	local MENU=$2
 	shift 2
-	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	whiptail --backtitle "$REPO_URL" \
 	--title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
 }
 
@@ -112,7 +114,7 @@ scheme_show(){
 	scheme+="
 Aceptar los cambios borrara el contenido de todos los discos mostrados"
 	# Mostramos el esquema para confirmar los cambios
-	whiptail --title "Confirmar particionado" --yesno "$scheme" 15 60 || \
+	whiptail --backtitle "$REPO_URL" --title "Confirmar particionado" --yesno "$scheme" 15 60 || \
 	script_exit
 }
 
@@ -186,7 +188,7 @@ done
 }
 
 home_delete_confirm(){
-whiptail --title "$HOME_DISK" --yesno \
+whiptail --backtitle "$REPO_URL" --title "$HOME_DISK" --yesno \
 "¿Desea borrar todos los datos de $HOME_DISK? Esto borrara toda la información que este contiene (Documentos, imagenes, videos, etc).\n
 En caso contrario se utilizara el disco duro tal cual esta ahora (Si es que ya se uso en otra instalacion como particion /home)" 13 60
 }

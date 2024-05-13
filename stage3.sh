@@ -4,14 +4,16 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+
 # Funciones que invocaremos a menudo
 whip_msg(){
-	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --msgbox "$2" 10 60
 }
 
 whip_yes(){
-	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --yesno "$2" 10 60
 }
 
@@ -27,7 +29,7 @@ whip_menu(){
 	local TITLE=$1
 	local MENU=$2
 	shift 2
-	whiptail --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
+	whiptail --backtitle "$REPO_URL" --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 
 service_add(){
@@ -93,7 +95,7 @@ packages_show(){
 	[ "$daw"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
 	[ "$office"    == "true" ] && scheme+="Libreoffice\n"
 	[ "$latex"     == "true" ] && scheme+="TeX-live\n"
-	whiptail --title "Confirmar paquetes" --yesno "$scheme" 15 60 
+	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60 
 }
 
 # Elegir el software a instalar
@@ -498,7 +500,7 @@ else
 		packages+=" blueman"
 	fi
 	# Crear directorios
-	for dir in Escritorio Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
+	for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
 fi
 
 # Elegimos que paquetes instalar

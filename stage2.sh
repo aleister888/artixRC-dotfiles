@@ -4,9 +4,11 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+
 # Funciones que invocaremos a menudo
 whip_msg(){
-	whiptail --backtitle 'https://github.com/aleister888/artixRC-dotfiles' \
+	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --msgbox "$2" 10 60
 }
 
@@ -41,7 +43,7 @@ timezoneset(){
 		done
 
 		# Utilizar Whiptail para presentar las opciones de región al usuario
-		region=$(whiptail --title "Selecciona una region" --menu "Por favor, elige una region:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+		region=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una region" --menu "Por favor, elige una region:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
 
 		# Obtener la lista de zonas horarias disponibles para la región seleccionada
 		timezones=$( find "/usr/share/zoneinfo/$region" -mindepth 1 -type f -printf "%f\n" | sort -u )
@@ -51,7 +53,7 @@ timezoneset(){
 		done
 
 		# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
-		timezone=$(whiptail --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
+		timezone=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una zona horaria en $region" --menu "Por favor, elige una zona horaria en $region:" 20 70 10 ${timezones_array[@]} 3>&1 1>&2 2>&3)
 
 		# Verificar si la zona horaria seleccionada es válida
 		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
@@ -80,7 +82,7 @@ set_password() {
 }
 
 user_create(){
-	username="$(whiptail --inputbox "Por favor, ingresa el nombre del usuario:" 10 60 3>&1 1>&2 2>&3)"
+	username="$(whiptail --backtitle "$REPO_URL" --inputbox "Por favor, ingresa el nombre del usuario:" 10 60 3>&1 1>&2 2>&3)"
 	useradd -m -G wheel,lp "$username"
 	set_password "$username"
 }
@@ -152,7 +154,7 @@ swap_create(){
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config(){
-	hostname=$(whiptail --title "Configuracion de Hostname" --inputbox "Por favor, introduce el nombre que deseas darle a tu ordenador:" 10 60 3>&1 1>&2 2>&3)
+	hostname=$(whiptail --backtitle "$REPO_URL" --title "Configuracion de Hostname" --inputbox "Por favor, introduce el nombre que deseas darle a tu ordenador:" 10 60 3>&1 1>&2 2>&3)
 	echo "$hostname" > /etc/hostname
 	curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
 	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
