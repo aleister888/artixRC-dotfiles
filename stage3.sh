@@ -39,7 +39,7 @@ service_add(){
 ############
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli dunst net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs i3lock-fancy-git i3lock-fancy-rapid-git perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk j4-dmenu-desktop man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -62,10 +62,6 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gt
 packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab gcolor2 eww-git gnome-disk-utility"
 # Misc
 packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine-staging wine-mono wine-gecko winetricks"
-
-if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
-	packages+=" blueman"
-fi
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -160,10 +156,10 @@ packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmas
 [ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
 [ "$daw"	== "true" ] && \
 packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
-	mkdir -p "$HOME/Documents/Guitarra/Tabs" && \
-	ln -s "$HOME/Documents/Guitarra/Tabs" "$HOME/Documents/Tabs"
-	mkdir -p "$HOME/Documents/Guitarra/REAPER Media" && \
-	ln -s "$HOME/Documents/Guitarra/REAPER Media" "$HOME/Documents/REAPER Media"
+	mkdir -p "$HOME/Documentos/Guitarra/Tabs" && \
+	ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
+	mkdir -p "$HOME/Documentos/Guitarra/REAPER Media" && \
+	ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
 [ "$office"	== "true" ] && packages+=" libreoffice"
 [ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 }
@@ -397,11 +393,11 @@ gtk_config() {
 
 	# Definimos nuestros directorios marca-páginas
 echo "file:///home/$USER
-file:///home/$USER/Downloads
-file:///home/$USER/Documents
-file:///home/$USER/Pictures
-file:///home/$USER/Videos
-file:///home/$USER/Music" > "$HOME/.config/gtk-3.0/bookmarks"
+file:///home/$USER/Descargas
+file:///home/$USER/Documentos
+file:///home/$USER/Imágenes
+file:///home/$USER/Vídeos
+file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
 }
 
 # Configurar el fondo de pantalla
@@ -495,15 +491,17 @@ driver_choose
 if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
 
 	kde="true"
-	packages+=" sddm-openrc plasma-desktop dolphin wl-clipboard discover fwupd packagekit-qt6"
-	mkdir -p $HOME/.config/autostart; cp $HOME/.dotfiles/assets/configs/pipewire.desktop $HOME/.config/autostart/pipewire.desktop
+	packages+=" sddm-openrc plasma-meta dolphin wl-clipboard discover fwupd packagekit-qt6 kscreen sddm-kcm pipewire-autostart spectacle"
 
 else
 
 	kde="false"
-	packages+=" tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring"
+	packages+=" tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst"
+	if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+		packages+=" blueman"
+	fi
 	# Crear directorios
-	for dir in Documents Downloads Music Pictures Public Videos; do mkdir -p "$HOME/$dir"; done
+	for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
 
 fi
 

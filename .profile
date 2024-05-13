@@ -24,10 +24,12 @@ export XCURSOR_SIZE=64
 [ -e /usr/bin/plasmashell ] || export GDK_SCALE=1
 [ -e /usr/bin/plasmashell ] || export GTK_USE_PORTAL=1
 
-# Fix for java apps
+[ -e /usr/bin/plasmashell ] || export GTK_THEME=Gruvbox-Dark-B
+
+# Arreglar aplicaciones de java
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-# Make QT themes follow qt5ct settings
+# Hacer que las aplicaciones QT sigan los ajustes de QT5CT
 [ -e /usr/bin/plasmashell ] || export QT_QPA_PLATFORMTHEME="qt5ct"
 
 # XDG
@@ -61,7 +63,6 @@ export DVDCSS_CACHE="$XDG_DATA_HOME"/dvdcss
 export GNUPGHOME="${XDG_DATA_HOME:-$HOME/.local/share}/gnupg"
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/nv"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc:${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkfilechooser.ini"
-export GTK_THEME=Gruvbox-Dark-B
 export WINEPREFIX="${XDG_CONFIG_HOME:-$HOME/.config}/wineprefixes"
 export TERMINFO_DIRS="${XDG_CONFIG_HOME:-$HOME/.config}/terminfo:/usr/share/terminfo"
 export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
