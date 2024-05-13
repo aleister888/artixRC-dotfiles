@@ -19,15 +19,19 @@ export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
 export XCURSOR_PATH=/usr/share/icons/
 export XCURSOR_THEME=capitaine-cursors
 export XCURSOR_SIZE=64
+
 # Usar el filechooser del portal GTK
-export GDK_SCALE=1
-export GTK_USE_PORTAL=1
+[ -e /usr/bin/plasmashell ] || export GDK_SCALE=1
+[ -e /usr/bin/plasmashell ] || export GTK_USE_PORTAL=1
+
 # Fix for java apps
 export _JAVA_AWT_WM_NONREPARENTING=1
+
 # Make QT themes follow qt5ct settings
-export QT_QPA_PLATFORMTHEME="qt5ct"
+[ -e /usr/bin/plasmashell ] || export QT_QPA_PLATFORMTHEME="qt5ct"
+
 # XDG
-export XDG_CURRENT_DESKTOP=X-Generic
+[ -e /usr/bin/plasmashell ] || export XDG_CURRENT_DESKTOP=X-Generic
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
