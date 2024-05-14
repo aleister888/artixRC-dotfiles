@@ -193,3 +193,4 @@ fi
 
 rm -rf "$HOME/.local/share/desktop-directories"
 rm -rf "$HOME/.local/share/applications/wine"*
+rm -rf "$HOME/.config/menus"

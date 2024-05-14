@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME="$(date +"%d%m%Y_%H%M%S").jpg"
-SCRENDIR="$HOME/Pictures/Screenshots"
+SCRENDIR="$HOME/Imágenes/Screenshots"
 FILE="$SCRENDIR/$NAME"
 
 if [ ! -d $SCRENDIR ]; then
