@@ -41,7 +41,7 @@ service_add(){
 ############
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils timeshift xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs font-manager glow"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -61,7 +61,7 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gtk"
 # Aplicaciones GUI
-packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab gcolor2 eww-git gnome-disk-utility"
+packages+=" keepassxc transmission-gtk handbrake mate-calc bleachbit baobab gcolor2 gnome-disk-utility"
 # Misc
 packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine-staging wine-mono wine-gecko winetricks"
 
@@ -452,11 +452,11 @@ if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de v
 	packages+=" sddm-openrc plasma-meta dolphin kscreen sddm-kcm"
 	packages+=" wl-clipboard discover fwupd packagekit-qt6 spectacle gvfs-mtp gvfs-gphoto2 gvfs-afc kdegraphics-thumbnailers kimageformats libheif qt6-imageformats ffmpegthumbs taglib"
 	# Hacer que pipewire se inicie con el escritorio
-	mkdir -p $HOME/.config/plasma-workspace/env
-	ln -s $HOME/.dotfiles/bin/pipewire-start $HOME/.config/plasma-workspace/env/pipewire-start
+	mkdir -p $HOME/.config/plasma-workspace/env # https://userbase.kde.org/Session_Environment_Variables
+	cp $HOME/.dotfiles/bin/pipewire-start $HOME/.config/plasma-workspace/env/pipewire-start.sh
 else
 	kde="false"
-	packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop"
+	packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift"
 	{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && packages+=" blueman" # Instalar blueman si se encontro una tarjeta bluetooth
 	# Crear directorios
 	for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
