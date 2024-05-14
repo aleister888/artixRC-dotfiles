@@ -34,7 +34,7 @@ timezoneset(){
 	while [ "$valid_timezone" == "false" ]; do
 
 		# Obtener la lista de regiones disponibles
-		regions=$( find /usr/share/zoneinfo -mindepth 2 -type d -printf "%f\n" | sort -u )
+		regions=$( find /usr/share/zoneinfo -mindepth 1 -type d -printf "%f\n" | sort -u )
 
 		# Crear un array con las regiones
 		regions_array=()

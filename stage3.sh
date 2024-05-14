@@ -101,10 +101,15 @@ packages_show(){
 # Elegir el software a instalar
 packages_choose(){
 local packages_confirm="false"
-# Definimos todas las variables menos $daw como locales
-local virt music noprivacy office latex
+# Definimos todas las variables menos daw y virt como locales
+local music noprivacy office latex
 
 while [ "$packages_confirm" == "false" ]; do
+	variables=("virt" "music" "noprivacy" "daw" "office" "latex")
+	for var in "${variables[@]}"; do # Reiniciamos las variables si no confirmamos la selección
+		eval "$var=false"
+	done
+
 	whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && virt="true"
 	whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && music="true"
 	whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && noprivacy="true"
@@ -120,7 +125,7 @@ while [ "$packages_confirm" == "false" ]; do
 done
 
 [ "$virt"	== "true" ] && \
-packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq" && isvirt="true"
+packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
 [ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
 [ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
 [ "$office"	== "true" ] && packages+=" libreoffice"
@@ -584,7 +589,7 @@ doas mkdir /mnt/ANDROID
 doas chown $USER /mnt/ANDROID
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
-[ "$isvirt" == "true" ] && virt_conf
+[ "$virt" == "true" ] && virt_conf
 
 doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
 
