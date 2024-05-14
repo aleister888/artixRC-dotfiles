@@ -14,20 +14,21 @@ if [ -d "$HOME/.local/bin/sb" ]; then
 	PATH="$HOME/.local/bin/sb:$PATH"
 fi
 
+export PIPEWIRE_LATENCY="256/48000"
+
 # Definir cursor usado por X11
 export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
 export XCURSOR_PATH=/usr/share/icons/
 export XCURSOR_THEME=capitaine-cursors
 export XCURSOR_SIZE=64
 
+# Arreglar aplicaciones de java
+export _JAVA_AWT_WM_NONREPARENTING=1
+
 # Usar el filechooser del portal GTK
 [ -e /usr/bin/plasmashell ] || export GDK_SCALE=1
 [ -e /usr/bin/plasmashell ] || export GTK_USE_PORTAL=1
-
 [ -e /usr/bin/plasmashell ] || export GTK_THEME=Gruvbox-Dark-B
-
-# Arreglar aplicaciones de java
-export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Hacer que las aplicaciones QT sigan los ajustes de QT5CT
 [ -e /usr/bin/plasmashell ] || export QT_QPA_PLATFORMTHEME="qt5ct"
@@ -38,9 +39,8 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
-# Apps
-export PIPEWIRE_LATENCY="256/48000"
 
+# Apps
 export EDITOR="nvim"
 export SUDO_EDITOR="nvim"
 export READER="zathura"

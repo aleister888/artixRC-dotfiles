@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = firefox
+Target = librewolf
+Target = librewolf-bin
+[Action]
+Description=Update Arkenfox user.js
+When=PostTransaction
+Depends=arkenfox-user.js
+Exec=/usr/local/lib/arkenfox-auto-update

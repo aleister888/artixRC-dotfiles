@@ -92,58 +92,25 @@ packages_show(){
 	[ "$virt"      == "true" ] && scheme+="Virt-Manager\n"
 	[ "$music"     == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
 	[ "$noprivacy" == "true" ] && scheme+="Telegram Discord\n"
-	[ "$daw"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
 	[ "$office"    == "true" ] && scheme+="Libreoffice\n"
 	[ "$latex"     == "true" ] && scheme+="TeX-live\n"
-	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60 
+	[ "$daw"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
+	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60
 }
 
 # Elegir el software a instalar
 packages_choose(){
 local packages_confirm="false"
 # Definimos todas las variables menos $daw como locales
-local virt
-local music
-local noprivacy
-local office
-local latex
+local virt music noprivacy office latex
 
 while [ "$packages_confirm" == "false" ]; do
-	if whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?"; then
-		virt="true"
-	else
-		virt="false"
-	fi
-
-	if whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?"; then
-		music="true"
-	else
-		music="false"
-	fi
-
-	if whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?"; then
-		noprivacy="true"
-	else
-		noprivacy="false"
-	fi
-
-	if whip_yes "DAW" "¿Deseas instalar software de produccion de audio?"; then
-		daw="true"
-	else
-		daw="false"
-	fi
-
-	if whip_yes "Oficina" "¿Deseas instalar software de ofimatica?"; then
-		office="true"
-	else
-		office="false"
-	fi
-
-	if whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)"; then
-		latex="true"
-	else
-		latex="false"
-	fi
+	whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && virt="true"
+	whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && music="true"
+	whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && noprivacy="true"
+	whip_yes "Oficina" "¿Deseas instalar software de ofimatica?" && office="true"
+	whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)" && latex="true"
+	whip_yes "DAW" "¿Deseas instalar software de produccion de audio?" && daw="true"
 
 	if packages_show; then
 		packages_confirm=true
@@ -156,14 +123,14 @@ done
 packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq" && isvirt="true"
 [ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
 [ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
-[ "$daw"	== "true" ] && \
-packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
-	mkdir -p "$HOME/Documentos/Guitarra/Tabs" && \
-	ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
-	mkdir -p "$HOME/Documentos/Guitarra/REAPER Media" && \
-	ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
 [ "$office"	== "true" ] && packages+=" libreoffice"
 [ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
+[ "$daw"	== "true" ] && \
+	packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
+	mkdir -p "$HOME/Documentos/Guitarra/Tabs" && \
+	mkdir -p "$HOME/Documentos/Guitarra/REAPER Media" && \
+	ln -s    "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media" && \
+	ln -s    "$HOME/Documentos/Guitarra/Tabs"         "$HOME/Documentos/Tabs"
 }
 
 # Elegimos distribución de teclado
@@ -190,7 +157,7 @@ echo "Section \"InputClass\"
         Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	# Si elegimos español, configurar el layout de la tty en español también
-	doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
+	[ "$final_layout" == "es" ] && doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 }
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
@@ -283,17 +250,7 @@ makeuserjs(){
 	doas mkdir -p /usr/local/lib /etc/pacman.d/hooks
 	doas install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
 	# Trigger the update when needed via a pacman hook.
-	echo "[Trigger]
-Operation = Upgrade
-Type = Package
-Target = firefox
-Target = librewolf
-Target = librewolf-bin
-[Action]
-Description=Update Arkenfox user.js
-When=PostTransaction
-Depends=arkenfox-user.js
-Exec=/usr/local/lib/arkenfox-auto-update" | doas tee /etc/pacman.d/hooks/arkenfox.hook
+	doas cp $HOME/.dotfiles/assets/system/arkenfox.hook /etc/pacman.d/hooks/arkenfox.hook
 }
 firefox_configure(){
 	browserdir="/home/$USER/.mozilla/firefox"
@@ -424,7 +381,7 @@ keepass_configure(){
 	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
 }
 
-# Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
+# Crear enlaces simbólicos a /usr/local/bin para ciertos scripts
 scripts_link(){
 	files=(
 		"convert-2m4a"
@@ -480,7 +437,7 @@ virt_conf(){
 # Aquí empieza el script #
 ##########################
 
-# Instalamos yay
+# Instalamos yay (https://aur.archlinux.org/packages/yay)
 tmp_dir="/tmp/yay_install_temp"
 mkdir -p "$tmp_dir"
 git clone https://aur.archlinux.org/yay.git "$tmp_dir"
@@ -492,13 +449,15 @@ driver_choose
 # Elegir si instalar KDE
 if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
 	kde="true"
-	packages+=" sddm-openrc plasma-meta dolphin wl-clipboard discover fwupd packagekit-qt6 kscreen sddm-kcm pipewire-autostart spectacle gvfs-mtp gvfs-gphoto2 gvfs-afc kdegraphics-thumbnailers kimageformats libheif qt6-imageformats ffmpegthumbs taglib"
+	packages+=" sddm-openrc plasma-meta dolphin kscreen sddm-kcm"
+	packages+=" wl-clipboard discover fwupd packagekit-qt6 spectacle gvfs-mtp gvfs-gphoto2 gvfs-afc kdegraphics-thumbnailers kimageformats libheif qt6-imageformats ffmpegthumbs taglib"
+	# Hacer que pipewire se inicie con el escritorio
+	mkdir -p $HOME/.config/plasma-workspace/env
+	ln -s $HOME/.dotfiles/bin/pipewire-start $HOME/.config/plasma-workspace/env/pipewire-start
 else
 	kde="false"
 	packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop"
-	if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
-		packages+=" blueman"
-	fi
+	{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && packages+=" blueman" # Instalar blueman si se encontro una tarjeta bluetooth
 	# Crear directorios
 	for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
 fi
@@ -576,12 +535,11 @@ audio_setup
 
 # Si estamos usando una máquina virtual,
 # configuramos X11 para usar 1080p como resolución
-
 [ "$graphic_driver" == "virtual" ] && \
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 # Permitir a Steam controlar mandos de PlayStation 4
-doas cp $HOME/.dotfiles/assets/configs/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
+doas cp $HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
 
 # Descargar wordlist
 "$HOME/.dotfiles/bin/wordlist"
@@ -600,24 +558,23 @@ else
 	service_add sddm
 fi
 
+# Activar WiFi y Bluetooth
 doas rfkill unblock wifi
-if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
-	doas rfkill unblock bluetooth
-fi
+{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && doas rfkill unblock bluetooth
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network $USER
 [ -e /sys/class/power_supply/BAT0 ] && \
-doas cp "$HOME/.dotfiles/assets/configs/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
+doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
 # Suspender de forma automatica cuando la bateria cae por debajo del 5%
 [ -e /sys/class/power_supply/BAT0 ] && \
-doas cp "$HOME/.dotfiles/assets/configs/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
+doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
 
 # /etc/polkit-1/rules.d/99-artix.rules
 doas usermod -aG storage,input,users $USER
 
-# Permitir hacer click tocando el trackpad
+# Permitir hacer click tocando el trackpad (X11)
 # Créditos para: <luke@lukesmith.xyz>
 [ -e /sys/class/power_supply/BAT0 ] && \
 doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
@@ -629,7 +586,7 @@ doas chown $USER /mnt/ANDROID
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$isvirt" == "true" ] && virt_conf
 
-doas install -m 755 "$HOME/.dotfiles/assets/configs/nm-restart" /lib/elogind/system-sleep/nm-restart
+doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
 
 # Añadir entradas a /etc/environment
 echo 'CARGO_HOME="~/.local/share/cargo"
@@ -639,5 +596,6 @@ _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/en
 # Install mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 
+# Borrar archivos innecesarios
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
