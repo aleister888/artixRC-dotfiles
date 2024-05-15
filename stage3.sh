@@ -106,9 +106,8 @@ local music noprivacy office latex
 
 while [ "$packages_confirm" == "false" ]; do
 	variables=("virt" "music" "noprivacy" "daw" "office" "latex")
-	for var in "${variables[@]}"; do # Reiniciamos las variables si no confirmamos la selección
-		eval "$var=false"
-	done
+	# Reiniciamos las variables si no confirmamos la selección
+	for var in "${variables[@]}"; do eval "$var=false"; done
 
 	whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && virt="true"
 	whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && music="true"
@@ -124,18 +123,17 @@ while [ "$packages_confirm" == "false" ]; do
 	fi
 done
 
-[ "$virt"	== "true" ] && \
-packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
-[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
-[ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
-[ "$office"	== "true" ] && packages+=" libreoffice"
-[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
-[ "$daw"	== "true" ] && \
-	packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt" && \
-	mkdir -p "$HOME/Documentos/Guitarra/Tabs" && \
-	mkdir -p "$HOME/Documentos/Guitarra/REAPER Media" && \
-	ln -s    "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media" && \
-	ln -s    "$HOME/Documentos/Guitarra/Tabs"         "$HOME/Documentos/Tabs"
+	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
+	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
+	[ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
+	[ "$office"	== "true" ] && packages+=" libreoffice"
+	[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
+	if [ "$daw"	== "true" ]; then
+		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt"
+		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
+		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
+		ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
+	fi
 }
 
 # Elegimos distribución de teclado
@@ -207,11 +205,10 @@ fontdownload() {
 	AGAVE_DIR="/usr/share/fonts/Agave"
 	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
 	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
-	
+	# Descargar y extraer fuentes
 	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
 	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
 	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
-
 	doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
 	doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
 	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
@@ -304,13 +301,9 @@ dotfiles_install(){
 suckless_install(){
 	# Instalar software suckless
 	if [ "$resolution" == "720p" ] || [ "$resolution" == "1080p" ]; then
-		doas make 1080 install --directory "$HOME/.dotfiles/dwm" >/dev/null
-		doas make 1080 install --directory "$HOME/.dotfiles/dmenu" >/dev/null
-		doas make 1080 install --directory "$HOME/.dotfiles/st" >/dev/null
+		for app in dwm dmenu st; do doas make 1080 install --directory "$HOME/.dotfiles/$app" >/dev/null; done
 	else
-		doas make 2160 install --directory "$HOME/.dotfiles/dwm" >/dev/null
-		doas make 2160 install --directory "$HOME/.dotfiles/dmenu" >/dev/null
-		doas make 2160 install --directory "$HOME/.dotfiles/st" >/dev/null
+		for app in dwm dmenu st; do doas make 2160 install --directory "$HOME/.dotfiles/$app" >/dev/null; done
 	fi
 	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
