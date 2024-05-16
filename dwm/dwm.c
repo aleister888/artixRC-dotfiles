@@ -2153,8 +2153,8 @@ setfullscreen(Client *c, int fullscreen)
 void
 setgaps(const Arg *arg)
 {
-	if ((arg->i == 0) || (selmon->gappx + arg->i < 0))
-		selmon->gappx = 0;
+	if ((arg->i == gappx) || (selmon->gappx + arg->i < gappx))
+		selmon->gappx = gappx;
 	else
 		selmon->gappx += arg->i;
 	arrange(selmon);
