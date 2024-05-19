@@ -5,8 +5,16 @@ FACT=30
 
 # Obtener el título del track desde el servidor y mostrar solo los últimos FACT-3 caracteres
 title=$(playerctl metadata --player=tauon title)
-if [ "$(echo "$title" | wc -c)" -gt "$FACT" ]; then
-    echo " ...$(echo "$title" | awk -v last_chars="$(($FACT-3))" '{print substr($0, length($0) - last_chars + 1)}')"
+stat=$(playerctl status --player=tauon)
+
+if [ "$stat" == "Playing" ]; then
+	icon="奈"
 else
-	[ -z "$title" ] || echo " $title"
+	icon=""
+fi
+
+if [ "$(echo "$title" | wc -c)" -gt "$FACT" ]; then
+    echo " ...$(echo "$icon $title" | awk -v last_chars="$(($FACT-3))" '{print substr($0, length($0) - last_chars + 1)}')"
+else
+	[ -z "$title" ] || echo " $icon $title"
 fi
