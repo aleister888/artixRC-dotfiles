@@ -14,7 +14,7 @@ else
 fi
 
 if [ "$(echo "$title" | wc -c)" -gt "$FACT" ]; then
-    echo " ...$(echo "$icon $title" | awk -v last_chars="$(($FACT-3))" '{print substr($0, length($0) - last_chars + 1)}')"
+    echo " $icon ...$(echo "$title" | awk -v last_chars="$(($FACT-3))" '{print substr($0, length($0) - last_chars + 1)}')"
 else
 	[ -z "$title" ] || echo " $icon $title"
 fi
