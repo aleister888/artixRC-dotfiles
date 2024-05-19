@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if pgrep trayer; then
+	killall trayer
+else
+	setsid -f \
+	trayer --align center --width 6 --edge top --SetDockType true \
+	--SetPartialStrut true --expand true --height 64 -l \
+	--distancefrom top --distance \
+	"$(grep gappx $HOME/.dotfiles/dwm/resolution.h | tr -d -c 0-9)"
+fi
