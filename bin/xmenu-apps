@@ -25,15 +25,13 @@ IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video
 	IMG:$ICONPATH/apps/picard.svg					Picard			picard --stand-alone-instance
 
 IMG:$ICONPATH/apps/radiotray.svg					Radio
-	Your Classical - Relax	 					$TERMINAL $RADIOFLAG "http://relax.stream.publicradio.org/relax.mp3"
+	Radio Caprice Jazz Fusion					$TERMINAL $RADIOFLAG "http://79.111.119.111:8000/jazzfusion.m3u"
+	181.1 FM Jazz Fusion						$TERMINAL $RADIOFLAG "http://listen.181fm.com:7080/181-fusionjazz_128k.mp3"
+	181.1 FM Jazz Bebop						$TERMINAL $RADIOFLAG "http://listen.181fm.com:7080/181-bebop_128k.mp3"
+	91.1 FM KCSM Jazz 						$TERMINAL $RADIOFLAG "http://ice7.securenetsystems.net/KCSM2"
 	Adroit Jazz Underground	 					$TERMINAL $RADIOFLAG "https://icecast.walmradio.com:8443/jazz"
-	KCSM Jazz 91.1 FM						$TERMINAL $RADIOFLAG "http://ice7.securenetsystems.net/KCSM2"
-	Deep House Radio						$TERMINAL $RADIOFLAG "http://62.210.105.16:7000/stream"
-	TEKNO1								$TERMINAL $RADIOFLAG "http://cressida.shoutca.st:8591/stream/1/"
-	Radio Schizoid - Dub Techno					$TERMINAL $RADIOFLAG "http://94.130.113.214:8000/dubtechno"
 	RNE								$TERMINAL $RADIOFLAG "https://rtvelivestream.akamaized.net/rtvesec/rne/rne_r1_main.m3u8"
 	Cadena SER							$TERMINAL $RADIOFLAG "http://21223.live.streamtheworld.com:80/CADENASER.mp3"
-	BBC								$TERMINAL $RADIOFLAG "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service"
 
 IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
 	IMG:$ICONPATH/devices/audio-input-microphone.svg		Ajustes Mic.	pipewire-virtualmic-select
