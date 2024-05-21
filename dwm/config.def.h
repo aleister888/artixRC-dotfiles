@@ -80,9 +80,9 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]	= { "I", "ii", "iii", "IV", "V", "vi", "vii", "IIX", "ix",  "x" };
-static const char *alttags[]	= { "",  "",   "󰈹",  "", "󰙯",  "",   "󰋅",   "",  "󱁤",  "" };
-static const int taglayouts[]	= {   0,    0,     0,    0,   0,    2,     0,     0,    0,    0 };
+static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
+static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󱁤", "" };
+static const int taglayouts[]	= {   0,   0,   0,   0,   0,   2,   0,   0,   0,   0 };
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
