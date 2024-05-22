@@ -44,6 +44,13 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc-vimtex'
 inoremap <silent><expr> <tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 
+" Snippets
+Plug 'sirver/ultisnips'
+let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
 call plug#end()
 
 " Opciones de vim
