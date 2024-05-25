@@ -42,14 +42,14 @@ let g:Hexokinase_highlighters = [
 Plug 'lervag/vimtex'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc-vimtex'
-inoremap <silent><expr> <tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
+inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 
 " Snippets
 Plug 'sirver/ultisnips'
 let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
 
 call plug#end()
 
