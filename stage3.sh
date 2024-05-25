@@ -555,8 +555,8 @@ if [ $kde == "false" ]; then
 	doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 else
 	service_add sddm
-	sddm --example-config | \ # Configurar SDDM para usar breeze
-	sed "s/^Current=.*/Current=breeze/" | doas tee /etc/sddm.conf
+	# Configurar SDDM para seguir el tema de KDE
+	sddm --example-config | sed "s/^Current=.*/Current=breeze/" | doas tee /etc/sddm.conf
 fi
 
 # Activar WiFi y Bluetooth
