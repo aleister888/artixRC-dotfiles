@@ -181,7 +181,7 @@ cmd open ${{
 	*/pdf | */epub*)
 		zathura "$f" ;;
 
-	text/* | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor)
+	text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor)
 		$EDITOR $fx ;;
 
 	image/*)
