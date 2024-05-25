@@ -73,6 +73,9 @@ Cualquier texto que veas coloreado en azul es un hiper-vínculo \emph{(exceptuan
 \item Alt Izq. + Shift + Intro: Abrir terminal
 \item Alt Izq. + Ctrl + ,: Reducir el espacio entre ventanas
 \item Alt Izq. + Ctrl + .: Aumentar el espacio entre ventanas
+\item Alt Izq. + Ctrl + Shift + ,: Reducir el espacio entre ventanas $(\times 3)$
+\item Alt Izq. + Ctrl + Shift + .: Aumentar el espacio entre ventanas $(\times 3)$
+\vspace{-5pt}
 \begin{itemize}
 \setlength\itemsep{-0.3em}
 \item Alt Izq. + C: Copiar texto
@@ -83,6 +86,7 @@ Cualquier texto que veas coloreado en azul es un hiper-vínculo \emph{(exceptuan
 \item Alt Izq. + F2: Abrir Navegador \emph{(Firefox)}
 \item Alt Izq. + F3: Abrir Administrador de archivos
 \item Alt Izq. + Shift + F3: Abrir Administrador de archivos (En /run/media, donde se montan los pendrives y discos externos)
+\vspace{-5pt}
 \begin{itemize}
 \setlength\itemsep{-0.3em}
 \item Espacio: Seleccionar archivos
@@ -452,29 +456,29 @@ Primero vamos a descargar la ISO de Windows desde \href{https://www.microsoft.co
 
 Una vez descargada la ISO, abriremos \emph{virt-manager} y crearemos una máquina virtual, vamos a seleccionar nuestra ISO y el tamaño que queremos asignarle al disco:
 
-\begin{multicols}{2}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
-\includegraphics[width=0.75\textwidth]{images/vm-iso-selection.png}
+\begin{figure}[h]
+\centering
+\begin{minipage}[b]{0.35\textwidth}
+\includegraphics[width=\textwidth]{images/vm-iso-selection.png}
 \end{minipage}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
-\includegraphics[width=0.75\textwidth]{images/vm-disk-creation.png}
+\hspace{10pt}
+\begin{minipage}[b]{0.35\textwidth}
+\includegraphics[width=\textwidth]{images/vm-disk-creation.png}
 \end{minipage}
-\end{multicols}
+\end{figure}
 
 Vamos a asignarle la memoria RAM \emph{(mi recomendación es asignar, como mínimo, 8GB)} a nuestra máquina virtual. Y en el último paso, vamos a elegir el \emph{customizar nuestra máquina virtual antes de la instalación}.
 
-\begin{multicols}{2}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
-\includegraphics[width=0.75\textwidth]{images/vm-memory-setup.png}
+\begin{figure}[h]
+\centering
+\begin{minipage}[b]{0.35\textwidth}
+\includegraphics[width=\textwidth]{images/vm-memory-setup.png}
 \end{minipage}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
-\includegraphics[width=0.75\textwidth]{images/vm-name.png}
+\hspace{10pt}
+\begin{minipage}[b]{0.35\textwidth}
+\includegraphics[width=\textwidth]{images/vm-name.png}
 \end{minipage}
-\end{multicols}
+\end{figure}
 
 Ahora deberás hacer las siguientes modificaciones:
 
@@ -488,35 +492,31 @@ Ahora deberás hacer las siguientes modificaciones:
 \item Por último dale a \emph{Añadir hardware} y añade un almacenamiento de tipo de dispositivo CDROM y escribe al lado de \emph{Administrar...} la localización de el ISO con los drivers virtio, por ejemplo: \emph{/home/usuario/Downloads/virtio-win.iso}.
 \end{itemize}
 
-\begin{multicols}{2}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
+\begin{figure}[h]
 \centering
+\begin{minipage}[b]{0.4\textwidth}
 \includegraphics[width=\textwidth]{images/windows-setup-01.png}
 \end{minipage}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
-\centering
+\hspace{10pt}
+\begin{minipage}[b]{0.4\textwidth}
 \includegraphics[width=\textwidth]{images/windows-setup-02.png}
 \end{minipage}
-\end{multicols}
+\end{figure}
 
 Dale a \emph{Iniciar la instalación} y cuando veas la selección de disco del instalador de windows verás que está vacío. Primero debes darle a \emph{Cargar driver} o \emph{Load driver}, en inglés.
 
 Selecciona el CD con los drivers virtio y la carpeta que contiene los drivers para Windows 10. Entonces aparecerá tu disco duro virtual y podrás continuar la instalación de Windows. Cuando esta finalize, apaga la máquina virtual.
 
-\begin{multicols}{2}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
+\begin{figure}[h]
 \centering
+\begin{minipage}[b]{0.4\textwidth}
 \includegraphics[width=\textwidth]{images/windows-setup-03.png}
 \end{minipage}
-\begin{minipage}[t]{\linewidth}%
-\vspace{0pt}
-\centering
+\hspace{10pt}
+\begin{minipage}[b]{0.4\textwidth}
 \includegraphics[width=\textwidth]{images/windows-setup-04.png}
 \end{minipage}
-\end{multicols}
+\end{figure}
 
 \subsection{Looking Glass en el Host}
 

@@ -284,6 +284,8 @@ static const Key keys[] = {
 	// Cambiar espacio entre ventanas
 	{ MODKEY|ControlMask,           XK_period, setgaps,          {.i = -8 } },
 	{ MODKEY|ControlMask,           XK_comma,  setgaps,          {.i = +8 } },
+	{ MODKEY|ShiftMask|ControlMask, XK_period, setgaps,          {.i = -24 } },
+	{ MODKEY|ShiftMask|ControlMask, XK_comma,  setgaps,          {.i = +24 } },
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
 	TAGKEYS(                        XK_2,                        1)
