@@ -164,10 +164,10 @@ cmd fzf_jump ${{
 cmd open ${{
     case $(xdg-mime query filetype "$(readlink -f $f)") in
 
-	application/x-7z-compressed | application/vnd.rar | application/x-tar)
+	*/x-7z-compressed | */vnd.rar | */x-tar)
 		xarchiver "$fx" ;;
 
-	application/zip)
+	*/zip)
 		case "$(readlink -f $f)" in
 			*.cbz)
 				zathura "$fx" ;;
@@ -175,13 +175,13 @@ cmd open ${{
 			xarchiver "$fx" ;;
 		esac ;;
 
-	application/vnd.*)
+	*/vnd.*)
 		libreoffice "$fx" ;;
 
-	application/pdf | application/epub*)
+	*/pdf | */epub*)
 		zathura "$f" ;;
 
-	text/* | application/json | inode/x-empty | */x-shellscript | application/pgp-encrypted)
+	text/* | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor)
 		$EDITOR $fx ;;
 
 	image/*)
