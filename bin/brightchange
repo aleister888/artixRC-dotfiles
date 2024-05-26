@@ -3,6 +3,8 @@
 # Script para cambiar el brillo directamente usando /sys/class/backlight/intel_backlight/brightness
 # (Solo funciona en portátiles con procesadores intel)
 
+[ -f /sys/class/backlight/intel_backlight/max_brightness ] || exit 1
+
 # Calcular el nuevo valor para el brillo
 calculate_brightness() {
 	local max="$1"
