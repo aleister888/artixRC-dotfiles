@@ -26,6 +26,10 @@ IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video
 
 IMG:$ICONPATH/apps/radiotray.svg					Radio
 	Radio Caprice Jazz Fusion					$TERMINAL $RADIOFLAG "http://79.111.119.111:8000/jazzfusion.m3u"
+	4Drive Jazz							$TERMINAL $RADIOFLAG "http://radio.streemlion.com:1150/stream"
+	Splash Jazz							$TERMINAL $RADIOFLAG "https://ais-sa2.cdnstream1.com/2346_128.mp3"
+	101 Smooth Jazz							$TERMINAL $RADIOFLAG "http://jking.cdnstream1.com/b22139_128mp3"
+	KKJZ KJAZZ HD2 - Bebop Channel					$TERMINAL $RADIOFLAG "https://1.ice1.sslstream.com/kkjz_hd.aac"
 	181.1 FM Jazz Fusion						$TERMINAL $RADIOFLAG "http://listen.181fm.com:7080/181-fusionjazz_128k.mp3"
 	181.1 FM Jazz Bebop						$TERMINAL $RADIOFLAG "http://listen.181fm.com:7080/181-bebop_128k.mp3"
 	91.1 FM KCSM Jazz 						$TERMINAL $RADIOFLAG "http://ice7.securenetsystems.net/KCSM2"
