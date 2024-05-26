@@ -5,6 +5,9 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+
 # Mostramos el fondo de pantalla
 nitrogen --restore
 

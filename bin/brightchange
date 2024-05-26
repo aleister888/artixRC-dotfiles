@@ -8,25 +8,27 @@ calculate_brightness() {
 	local max="$1"
 	local actual="$2"
 	local percentage="$3"
+	local new_brightness
+	local gradient=50
 	# Calcular el 20% del brillo (No podremos bajar de este valor)
 	local increment=$((max / 10 * 2))
 	# Calcular nuevo brillo en función del argumento que damos
+	# y cambiarlo gradualmente
 	if [ "$percentage" == "inc" ]; then
 		new_brightness=$((actual + increment))
+		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $(($max-$gradient)) ]; do
+			actual=$((actual + $gradient))
+			echo $actual | doas tee /sys/class/backlight/intel_backlight/brightness
+		done
 	elif [ "$percentage" == "dec" ]; then
 		new_brightness=$((actual - increment))
+		while [ "$actual" -gt "$new_brightness" ] && [ "$actual" -ge $gradient ]; do
+			actual=$((actual - $gradient))
+			echo $actual | doas tee /sys/class/backlight/intel_backlight/brightness
+		done
 	fi
-	# Asegurarse que el nuevo brillo no baja de $increment
-	# Ensure brightness stays within bounds
-	if [ "$new_brightness" -lt "$increment" ]; then
-		exit 1
-	fi
-
-	echo "$new_brightness"
 }
 
 max_brightness=$(cat /sys/class/backlight/intel_backlight/max_brightness)
 current_brightness=$(cat /sys/class/backlight/intel_backlight/brightness)
-new_brightness=$(calculate_brightness "$max_brightness" "$current_brightness" "$1")
-
-echo "$new_brightness" | doas tee /sys/class/backlight/intel_backlight/brightness
+calculate_brightness "$max_brightness" "$current_brightness" "$1"

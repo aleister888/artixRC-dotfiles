@@ -10,6 +10,7 @@ RADIOFLAG="$TERMTITLE scratchpad mpv"
 cat <<EOF | xmenu -r | /bin/sh &
 IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/$BROWSER.svg					$(echo $BROWSER | sed 's/^\(.\)/\U\1/')	$BROWSER
+	IMG:$ICONPATH/apps/kdeconnect.svg				KDE Connect		/usr/lib/kdeconnectd --replace
 	IMG:$ICONPATH/apps/discord.svg					Discord			discord
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/transmission.svg				Transmission		transmission-gtk
