@@ -1,6 +1,1 @@
-[Desktop Entry]
-Comment=A third-party, open-source ProtonMail CardDAV, IMAP and SMTP bridge
-Name=Hydroxide
-Exec=/usr/bin/hydroxide imap
-Terminal=false
-Type=Application
+./desktop/hydroxide.desktop

@@ -133,6 +133,7 @@ done
 		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
+		doas ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop /usr/share/applications/
 	fi
 }
 
