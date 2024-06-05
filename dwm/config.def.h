@@ -7,15 +7,15 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Constantes
-static const unsigned int borderpx       = gappx/4+4; // Borde en pixeles de las ventanas
+static const unsigned int borderpx       = gappx/5; // Borde en pixeles de las ventanas
 static const int vertpad                 = gappx;   // Separación vertical de la barra
 static const int sidepad                 = gappx;   // Separación horizontal de la barra
-static const int user_bh                 = gappx+4;   // Altura barra: 0 por defecto, >= 1 Altura añadida
+static const int user_bh                 = gappx;       // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;       // Pixeles de cercanía para pegarse al borde (0 = desactivado)
 static const unsigned int systraypinning = 0;       // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
-static const unsigned int systrayspacing = gappx/2+2; // Espaciado de la barra de tareas
+static const unsigned int systrayspacing = gappx/5*2; // Espaciado de la barra de tareas
 static const int systraypinningfailfirst = 1;       // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
-static const int showsystray             = 1;       // ¿Barra de tareas? (0: Desactivada)
+static const int showsystray             = 0;       // ¿Barra de tareas? (0: Desactivada)
 static const int swallowfloating         = 0;       // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;       // 0 Para desactivar la barra
 static const int topbar                  = 1;       // 0 Para la barra en la parte inferior
@@ -62,17 +62,12 @@ static const char *colors[][3]      = {
 	[SchemeTag6]        = { col_blue,   background_sel, "#000000"  },
 	[SchemeTag7]        = { col_green,  background_sel, "#000000"  },
 	[SchemeTag8]        = { col_yellow, background_sel, "#000000"  },
-	[SchemeTag9]        = { col_blue,   background_sel, "#000000"  },
-	[SchemeTag10]       = { col_purple, background_sel, "#000000"  },
-	[SchemeTag11]       = { col_aqua,   background_sel, "#000000"  },
-	[SchemeTag12]       = { col_orange, background_sel, "#000000"  },
 	// Los valores con "#000000" no son usados pero no pueden estar vacios
 };
 
 static const int tagschemes[] = { SchemeTag1,  SchemeTag2,  SchemeTag3,
                                   SchemeTag4,  SchemeTag5,  SchemeTag6,
-                                  SchemeTag7,  SchemeTag8,  SchemeTag9,
-                                  SchemeTag10, SchemeTag11, SchemeTag12 };
+                                  SchemeTag7,  SchemeTag8 };
 
 typedef struct {
 	const char *name;
@@ -80,9 +75,9 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
-static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󱁤", "" };
-static const int taglayouts[]	= {   0,   0,   0,   0,   0,   2,   0,   0,   0,   0 };
+static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", };
+static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", };
+static const int taglayouts[]	= {   0,   0,   0,   0,   0,   2,   0,   0, };
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -122,25 +117,24 @@ static const Rule rules[] = {
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
 	{ "REAPER",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Guitarix",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
-	// Espacio 8: Gráficos
+	// Espacio 8: Gráficos || Organizar/Descargar Música || Utilidades/Configuración
 	{ "krita",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Fr.handbrake.ghb",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Gimp",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	// Espacio 9: Organizar/Descargar Música || Utilidades/Configuración
-	{ "Lrcget",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Easytag",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Picard",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "transmission-gtk",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "KeePassXC",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Timeshift-gtk",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "BleachBit",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Gnome-disks",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Nitrogen",		NULL,	NULL,	1 << 8,	1,	0,	0,	-1,     0},
-	{ "Blueman-manager",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Arandr",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "Lxappearance",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "qt5ct",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
-	{ "baobab",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Lrcget",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Easytag",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Picard",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "transmission-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "KeePassXC",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Timeshift-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "BleachBit",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Gnome-disks",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Nitrogen",		NULL,	NULL,	1 << 7,	1,	0,	0,	-1,     0},
+	{ "Blueman-manager",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Arandr",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "Lxappearance",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "qt5ct",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "baobab",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	// Scratchpad
 	{ NULL,	NULL,"scratchpad",              0,      1,      1,      1,      -1,     's'},
 };
@@ -282,10 +276,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_y,      setlayout,        {.v = &layouts[4]} },
 	{ MODKEY|ShiftMask,             XK_y,      setlayout,        {.v = &layouts[5]} },
 	// Cambiar espacio entre ventanas
-	{ MODKEY|ControlMask,           XK_period, setgaps,          {.i = -8 } },
-	{ MODKEY|ControlMask,           XK_comma,  setgaps,          {.i = +8 } },
-	{ MODKEY|ShiftMask|ControlMask, XK_period, setgaps,          {.i = -24 } },
-	{ MODKEY|ShiftMask|ControlMask, XK_comma,  setgaps,          {.i = +24 } },
+	{ MODKEY|ControlMask,           XK_period, setgaps,          {.i = -16 } },
+	{ MODKEY|ControlMask,           XK_comma,  setgaps,          {.i = +16 } },
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
 	TAGKEYS(                        XK_2,                        1)

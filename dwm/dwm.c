@@ -89,8 +89,7 @@ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm,
 	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm, SchemeScratchSel, SchemeStickyNorm, SchemeStickySel,
 	SchemeTag1, SchemeTag2,  SchemeTag3,  SchemeTag4,
-	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8,
-	SchemeTag9, SchemeTag10, SchemeTag11, SchemeTag12}; /* color schemes */
+	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8}; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetWMSticky, NetActiveWindow, NetWMWindowType,

@@ -51,6 +51,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # Cosas por hacer
 
+- Actualizar información sobre el script `convert-2mp3`
 - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Añadir capturas a la guía sobre VFIO
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
