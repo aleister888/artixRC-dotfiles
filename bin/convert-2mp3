@@ -7,9 +7,9 @@
 
 # Función para verificar que las dependencias estan instaladas
 check_command() {
-	if ! command -v $1 &> /dev/null; then
-		printf "El comando $1 no se encontró. Por favor, instálalo usando:"
-		printf "$2"
+	if ! command -v "$1" &> /dev/null; then
+		echo -e "El comando $1 no se encontró. Por favor, instálalo usando:\n"
+		echo "$2"
 		exit 1
 	fi
 }
@@ -20,7 +20,7 @@ check_command "glyrc" "sudo pacman -S glyrc"
 check_command "eyeD3" "yay -S python-eyed3"
 
 usage(){
-	printf "Uso: $0 [-p] [Directorio original] [Directorio para la copia]\n"
+	echo -e "Uso: $0 [-p] [Directorio original] [Directorio para la copia]\n"
 	printf "  -p: Convertir archivos en paralelo (Más rápido, pero consumirá más recursos)\n"
 	printf "  -l: Añadir letras (Más lento, requiere conexión a internet)\n"
 	printf "  -h: Mostrar este mensaje\n"
@@ -79,10 +79,10 @@ sed -i -e "s|^|rm -rf \"$BK_DIR/|" -e 's|$|.mp3"|' -e '1i #!/bin/sh' "$SYNC_DIFF
 # Función para comparar y añadir archivos obsoletos al archivo SYNC_DIFF
 compare_and_append() {
 	while read -r file; do
-	    local og_file="$OG_DIR/$file"
-	    local og_time
-	    og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
-	    local extension="${file##*.}"  # Extraer la extensión del archivo
+		local og_file="$OG_DIR/$file"
+		local og_time
+		og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
+		local extension="${file##*.}"  # Extraer la extensión del archivo
 
 	if [ -e "$og_file" ]; then
 		if [ "$extension" == "flac" ]; then
@@ -130,7 +130,7 @@ convert_file() {
 	local tmplyrics="/tmp/lyrics.$RANDOM.txt" # Archivo temporal para las letras
 	local tmpcover="/tmp/cover.$RANDOM.jpg" # Archivo temporal para las portadas
 
-	# Función para borrar y sustituir caracteres conflictivos
+	# Función para borrar/sustituir caracteres conflictivos
 	clean_non_ascii(){
 		iconv -f UTF-8 -t ASCII//TRANSLIT
 	}
@@ -157,45 +157,49 @@ convert_file() {
 	local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}')
 	local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}')
 
-		# Convertir audio a .mp3 (Sin letra, más rápido)
-		if [ "$4" = "false" ]; then
-			ffmpeg -n -nostdin -i "$og_dir/$file" \
-				-codec:a libmp3lame \
-				-ab 320k \
-				-metadata:s:v title="Album cover" \
-				-metadata:s:v comment="Cover (front)" \
-				-map_metadata -1 \
-				-metadata artist="$artist" \
-				-metadata title="$title" \
-				-metadata album="$album" \
-				-metadata album_artist="$album_artist" \
-				-metadata date="$date" \
-				-metadata track="$track" \
-				-metadata disc="$disc" \
-				"$dest_file" >/dev/null 2>&1
-		else # Convertir audio a .mp3 (Con letra, mucho más lento)
-			# Recodificar el audio en mp3
-			ffmpeg -nostdin -i "$og_dir/$file" \
-				-q:a 0 -map_metadata -1 \
-				"$dest_file" >/dev/null 2>&1
-			# Extraer la portada del álbum del archivo original
-			ffmpeg -nostdin -i "$og_dir/$file" "$tmpcover" >/dev/null 2>&1
-			# Obtener la letra (Si se ejecutó el script con -l)
-			glyrc lyrics --artist "$artist" --title "$title" -l "en" --write "$tmplyrics" >/dev/null 2>&1 && \
-				iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
-			# Añadir metadatos (Con la letras, si se descargó en el paso anterior)
-			eyeD3 --title "$title" \
-				--artist "$artist" \
-				--album-artist "$album_artist" \
-				--album "$album" \
-				--release-date "$date" \
-				--track "$track" \
-				--disc-num "$disc" \
-				--add-image "$tmpcover":FRONT_COVER \
-				--add-lyrics "$tmplyrics" \
-				"$dest_file" >/dev/null 2>&1
-		fi
-	rm "$tmpcover" "$tmplyrics" 2>/dev/null
+	if [ "$4" = "false" ]; then # Convertir a mp3 con letra (Rápido)
+		ffmpeg -n -nostdin -i "$og_dir/$file" \
+			-codec:a libmp3lame \
+			-ab 320k \
+			-metadata:s:v title="Album cover" \
+			-metadata:s:v comment="Cover (front)" \
+			-map_metadata -1 \
+			-metadata artist="$artist" \
+			-metadata title="$title" \
+			-metadata album="$album" \
+			-metadata album_artist="$album_artist" \
+			-metadata date="$date" \
+			-metadata track="$track" \
+			-metadata disc="$disc" \
+			"$dest_file" >/dev/null 2>&1
+	else # Convertir a con letra (Mucho más lento)
+		# Pasar a mp3 (Sin ningún metadato)
+		ffmpeg -nostdin -i "$og_dir/$file" \
+			-q:a 0 -map_metadata -1 \
+			"$dest_file" >/dev/null 2>&1
+
+		# Extraer la portada del álbum del archivo original
+		ffmpeg -nostdin -i "$og_dir/$file" "$tmpcover" >/dev/null 2>&1
+
+		# Obtener la letra y borrar/sustituir caracteres conflictivos
+		glyrc lyrics --artist "$artist" --title "$title" -l "en" --write "$tmplyrics" >/dev/null 2>&1 && \
+			iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
+
+		# Añadir metadatos y portada
+		eyeD3 --title "$title" \
+			--artist "$artist" \
+			--album-artist "$album_artist" \
+			--album "$album" \
+			--release-date "$date" \
+			--track "$track" \
+			--disc-num "$disc" \
+			--add-image "$tmpcover":FRONT_COVER \
+			--add-lyrics "$tmplyrics" \
+			"$dest_file" >/dev/null 2>&1
+
+		# Borrar archivos temprales
+		rm "$tmpcover" "$tmplyrics" 2>/dev/null
+	fi
 	fi
 }
 
