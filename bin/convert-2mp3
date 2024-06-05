@@ -131,9 +131,9 @@ convert_file() {
 	local tmplyrics="/tmp/lyrics.$RANDOM.txt" # Archivo temporal para las letras
 	local tmpcover="/tmp/cover.$RANDOM.jpg" # Archivo temporal para las portadas
 
-	# Función para borrar caracteres conflictivos
+	# Función para borrar y sustituir caracteres conflictivos
 	clean_non_ascii(){
-		sed 's/[^[:alnum:][:space:]¿?¡!,;.@#$%&=-]//g'
+		iconv -f UTF-8 -t ASCII//TRANSLIT
 	}
 
 	# Eliminar la extensión según el tipo de archivo
@@ -203,7 +203,9 @@ convert_file() {
 				"$dest_file" >/dev/null 2>&1
 			# Añadir carátula del álbum
 			eyeD3 --add-image "$tmpcover":FRONT_COVER "$dest_file" >/dev/null 2>&1
+
 		fi
+	rm "$tmpmetadata" "$tmpcover" "$tmplyrics" 2>/dev/null
 	fi
 }
 
@@ -230,8 +232,6 @@ else
 		convert_file "$file" "$BK_DIR" "$OG_DIR" "$lyrics"
 	done
 fi
-
-rm /tmp/metadata.*.txt /tmp/lyrics.*.txt /tmp/cover.*.jpg 2>/dev/null
 
 # Borrar los directorios vacíos en la carpeta de destino
 echo "Se borraron $(find "$BK_DIR" -type d -empty -not -path "*/.stfolder" -delete -print 2>/dev/null | wc -l) carpetas vacias."
