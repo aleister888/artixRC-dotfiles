@@ -153,8 +153,8 @@ convert_file() {
 	local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}' | clean_non_ascii)
 	local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}' | clean_non_ascii)
 	local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}' | clean_non_ascii)
+	local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}' | sed 's|/.*||')
 	local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}')
-	local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}')
 	local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}')
 
 	if [ "$4" = "false" ]; then # Convertir a mp3 con letra (Rápido)
@@ -185,17 +185,30 @@ convert_file() {
 		glyrc lyrics --artist "$artist" --title "$title" -l "en" --write "$tmplyrics" >/dev/null 2>&1 && \
 			iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
 
-		# Añadir metadatos y portada
-		eyeD3 --title "$title" \
-			--artist "$artist" \
-			--album-artist "$album_artist" \
-			--album "$album" \
-			--release-date "$date" \
-			--track "$track" \
-			--disc-num "$disc" \
-			--add-image "$tmpcover":FRONT_COVER \
-			--add-lyrics "$tmplyrics" \
-			"$dest_file" >/dev/null 2>&1
+		if [ -f "$tmplyrics" ]; then
+			# Añadir metadatos y portada
+			eyeD3 --title "$title" \
+				--artist "$artist" \
+				--album-artist "$album_artist" \
+				--album "$album" \
+				--release-date "$date" \
+				--track "$track" \
+				--disc-num "$disc" \
+				--add-image "$tmpcover":FRONT_COVER \
+				--add-lyrics "$tmplyrics" \
+				"$dest_file"
+		else
+			# Añadir metadatos y portada (No se encontró ninguna letra)
+			eyeD3 --title "$title" \
+				--artist "$artist" \
+				--album-artist "$album_artist" \
+				--album "$album" \
+				--release-date "$date" \
+				--track "$track" \
+				--disc-num "$disc" \
+				--add-image "$tmpcover":FRONT_COVER \
+				"$dest_file"
+		fi
 
 		# Borrar archivos temprales
 		rm "$tmpcover" "$tmplyrics" 2>/dev/null
