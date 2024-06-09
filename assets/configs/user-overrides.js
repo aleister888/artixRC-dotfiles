@@ -27,3 +27,5 @@ user_pref("browser.toolbars.bookmarks.visibility", "always");
 
 // Barra de tareas del sistema
 user_pref("browser.tabs.inTitlebar", 0);
+
+user_pref("privacy.resistFingerprinting", false);
