@@ -51,6 +51,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # Cosas por hacer
 
+- Script para instalar solo los scripts útiles (Para usar con otras distribuciones)
 - Actualizar información sobre el script `convert-2mp3`
 - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Añadir capturas a la guía sobre VFIO
