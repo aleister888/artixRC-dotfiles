@@ -71,11 +71,8 @@ echo "Buscando archivos desactualizados o sobrantes..."
 find "$OG_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' > "$OG_TMP"
 find "$BK_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' > "$BK_TMP"
 
-# Encontrar archivos que han sido eliminados en el directorio original
+# Crear un script para borrar los archivos que han sido eliminados en el directorio original
 grep -vFxf "$OG_TMP" "$BK_TMP" | uniq > "$SYNC_DIFF"
-
-rm -f "$OG_TMP" "$BK_TMP"
-
 sed -i -e "s|^|rm -rf \"$BK_DIR/|" -e 's|$|.mp3"|' -e '1i #!/bin/sh' "$SYNC_DIFF" >/dev/null 2>&1
 
 # Función para comparar y añadir archivos obsoletos al archivo SYNC_DIFF
@@ -103,22 +100,22 @@ compare_and_append() {
 	done
 }
 
-# Buscar archivos de audio y comparar fechas de modificación
+# Buscamos que archivos estan desactualizados para borrarlos también
 find "$OG_DIR" -type f \
 	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
 	-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
 	-printf '%P\n' | compare_and_append
 echo "Hecho!"
 
-# Limpiar archivos temporales
+# Borramos las pistas desactualizadas/sobrantes y los archivos temporales
 if [ -s "$SYNC_DIFF" ]; then
 	chmod +x "$SYNC_DIFF" && sed -i 's/\$/\\$/g' "$SYNC_DIFF"
 	echo "Borrando $(grep -vc '#!/bin/sh' "$SYNC_DIFF") archivos..."
-	sh "$SYNC_DIFF"; rm "$SYNC_DIFF"
-	echo "Hecho!"
-else
+	sh "$SYNC_DIFF" && echo "Hecho!"
+	rm -f "$SYNC_DIFF" "$OG_TMP" "$BK_TMP"
+else # Si el script tiene tamaño 0, no se borra nada
 	echo "No hay archivos que borrar"
-	rm "$SYNC_DIFF"
+	rm -f "$SYNC_DIFF" "$OG_TMP" "$BK_TMP"
 fi
 
 # Función para realizar la conversión de archivos
@@ -145,24 +142,21 @@ convert_file() {
 	# Si no existe el archivo, convertir a .mp3
 	if [ ! -e "$dest_file" ]; then
 
-	mkdir -p "$(dirname "$dest_file")"
+		mkdir -p "$(dirname "$dest_file")"
+		echo "Convirtiendo $file a formato MP3"
 
-	echo "Convirtiendo $file a formato MP3"
+		# Extraer metadatos y guardar en memoria
+		local metadata=$(ffmpeg -nostdin -i "$og_dir/$file" -f ffmetadata - 2>&1)
+		local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}'		| clean_non_ascii)
+		local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}'		| clean_non_ascii)
+		local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}'	| clean_non_ascii)
+		local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}'		| clean_non_ascii)
+		local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}'		| sed 's|/.*||')
+		local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}'			| sed 's|/.*||')
+		local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}'			| sed 's|-.*||')
+		[ -z "$disc" ] && disc=1; [ -z "$track" ] && track=1; [ -z "$disc" ] && disc=1
 
-	# Extraer metadatos y guardar en memoria
-	local metadata=$(ffmpeg -nostdin -i "$og_dir/$file" -f ffmetadata - 2>&1)
-	local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}'		| clean_non_ascii)
-	local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}'		| clean_non_ascii)
-	local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}'	| clean_non_ascii)
-	local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}'		| clean_non_ascii)
-	local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}'		| sed 's|/.*||')
-	local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}'			| sed 's|/.*||')
-	local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}')
-	[ -z "$disc" ] && disc=1
-	[ -z "$track" ] && track=1
-	[ -z "$disc" ] && disc=1
-
-	if [ "$4" = "false" ]; then # Convertir a mp3 sin letra (Rápido)
+		# Convertir a mp3
 		ffmpeg -nostdin -i "$og_dir/$file" \
 			-metadata:s:v title="Album cover" \
 			-metadata:s:v comment="Cover (front)" \
@@ -176,35 +170,18 @@ convert_file() {
 			-metadata disc="$disc" \
 			"$dest_file" >/dev/null 2>&1
 
-	else # Convertir a mp3 con letra (Más lento)
-		# Pasar a mp3 (Solo con la carátula)
-		ffmpeg -nostdin -i "$og_dir/$file" \
-			-metadata:s:v title="Album cover" \
-			-metadata:s:v comment="Cover (front)" \
-			-q:a 0 -map_metadata -1 \
-			"$dest_file" >/dev/null 2>&1
-
-		# Obtener la letra y borrar/sustituir caracteres conflictivos
-		glyrc lyrics -a "$artist" -t "$title" \
-		-l "en" --write "$tmplyrics" --from "chartlyrics;metallum" >/dev/null 2>&1 && \
-			iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
-		# Asegurarse que la variable apunte a un archivo para que eyeD3 no de error
-		[ ! -f "$tmplyrics" ] && tmplyrics="/dev/null"
-		
-		# Añadir metadatos
-		eyeD3 --title "$title" \
-			--artist "$artist" \
-			--album-artist "$album_artist" \
-			--album "$album" \
-			--release-date "$date" \
-			--track "$track" \
-			--disc-num "$disc" \
-			--add-lyrics "$tmplyrics" \
-			"$dest_file" >/dev/null 2>&1
-
-		# Borrar archivo temporal
-		[ $tmplyrics = "/dev/null" ] || rm "$tmplyrics"
-	fi
+		# Añadir la letras (si se eligió así)
+		if [ "$4" = "true" ]; then
+			# Obtener la letra
+			glyrc lyrics -a "$artist" -t "$title" \
+			-l "en" --write "$tmplyrics" --from "chartlyrics;metallum" >/dev/null 2>&1
+			# Añadir letra, borrardo/sustituyendo caracteres conflictivos (Si esta se encontró)
+			if [ -f "$tmplyrics" ]; then
+				iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
+				eyeD3 --add-lyrics "$tmplyrics" "$dest_file" >/dev/null 2>&1
+				rm -f "$tmplyrics"
+			fi
+		fi
 	fi
 }
 
@@ -214,7 +191,7 @@ export -f convert_file
 # Convertir archivos de formatos compatibles
 if [ $parallel = "true" ]; then
 	# Calcular el número máximo de descriptores de archivo que vamos a usar
-	FDS=$(( $(ulimit -n) / 12 ))
+	FDS=$(( $(ulimit -n) / 14 ))
 	# Convertir los archivos de forma paralela
 	find "$OG_DIR" -type f \
 	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
