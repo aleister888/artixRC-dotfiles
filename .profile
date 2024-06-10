@@ -55,7 +55,7 @@ export PAGER="less"
 export VIEWER="nsxiv"
 
 # Limpiar el directorio ~/ de archivos de configuración
-export PARALLEL_HOME="$XDG_CONFIG_HOME"/parallel
+export PARALLEL_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"/parallel
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export GOPATH="$XDG_DATA_HOME"/go
 export TEXMFVAR="$XDG_CACHE_HOME"/texlive/texmf-var

@@ -5,6 +5,8 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+export PARALLEL_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"/parallel
+
 # Función para verificar que las dependencias estan instaladas
 check_command() {
 	if ! command -v "$1" &> /dev/null; then
@@ -20,7 +22,7 @@ check_command "glyrc" "sudo pacman -S glyrc"
 check_command "eyeD3" "yay -S python-eyed3"
 
 usage(){
-	echo -e "Uso: $0 [-p] [Directorio original] [Directorio para la copia]\n"
+	echo -e "Uso: $0 [-plh] [Directorio original] [Directorio para la copia]\n"
 	printf "  -p: Convertir archivos en paralelo (Más rápido, pero consumirá más recursos)\n"
 	printf "  -l: Añadir letras (Más lento, requiere conexión a internet)\n"
 	printf "  -h: Mostrar este mensaje\n"
@@ -112,8 +114,7 @@ echo "Hecho!"
 if [ -s "$SYNC_DIFF" ]; then
 	chmod +x "$SYNC_DIFF" && sed -i 's/\$/\\$/g' "$SYNC_DIFF"
 	echo "Borrando $(grep -vc '#!/bin/sh' "$SYNC_DIFF") archivos..."
-	sh "$SYNC_DIFF"
-	rm "$SYNC_DIFF"
+	sh "$SYNC_DIFF"; rm "$SYNC_DIFF"
 	echo "Hecho!"
 else
 	echo "No hay archivos que borrar"
@@ -146,6 +147,7 @@ convert_file() {
 	if [ ! -e "$dest_file" ]; then
 
 	mkdir -p "$(dirname "$dest_file")"
+
 	echo "Convirtiendo $file a formato MP3"
 
 	# Extraer metadatos y guardar en memoria
@@ -159,7 +161,7 @@ convert_file() {
 	local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}')
 	[ -z "$disc" ] && disc=1
 
-	if [ "$4" = "false" ]; then # Convertir a mp3 con letra (Rápido)
+	if [ "$4" = "false" ]; then # Convertir a mp3 sin letra (Rápido)
 		ffmpeg -n -nostdin -i "$og_dir/$file" \
 			-codec:a libmp3lame \
 			-ab 320k \
@@ -175,7 +177,7 @@ convert_file() {
 			-metadata disc="$disc" \
 			"$dest_file" >/dev/null 2>&1
 
-	else # Convertir a con letra (Mucho más lento)
+	else # Convertir a mp3 con letra (Más lento)
 		# Pasar a mp3 (Sin ningún metadato)
 		ffmpeg -nostdin -i "$og_dir/$file" \
 			-q:a 0 -map_metadata -1 \
@@ -185,7 +187,8 @@ convert_file() {
 		ffmpeg -nostdin -i "$og_dir/$file" "$tmpcover" >/dev/null 2>&1
 
 		# Obtener la letra y borrar/sustituir caracteres conflictivos
-		glyrc lyrics --artist "$artist" --title "$title" -l "en" --write "$tmplyrics" >/dev/null 2>&1 && \
+		glyrc lyrics -a "$artist" -t "$title" \
+		-l "en" --write "$tmplyrics" --from "all;-lyrix" >/dev/null 2>&1 && \
 			iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
 
 		# Asegurarse que las variables sean válidas para que eyeD3 no de error
