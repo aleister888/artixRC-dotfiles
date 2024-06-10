@@ -128,8 +128,7 @@ convert_file() {
 	local og_dir="$3"
 	local dest_file
 	local extension="${file##*.}" # Extraer la extensión del archivo
-	local tmplyrics="/tmp/lyrics.$RANDOM.txt" # Archivo temporal para las letras
-	local tmpcover="/tmp/cover.$RANDOM.jpg" # Archivo temporal para las portadas
+	local tmplyrics="/tmp/$RANDOM$RANDOM.txt" # Archivo temporal para las letras
 
 	# Función para borrar/sustituir caracteres conflictivos
 	clean_non_ascii(){
@@ -152,22 +151,22 @@ convert_file() {
 
 	# Extraer metadatos y guardar en memoria
 	local metadata=$(ffmpeg -nostdin -i "$og_dir/$file" -f ffmetadata - 2>&1)
-	local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}' | clean_non_ascii)
-	local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}' | clean_non_ascii)
-	local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}' | clean_non_ascii)
-	local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}' | clean_non_ascii)
-	local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}' | sed 's|/.*||')
-	local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}' | sed 's|/.*||')
+	local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}'		| clean_non_ascii)
+	local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}'		| clean_non_ascii)
+	local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}'	| clean_non_ascii)
+	local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}'		| clean_non_ascii)
+	local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}'		| sed 's|/.*||')
+	local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}'			| sed 's|/.*||')
 	local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}')
+	[ -z "$disc" ] && disc=1
+	[ -z "$track" ] && track=1
 	[ -z "$disc" ] && disc=1
 
 	if [ "$4" = "false" ]; then # Convertir a mp3 sin letra (Rápido)
-		ffmpeg -n -nostdin -i "$og_dir/$file" \
-			-codec:a libmp3lame \
-			-ab 320k \
+		ffmpeg -nostdin -i "$og_dir/$file" \
 			-metadata:s:v title="Album cover" \
 			-metadata:s:v comment="Cover (front)" \
-			-map_metadata -1 \
+			-q:a 0 -map_metadata -1 \
 			-metadata artist="$artist" \
 			-metadata title="$title" \
 			-metadata album="$album" \
@@ -178,25 +177,21 @@ convert_file() {
 			"$dest_file" >/dev/null 2>&1
 
 	else # Convertir a mp3 con letra (Más lento)
-		# Pasar a mp3 (Sin ningún metadato)
+		# Pasar a mp3 (Solo con la carátula)
 		ffmpeg -nostdin -i "$og_dir/$file" \
+			-metadata:s:v title="Album cover" \
+			-metadata:s:v comment="Cover (front)" \
 			-q:a 0 -map_metadata -1 \
 			"$dest_file" >/dev/null 2>&1
 
-		# Extraer la portada del álbum del archivo original
-		ffmpeg -nostdin -i "$og_dir/$file" "$tmpcover" >/dev/null 2>&1
-
 		# Obtener la letra y borrar/sustituir caracteres conflictivos
 		glyrc lyrics -a "$artist" -t "$title" \
-		-l "en" --write "$tmplyrics" --from "all;-lyrix" >/dev/null 2>&1 && \
+		-l "en" --write "$tmplyrics" --from "chartlyrics;metallum" >/dev/null 2>&1 && \
 			iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
-
-		# Asegurarse que las variables sean válidas para que eyeD3 no de error
+		# Asegurarse que la variable apunte a un archivo para que eyeD3 no de error
 		[ ! -f "$tmplyrics" ] && tmplyrics="/dev/null"
-		[ -z "$track" ] && track="1"
-		[ -z "$disc" ] && disc="1"
 		
-		# Añadir metadatos y portada
+		# Añadir metadatos
 		eyeD3 --title "$title" \
 			--artist "$artist" \
 			--album-artist "$album_artist" \
@@ -204,12 +199,11 @@ convert_file() {
 			--release-date "$date" \
 			--track "$track" \
 			--disc-num "$disc" \
-			--add-image "$tmpcover":FRONT_COVER \
 			--add-lyrics "$tmplyrics" \
 			"$dest_file" >/dev/null 2>&1
 
-		# Borrar archivos temprales
-		rm "$tmpcover" "$tmplyrics" 2>/dev/null
+		# Borrar archivo temporal
+		[ $tmplyrics = "/dev/null" ] || rm "$tmplyrics"
 	fi
 	fi
 }
