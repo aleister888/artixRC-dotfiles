@@ -18,11 +18,11 @@ whip_yes(){
 }
 
 pacinstall() {
-	doas pacman -Sy --noconfirm --needed "$@"
+	doas pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
 yayinstall() {
-	yay -Sy --noconfirm --needed "$@"
+	yay -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
 whip_menu(){

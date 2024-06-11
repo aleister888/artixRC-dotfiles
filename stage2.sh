@@ -13,7 +13,7 @@ whip_msg(){
 }
 
 pacinstall() {
-	pacman -Sy --noconfirm --needed "$@"
+	pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
 service_add(){
