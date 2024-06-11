@@ -1,0 +1,6 @@
+#!/bin/sh
+case "${1-}" in
+	'pre')
+		/usr/local/bin/lock
+	;;
+esac

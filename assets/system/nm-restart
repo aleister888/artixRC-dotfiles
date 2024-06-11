@@ -1,7 +1,6 @@
-#!/bin/bash
-
-case "$1" in
-	post)
+#!/bin/sh
+case "${1-}" in
+	'post')
 		/usr/bin/rc-service NetworkManager "restart"
 		/usr/bin/rc-service netmount "restart"
 		/usr/bin/rc-service nptd "restart"

@@ -396,6 +396,7 @@ scripts_link(){
 		"crypt-backup"
 		"pipewire-start"
 		"tray-toggle"
+		"lock"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
@@ -591,7 +592,9 @@ doas chown $USER /mnt/ANDROID
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$virt" == "true" ] && virt_conf
 
-doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
+# Scripts de elogind
+doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart"		/lib/elogind/system-sleep/nm-restart
+doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock"	/lib/elogind/system-sleep/display-lock
 
 # Añadir entradas a /etc/environment
 echo 'CARGO_HOME="~/.local/share/cargo"
