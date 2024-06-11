@@ -2,6 +2,7 @@
 case "${1-}" in
 	'post')
 		/usr/bin/rc-service NetworkManager "restart"
+		sleep 1
 		/usr/bin/rc-service netmount "restart"
 		/usr/bin/rc-service nptd "restart"
 		[ -e "/usr/bin/libvirtd" ] && /usr/bin/rc-service libvirtd "restart"

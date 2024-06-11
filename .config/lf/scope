@@ -22,7 +22,8 @@ image() {
 
 case "$(xdg-mime query filetype "$1")" in
 
-text/* | */xml | */json | */x-shellscript | */x-xcursor) bat -fp --terminal-width "$(($4-2))" -f "$1" ;;
+text/* | */xml | */json | */x-shellscript | */x-xcursor | */x-theme )
+	bat -fp --terminal-width "$(($4-2))" -f "$1" ;;
 
 text/troff) man ./ "$1" | col -b ;;
 

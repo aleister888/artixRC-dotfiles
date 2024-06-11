@@ -313,54 +313,6 @@ suckless_install(){
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
-# Configurar nuestro tema de QT
-qt_config(){
-echo "[Appearance]
-color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
-custom_palette=true
-icon_theme=gruvbox-dark-icons-gtk
-standard_dialogs=default
-style=Fusion
-
-[Fonts]
-fixed=\"Iosevka Nerd Font Mono,12,-1,5,50,0,0,0,0,0,Bold\"
-general=\"Iosevka Nerd Font,12,-1,5,63,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
-}
-
-# Configurar nuestro tema de GTK
-gtk_config() {
-	local ASSETDIR="$HOME/.dotfiles/assets/configs"
-	local THEME_DIR="/usr/share/themes"
-
-	# Copiar la configuración de GTK
-	cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
-	cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
-	cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
-	cp $ASSETDIR/settings.ini $HOME/.config/gtk-4.0/settings.ini
-
-	# Aplicar configuraciones utilizando stow
-	sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
-
-	# Clona el tema de gtk4
-	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
-	# Copia el tema deseado a la carpeta de temas
-	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
-
-	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-	doas mkdir -p /root/.config
-	doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
-	doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
-	doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
-
-	# Definimos nuestros directorios marca-páginas
-echo "file:///home/$USER
-file:///home/$USER/Descargas
-file:///home/$USER/Documentos
-file:///home/$USER/Imágenes
-file:///home/$USER/Vídeos
-file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
-}
-
 # Configurar el fondo de pantalla
 nitrogen_configure() {
 # Crear el archivo de configuración bg-saved.cfg
@@ -369,12 +321,6 @@ echo "[xin_-1]
 file=$HOME/.dotfiles/assets/wallpaper.png
 mode=5
 bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
-}
-
-# Configurar el tema del cursor
-cursor_configure(){
-mkdir -p "$HOME/.local/share/icons/default"
-cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 }
 
 # Configurar keepassxc para que siga el tema de QT
@@ -516,14 +462,8 @@ if [ $kde == "false" ]; then
 	"$HOME/.dotfiles/bin/tauon-config"
 	# Creamos nuestro xinitrc
 	doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-	# Configurar nuestro tema de QT
-	qt_config
-	# Configurar nuestro tema de GTK
-	gtk_config
 	# Configurar el fondo de pantalla
 	nitrogen_configure
-	# Configurar el tema del cursor
-	cursor_configure
 fi
 
 # Configurar keepassxc para que siga el tema de QT
