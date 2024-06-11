@@ -34,32 +34,30 @@ ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
 # Configurar GTK y QT (Si KDE no está instalado) #
 ##################################################
 
-if [ ! -e /usr/bin/plasmashell ]; then
+ASSETDIR="$HOME/.dotfiles/assets/configs"
+THEME_DIR="/usr/share/themes"
 
-	ASSETDIR="$HOME/.dotfiles/assets/configs"
-	THEME_DIR="/usr/share/themes"
+# Copiar la configuración de GTK
+cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
+cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
+cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
+cp $ASSETDIR/settings.ini $HOME/.config/gtk-4.0/settings.ini
 
-	# Copiar la configuración de GTK
-	cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
-	cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
-	cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
-	cp $ASSETDIR/settings.ini $HOME/.config/gtk-4.0/settings.ini
+if [ ! -d /usr/share/themes/Gruvbox-Dark-B ]; then
+	# Clona el tema de gtk4
+	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
+	# Copia el tema deseado a la carpeta de temas
+	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
+fi
 
-	if [ ! -d /usr/share/themes/Gruvbox-Dark-B ]; then
-		# Clona el tema de gtk4
-		git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
-		# Copia el tema deseado a la carpeta de temas
-		doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
-	fi
+# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
+doas mkdir -p /root/.config
+doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
+doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
+doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
 
-	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-	doas mkdir -p /root/.config
-	doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
-	doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
-	doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
-
-	# Definimos nuestros directorios marca-páginas
-	echo "file:///home/$USER
+# Definimos nuestros directorios marca-páginas
+echo "file:///home/$USER
 file:///home/$USER/Descargas
 file:///home/$USER/Documentos
 file:///home/$USER/Imágenes
@@ -67,7 +65,7 @@ file:///home/$USER/Vídeos
 file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
 
 	# Configuramos QT
-	echo "[Appearance]
+echo "[Appearance]
 color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
 custom_palette=true
 icon_theme=gruvbox-dark-icons-gtk
@@ -78,11 +76,9 @@ style=Fusion
 fixed=\"Iosevka Nerd Font Mono,12,-1,5,50,0,0,0,0,0,Bold\"
 general=\"Iosevka Nerd Font,12,-1,5,63,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
 
-	# Configurar el tema del cursor
-	mkdir -p "$HOME/.local/share/icons/default"
-	cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
-
-fi
+# Configurar el tema del cursor
+mkdir -p "$HOME/.local/share/icons/default"
+cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 
 ###############
 # Plugins ZSH #

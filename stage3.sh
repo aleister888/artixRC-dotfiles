@@ -66,7 +66,9 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gt
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake mate-calc bleachbit baobab gcolor2 gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine-staging wine-mono wine-gecko winetricks"
+packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks"
+# WM
+packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
@@ -396,21 +398,10 @@ sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 # Escogemos que drivers de video instalar
 driver_choose
 
-# Elegir si instalar KDE
-if whip_yes "Desesas usar KDE" "En caso contrario se usara el administrador de ventanas DWM"; then
-	kde="true"
-	packages+=" sddm-openrc plasma-meta dolphin kscreen sddm-kcm"
-	packages+=" wl-clipboard discover fwupd packagekit-qt6 spectacle gvfs-mtp gvfs-gphoto2 gvfs-afc kdegraphics-thumbnailers kimageformats libheif qt6-imageformats ffmpegthumbs taglib"
-	# Hacer que pipewire se inicie con el escritorio
-	mkdir -p $HOME/.config/plasma-workspace/env # https://userbase.kde.org/Session_Environment_Variables
-	cp $HOME/.dotfiles/bin/pipewire-start $HOME/.config/plasma-workspace/env/pipewire-start.sh
-else
-	kde="false"
-	packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
-	{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && packages+=" blueman" # Instalar blueman si se encontro una tarjeta bluetooth
-	# Crear directorios
-	for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
-fi
+# Instalar blueman si se encontro una tarjeta bluetooth
+{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && packages+=" blueman"
+# Crear directorios
+for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
 
 # Elegimos que paquetes instalar
 packages_choose
@@ -425,7 +416,7 @@ kb_layout_select
 kb_layout_conf
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
-[ $kde == "false" ] && xresources_make
+xresources_make
 
 # A partir de aquí no se necesita interacción del usuario
 whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20min aprox. (Depende de la velocidad de tu conexion a Internet)"
@@ -445,8 +436,6 @@ doas archlinux-java set java-17-openjdk
 
 # Configurar firefox para proteger la privacidad
 firefox_configure
-# Configurar Transmission
-#"$HOME/.dotfiles/bin/transmission-config"
 # Configurar neovim e instalar los plugins
 vim_configure
 
@@ -457,14 +446,12 @@ dotfiles_install
 # Instalamos dwm y otras utilidades
 suckless_install
 
-if [ $kde == "false" ]; then
-	# Configuramos Tauon Music Box (Nuestro reproductor de música)
-	"$HOME/.dotfiles/bin/tauon-config"
-	# Creamos nuestro xinitrc
-	doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-	# Configurar el fondo de pantalla
-	nitrogen_configure
-fi
+# Configuramos Tauon Music Box (Nuestro reproductor de música)
+"$HOME/.dotfiles/bin/tauon-config"
+# Creamos nuestro xinitrc
+doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
+# Configurar el fondo de pantalla
+nitrogen_configure
 
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure
@@ -493,16 +480,10 @@ service_add irqbalance
 service_add syslog-ng
 service_add elogind
 
-if [ $kde == "false" ]; then
-	# Configurar y activar xdm
-	service_add xdm
-	doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-	doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
-else
-	service_add sddm
-	# Configurar SDDM para seguir el tema de KDE
-	sddm --example-config | sed "s/^Current=.*/Current=breeze/" | doas tee /etc/sddm.conf
-fi
+# Configurar y activar xdm
+service_add xdm
+doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 
 # Activar WiFi y Bluetooth
 doas rfkill unblock wifi

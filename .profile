@@ -26,15 +26,15 @@ export XCURSOR_SIZE=64
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Usar el filechooser del portal GTK
-[ -e /usr/bin/plasmashell ] || export GDK_SCALE=1
-[ -e /usr/bin/plasmashell ] || export GTK_USE_PORTAL=1
-[ -e /usr/bin/plasmashell ] || export GTK_THEME=Gruvbox-Dark-B
+export GDK_SCALE=1
+export GTK_USE_PORTAL=1
+export GTK_THEME=Gruvbox-Dark-B
 
 # Hacer que las aplicaciones QT sigan los ajustes de QT5CT
-[ -e /usr/bin/plasmashell ] || export QT_QPA_PLATFORMTHEME="qt5ct"
+export QT_QPA_PLATFORMTHEME="qt5ct"
 
 # XDG
-[ -e /usr/bin/plasmashell ] || export XDG_CURRENT_DESKTOP=X-Generic
+export XDG_CURRENT_DESKTOP=X-Generic
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
