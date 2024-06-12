@@ -5,14 +5,65 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+export PARALLEL_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"/parallel
+
+# Función para verificar que las dependencias estan instaladas
+check_command() {
+	if ! command -v "$1" &> /dev/null; then
+		echo -e "El comando $1 no se encontró. Por favor, instálalo usando:\n"
+		echo "$2"
+		exit 1
+	fi
+}
+
+# Verificar que todas las dependencias están instaladas
+check_command "ffmpeg" "sudo pacman -S ffmpeg"
+check_command "glyrc" "sudo pacman -S glyrc"
+check_command "atomicparsley" "sudo pacman -S atomicparsley"
+
+usage(){
+	echo -e "Uso: $0 [-plh] [Directorio original] [Directorio para la copia]\n"
+	printf "  -p: Convertir archivos en paralelo (Más rápido, pero consumirá más recursos)\n"
+	printf "  -l: Añadir letras (Más lento, requiere conexión a internet)\n"
+	printf "  -h: Mostrar este mensaje\n"
+	exit 1
+}
+
+# Verificar si no se han pasado argumentos
+if [ $# -eq 0 ]; then
+	usage
+fi
+
+# Obtener las flags
+parallel=false
+lyrics=false
+
+while getopts 'plh:v' flag; do
+	case "${flag}" in
+		p) parallel=true ;;
+		l) lyrics=true ;;
+		h) usage ;;
+		*) usage ;;
+	esac
+done
+
+shift $((OPTIND -1))
+
+# Directorios
 OG_DIR="$1"
 BK_DIR="$2"
 TMP_DIR="/tmp"
 
+# Verificar que los directorios existan
+if [ ! -d "$OG_DIR" ] || [ ! -d "$BK_DIR" ]; then
+	echo "Error: Uno o ambos directorios no existen."
+	exit 1
+fi
+
 # Crear archivos temporales
-OG_TMP="$TMP_DIR/OG_DIR.$$"
-BK_TMP="$TMP_DIR/BK_DIR.$$"
-SYNC_DIFF="$TMP_DIR/SYNC_DIFF.$$"
+OG_TMP=$(mktemp "$TMP_DIR/OG_DIR.XXXXXX")
+BK_TMP=$(mktemp "$TMP_DIR/BK_DIR.XXXXXX")
+SYNC_DIFF=$(mktemp "$TMP_DIR/SYNC_DIFF.XXXXXX")
 
 echo "Buscando archivos desactualizados o sobrantes..."
 
@@ -20,19 +71,17 @@ echo "Buscando archivos desactualizados o sobrantes..."
 find "$OG_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' > "$OG_TMP"
 find "$BK_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' > "$BK_TMP"
 
-# Encontrar archivos que han sido eliminados en el directorio original
+# Crear un script para borrar los archivos que han sido eliminados en el directorio original
 grep -vFxf "$OG_TMP" "$BK_TMP" | uniq > "$SYNC_DIFF"
-
-rm -f "$OG_TMP" "$BK_TMP"
-
 sed -i -e "s|^|rm -rf \"$BK_DIR/|" -e 's|$|.m4a"|' -e '1i #!/bin/sh' "$SYNC_DIFF" >/dev/null 2>&1
 
 # Función para comparar y añadir archivos obsoletos al archivo SYNC_DIFF
 compare_and_append() {
 	while read -r file; do
-	    local og_file="$OG_DIR/$file"
-	    local og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
-	    local extension="${file##*.}"  # Extraer la extensión del archivo
+		local og_file="$OG_DIR/$file"
+		local og_time
+		og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
+		local extension="${file##*.}"  # Extraer la extensión del archivo
 
 	if [ -e "$og_file" ]; then
 		if [ "$extension" == "flac" ]; then
@@ -51,50 +100,118 @@ compare_and_append() {
 	done
 }
 
-# Buscar archivos de audio y comparar fechas de modificación
-find "$OG_DIR" -type f \( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' -o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) -printf '%P\n' | compare_and_append
-
+# Buscamos que archivos estan desactualizados para borrarlos también
+find "$OG_DIR" -type f \
+	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
+	-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
+	-printf '%P\n' | compare_and_append
 echo "Hecho!"
 
-# Limpiar archivos temporales
+# Borramos las pistas desactualizadas/sobrantes y los archivos temporales
 if [ -s "$SYNC_DIFF" ]; then
 	chmod +x "$SYNC_DIFF" && sed -i 's/\$/\\$/g' "$SYNC_DIFF"
 	echo "Borrando $(grep -vc '#!/bin/sh' "$SYNC_DIFF") archivos..."
-	. "$SYNC_DIFF"
-	rm "$SYNC_DIFF"
-	echo "Hecho!"
-else
+	sh "$SYNC_DIFF" && echo "Hecho!"
+	rm -f "$SYNC_DIFF" "$OG_TMP" "$BK_TMP"
+else # Si el script tiene tamaño 0, no se borra nada
 	echo "No hay archivos que borrar"
-	rm "$SYNC_DIFF"
+	rm -f "$SYNC_DIFF" "$OG_TMP" "$BK_TMP"
 fi
 
 # Función para realizar la conversión de archivos
 convert_file() {
 	local file="$1"
+	local dest_dir="$2"
+	local og_dir="$3"
 	local dest_file
-	local extension="${file##*.}"  # Extraer la extensión del archivo
+	local extension="${file##*.}" # Extraer la extensión del archivo
+	local tmplyrics="/tmp/$RANDOM$RANDOM.txt" # Archivo temporal para las letras
+
+	# Función para borrar/sustituir caracteres conflictivos
+	clean_non_ascii(){
+		iconv -f UTF-8 -t ASCII//TRANSLIT
+	}
 
 	# Eliminar la extensión según el tipo de archivo
 	if [ "$extension" == "flac" ]; then
-		dest_file="$BK_DIR/${file%.flac}.m4a"
+		dest_file="$dest_dir/${file%.flac}.m4a"
 	else
-		dest_file="$BK_DIR/${file%.???}.m4a"
+		dest_file="$dest_dir/${file%.???}.m4a"
 	fi
 
+	# Si no existe el archivo, convertir a .mp3
 	if [ ! -e "$dest_file" ]; then
-		mkdir -p "$(dirname "$dest_file")"
-		echo "Convirtiendo $(basename "$file") a formato M4A"
 
-		ffmpeg -n -nostdin -i "$OG_DIR/$file" -vf scale=480:480 -metadata:s:v:0 title="cover.jpg" -metadata:s:v:0 comment="Cover (front)" -ar 44100 -ac 2 -b:a 320k -vcodec mjpeg -qscale:v 2 -field_order tt -r 1 "$dest_file" >/dev/null 2>&1
+		mkdir -p "$(dirname "$dest_file")"
+		echo "Convirtiendo $file a M4A"
+
+		# Extraer metadatos y guardar en memoria
+		local metadata=$(ffmpeg -nostdin -i "$og_dir/$file" -f ffmetadata - 2>&1)
+		local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}'		| clean_non_ascii)
+		local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}'		| clean_non_ascii)
+		local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}'	| clean_non_ascii)
+		local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}'		| clean_non_ascii)
+		local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}'		| sed 's|/.*||')
+		local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}'			| sed 's|/.*||')
+		local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}'			| sed 's|-.*||')
+		[ -z "$disc" ] && disc=1; [ -z "$track" ] && track=1; [ -z "$disc" ] && disc=1
+
+		# Convertir a m4a
+		ffmpeg -nostdin -i "$og_dir/$file" \
+			-field_order tt -r 1 \
+			-vcodec mjpeg \
+			-vf scale=480:480 \
+			-metadata:s:v title="Album cover" \
+			-metadata:s:v comment="Cover (front)" \
+			-map_metadata -1 \
+			-metadata artist="$artist" \
+			-metadata title="$title" \
+			-metadata album="$album" \
+			-metadata album_artist="$album_artist" \
+			-metadata date="$date" \
+			-metadata track="$track" \
+			-metadata disc="$disc" \
+			"$dest_file" >/dev/null 2>&1
+
+		# Añadir la letras (si se eligió así)
+		if [ "$4" = "true" ]; then
+			# Obtener la letra
+			glyrc lyrics -a "$artist" -t "$title" \
+			-l "en" --write "$tmplyrics" --from "chartlyrics;metallum" >/dev/null 2>&1
+			# Añadir letra, borrardo/sustituyendo caracteres conflictivos (Si esta se encontró)
+			if [ -f "$tmplyrics" ]; then
+				iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
+				atomicparsley "$dest_file" --lyrics "$(cat $tmplyrics)" --overWrite >/dev/null 2>&1
+				rm -f "$tmplyrics"
+			fi
+		fi
 	fi
 }
 
+# Exportar la función "convert_file" para invocarla de forma paralela
+export -f convert_file
+
 # Convertir archivos de formatos compatibles
-find "$OG_DIR" -type f \( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' -o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) -printf '%P\n' | while read -r file; do
-convert_file "$file"
-done
+if [ $parallel = "true" ]; then
+	# Calcular el número máximo de descriptores de archivo que vamos a usar
+	FDS=$(( $(ulimit -n) / 14 ))
+	# Convertir los archivos de forma paralela
+	find "$OG_DIR" -type f \
+	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
+	-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
+	-printf '%P\n' | \
+	parallel -j "$FDS" -P "$(nproc --ignore=$(( $(nproc) / 3 )))" \
+	--no-notice convert_file "{= s/\n/\\n/g =}" \'$BK_DIR\' \'$OG_DIR\' \'$lyrics\'
+else
+	# Convertir los archivos de uno en uno
+	find "$OG_DIR" -type f \
+	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
+	-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
+	-printf '%P\n' | while read -r file; do
+		convert_file "$file" "$BK_DIR" "$OG_DIR" "$lyrics"
+	done
+fi
 
-# Borrar directorios vacios en la carpeta de destino
-echo "Se borraron $(find $BK_DIR -type d -empty -not -path "*/.stfolder" -delete -print | wc -l) carpetas vacias."
-
+# Borrar los directorios vacíos en la carpeta de destino
+echo "Se borraron $(find "$BK_DIR" -type d -empty -not -path "*/.stfolder" -delete -print 2>/dev/null | wc -l) carpetas vacias."
 echo "El script terminó de ejecutarse"
