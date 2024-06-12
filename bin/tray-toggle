@@ -12,7 +12,7 @@ fi
 if pgrep trayer; then
 	killall trayer
 else
-	trayer --align center --width 6 --expand true \
+	trayer --align center --width 10 --expand true \
 	--SetDockType true --SetPartialStrut true \
 	--edge top --distancefrom top --distance $GAPPX --height $SIZE
 fi
