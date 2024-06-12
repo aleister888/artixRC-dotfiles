@@ -14,6 +14,7 @@ IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
 	IMG:$ICONPATH/apps/telegram.svg					Telegram		Forkgram
+	IMG:$ICONPATH/apps/syncthing.svg				Syncthing (Restart)	pkill syncthing; syncthing --no-browser --no-default-folder --reset-deltas
 
 IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon			tauon
