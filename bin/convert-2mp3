@@ -158,10 +158,13 @@ convert_file() {
 
 		# Convertir a mp3
 		ffmpeg -nostdin -i "$og_dir/$file" \
+			-codec:a libmp3lame \
+			-field_order tt -r 1 \
+			-vcodec mjpeg \
+			-vf scale=480:480 \
 			-metadata:s:v title="Album cover" \
 			-metadata:s:v comment="Cover (front)" \
-			-codec:a libmp3lame \
-			-q:a 0 -map_metadata -1 \
+			-map_metadata -1 \
 			-metadata artist="$artist" \
 			-metadata title="$title" \
 			-metadata album="$album" \
