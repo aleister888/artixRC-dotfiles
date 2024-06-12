@@ -43,11 +43,11 @@ cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
 cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
 cp $ASSETDIR/settings.ini $HOME/.config/gtk-4.0/settings.ini
 
-if [ ! -d /usr/share/themes/Gruvbox-Dark-B ]; then
+if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
 	# Clona el tema de gtk4
 	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
 	# Copia el tema deseado a la carpeta de temas
-	doas cp -r /tmp/Gruvbox_Theme/themes/Gruvbox-Dark-B $THEME_DIR/Gruvbox-Dark-B
+	doas /tmp/Gruvbox_Theme/themes/install.sh
 fi
 
 # Tema GTK para el usuario root (Para aplicaciones como Bleachbit)

@@ -28,7 +28,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # Usar el filechooser del portal GTK
 export GDK_SCALE=1
 export GTK_USE_PORTAL=1
-export GTK_THEME=Gruvbox-Dark-B
+export GTK_THEME=Gruvbox-Dark
 
 # Hacer que las aplicaciones QT sigan los ajustes de QT5CT
 export QT_QPA_PLATFORMTHEME="qt5ct"
