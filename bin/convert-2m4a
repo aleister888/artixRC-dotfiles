@@ -38,7 +38,7 @@ fi
 parallel=false
 lyrics=false
 
-while getopts 'plh:v' flag; do
+while getopts 'plh' flag; do
 	case "${flag}" in
 		p) parallel=true ;;
 		l) lyrics=true ;;
