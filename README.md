@@ -60,18 +60,19 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 # Referencias y créditos
 
-- [3] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
-- [4] https://wiki.gentoo.org/wiki/Dm-crypt
-- [5] https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system
-- [6] https://jpedmedia.com/tutorials/installations/void_install/index.html
-- [7] https://github.com/LukeSmithxyz/LARBS
-- [8] https://github.com/LukeSmithxyz/voidrice
+- [3] https://gitlab.com/risingprismtv/single-gpu-passthrough
+- [4] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
+- [5] https://wiki.gentoo.org/wiki/Dm-crypt
+- [6] https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system
+- [7] https://jpedmedia.com/tutorials/installations/void_install/index.html
+- [8] https://github.com/LukeSmithxyz/LARBS
+- [9] https://github.com/LukeSmithxyz/voidrice
    - Créditos a Luke Smith por sus scripts, que sirvieron de referencia y base para implementar algunas de las funciones de este autoinstalador. Y por su build de st.
-- [9] https://suckless.org
+- [10] https://suckless.org
    - Créditos al equipo de suckless.org por todo el software suyo utilizado en este repositorio
-- [10] https://github.com/siduck/dotfiles
+- [11] https://github.com/siduck/dotfiles
     - Créditos a Sidhanth Rathod, de quien saque código para el widget de eww
-- [11] Menú de aplicaciones: https://github.com/phillbush/xmenu
-- [12] Salvapantallas: https://github.com/George-lewis/DVDBounce
-- [13] Barra de estado: https://github.com/torrinfail/dwmblocks
-- [14] Fondo de pantalla: https://gruvbox-wallpapers.pages.dev/
+- [12] Menú de aplicaciones: https://github.com/phillbush/xmenu
+- [13] Salvapantallas: https://github.com/George-lewis/DVDBounce
+- [14] Barra de estado: https://github.com/torrinfail/dwmblocks
+- [15] Fondo de pantalla: https://gruvbox-wallpapers.pages.dev/
