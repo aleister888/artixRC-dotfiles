@@ -53,8 +53,9 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 - Script para instalar solo los scripts útiles (Para usar con otras distribuciones)
 - Actualizar información sobre el script `convert-2mp3` y otros en el PDF
-- Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
+- Compilar DVDBounce localmente
 - Añadir capturas a la guía sobre VFIO
+- Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
 
 # Referencias y créditos
@@ -70,6 +71,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
    - Créditos al equipo de suckless.org por todo el software suyo utilizado en este repositorio
 - [10] https://github.com/siduck/dotfiles
     - Créditos a Sidhanth Rathod, de quien saque código para el widget de eww
-- [11] https://github.com/phillbush/xmenu
-- [12] https://github.com/George-lewis/DVDBounce
-- [13] https://github.com/torrinfail/dwmblocks
+- [11] Menú de aplicaciones: https://github.com/phillbush/xmenu
+- [12] Salvapantallas: https://github.com/George-lewis/DVDBounce
+- [13] Barra de estado: https://github.com/torrinfail/dwmblocks
+- [14] Fondo de pantalla: https://gruvbox-wallpapers.pages.dev/
