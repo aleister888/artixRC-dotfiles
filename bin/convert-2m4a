@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script para crear mirrors en formato .mp3 de una biblioteca de música.
+# Script para crear mirrors en formato .m4a de una biblioteca de música.
 
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
@@ -79,17 +79,10 @@ sed -i -e "s|^|rm -rf \"$BK_DIR/|" -e 's|$|.m4a"|' -e '1i #!/bin/sh' "$SYNC_DIFF
 compare_and_append() {
 	while read -r file; do
 		local og_file="$OG_DIR/$file"
-		local og_time
-		og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
-		local extension="${file##*.}"  # Extraer la extensión del archivo
+		local og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
+		local bk_file="$BK_DIR/${file%.*}.m4a"
 
 	if [ -e "$og_file" ]; then
-		if [ "$extension" == "flac" ]; then
-			bk_file="$BK_DIR/${file%.flac}.m4a"
-		else
-			bk_file="$BK_DIR/${file%.???}.m4a"
-		fi
-
 		if [ -e "$bk_file" ]; then
 	            bk_time=$(date -r "$bk_file" +%Y%m%d%H%M%S 2>/dev/null)
 			if [ "$og_time" -gt "$bk_time" ]; then
@@ -124,20 +117,13 @@ convert_file() {
 	local dest_dir="$2"
 	local og_dir="$3"
 	local dest_file
-	local extension="${file##*.}" # Extraer la extensión del archivo
 	local tmplyrics="/tmp/$RANDOM$RANDOM.txt" # Archivo temporal para las letras
+	local dest_file="$dest_dir/${file%.*}.m4a"
 
 	# Función para borrar/sustituir caracteres conflictivos
 	clean_non_ascii(){
 		iconv -f UTF-8 -t ASCII//TRANSLIT
 	}
-
-	# Eliminar la extensión según el tipo de archivo
-	if [ "$extension" == "flac" ]; then
-		dest_file="$dest_dir/${file%.flac}.m4a"
-	else
-		dest_file="$dest_dir/${file%.???}.m4a"
-	fi
 
 	# Si no existe el archivo, convertir a .mp3
 	if [ ! -e "$dest_file" ]; then

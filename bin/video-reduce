@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Script para optimizar el tamaño de archivos de video
+
+# por aleister888 <pacoe1000@gmail.com>
+# Licencia: GNU GPLv3
+
+OG_DIR="$1"
+BK_DIR="$2"
+
+# Función para realizar la conversión de archivos
+convert_file() {
+	local file="$1"
+	local dest_file="$BK_DIR/${file%.*}.mp4"
+
+	if [ ! -e "$dest_file" ]; then
+		mkdir -p "$(dirname "$dest_file")"
+		echo "Convirtiendo $(basename "$file") a MP4"
+
+		if [ -e "$BK_DIR/${file%.???}.vtt" ]; then
+			HandBrakeCLI -i "$OG_DIR/$file" \
+			-o "$dest_file" -e x264 -q 20 -B 160 \
+			--pfr -r 24 --all-audio \
+			--srt-file "$BK_DIR/${file%.???}.vtt" \
+			--srt-codeset UTF-8 --srt-lang eng
+		else
+			HandBrakeCLI -i "$OG_DIR/$file" \
+			-o "$dest_file" -e x264 -q 20 -B 160 \
+			--pfr -r 24 --all-audio --all-subtitles
+		fi
+	fi
+}
+
+# Convertir archivos de formatos compatibles
+find "$OG_DIR" -type f \( -name '*.mp4' -o -name '*.mkv' -o -name '*.avi' \) -printf '%P\n' | while read -r file; do
+convert_file "$file"
+done
+
+echo "El script terminó de ejecutarse"
