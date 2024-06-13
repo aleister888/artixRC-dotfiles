@@ -72,3 +72,4 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - Créditos a Sidhanth Rathod, de quien saque código para el widget de eww
 - [11] https://github.com/phillbush/xmenu
 - [12] https://github.com/George-lewis/DVDBounce
+- [13] https://github.com/torrinfail/dwmblocks

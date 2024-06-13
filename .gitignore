@@ -27,6 +27,7 @@ x.o
 fonts.h
 xmenu/xmenu
 xmenu.o
+dwmblocks/blocks.h
 .config/zsh/ohmyzsh
 .config/zsh/zsh-autosuggestions
 .config/zsh/zsh-history-substring-search
