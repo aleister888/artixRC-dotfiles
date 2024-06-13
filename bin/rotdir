@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Script de Luke Smith:
+# https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/rotdir
+
 # When I open an image from the file manager in nsxiv (the image viewer), I want
 # to be able to press the next/previous keys to key through the rest of the
 # images in the same directory. This script "rotates" the content of a

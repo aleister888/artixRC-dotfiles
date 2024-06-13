@@ -225,7 +225,7 @@ fontdownload() {
 # https://github.com/LukeSmithxyz/voidrice
 # Créditos para: Luke Smith <luke@lukesmith.xyz>
 installffaddons(){
-	addonlist="ublock-origin istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser video-downloadhelper clearurls"
+	addonlist="ublock-origin istilldontcareaboutcookies violentmonkey checkmarks-web-ext darkreader xbs keepassxc-browser video-downloadhelper clearurls decentraleyes"
 	addontmp="$(mktemp -d)"
 	trap "rm -fr $addontmp" HUP INT QUIT TERM PWR EXIT
 	IFS=' '

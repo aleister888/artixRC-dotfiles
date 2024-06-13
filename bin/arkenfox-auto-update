@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Script de Luke Smith:
+# https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/arkenfox-auto-update
+
 # A wrapper for the arkenfox-updater that runs it on all pre-existing Arkenfox
 # user.js files on the machine.
 
