@@ -28,7 +28,7 @@ convert_file() {
 
 	if [ ! -e "$dest_file" ]; then
 		mkdir -p "$(dirname "$dest_file")"
-		echo "Convirtiendo $(basename "$file") a MKV"
+		echo "Optimizando $(basename "$file")"
 
 		if [ -e "$sub_file" ]; then
 			HandBrakeCLI -i "$OG_DIR/$file" \
