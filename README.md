@@ -66,7 +66,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 - [6] https://jpedmedia.com/tutorials/installations/void_install/index.html
 - [7] https://github.com/LukeSmithxyz/LARBS
 - [8] https://github.com/LukeSmithxyz/voidrice
-   - Créditos a Luke Smith por sus scripts, que sirvieron de referncia y base para implementar algunas de las funciones de este autoinstalador. Y por su build de st.
+   - Créditos a Luke Smith por sus scripts, que sirvieron de referencia y base para implementar algunas de las funciones de este autoinstalador. Y por su build de st.
 - [9] https://suckless.org
    - Créditos al equipo de suckless.org por todo el software suyo utilizado en este repositorio
 - [10] https://github.com/siduck/dotfiles
