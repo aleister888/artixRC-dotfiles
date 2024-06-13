@@ -27,4 +27,8 @@ x.o
 fonts.h
 xmenu/xmenu
 xmenu.o
+.config/zsh/ohmyzsh
+.config/zsh/zsh-autosuggestions
+.config/zsh/zsh-history-substring-search
+.config/zsh/zsh-syntax-highlighting
 .config/zsh/zsh-you-should-use

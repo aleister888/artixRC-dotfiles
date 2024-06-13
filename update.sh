@@ -88,14 +88,17 @@ plugin_install(){
 	git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")"
 }
 
-[ ! -e $HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ] && \
-     plugin_install zsh-users/zsh-autosuggestions
-[ ! -e $HOME/.config/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh ] && \
-     plugin_install zsh-users/zsh-history-substring-search
-[ ! -e $HOME/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && \
-     plugin_install zsh-users/zsh-syntax-highlighting
-[ ! -e $HOME/.config/zsh/zsh-you-should-use/you-should-use.plugin.zsh ] && \
+[ ! -e "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+	plugin_install zsh-users/zsh-autosuggestions
+[ ! -e "$HOME/.config/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh" ] && \
+	plugin_install zsh-users/zsh-history-substring-search
+[ ! -e "$HOME/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+	plugin_install zsh-users/zsh-syntax-highlighting
+[ ! -e "$HOME/.config/zsh/zsh-you-should-use/you-should-use.plugin.zsh" ] && \
 	plugin_install MichaelAquilina/zsh-you-should-use
+[ ! -d "$HOME/.config/zsh/ohmyzsh" ] && mkdir -p "$HOME/.config/zsh/ohmyzsh"
+	wget -q "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/dirhistory/dirhistory.plugin.zsh" \
+	-O "$HOME/.config/zsh/ohmyzsh/dirhistory.plugin.zsh"
 
 # Actualizar plugins de zsh
 sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull"
