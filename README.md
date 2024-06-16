@@ -58,7 +58,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
 
-# Referencias y créditos
+# Recursos/fuentes usadas y Créditos
 
 - [3] https://gitlab.com/risingprismtv/single-gpu-passthrough
 - [4] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption

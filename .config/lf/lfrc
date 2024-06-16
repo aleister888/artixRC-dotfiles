@@ -167,7 +167,7 @@ cmd open ${{
 	*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
 		xarchiver "$fx" ;;
 
-	*/zip)
+	*/zip | */vnd.comicbook+zip)
 		case "$(readlink -f $f)" in
 			*.cbz)
 				zathura "$fx" ;;
@@ -175,7 +175,7 @@ cmd open ${{
 			xarchiver "$fx" ;;
 		esac ;;
 
-	*/vnd.*)
+	*/vnd.*document*)
 		libreoffice "$fx" ;;
 
 	*/pdf | */epub*)

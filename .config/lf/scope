@@ -74,16 +74,16 @@ video/* )
 	image "$CACHE.jpg" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
+# For Mangas in .cbz
 */vnd.comicbook+zip)
 	NAME="$(echo "$1" | rev | sed 's/ /_/g' | sed 's/\// /g' | awk '{print $1}' | rev)"
 	FIRST="$(unzip -l "$1" | head -5 | tail -1 | awk '{$1=""; $2=""; $3=""; sub("   ", " "); print}' | cut -c 2-)"
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$NAME"
 	[ ! -d "$CACHE" ] && 7z e "$1" -o"$CACHE" "$FIRST" >/dev/null
-	IMG="$(find $CACHE | grep jpg | sort | head -n 1)"
+	IMG="$(find $CACHE | grep "jpg\|png" | sort | head -n 1)"
 	image "$IMG" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
-# For Mangas in .cbz
 */zip | */x-tar | */x-7z-compressed | */x-compressed-tar )
 	aunpack -l "$1"
 	exit 1 ;;
