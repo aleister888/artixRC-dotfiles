@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=lf File Manager (St)
+Comment=Simple terminal-based file manager
+Exec=st -e lf %u
+Terminal=false
+Icon=utilities-terminal
+Categories=System;FileTools;FileManager
+GenericName=File Manager
+MimeType=inode/directory;

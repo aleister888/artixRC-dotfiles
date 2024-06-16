@@ -121,28 +121,15 @@ doas update-mime-database /usr/share/mime
 [ ! -d "$HOME/.local/share/applications" ] && mkdir -p "$HOME/.local/share/applications"
 # Creamos el archivo .desktop para lf
 [ ! -e "$HOME/.local/share/applications/lft.desktop" ] && \
-echo '[Desktop Entry]
-Type=Application
-Name=lf File Manager (St)
-Comment=Simple terminal-based file manager
-Exec=st -e lf %u
-Terminal=false
-Icon=utilities-terminal
-Categories=System;FileTools;FileManager
-GenericName=File Manager
-MimeType=inode/directory;' > "$HOME/.local/share/applications/lft.desktop"
+cp -f "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/lft.desktop"
 
 # Creamos el archivo .desktop para nvim
 [ ! -e "$HOME/.local/share/applications/nvimt.desktop" ] && \
-echo '[Desktop Entry]
-Type=Application
-Name=Neovim (St)
-Comment=Simple terminal-based text editor
-Exec=st -e nvim %F
-Terminal=false
-Icon=nvim
-Categories=Utility;TextEditor;
-MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;' > "$HOME/.local/share/applications/nvimt.desktop"
+cp -f "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/nvimt.desktop"
+
+# Creamos el archivo .desktop para el visor de imagenes
+[ ! -e "$HOME/.local/share/applications/image.desktop" ] && \
+cp -f "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop"
 
 # Nuestra función para establecer nuestro visor de imagenes, video, audio y editor de texto
 set_default_mime_types(){
@@ -153,7 +140,7 @@ set_default_mime_types(){
 	done
 }
 
-set_default_mime_types "^image" "nsxiv.desktop"
+set_default_mime_types "^image" "image.desktop"
 set_default_mime_types "^video" "mpv.desktop"
 set_default_mime_types "^audio" "mpv.desktop"
 set_default_mime_types "^text" "nvimt.desktop"
