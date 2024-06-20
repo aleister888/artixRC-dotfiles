@@ -72,7 +72,7 @@ export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"/npm/npmrc
 
 # Iconos de lf
-export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=:or=:\
+export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=󱫁:or=󱫅:\
 *.mp3=:*.opus=:*.ogg=:*.m4a=:*.flac=:*.ape=:*.wav=:*.cue=:\
 *.RPP=󰋅:*.RPP-bak=󰋅:*.rpp=󰋅:*.rpp-bak=󰋅:*.rpp-PROX=󰋅:*drums.wav=󰋅:\
 *.tg=:*.gp=:*.gp3=:*.gp4=:*.gp5=:*.gpx=:*.vst3=:*.so=:\
@@ -102,6 +102,7 @@ export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=:or=:\
 *.tmp=󱁿:*.history=󱁿:\
 *Missing-Tabs=󰵦:\
 *.iso=:*.img=:\
+*.ttf=:*.otf=:\
 *Dockerfile=:\
 *.vader=:\
 *.html=󰌀:\

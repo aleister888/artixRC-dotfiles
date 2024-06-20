@@ -52,9 +52,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 # Cosas por hacer
 
 - Script para instalar solo los scripts útiles (Para usar con otras distribuciones)
-- Actualizar información sobre el script `convert-2mp3` y otros en el PDF
 - Compilar DVDBounce localmente
-- Añadir capturas a la guía sobre VFIO
 - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
 - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
 

@@ -193,6 +193,11 @@ Podemos automatizar este proceso, para que el usuario \emph{"usuario1"} conviert
 30 8 * * * usuario1 convert-2mp3 /musica/biblioteca /musica/mp3
 \end{verbatim}
 
+\begin{itemize}
+\item El script puede usarse con el flag \emph{-p} para convertir varios archivos de forma paralela, lo que reduce el tiempo necesario para la conversión de archivos, pero consume más recursos y probablemente ocupe todo el tiempo de CPU hasta que el script se termine de ejecutar.
+\item El script también puede usarse con el flag \emph{-l} lo que hará que además de convertir las canciones a otro formato, se busque la letra de la canción en Internet y se incluya dentro del archivo de audio.
+\end{itemize}
+
 \subsection{corruption-check}
 
 Este script comprueba que no haya archivos corruptos en nuestra biblioteca de música, corrige falsos positivos de corrupción y nos escribe una lista con los archivos que realmente están corruptos y no se pueden reproducir correctamente en \emph{/tmp/corruption.log}. Solo necesita como argumento el directorio cuyos archivos de audio queremos comprobar.
@@ -541,23 +546,42 @@ doas pacman -Sy --noconfirm etmpfiles
 
 Ahora ya tenemos casi todo listo, queda instalar los drivers de video e instalar Looking Glass en nuestra máquina virtual \emph{(a la hora de la instalación debió de haberse instalado ya en nuestro linux)}.
 
-Primero tenemos que añadir nuestra tarjeta gráfica a nuestra máquina virtual. Para ello tenemos que ir a los ajustes de nuestra máquina virtual y en \emph{"Añadir Dispositivo"}, busca la pestaña para añadir dispositivos PCI y añade tu gráfica.
+Primero tenemos que añadir nuestra tarjeta gráfica a nuestra máquina virtual. Para ello tenemos que ir a los ajustes de nuestra máquina virtual y en \emph{``Añadir Dispositivo"}, busca la pestaña para añadir dispositivos PCI y añade tu gráfica.
 
-\emph{Pendiente: Añadir imagen de como añadimos la gráfica}
+Despues debemos de configurar el servidor Spice para que use el puerto 6000 en vez de asignar un puerto automáticamente
 
-Ahora configura el servidor Spice para que use el puerto 6000 en vez de asignar un puerto automáticamente
+\begin{figure}[h]
+\centering
+\begin{minipage}[b]{0.4\textwidth}
+\includegraphics[height=0.6\textwidth,width=\textwidth]{images/card-add.jpg}
+\end{minipage}
+\hspace{10pt}
+\begin{minipage}[b]{0.4\textwidth}
+\includegraphics[height=0.6\textwidth,width=\textwidth]{images/spice-conf.jpg}
+\end{minipage}
+\end{figure}
 
-\emph{Pendiente: Añadir imagen de como configuramos spice}
+Ahora tenemos que activar la edición de XML en Virt-Manager (Editar -> Preferencias) y editar el código XML de nuestra máquina virtual. Añadiremos estas lineas de código al final para que el archivo acabe viéndose así:
 
-Ahora tenemos que activar la edición de XML en Virt-Manager y editar el código XML de nuestra máquina virtual. Añadiremos estas lineas de código al final para que el archivo acabe viéndose así:
+\begin{figure}[h]
+	\centering
+	\begin{minipage}[b]{0.3\textwidth}
+		\includegraphics[height=0.6\textwidth,width=\textwidth]{images/xml-enable.jpg}
+	\end{minipage}
+	\hspace{10pt}
+	\begin{minipage}[b]{0.3\textwidth}
+		\includegraphics[height=0.6\textwidth,width=\textwidth]{images/xml-edit.jpg}
+	\end{minipage}
+	\hspace{10pt}
+	\begin{minipage}[b]{0.3\textwidth}
+		\includegraphics[height=0.6\textwidth,width=\textwidth]{images/video-none.jpg}
+	\end{minipage}
+\end{figure}
 
-\emph{Pendiente: Añadir imagen de como activamos edición del XML y como queda el XML modificado}
 
-Finalmente iniciamos nuestra máquina virtual e instalamos nuestros drivers de \href{https://www.nvidia.es/Download/index.aspx?lang=es}{NVIDIA} o \href{https://www.amd.com/es/support}{AMD} y \href{https://looking-glass.io/downloads}{Looking Glass Host}.
+Iniciamos nuestra máquina virtual e instalamos nuestros drivers de \href{https://www.nvidia.es/Download/index.aspx?lang=es}{NVIDIA} o \href{https://www.amd.com/es/support}{AMD} y \href{https://looking-glass.io/downloads}{Looking Glass Host}.
 
 Finalmente cambiamos el driver virtual de video de \emph{QXL} a \emph{None} y borramos el dispositivo de tableta táctil. La próxima vez que iniciemos la máquina virtual solo tenemos que iniciarla en Virt-Manager e ínteractuaremos con nuestra máquina virtual abriendo Looking Glass \emph{(Podemos abrirlo seleccionando "Looking Glass" en el menú que aparece cuando hacemos clic derecho en alguna parte vacía del Escritorio)}.
-
-\emph{Pendiente: Añadir imagen de como realizamos los pasos mencionados}
 
 Para que esto funcione debemos reiniciar nuestro ordenador o ejecutar el comando.
 
