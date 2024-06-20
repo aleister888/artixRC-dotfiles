@@ -6,56 +6,77 @@
 pw-link my-combined-sink:monitor_FL my-virtualmic:input_FL 2>/dev/null
 pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR 2>/dev/null
 
+# Sink del micrófono virtual
+sink1=my-combined-sink:playback_FL
+sink2=my-combined-sink:playback_FR
+# Dispositivos a elegir (Añadir)
+devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
+# Dispositivos a elegir (Borrar)
+del_devices=$(pw-link -l | grep "my-combined-sink" -A 1 | grep -e '<-' | awk '{print $2}' | grep -v "my-combined-sink" | sort -u)
+
 # Icono para las notificaciones
 ICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
 
 # Vincular dispositivo con el micrófono virtual
 device_add(){
-local sink1=my-combined-sink:playback_FL
-local sink2=my-combined-sink:playback_FR
-devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
-# Elegir fuente desde dmenu
-selected_device=$(echo "$devices" | dmenu -p "Select an input device to add:" -l 14 )
+
+# Elegir dispositivo desde dmenu
+local selected_device
+selected_device=$(echo "$devices" | dmenu -p "Elige el dispositivo:" -l 14 )
+
+# Comprobar si el dispositivo es estéreo para añadir ambas entradas
 if [ -z "$selected_device" ]; then
 	exit 1
-elif echo $devices | grep "${selected_device%FL}FR"; then
+elif echo "$devices" | grep "${selected_device%FL}FR"; then
 	pw-link "$selected_device" "$sink1"
-	sink1_code=$?
 	pw-link "${selected_device%FL}FR" "$sink2"
-	sink2_code=$?
-elif echo $devices | grep "${selected_device%FR}FL"; then
+elif echo "$devices" | grep "${selected_device%FR}FL"; then
 	pw-link "${selected_device%FR}FL" "$sink1"
-	sink1_code=$?
 	pw-link "$selected_device" "$sink2"
-	sink2_code=$?
 else
 	pw-link "$selected_device" "$sink1"
-	sink1_code=$?
 	pw-link "$selected_device" "$sink2"
-	sink2_code=$?
 fi
-if [ $sink1_code -eq 0 ] && [ $sink2_code -eq 0 ]; then
-	notify-send -i "$ICON" "Dispositivo añadido correctamente"
+
+# Comprobar que los dispositivos se añadieron correctamente
+if pw-link -l | grep "my-combined-sink" -A 1 | grep "$selected_device"; then
+	notify-send -i "$ICON" "Dispositivo/s añadido/s correctamente"
 else
-	notify-send -i "$ICON" "Hubo un fallo al añadir el dispositivo"
+	notify-send -i "$ICON" "Hubo un fallo al añadir el/los dispositivo/s"
 fi
 }
 
 # Desvincular dispositivo con el micrófono virtual
 device_remove(){
-devices=$(pw-link -l | grep "my-combined-sink" -A 1 | grep -e '<-' | awk '{print $2}' | grep -v "my-combined-sink" | sort -u)
-[ -z "$devices" ] && exit 255
-selected_device=$(echo "$devices" | dmenu -p "Select an input device to remove:" -l 4 )
+
+# Dispositivos a elegir
+[ -z "$del_devices" ] && notify-send -i $ICON "No hay dispositivos que borrar" && exit 255 # Si no hay dispositivos añadidos, salir del script
+
+# Elegir el dispositivo a eliminar con dmenu
+local selected_device
+selected_device=$(echo "$del_devices" | dmenu -p "Elige el dispositivo a eliminar:" -l 4 )
 [ -z "$selected_device" ] && exit 255
-$(pw-link -d "$selected_device" my-combined-sink:playback_FR 2>/dev/null;
-pw-link -d "$selected_device" my-combined-sink:playback_FL 2>/dev/null) && \
-notify-send -i $ICON "Dispositivo borrado correctamente"
+
+# Comprobar si el dispositivo es estéreo para desvincular ambas entradas
+if echo "$del_devices" | grep "${selected_device%FL}FR"; then
+	pw-link -d "$selected_device" "$sink1"
+	pw-link -d "${selected_device%FL}FR" "$sink2"
+elif echo "$del_devices" | grep "${selected_device%FR}FL"; then
+	pw-link -d "${selected_device%FR}FL" "$sink1"
+	pw-link -d "$selected_device" "$sink2"
+else
+	pw-link -d "$selected_device" "$sink1"
+	pw-link -d "$selected_device" "$sink2"
+fi && notify-send -i $ICON "Dispositivo/s borrado/s"
 }
 
+add="Añadir entrada al micrófono virtual"
+del="Quitar entrada del micrófono virtual"
+
 # Elegir si borrar conexión ya existente o vincular nuevo micrófono
-chosen=$(echo -e "Add Input to Audio-Sharing\nDelete Input from Audio-Sharing" | dmenu -l 10)
+chosen=$(echo -e "$add\n$del" | dmenu -l 10)
 [ -z "$chosen" ] && exit 255
-if [ "$chosen" = "Add Input to Audio-Sharing" ]; then
+if [ "$chosen" = "$add" ]; then
 	device_add
 else
 	device_remove

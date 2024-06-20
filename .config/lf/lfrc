@@ -197,7 +197,7 @@ cmd open ${{
 		/usr/bin/mpv --audio-display=no "$f" ;;
 
 	video/*)
-		/usr/bin/mpv "$f" ;;
+		/usr/bin/vlc "$f" ;;
 
 	*/x-keepass2)
 		keepassxc "$f" ;;

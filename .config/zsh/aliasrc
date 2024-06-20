@@ -23,6 +23,11 @@ alias ...='cd ../..'
 # Actualizar el sistema
 alias update='yay -Syuu --removemake --ignore i3lock-fancy-git --ignore i3lock-fancy-rapid-git --ignore eww-git --ignore hydroxide-git'
 
+# Customizar firefox
+fffix(){
+	bash -c "$(curl -fsSL https://raw.githubusercontent.com/black7375/Firefox-UI-Fix/master/install.sh)"
+}
+
 # Herramientas
 alias xdotool_table='xmodmap -pk'
 alias push='git add . && git commit && git push'
