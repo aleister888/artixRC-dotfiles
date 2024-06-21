@@ -49,12 +49,20 @@ Y cuando el archivo llene el sistema de archivos puedes borrarlo y habrás sobre
 
 Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volumen con `cryptsetup luksOpen` y al elegir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
 
+# Instalar solo scripts
+
+Para instalar solo los scripts de este repositorio ejecuta desde el directorio del repositorio (con stow instalado):
+
+```
+mkdir -p "$HOME/.local/bin"; stow --target="${HOME}/.local/bin/" bin/
+```
+
 # Cosas por hacer
 
-- Script para instalar solo los scripts útiles (Para usar con otras distribuciones)
-- Compilar DVDBounce localmente
-- Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
-- Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
+- Mejorar script de particionado/instalación
+    - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
+    - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
+    - Arreglar instalación fuera del LiveISO
 
 # Recursos/fuentes usadas y Créditos
 
