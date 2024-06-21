@@ -55,6 +55,7 @@ Para instalar solo los scripts de este repositorio ejecuta desde el directorio d
 
 ```
 mkdir -p "$HOME/.local/bin"; stow --target="${HOME}/.local/bin/" bin/
+cp assets/pdf/help.pdf "${HOME}/.local/bin/"
 ```
 
 # Cosas por hacer
