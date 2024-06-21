@@ -315,16 +315,6 @@ suckless_install(){
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
-# Configurar el fondo de pantalla
-nitrogen_configure() {
-# Crear el archivo de configuración bg-saved.cfg
-mkdir -p "$HOME/.config/nitrogen"
-echo "[xin_-1]
-file=$HOME/.dotfiles/assets/wallpaper.png
-mode=5
-bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
-}
-
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
@@ -450,8 +440,6 @@ suckless_install
 "$HOME/.dotfiles/bin/tauon-config"
 # Creamos nuestro xinitrc
 doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-# Configurar el fondo de pantalla
-nitrogen_configure
 
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure

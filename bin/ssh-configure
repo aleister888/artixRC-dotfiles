@@ -58,5 +58,5 @@ enabled = true
 port = ssh
 filter = sshd
 logpath = /var/log/auth.log
-maxretry = 5
+maxretry = 2
 action = ufw' | doas tee -a /etc/fail2ban/jail.local

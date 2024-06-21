@@ -30,6 +30,17 @@ find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
 [ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
 ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
 
+################################
+# Configurar fondo de pantalla #
+################################
+
+# Crear el archivo de configuración bg-saved.cfg
+mkdir -p "$HOME/.config/nitrogen"
+echo "[xin_-1]
+file=$HOME/.dotfiles/assets/wallpaper
+mode=5
+bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
+
 ##################################################
 # Configurar GTK y QT (Si KDE no está instalado) #
 ##################################################
