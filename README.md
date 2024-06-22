@@ -55,7 +55,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 > cp assets/pdf/help.pdf "${HOME}/.local/bin/"
 > ```
 
-# Cosas por hacer
+## Cosas por hacer
 
 - Añadir un README.md a dwm explicando que es un fork, los patches que hay, etc.
 - Mejorar script de particionado/instalación
@@ -63,7 +63,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
     - Arreglar instalación fuera del LiveISO
 
-# Recursos/fuentes usadas y Créditos
+## Recursos/fuentes usadas y Créditos
 
 - [3] https://gitlab.com/risingprismtv/single-gpu-passthrough
 - [4] https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption
