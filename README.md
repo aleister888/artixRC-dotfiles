@@ -60,6 +60,7 @@ cp assets/pdf/help.pdf "${HOME}/.local/bin/"
 
 # Cosas por hacer
 
+- Añadir un README.md a dwm explicando que es un fork, los patches que hay, etc.
 - Mejorar script de particionado/instalación
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
