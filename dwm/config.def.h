@@ -10,7 +10,7 @@
 static const unsigned int borderpx       = gappx/5; // Borde en pixeles de las ventanas
 static const int vertpad                 = gappx;   // Separación vertical de la barra
 static const int sidepad                 = gappx;   // Separación horizontal de la barra
-static const int user_bh                 = gappx;       // Altura barra: 0 por defecto, >= 1 Altura añadida
+static const int user_bh                 = gappx;   // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;       // Pixeles de cercanía para pegarse al borde (0 = desactivado)
 static const unsigned int systraypinning = 0;       // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayspacing = gappx/5*2; // Espaciado de la barra de tareas
@@ -22,7 +22,7 @@ static const int topbar                  = 1;       // 0 Para la barra en la par
 static const int allowkill               = 1;       // ¿Permitir cerrar clientes por defecto?
 static const float mfact                 = 0.45;    // Factor de escalado de la zona principal [0.05..0.95]
 static const int nmaster                 = 1;       // Número de clientes en la zona principal
-static const int resizehints             = 1;       // 1 ¿Respetar pistas de dibujado al redimensionar ventanas no-flotantes?
+static const int resizehints             = 1;       // 1 ¿Respetar pistas de dibujado al re-dimensionar ventanas no-flotantes?
 static const int lockfullscreen          = 1;       // 1 Fuerza el foco en las ventanas en pantalla completa
 static const unsigned int colorfultag    = 1;       // 1, Los indicadores de espacio son coloridos
 static const unsigned int ulinepad       = 0;       // Espaciado horizontal entre subrayado y el indicador del espacio de trabajo
@@ -32,7 +32,6 @@ static const int ulineall                = 0;       // 1 para mostrar el subraya
 static const char background[]           = "#1D2021";
 static const char background_sel[]       = "#282828";
 static const char foreground[]           = "#EBDBB2";
-static const char foreground_alt[]       = "#665C54";
 static const char col_red[]              = "#FB4934";
 static const char col_green[]            = "#B8BB26" ;
 static const char col_yellow[]           = "#FABD2F" ;
@@ -42,19 +41,19 @@ static const char col_aqua[]             = "#8EC07C" ;
 static const char col_orange[]           = "#FE8019";
 
 
-static const char *colors[][3]      = {
+static const char *colors[][3] = {
 	// Colores:             Fuente          Fondo       Borde
 	[SchemeNorm]        = { foreground, background,     col_blue   }, // Color de las ventanas normales
-	[SchemeSel]         = { foreground, background_sel, col_orange }, // Color de las ventanas selccionadas
+	[SchemeSel]         = { foreground, background_sel, col_orange }, // Color de las ventanas seleccionadas
 	[SchemeStatus]      = { foreground, background,     "#000000"  }, // Color de los espacios por defecto
-	[SchemeTagsNorm]    = { foreground_alt, background, "#000000"  }, // Información (Normal)
+	[SchemeTagsNorm]    = { foreground, background,     "#000000"  }, // Información (Normal)
 	[SchemeTagsSel]     = { foreground, background_sel, "#000000"  }, // Color de los espacios seleccionados
 	[SchemeInfoNorm]    = { foreground, background,     "#000000"  }, // Estado/información
 	[SchemeInfoSel]     = { foreground, background_sel, "#000000"  }, // Información (Seleccionada)
 	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue   }, // Scratchpad (Normal)
-	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple }, // Scratchpad (Selecteccionado)
+	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple }, // Scratchpad (Seleccionado)
 	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
-	[SchemeStickySel]   = { "#000000",  "#000000",      col_yellow }, // Scratchpad (Selecteccionado)
+	[SchemeStickySel]   = { "#000000",  "#000000",      col_yellow }, // Scratchpad (Seleccionado)
 	[SchemeTag1]        = { col_purple, background_sel, "#000000"  }, // Colores de los espacios 1-12
 	[SchemeTag2]        = { col_aqua,   background_sel, "#000000"  },
 	[SchemeTag3]        = { col_orange, background_sel, "#000000"  },
@@ -145,7 +144,7 @@ static const Rule rules[] = {
 static const Layout layouts[] = {
 	{ "[]=",      tile },           // Layout por defecto
 	{ "><>",      NULL },           // Ningún layout significa comportamiento flotante
-	{ "[M]",      monocle },        // Las ventans ocupan toda la pantalla
+	{ "[M]",      monocle },        // Las ventanas ocupan toda la pantalla
 	{ "|M|",      centeredmaster }, // 3 Columnas (Zona principal centrada)
 	{ "|||",      col },            // Columnas (Zona principal a la izquierda)
 	{ "TTT",      bstack },         // Zona principal en la parte superior

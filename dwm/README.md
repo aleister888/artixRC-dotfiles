@@ -1,5 +1,3 @@
-# Mi build de dwm
-
 ## FAQ
 
 > Cuales son los atajos de teclado?
