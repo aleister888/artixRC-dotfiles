@@ -4,6 +4,9 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+# Actualizar repositorio
+sh -c "cd $HOME/.dotfiles && git pull"
+
 find $HOME/ -type d -exec chmod 700 {} +
 
 #######################################

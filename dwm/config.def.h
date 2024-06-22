@@ -7,28 +7,28 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Constantes
-static const unsigned int borderpx       = gappx/5; // Borde en pixeles de las ventanas
-static const int vertpad                 = gappx;   // Separación vertical de la barra
-static const int sidepad                 = gappx;   // Separación horizontal de la barra
-static const int user_bh                 = gappx;   // Altura barra: 0 por defecto, >= 1 Altura añadida
-static const unsigned int snap           = 0;       // Pixeles de cercanía para pegarse al borde (0 = desactivado)
-static const unsigned int systraypinning = 0;       // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
+static const unsigned int borderpx       = gappx/5;   // Borde en pixeles de las ventanas
+static const int vertpad                 = gappx;     // Separación vertical de la barra
+static const int sidepad                 = gappx;     // Separación horizontal de la barra
+static const int user_bh                 = gappx;     // Altura barra: 0 por defecto, >= 1 Altura añadida
+static const unsigned int snap           = 0;         // Pixeles de cercanía para pegarse al borde (0 = desactivado)
+static const unsigned int systraypinning = 0;         // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayspacing = gappx/5*2; // Espaciado de la barra de tareas
-static const int systraypinningfailfirst = 1;       // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
-static const int showsystray             = 0;       // ¿Barra de tareas? (0: Desactivada)
-static const int swallowfloating         = 0;       // 1 Significa tragarse nuevas ventanas por defecto
-static const int showbar                 = 1;       // 0 Para desactivar la barra
-static const int topbar                  = 1;       // 0 Para la barra en la parte inferior
-static const int allowkill               = 1;       // ¿Permitir cerrar clientes por defecto?
-static const float mfact                 = 0.45;    // Factor de escalado de la zona principal [0.05..0.95]
-static const int nmaster                 = 1;       // Número de clientes en la zona principal
-static const int resizehints             = 1;       // 1 ¿Respetar pistas de dibujado al re-dimensionar ventanas no-flotantes?
-static const int lockfullscreen          = 1;       // 1 Fuerza el foco en las ventanas en pantalla completa
-static const unsigned int colorfultag    = 1;       // 1, Los indicadores de espacio son coloridos
-static const unsigned int ulinepad       = 0;       // Espaciado horizontal entre subrayado y el indicador del espacio de trabajo
-static const unsigned int ulinestroke    = 4;       // Grosor/Altura del subrayado
-static const unsigned int ulinevoffset   = 0;       // Espacio entre el subrayado y el borde inferior de la barra
-static const int ulineall                = 0;       // 1 para mostrar el subrayado en todos los espacios, 0 para mostrarlo en los seleccionados
+static const int systraypinningfailfirst = 1;         // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
+static const int showsystray             = 1;         // ¿Barra de tareas? (0: Desactivada)
+static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
+static const int showbar                 = 1;         // 0 Para desactivar la barra
+static const int topbar                  = 1;         // 0 Para la barra en la parte inferior
+static const int allowkill               = 1;         // ¿Permitir cerrar clientes por defecto?
+static const float mfact                 = 0.45;      // Factor de escalado de la zona principal [0.05..0.95]
+static const int nmaster                 = 1;         // Número de clientes en la zona principal
+static const int resizehints             = 1;         // 1 ¿Respetar pistas de dibujado al re-dimensionar ventanas no-flotantes?
+static const int lockfullscreen          = 1;         // 1 Fuerza el foco en las ventanas en pantalla completa
+static const unsigned int colorfultag    = 1;         // 1, Los indicadores de espacio son coloridos
+static const unsigned int ulinepad       = 0;         // Espaciado horizontal entre subrayado y el indicador del espacio de trabajo
+static const unsigned int ulinestroke    = 4;         // Grosor/Altura del subrayado
+static const unsigned int ulinevoffset   = 0;         // Espacio entre el subrayado y el borde inferior de la barra
+static const int ulineall                = 0;         // 1 para mostrar el subrayado en todos los espacios, 0 para mostrarlo en los seleccionados
 static const char background[]           = "#1D2021";
 static const char background_sel[]       = "#282828";
 static const char foreground[]           = "#EBDBB2";
