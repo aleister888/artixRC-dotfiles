@@ -33,6 +33,11 @@ find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
 [ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
 ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
 
+# Descargar shader de mpv
+[ ! -e "$HOME/.config/mpv/shaders/crt-lottes.glsl" ] && \
+	wget -q "https://raw.githubusercontent.com/hhirtz/mpv-retro-shaders/master/crt-lottes.glsl" \
+	-O "$HOME/.config/mpv/shaders/crt-lottes.glsl"
+
 ################################
 # Configurar fondo de pantalla #
 ################################

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/usr/bin/mpv --vf="format=convert=yes:fmt=yuv444p,lavfi=[scale=800:600:flags=neighbor,setsar=1:1]" \
+	--profile=crt-lottes "$1"
