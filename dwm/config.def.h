@@ -10,7 +10,7 @@
 static const unsigned int borderpx       = gappx/5;   // Borde en pixeles de las ventanas
 static const int vertpad                 = gappx;     // Separación vertical de la barra
 static const int sidepad                 = gappx;     // Separación horizontal de la barra
-static const int user_bh                 = gappx;     // Altura barra: 0 por defecto, >= 1 Altura añadida
+static const int user_bh                 = gappx/2;     // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;         // Pixeles de cercanía para pegarse al borde (0 = desactivado)
 static const unsigned int systraypinning = 0;         // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayspacing = gappx/5*2; // Espaciado de la barra de tareas
@@ -26,7 +26,7 @@ static const int resizehints             = 1;         // 1 ¿Respetar pistas de 
 static const int lockfullscreen          = 1;         // 1 Fuerza el foco en las ventanas en pantalla completa
 static const unsigned int colorfultag    = 1;         // 1, Los indicadores de espacio son coloridos
 static const unsigned int ulinepad       = 0;         // Espaciado horizontal entre subrayado y el indicador del espacio de trabajo
-static const unsigned int ulinestroke    = 4;         // Grosor/Altura del subrayado
+static const unsigned int ulinestroke    = 0;         // Grosor/Altura del subrayado
 static const unsigned int ulinevoffset   = 0;         // Espacio entre el subrayado y el borde inferior de la barra
 static const int ulineall                = 0;         // 1 para mostrar el subrayado en todos los espacios, 0 para mostrarlo en los seleccionados
 static const char background[]           = "#1D2021";
