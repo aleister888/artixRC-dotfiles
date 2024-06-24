@@ -131,7 +131,11 @@ pgrep pipewire || pipewire-start &
 
 # Iniciar el compositor (Solo en hardware real. Desactivar para máquinas virtuales)
 grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
-pgrep picom || picomstart &
+if [ -x "/usr/bin/xcompmgr" ]; then # Iniciar picom si no está instalado xcompmgr
+	pgrep xcompmgr || xcompmgr &
+else
+	pgrep picom || picomstart &
+fi
 
 # Servicios del sistema
 dbus-update-activation-environment --all
