@@ -48,7 +48,7 @@ SAVEHIST=128
 HISTFILE=/tmp/zsh_history
 
 # Bindings de teclado
-bindkey  "^[[3~"  delete-char
+bindkey  "^[[3~" delete-char
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -65,7 +65,7 @@ function get_local_ip {
 	if [ ! -z $adress ]; then
 		echo $adress
 	else
-		echo "NO CONNECTION"
+		echo "N/A"
 	fi
 }
 
@@ -74,7 +74,7 @@ function get_time {
 }
 
 function precmd {
-    PROMPT="%B%F{red}[%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red}] "
+PROMPT="%B%F{red}(%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red})%B%F{white}$ "
 }
 
 setopt promptsubst
