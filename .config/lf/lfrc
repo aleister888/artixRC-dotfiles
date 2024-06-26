@@ -165,7 +165,7 @@ cmd open ${{
     case $(xdg-mime query filetype "$(readlink -f $f)") in
 
 	*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
-		xarchiver "$fx" ;;
+		xarchiver "$f" ;;
 
 	*/zip | */vnd.comicbook+zip)
 		case "$(readlink -f $f)" in
@@ -176,7 +176,7 @@ cmd open ${{
 		esac ;;
 
 	*/vnd.*document*)
-		libreoffice "$fx" ;;
+		setsid -f libreoffice "$fx" ;;
 
 	*/pdf | */epub*)
 		zathura "$f" ;;
@@ -197,7 +197,7 @@ cmd open ${{
 		/usr/bin/mpv --audio-display=no "$f" ;;
 
 	video/*)
-		/usr/bin/vlc "$f" ;;
+		/usr/bin/mpv "$f" ;;
 
 	*/x-keepass2)
 		keepassxc "$f" ;;
