@@ -192,7 +192,9 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 	grep "reflector" /etc/crontab || \
 echo "SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-0 8 * * * root reflector --verbose --latest 10 --sort rate --download-timeout 1 --connection-timeout 1 --threads $(nproc) --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
+
+# Escoger los mejores repositorios para Arch Linux
+@hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
 }
 
 # Configurar la codificación del sistema
