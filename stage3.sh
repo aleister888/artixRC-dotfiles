@@ -66,7 +66,7 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gt
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli mate-calc bleachbit baobab gcolor2 gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks"
+packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock"
 # WM
 packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
 

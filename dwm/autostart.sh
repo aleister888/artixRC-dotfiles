@@ -165,6 +165,9 @@ pgrep dunst || dunst &
 virtualmic &
 ewwspawn &
 
+# Salvapantallas
+xautolock -time 1 -locker screensaver
+
 # Servidor VNC Local (Solo para equipos que no lleven batería)
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 
