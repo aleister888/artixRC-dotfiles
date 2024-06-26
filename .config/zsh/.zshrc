@@ -74,7 +74,7 @@ function get_time {
 }
 
 function precmd {
-PROMPT="%B%F{red}(%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red})%B%F{white}$ "
+PROMPT="%B%F{red}[%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red}] "
 }
 
 setopt promptsubst

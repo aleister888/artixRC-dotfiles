@@ -131,11 +131,7 @@ pgrep pipewire || pipewire-start &
 
 # Iniciar el compositor (Solo en hardware real. Desactivar para máquinas virtuales)
 grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
-if [ -x "/usr/bin/xcompmgr" ]; then # Iniciar picom si no está instalado xcompmgr
-	pgrep xcompmgr || xcompmgr &
-else
-	pgrep picom || picomstart &
-fi
+pgrep picom || picomstart &
 
 # Servicios del sistema
 dbus-update-activation-environment --all
@@ -200,3 +196,10 @@ fi
 rm -rf "$HOME/.local/share/desktop-directories"
 rm -rf "$HOME/.local/share/applications/wine"*
 rm -rf "$HOME/.config/menus"
+
+# Borrar el lockfile de firefox
+while true; do
+if pgrep firefox > /dev/null; then
+find "$HOME/.mozilla" -name "*.parentlock*" -delete
+fi; sleep 1
+done
