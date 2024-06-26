@@ -454,12 +454,15 @@ echo "@reboot $USER syncthing --no-browser --no-default-folder" | doas tee -a /e
 audio_setup
 
 # Configurar /etc/sysctl.conf
-
 echo 'vm.swappiness=10
 net.ipv4.conf.all.accept_redirects = 0
 net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.all.send_redirects=1
+net.ipv4.conf.default.send_redirects=1
 net.ipv6.conf.all.accept_redirects = 0
-net.ipv6.conf.default.accept_redirects = 0' | doas tee -a /etc/sysctl.conf
+net.ipv6.conf.default.accept_redirects = 0
+net.ipv4.ip_forward=1
+net.ipv6.conf.all.forwarding=1' | doas tee -a /etc/sysctl.conf
 
 # Si estamos usando una máquina virtual,
 # configuramos X11 para usar 1080p como resolución
