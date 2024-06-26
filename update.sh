@@ -5,9 +5,19 @@
 # Licencia: GNU GPLv3
 
 # Actualizar repositorio
-sh -c "cd $HOME/.dotfiles && git pull"
+sh -c "cd $HOME/.dotfiles && git pull" >/dev/null
 
-find $HOME/ -type d -exec chmod 700 {} +
+
+while getopts ":f" opt; do case $opt in
+	f)
+		# Corregir los permisos de los directorios
+		find $HOME/ -type d -exec chmod 700 {} +
+		# Corregir los permisos de los archivos multimedia
+		find $HOME/ -type f | \
+		parallel 'case $(xdg-mime query filetype {}) in image/*|audio/*|video/*|text/plain) \
+		[ "$(stat -c "%a" {})" != "600" ] && chmod 600 {} ;; esac'
+	;;
+esac; done
 
 #######################################
 # Archivos de configuración y scripts #
@@ -36,7 +46,7 @@ ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
 # Descargar shader de mpv
 [ ! -e "$HOME/.config/mpv/shaders/crt-lottes.glsl" ] && \
 	wget -q "https://raw.githubusercontent.com/hhirtz/mpv-retro-shaders/master/crt-lottes.glsl" \
-	-O "$HOME/.config/mpv/shaders/crt-lottes.glsl"
+	-O "$HOME/.config/mpv/shaders/crt-lottes.glsl" >/dev/null
 
 ################################
 # Configurar fondo de pantalla #
@@ -104,7 +114,7 @@ cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/defaul
 ###############
 
 plugin_install(){
-	git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")"
+	git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
 }
 
 [ ! -e "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
@@ -120,10 +130,10 @@ plugin_install(){
 	-O "$HOME/.config/zsh/ohmyzsh/dirhistory.plugin.zsh"
 
 # Actualizar plugins de zsh
-sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull"
-sh -c "cd $HOME/.config/zsh/zsh-history-substring-search && git pull"
-sh -c "cd $HOME/.config/zsh/zsh-syntax-highlighting && git pull"
-sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull"
+sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull" >/dev/null
+sh -c "cd $HOME/.config/zsh/zsh-history-substring-search && git pull" >/dev/null
+sh -c "cd $HOME/.config/zsh/zsh-syntax-highlighting && git pull" >/dev/null
+sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 
 ############################
 # Aplicaciones por defecto #
@@ -163,6 +173,7 @@ set_default_mime_types "^image" "image.desktop"
 set_default_mime_types "^video" "mpv.desktop"
 set_default_mime_types "^audio" "mpv.desktop"
 set_default_mime_types "^text" "nvimt.desktop"
+set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
 
 # Establecemos por defecto el administrador de archivos
 xdg-mime default lfst.desktop inode/directory

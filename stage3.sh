@@ -392,6 +392,7 @@ driver_choose
 { lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && packages+=" blueman"
 # Crear directorios
 for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
+ln -s "$HOME/Descargas" "$HOME/Downloads"
 
 # Elegimos que paquetes instalar
 packages_choose
