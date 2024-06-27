@@ -10,7 +10,7 @@ calculate_brightness() {
 	local max="$1" # Valor máximo para el brillo
 	local actual="$2" # Valor actual del brillo
 	local mode="$3" # Argumento ("dec" o "inc")
-	local gradient=$((max / 100)) # Velocidad de cambio del brillo
+	local gradient=$((max / 75)) # Velocidad de cambio del brillo
 	local new_brightness # Variable para el nuevo valor de brillo
 	# Establecemos incrementos del 25%
 	local increment=$((max / 4))
@@ -18,7 +18,7 @@ calculate_brightness() {
 	# y cambiarlo gradualmente
 	if [ "$mode" == "inc" ]; then
 		# Salirse del script si el brillo ya esta al máximo
-		[ "$(cat /sys/class/backlight/intel_backlight/max_brightness)" == "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" ] && exit 1
+		[ "$(( $(cat /sys/class/backlight/intel_backlight/max_brightness) - 100))" -le "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" ] && exit 1
 		new_brightness=$((actual + increment)) # Aumentar el brillo gradualmente
 		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $(($max-$gradient)) ]; do
 			actual=$((actual + $gradient))
