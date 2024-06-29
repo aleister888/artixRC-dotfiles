@@ -187,8 +187,8 @@ done &
 # Servidor VNC Local (Solo para equipos que no lleven batería)
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 
-# Iniciar redshift (Filtro de la luz azul)
-pgrep redshift || redshift -l "$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"')" -m vidmode
+# Iniciar redshift (Filtro de la luz azul) con localización en Madrid/España
+redshift -l 40.42:-3.70 -t 5700:3600 -b 1:0.9 -m randr -v &
 
 # Iniciar hydroxide si está instalado
 # https://github.com/emersion/hydroxide?tab=readme-ov-file#usage
@@ -218,7 +218,7 @@ rm -rf "$HOME/.config/menus"
 
 # Borrar el lockfile de firefox
 while true; do
-if pgrep firefox > /dev/null; then
-find "$HOME/.mozilla" -name "*.parentlock*" -delete
-fi; sleep 1
+	pgrep firefox > /dev/null && \
+	find "$HOME/.mozilla" -name "*.parentlock*" -delete
+	sleep 1
 done
