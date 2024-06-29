@@ -166,7 +166,23 @@ virtualmic &
 ewwspawn &
 
 # Salvapantallas
-xautolock -time 1 -locker screensaver
+xautolock -time 1 -locker screensaver &
+
+while true; do
+	resultado=0 # Reinicamos la variable antes de hacer las comprobaciones
+	# Si alguna de estas aplicaciones esta activa, no mostrar el salvapantallas
+	processes=("i3lock" "mpv" "vlc" "looking-glass")
+	for process in "${processes[@]}"; do
+		! pgrep "$process" > /dev/null
+		resultado=$(($resultado + $?))
+	done
+	# Si firefox esta reproduciendo contenido, no mostrar el salvapantallas
+	[ $(playerctl --player firefox status) == "Playing" ] && \
+	resultado=1
+	# Reinciar el contador de xautolock en función de los resultados
+	[ "$resultado" -gt 0 ] && xautolock -enable
+	sleep 5 # Esperar 5s antes de hacer la siguiente comprobación
+done &
 
 # Servidor VNC Local (Solo para equipos que no lleven batería)
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
