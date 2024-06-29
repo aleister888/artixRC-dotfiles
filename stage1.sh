@@ -302,7 +302,8 @@ mount_partitions
 basestrap_pkgs="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt xfsprogs btrfs-progs"
 basestrap /mnt $basestrap_pkgs
 
-# Configuramos Opendoas
+# Configuramos Opendoas para no pedir contraseña
+# (Se cambiará después de la instalación)
 mkdir -p /mnt/etc
 echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 

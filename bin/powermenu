@@ -18,9 +18,9 @@ chosen=$(printf "%s\n" "${options[@]}" | dmenu -c -l ${#options[@]})
 case $chosen in
 	"${options[0]}") sleep 0.5; i3lock-fancy;;
 	"${options[1]}") sleep 0.5; i3lock-fancy & sleep 3; loginctl suspend;;
-	"${options[2]}") doas wake now;;
-	"${options[3]}") doas pkill X;;
-	"${options[4]}") doas openrc-shutdown -r now;;
-	"${options[5]}") doas openrc-shutdown -p now;;
+	"${options[2]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas wake now;;
+	"${options[3]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas pkill X;;
+	"${options[4]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas openrc-shutdown -r now;;
+	"${options[5]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas openrc-shutdown -p now;;
 	"${options[6]}") pkill dwm;;
 esac

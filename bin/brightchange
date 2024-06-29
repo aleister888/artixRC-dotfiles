@@ -22,7 +22,7 @@ calculate_brightness() {
 		new_brightness=$((actual + increment)) # Aumentar el brillo gradualmente
 		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $(($max-$gradient)) ]; do
 			actual=$((actual + $gradient))
-			echo $actual | doas tee /sys/class/backlight/intel_backlight/brightness
+			echo $actual | doas /usr/bin/tee /sys/class/backlight/intel_backlight/brightness
 		done
 	elif [ "$mode" == "dec" ]; then
 		# Salirse del script si el brillo ya está al mínimo
@@ -30,7 +30,7 @@ calculate_brightness() {
 		new_brightness=$((actual - increment)) # Bajar el brillo gradualmente (Mínimo 25%)
 		while [ "$actual" -gt "$new_brightness" ] && [ "$actual" -ge "$increment" ]; do
 			actual=$((actual - $gradient))
-			echo $actual | doas tee /sys/class/backlight/intel_backlight/brightness
+			echo $actual | doas /usr/bin/tee /sys/class/backlight/intel_backlight/brightness
 		done
 	fi
 }

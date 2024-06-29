@@ -528,3 +528,12 @@ WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 # Borrar archivos innecesarios
 rm $HOME/.bash* 2>/dev/null
 rm $HOME/.wget-hsts 2>/dev/null
+
+# Finalmente configurar doas de forma más segura
+doas chown -c root:root /etc/doas.conf
+doas chmod -c 0400 /etc/doas.conf
+echo 'permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel
+permit nopass :wheel as root cmd /usr/bin/pgrep
+permit nopass :wheel as root cmd /usr/bin/tee
+permit nopass :wheel as root cmd /usr/bin/pacman
+permit nopass :wheel as root cmd pacman' | doas tee /etc/doas.conf

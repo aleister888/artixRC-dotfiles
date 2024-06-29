@@ -57,6 +57,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 ## Cosas por hacer
 
+- Arreglar crypt-backup de forma que se ejecute como root y haga backups incrementales
 - Mejorar script de particionado/instalación
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
