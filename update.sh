@@ -141,7 +141,8 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 
 # Borramos ajustes ya guardados
 rm -f $HOME/.config/mimeapps.list
-rm -rf ~/.local/share/applications ~/.local/share/mime
+find ~/.local/share/applications -type f ! -name 'steam.desktop' -delete
+rm -rf ~/.local/share/mime
 mkdir -p $HOME/.local/share/mime/packages
 doas rm -f /usr/share/applications/mimeinfo.cache
 update-mime-database ~/.local/share/mime

@@ -15,7 +15,7 @@ echo "kernel.unprivileged_userns_clone = 1" | doas tee -a /etc/sysctl.conf
 echo '[Desktop Entry]
 Name=Steam (Runtime)
 Comment=Application for managing and playing games on Steam
-Exec=firejail --profile=/etc/firejail/steam.profile steam /usr/bin/steam %U
+Exec=firejail --profile=~/.dotfiles/assets/configs/steam.profile steam /usr/bin/steam %U
 Icon=steam
 Terminal=false
 Type=Application
