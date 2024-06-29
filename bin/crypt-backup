@@ -1,7 +1,5 @@
 #!/bin/sh
 
-exit 1
-
 # Script pensado para hacer copias de seguridad muy basicas a un disco encriptado
 
 error(){
@@ -47,8 +45,8 @@ else
 	error "Se encontro el disco montado en $bkdir"; exit 1
 fi
 
-doas chown $USER $bkdir
-doas chmod 700 $bkdir
+chown $USER $bkdir
+chmod 700 $bkdir
 
 [ "$disktype" != "crypt" ] && error "El script debe ejecutarse en un disco duro encriptado" && exit 1
 
@@ -66,7 +64,7 @@ rsync --info=progress2 --verbose --archive --delete "$userdir/" "$bkdir/rsync" 2
 # Creamos un mirror de /var/lib/libvirt/images
 IMAGEDIR="/var/lib/libvirt/images"
 message "Se va a crear un mirror de /var/lib/libvirt/images en $bkdir/images"; \
-for image in $(/usr/bin/ls $IMAGEDIR); do doas dd if=$IMAGEDIR/$image of=$bkdir/images/$image status=progress; done
+for image in $(/usr/bin/ls $IMAGEDIR); do dd if=$IMAGEDIR/$image of=$bkdir/images/$image status=progress; done
 
 make_copy(){
 	local destname=$(echo "$1" | tr '/' '_')
@@ -81,7 +79,7 @@ make_copy "/etc/conf.d/dmcrypt"
 
 # Copiamos las claves a $1/keys
 if [ -d /etc/keys ]; then
-	doas rsync --info=progress2 --verbose --archive --delete /etc/keys/ "$bkdir/keys" 2>/dev/null
+	rsync --info=progress2 --verbose --archive --delete /etc/keys/ "$bkdir/keys" 2>/dev/null
 else
 	error "La carpeta /etc/keys no existe"; exit 1
 fi

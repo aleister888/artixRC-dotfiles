@@ -216,12 +216,12 @@ El repositorio incluye una variedad de scripts para automatizar ciertas tareas. 
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-0 8 * * * root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+@hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
 @reboot usuario syncthing --no-browser --no-default-folder
 \end{lstlisting}
 
 \begin{itemize}
-	\item \textit{``0 8 * * *"} es la parte de donde definimos cuando se ejecutará el comando, si quieres investigar hay un montón de guías en youtube o cualquier otra plataforma sobre cuál es la sintaxis para configurar la ejecución de los comandos. Puedes también comprobar si tu sintaxis es correcta en \href{https://crontab.guru/}{crontab.guru}.
+	\item \textit{``@hourly"} es la parte de donde definimos cuando se ejecutará el comando, si quieres investigar hay un montón de guías en youtube o cualquier otra plataforma sobre cuál es la sintaxis para configurar la ejecución de los comandos. Puedes también comprobar si tu sintaxis es correcta en \href{https://crontab.guru/}{crontab.guru}.
 	\item \textit{``root"} es el usuario que ejecuta el comando, y \textit{"reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch"}, el comando.
 \end{itemize}
 
@@ -245,10 +245,10 @@ Esto convertirá toda la música de \path{/musica/biblioteca} a la carpeta \path
 
 \vspace{5pt}
 
-Podemos automatizar este proceso, para que el usuario \textit{``usuario1"} convierta a mp3 su música, todos los dias a las 8:30, añadiendo esta linea a \path{/etc/crontab}:
+Podemos automatizar este proceso, para que el usuario \textit{``usuario"} convierta a mp3 su música todos los días, añadiendo esta linea a \path{/etc/crontab}:
 
 \begin{verbatim}
-30 8 * * * usuario1 convert-2mp3 /musica/biblioteca /musica/mp3
+@daily usuario convert-2mp3 /musica/biblioteca /musica/mp3
 \end{verbatim}
 
 \begin{itemize}
@@ -265,7 +265,7 @@ Este script comprueba que no haya archivos corruptos en nuestra biblioteca de m�
 Podemos automatizar esta tarea añadiendo el comando a \path{/etc/crontab}, aquí un ejemplo:
 
 \begin{verbatim}
-15 7 * * * usuario1 corruption-check /musica/biblioteca
+@daily usuario corruption-check /musica/biblioteca
 \end{verbatim}
 
 \subsection{exif-remove}
@@ -281,12 +281,12 @@ Los metadatos EXIF sirven para identificar el usuario que tomó una fotografía,
 Para borrar automaticamente los metadatos de una carpeta, puedes añadir a \path{/etc/crontab} una línea parecida a:
 
 \begin{verbatim}
-0 17 * * * usuario1 exif-remove /fotografias
+@hourly usuario exif-remove /fotografias
 \end{verbatim}
 
 \subsection{wake}
 
-Este script comprueba si hay alguna máquina virtual en ejecucción, y si no encuentra ninguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
+Este script comprueba si hay alguna máquina virtual en ejecución, y si no encuentra ninguna, suspende nuestro equipo y lo reanuda a las 7 de la mañana del día siguiente. Útil para ahorrar energía y no tener que preocuparte por suspender tu equipo, ni de encenderlo por las mañanas.
 
 \vspace{5pt}
 
@@ -301,7 +301,7 @@ El script te avisa de que el sistema se va suspender y a los 10 minutos lo suspe
 Este script es un despertador, hace sonar el archivo de audio especificado hasta que le damos al un botón que apaga nuestra alarma. Si queremos que el despertador suene todas las mañanas a las 7:30, podemos añadir una linea parecida a esta a \path{/etc/crontab}:
 
 \begin{verbatim}
-30 7 * * * usuario1 wakeme ~/musica/alarma.mp3
+30 7 * * * usuario wakeme ~/musica/alarma.mp3
 \end{verbatim}
 
 \subsection{Mantenimiento btrfs}
@@ -309,22 +309,22 @@ Este script es un despertador, hace sonar el archivo de audio especificado hasta
 Si elegiste particionar tu disco con BTRFS es recomendable que se ejecuten tareas de mantenimiento cada $X$ tiempo. Añadir esto a tu \path{/etc/crontab} bastará:
 
 \begin{verbatim}
-0 14 * * 5 root btrfs balance start -dusage=95 -musage=95 /
+@weekly root btrfs balance start -dusage=95 -musage=95 /
 \end{verbatim}
 
-Esto realizará diversas tareas de mantenimiento en tu disco principal todos los viernes a las 14:00. Si tienes un disco diferente para tu partición home, también formateado en BTRFS, puede interesarte hacer lo mismo para tu disco /home
+Esto realizará diversas tareas de mantenimiento en tu disco principal una vez por semana. Si tienes un disco diferente para tu partición home, también formateado en BTRFS, puede interesarte hacer lo mismo para tu disco /home
 
 \begin{verbatim}
-0 14 * * 5 root btrfs balance start -dusage=95 -musage=95 /home
+@weekly root btrfs balance start -dusage=95 -musage=95 /home
 \end{verbatim}
 
 \subsection{Limpiar cache periódicamente}
 
-Puedes limpiar periódicamente la caché y archivos de registro antiguos de forma periódica añadiendo estas lineas a \path{/etc/crontab} sustituyendo \textit{usuario1} por el nombre de tu usuario:
+Puedes limpiar periódicamente la caché y archivos de registro antiguos de forma periódica añadiendo estas lineas a \path{/etc/crontab} sustituyendo \textit{usuario} por el nombre de tu usuario:
 
 \begin{verbatim}
-30 7 * * */2 usuario1 find ~/.cache -mtime +2 -delete
-30 7 * * */2 usuario1 find ~/ -name "*.log" -mtime +4 -delete
+@daily usuario find ~/.cache -mtime +2 -delete
+@hourly usuario find ~/ -name "*.log" -mtime +4 -delete
 \end{verbatim}
 
 \subsection{Reorganizar plugins}
@@ -332,7 +332,7 @@ Puedes limpiar periódicamente la caché y archivos de registro antiguos de form
 Si elegiste instalar herramientas de producción musical, se instaló \href{https://github.com/robbert-vdh/yabridge}{yabridge}, una aplicación para usar plugins \href{https://es.wikipedia.org/wiki/Virtual_Studio_Technology}{VST} de Windows en Linux. Es recomendable configurar el escaneo de nuevos plugins y el mantenimiento de tu librería de plugins para que se haga automáticamente.
 
 \begin{verbatim}
-15 23 * * * usuario1 yabridgectl sync --prune
+@hourly usuario yabridgectl sync --prune
 \end{verbatim}
 
 \subsection{compressed-backup}
@@ -344,10 +344,10 @@ Este script crea un fichero comprimido \textit{tar.gz} con una copia de segurida
 \noindent Por ejemplo, añadir esta linea a nuestro \path{/etc/crontab}:
 
 \begin{verbatim}
-0 16 * * 3 usuario1 compressed-backup ~/Música /Resguardos/Música
+@daily usuario compressed-backup ~/Música /Resguardos/Música
 \end{verbatim}
 
-Nos crearía todos los miércoles a las 16:00 una copia de seguridad de la carpeta \path{~/Música} en un archivo comprimido en \path{/Resguardos/Música}
+Nos crearía todos los días una copia de seguridad de la carpeta \path{~/Música} en un archivo comprimido en \path{/Resguardos/Música}
 
 \subsection{crypt-backup}
 
@@ -356,7 +356,7 @@ Este script crea una copia de seguridad de nuestros archivos más importantes, n
 El script solo se ejecutará si el disco que elegimos para las copias de seguridad es un disco encriptado. \textit{El script no se ejecutará si el disco no esta motado o no esta encriptado, pues en este se harán copias de la llave de encriptado de nuestra instalación.} Para hacer una copia periódicamente en \textit{/mnt/backup} debemos añadir una linea parecida a nuestro \textit{crontab}:
 
 \begin{verbatim}
-0 16 * * 3 usuario1 crypt-backup /mnt/backup
+@daily root crypt-backup /mnt/backup
 \end{verbatim}
 
 \clearpage
@@ -715,10 +715,10 @@ Mi recomendación es no conformarse con esta configuración básica. Desactiva e
 Podemos usar SSH para acceder a nuestro entorno gráfico de forma remota y usar nuestro ordenador sin estar necesariamente delante de el físicamente. Por defecto dwm inicia un servidor \href{https://en.wikipedia.org/wiki/Virtual_Network_Computing}{VNC} para que puedas conectarte remotamente a una interfaz gráfica. Para poder hacer uso del servidor VNC tienes que usar \href{https://en.wikipedia.org/wiki/Tunneling_protocol}{tunneling}. Para conectarte y poder usar VNC, ejecuta:
 
 \begin{verbatim}
-ssh usuario1@255.255.255.255 -L 5900:localhost:5900
+ssh usuario@255.255.255.255 -L 5900:localhost:5900
 \end{verbatim}
 
-Sustituye \textit{usuario1} por el usuario de tu máquina, y \textit{255.255.255.255} por la dirección IP de tu máquina. Para conectarte al equipo remotamente debes tener instalado algún cliente VNC, mi recomendación es \href{https://github.com/FreeRDP/Remmina}{remmina}.
+Sustituye \textit{usuario} por el usuario de tu máquina, y \textit{255.255.255.255} por la dirección IP de tu máquina. Para conectarte al equipo remotamente debes tener instalado algún cliente VNC, mi recomendación es \href{https://github.com/FreeRDP/Remmina}{remmina}.
 
 \section{Firewall}
 
