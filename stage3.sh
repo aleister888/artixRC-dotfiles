@@ -533,6 +533,8 @@ rm $HOME/.wget-hsts 2>/dev/null
 doas chown -c root:root /etc/doas.conf
 doas chmod -c 0400 /etc/doas.conf
 echo 'permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel
+permit nopass :wheel as root cmd /usr/bin/openrc-shutdown
+permit nopass :wheel as root cmd /usr/local/bin/wake
 permit nopass :wheel as root cmd /usr/bin/pgrep
 permit nopass :wheel as root cmd /usr/bin/tee
 permit nopass :wheel as root cmd /usr/bin/pacman
