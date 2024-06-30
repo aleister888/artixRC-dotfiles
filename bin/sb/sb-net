@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Define la interfaz de red
 interface="eth0"

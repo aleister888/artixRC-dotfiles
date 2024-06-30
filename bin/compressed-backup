@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Script para crear copias de seguridad comprimidas
 

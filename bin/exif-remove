@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Script para borrar todos los metadatos EXIF de una carpeta con imágenes
 

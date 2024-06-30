@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Ejecutar comandos en función del argumento con el que se ejecuta el script
 case $1 in

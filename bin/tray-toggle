@@ -1,18 +1,13 @@
 #!/bin/sh
 
-GAPPX="$(grep gappx $HOME/.dotfiles/dwm/resolution.h | tr -d -c 0-9)"
-RESOLUTION="$(readlink $HOME/.config/eww/dashboard.scss | tr -d -c 0-9)"
+GAPPX=$(grep gappx $HOME/.dotfiles/dwm/resolution.h | tr -d -c 0-9)
+RESOLUTION=$(readlink $HOME/.config/eww/dashboard.scss | tr -d -c 0-9)
 
-if [ "$RESOLUTION" = "2160" ]; then
-	SIZE=64
-else
-	SIZE=32
-fi
+if [ "$RESOLUTION" = "2160" ]; then SIZE=64; else SIZE=32; fi
 
 if pgrep trayer; then
 	killall trayer
 else
-	trayer --align center --width 10 --expand true \
-	--SetDockType true --SetPartialStrut true \
-	--edge top --distancefrom top --distance $GAPPX --height $SIZE
+	trayer --width 10 --height $SIZE --distance $GAPPX \
+	--edge top --distancefrom top
 fi

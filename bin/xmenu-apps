@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 # Menú de aplicaciones con xmenu
 
 # Directorio con los iconos de las aplicaciones

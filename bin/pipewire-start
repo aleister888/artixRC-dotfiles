@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Iniciar PipeWire
 /usr/bin/pipewire &

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Script para vincular microfonos a un microfono virtual para compartir audio
 

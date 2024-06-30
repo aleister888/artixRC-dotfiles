@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script para instalar y configurar SSH en sistema Arch/Artix Linux
 # https://www.ssh-audit.com/hardening_guides.html
