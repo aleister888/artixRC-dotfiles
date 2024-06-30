@@ -2,25 +2,38 @@
 
 # Script para instalar Steam y ponerlo en un sandbox con firejail
 
-doas pacman -Sy --noconfirm --disable-download-timeout --needed steam firejail
+# Instalar Steam y Firejail
+doas pacman -S --noconfirm --needed steam firejail
 
-if ! grep "apparmor no" /etc/firejail/firejail.config; then
-	echo "apparmor no" | \
-	doas tee -a /etc/firejail/firejail.config
+# Configurar Firejail
+if ! grep -q "apparmor no" /etc/firejail/firejail.config; then
+	echo "apparmor no" | doas tee -a /etc/firejail/firejail.config
 fi
 
-grep kernel.unprivileged_userns_clone /etc/sysctl.conf || \
-echo "kernel.unprivileged_userns_clone = 1" | doas tee -a /etc/sysctl.conf
+# Configurar kernel.unprivileged_userns_clone en sysctl.conf
+if ! grep -q "kernel.unprivileged_userns_clone" /etc/sysctl.conf; then
+	echo "kernel.unprivileged_userns_clone = 1" | doas tee -a /etc/sysctl.conf
+fi
 
+# Instalar el perfil de Firejail
+doas mkdir -p /opt/firejail/
+doas install -m 644 \
+"$HOME/.dotfiles/assets/configs/steam.profile" \
+"/opt/firejail/steam.profile"
+
+# Instalar el script de ejecución
+doas install -m 777 \
+"$HOME/.dotfiles/assets/exec/steam" \
+"/usr/local/bin/steam"
+
+# Crear archivo .desktop para steam
 echo '[Desktop Entry]
 Name=Steam (Runtime)
 Comment=Application for managing and playing games on Steam
-Exec=firejail --profile=~/.dotfiles/assets/configs/steam.profile steam /usr/bin/steam %U
+Exec=/usr/local/bin/steam %U
 Icon=steam
 Terminal=false
 Type=Application
 Categories=Network;FileTransfer;Game;
-MimeType=x-scheme-handler/steam;x-scheme-handler/steamlink;
-Actions=Store;Community;Library;Servers;Screenshots;News;Settings;BigPicture;Friends;
-PrefersNonDefaultGPU=true
-X-KDE-RunOnDiscreteGpu=true' | tee "$HOME/.local/share/applications/steam.desktop"
+MimeType=x-scheme-handler/steam;x-scheme-handler/steamlink;' | \
+tee "$HOME/.local/share/applications/steam.desktop"

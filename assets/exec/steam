@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if firejail --list | grep '\--name'; then
+	firejail --name=steam --join=steam /usr/bin/steam $@
+else
+	firejail --name=steam \
+	--profile=/opt/firejail/steam.profile \
+	/usr/bin/steam $@
+fi
