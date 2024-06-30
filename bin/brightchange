@@ -13,7 +13,7 @@ calculate_brightness() {
 	local max="$1" # Valor máximo para el brillo
 	local actual="$2" # Valor actual del brillo
 	local mode="$3" # Argumento ("dec" o "inc")
-	local gradient=$((max / 75)) # Velocidad de cambio del brillo
+	local gradient=$((max / 50)) # Velocidad de cambio del brillo
 	local new_brightness # Variable para el nuevo valor de brillo
 	# Establecemos incrementos del 25%
 	local increment=$((max / 4))

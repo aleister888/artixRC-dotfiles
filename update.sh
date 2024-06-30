@@ -7,14 +7,16 @@
 # Actualizar repositorio
 sh -c "cd $HOME/.dotfiles && git pull" >/dev/null
 
-
+# Si el script se ejecuta con -f, arreglar los permisos de todos
+# los archivos en $HOME (Consume muchos recursos)
 while getopts ":f" opt; do case $opt in
 	f)
-		# Corregir los permisos de los directorios
-		find $HOME/ -type d -exec chmod 700 {} +
-		# Corregir los permisos de los archivos multimedia
-		find $HOME/ -type f | \
-		parallel 'case $(xdg-mime query filetype {}) in image/*|audio/*|video/*|text/plain) \
+	# Corregir los permisos de los directorios
+	find $HOME/ -type d -exec chmod 700 {} +
+	# Corregir los permisos de los archivos multimedia
+	find $HOME/ -type f | \
+	parallel 'case $(xdg-mime query filetype {}) \
+		in image/*|audio/*|video/*|text/plain) \
 		[ "$(stat -c "%a" {})" != "600" ] && chmod 600 {} ;; esac'
 	;;
 esac; done
@@ -24,33 +26,33 @@ esac; done
 #######################################
 
 # Crear los directorios necesarios
-[ -d "$HOME/.config" ]      || mkdir -p "$HOME/.config"
-[ -d "$HOME/.local/bin" ]   || mkdir -p "$HOME/.local/bin"
-[ -d "$HOME/.local/share" ] || mkdir -p "$HOME/.local/share"
-[ -d "$HOME/.cache" ]       || mkdir -p "$HOME/.cache"
+[ -d "$HOME/.config" ]		|| mkdir -p "$HOME/.config"
+[ -d "$HOME/.local/bin" ]	|| mkdir -p "$HOME/.local/bin"
+[ -d "$HOME/.local/share" ]	|| mkdir -p "$HOME/.local/share"
+[ -d "$HOME/.cache" ]		|| mkdir -p "$HOME/.cache"
 
 # Instalar archivos de configuración y scripts
-sh -c "cd $HOME/.dotfiles && stow --target="${HOME}/.local/bin/" bin/" >/dev/null
-sh -c "cd $HOME/.dotfiles && stow --target="${HOME}/.config/" .config/" >/dev/null
+sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.local/bin/ bin/" >/dev/null
+sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
 ln -s $HOME/.dotfiles/.profile $HOME/.profile 2>/dev/null
 ln -s $HOME/.dotfiles/.profile $HOME/.config/zsh/.zprofile 2>/dev/null
 
 # Borrar enlaces rotos
-find "$HOME/.local/bin" -type l ! -exec test -e {} \; -delete
-find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
+find "$HOME/.local/bin"	-type l ! -exec test -e {} \; -delete
+find "$HOME/.config"	-type l ! -exec test -e {} \; -delete
 
 # Enlazar nuestro script de inicio
 [ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
-ln -s ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh 2>/dev/null
+ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
 
 # Descargar shader de mpv
 [ ! -e "$HOME/.config/mpv/shaders/crt-lottes.glsl" ] && \
 	wget -q "https://raw.githubusercontent.com/hhirtz/mpv-retro-shaders/master/crt-lottes.glsl" \
 	-O "$HOME/.config/mpv/shaders/crt-lottes.glsl" >/dev/null
 
-################################
-# Configurar fondo de pantalla #
-################################
+#########################
+# Configurar apariencia #
+#########################
 
 # Crear el archivo de configuración bg-saved.cfg
 mkdir -p "$HOME/.config/nitrogen"
@@ -93,7 +95,7 @@ file:///home/$USER/Imágenes
 file:///home/$USER/Vídeos
 file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
 
-	# Configuramos QT
+# Configuramos QT
 echo "[Appearance]
 color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
 custom_palette=true
@@ -102,8 +104,8 @@ standard_dialogs=default
 style=Fusion
 
 [Fonts]
-fixed=\"Iosevka Nerd Font Mono,12,-1,5,50,0,0,0,0,0,Bold\"
-general=\"Iosevka Nerd Font,12,-1,5,63,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
+fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
+general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
 
 # Configurar el tema del cursor
 mkdir -p "$HOME/.local/share/icons/default"
@@ -117,6 +119,7 @@ plugin_install(){
 	git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
 }
 
+# Instalar los plugins de zsh que no estén ya instalados
 [ ! -e "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
 	plugin_install zsh-users/zsh-autosuggestions
 [ ! -e "$HOME/.config/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh" ] && \
@@ -140,15 +143,19 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 ############################
 
 # Borramos ajustes ya guardados
-rm -f $HOME/.config/mimeapps.list
 find ~/.local/share/applications -type f ! -name 'steam.desktop' -delete
+
+rm -f $HOME/.config/mimeapps.list
 rm -rf ~/.local/share/mime
 mkdir -p $HOME/.local/share/mime/packages
 doas rm -f /usr/share/applications/mimeinfo.cache
+
 update-mime-database ~/.local/share/mime
 doas update-mime-database /usr/share/mime
 
-[ ! -d "$HOME/.local/share/applications" ] && mkdir -p "$HOME/.local/share/applications"
+[ ! -d "$HOME/.local/share/applications" ] && \
+	mkdir -p "$HOME/.local/share/applications"
+
 # Creamos el archivo .desktop para lf
 [ ! -e "$HOME/.local/share/applications/lft.desktop" ] && \
 cp -f "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/lft.desktop"
@@ -196,9 +203,6 @@ excel_associations=(
 	"application/x-excel"
 	"application/vnd.sun.xml.calc"
 	"application/vnd.sun.xml.calc.template"
-	"application/x-dbase"
-	"application/x-dbf"
-	"application/x-123"
 )
 
 # Definir asociaciones para archivos de Microsoft PowerPoint
@@ -216,7 +220,6 @@ powerpoint_associations=(
 word_associations=(
 	"application/msword"
 	"application/macwriteii"
-	"application/prs.plucker"
 	"application/rtf"
 	"application/vnd.ms-word"
 	"application/vnd.oasis.opendocument.text"

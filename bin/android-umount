@@ -1,8 +1,6 @@
 #!/bin/sh
 # Script para desmontar dispositivos android
 
-user="$(whoami)"
-
 unmountandroid() {
 # Elegir que dispositivo Android desmontar
 chosen="$(awk '/simple-mtpfs/ {print $2}' /etc/mtab | dmenu -p "Que dispositivo desmontar?")" || exit 1
