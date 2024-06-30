@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Script para poder bloquear el entorno gráfico
+# como el usuario root (Usado por elogind)
+
 REGULARUSER="$(getent passwd 1000 | cut -d: -f1)"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR=/run/user/1000

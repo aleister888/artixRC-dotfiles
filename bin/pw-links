@@ -3,9 +3,9 @@
 share_toggle(){
 	case "$3" in
 		out)
-		local out1="out1"; local out2="out2" ;;
+		out1="out1"; local out2="out2" ;;
 		*)
-		local out1="output_FL"; local out2="output_FR" ;;
+		out1="output_FL"; local out2="output_FR" ;;
 	esac
 	if pw-link -P "$1:$out1" my-combined-sink:playback_FL; then
 		pw-link -P "$1:$out2" my-combined-sink:playback_FR
@@ -18,18 +18,18 @@ share_toggle(){
 }
 
 case "$1" in
-  firefox)
-    share_toggle Firefox firefox ;;
-  tauon)
-    share_toggle tauon.py tauonmb ;;
-  tuxguitar)
-    share_toggle Java tuxguitar ;;
-  mpv)
-    share_toggle mpv mpv ;;
-  qemu)
-    share_toggle "Looking Glass" preferences-desktop-remote-desktop ;;
-  telegram)
-    share_toggle "Telegram Desktop" telegram ;;
-  reaper)
-    share_toggle REAPER cockos-reaper out ;;
+firefox)
+	share_toggle Firefox firefox ;;
+tauon)
+	share_toggle tauon.py tauonmb ;;
+tuxguitar)
+	share_toggle Java tuxguitar ;;
+mpv)
+	share_toggle mpv mpv ;;
+qemu)
+	share_toggle "Looking Glass" preferences-desktop-remote-desktop ;;
+telegram)
+	share_toggle "Telegram Desktop" telegram ;;
+reaper)
+	share_toggle REAPER cockos-reaper out ;;
 esac

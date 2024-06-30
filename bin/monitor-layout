@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Script para elegir la distribución de los monitores
+
 XRANDR=$(command -v xrandr)
 MONITORS=($($XRANDR | awk '/ connected/ { print $1 }'))
 NUM_MONITORS=${#MONITORS[@]}
@@ -7,50 +9,48 @@ TITLES=("Cancel")
 COMMANDS=("true")
 
 gen_xrandr_only() {
-    selected=$1
-    cmd="xrandr --output ${MONITORS[$selected]} --auto "
-    for entry in "${!MONITORS[@]}"; do
-        if [ $selected != $entry ]; then
-            cmd+="--output ${MONITORS[$entry]} --off "
-        fi
-    done
-    echo "$cmd"
+selected=$1
+cmd="xrandr --output ${MONITORS[$selected]} --auto "
+for entry in "${!MONITORS[@]}"; do
+	[ $selected != $entry ] && cmd+="--output ${MONITORS[$entry]} --off "
+done
+echo "$cmd"
 }
 
 index=1
 
 for ((entry=0; entry<NUM_MONITORS; entry++)); do
-    TITLES[$index]="Only ${MONITORS[$entry]}"
-    COMMANDS[$index]=$(gen_xrandr_only $entry)
-    ((index++))
+	TITLES[$index]="Only ${MONITORS[$entry]}"
+	COMMANDS[$index]=$(gen_xrandr_only $entry)
+	((index++))
 done
 
 for ((entry_a=0; entry_a<NUM_MONITORS; entry_a++)); do
-    for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++)); do
-        if [ $entry_a != $entry_b ]; then
-            TITLES[$index]="Dual Screen ${MONITORS[$entry_a]} -> ${MONITORS[$entry_b]}"
-            COMMANDS[$index]="xrandr --output ${MONITORS[$entry_a]} --auto \
-                              --output ${MONITORS[$entry_b]} --auto --left-of ${MONITORS[$entry_a]}"
-            ((index++))
-        fi
-    done
+for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++)); do
+	if [ $entry_a != $entry_b ]; then
+	TITLES[$index]="Dual Screen ${MONITORS[$entry_a]} -> ${MONITORS[$entry_b]}"
+	COMMANDS[$index]="xrandr --output ${MONITORS[$entry_a]} --auto \
+	--output ${MONITORS[$entry_b]} --auto --left-of ${MONITORS[$entry_a]}"
+	((index++))
+	fi
+done
 done
 
 for ((entry_a=0; entry_a<NUM_MONITORS; entry_a++)); do
-    for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++)); do
-        if [ $entry_a != $entry_b ]; then
-            TITLES[$index]="Clone Screen ${MONITORS[$entry_a]} -> ${MONITORS[$entry_b]}"
-            COMMANDS[$index]="xrandr --output ${MONITORS[$entry_a]} --auto \
-                              --output ${MONITORS[$entry_b]} --auto --same-as ${MONITORS[$entry_a]}"
-            ((index++))
-        fi
-    done
+for ((entry_b=0; entry_b<NUM_MONITORS; entry_b++)); do
+	if [ $entry_a != $entry_b ]; then
+	TITLES[$index]="Clone Screen ${MONITORS[$entry_a]} -> ${MONITORS[$entry_b]}"
+	COMMANDS[$index]="xrandr --output ${MONITORS[$entry_a]} --auto \
+	--output ${MONITORS[$entry_b]} --auto --same-as ${MONITORS[$entry_a]}"
+	((index++))
+	fi
+done
 done
 
 gen_entries() {
-    for a in "${!TITLES[@]}"; do
-        echo "$a ${TITLES[a]}"
-    done
+for a in "${!TITLES[@]}"; do
+	echo "$a ${TITLES[a]}"
+done
 }
 
 SEL=$(gen_entries | dmenu -p "Monitor Setup:" | awk '{print $1}')

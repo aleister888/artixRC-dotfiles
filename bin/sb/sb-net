@@ -5,26 +5,26 @@ interface="eth0"
 
 # Verifica la existencia de los archivos antes de leerlos
 if [ -f "/sys/class/net/$interface/statistics/rx_bytes" ] && [ -f "/sys/class/net/$interface/statistics/tx_bytes" ]; then
-    # Lee los valores de recepción y transmisión inicial
-    read R1 < "/sys/class/net/$interface/statistics/rx_bytes"
-    read T1 < "/sys/class/net/$interface/statistics/tx_bytes"
-    # Espera 1 segundo
-    sleep 1
-    # Lee los valores de recepción y transmisión después de 1 segundo
-    read R2 < "/sys/class/net/$interface/statistics/rx_bytes"
-    read T2 < "/sys/class/net/$interface/statistics/tx_bytes"
-
-    # Calcula la cantidad de datos recibidos y transmitidos en KB/s
-    RBPS=$(( (R2 - R1) / 1024 ))
-    TBPS=$(( (T2 - T1) / 1024 ))
-
-    # Define los iconos
-    icon="!" # Icono para la recepción
-    icon1="¡" # Icono para la transmisión
-
-    # Imprime los resultados usando printf
-    printf "%s %s KB %s %s KB \\n" "$icon" "$RBPS" "$icon1" "$TBPS"
+	# Lee los valores de recepción y transmisión inicial
+	read R1 < "/sys/class/net/$interface/statistics/rx_bytes"
+	read T1 < "/sys/class/net/$interface/statistics/tx_bytes"
+	# Espera 1 segundo
+	sleep 1
+	# Lee los valores de recepción y transmisión después de 1 segundo
+	read R2 < "/sys/class/net/$interface/statistics/rx_bytes"
+	read T2 < "/sys/class/net/$interface/statistics/tx_bytes"
+	
+	# Calcula la cantidad de datos recibidos y transmitidos en KB/s
+	RBPS=$(( (R2 - R1) / 1024 ))
+	TBPS=$(( (T2 - T1) / 1024 ))
+	
+	# Define los iconos
+	icon="!" # Icono para la recepción
+	icon1="¡" # Icono para la transmisión
+	
+	# Imprime los resultados usando printf
+	printf "%s %s KB %s %s KB \\n" "$icon" "$RBPS" "$icon1" "$TBPS"
 else
-    echo "Los archivos de estadísticas de red no existen."
+	echo "Los archivos de estadísticas de red no existen."
 fi
 

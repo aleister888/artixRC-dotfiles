@@ -3,26 +3,20 @@
 
 user="$(whoami)"
 
-# Definir la ruta completa del directorio de inicio del usuario
-HOME_DIR="/home/$user"
-
 unmountandroid() {
-    # Obtener el dispositivo simple-mtpfs montado y permitir al usuario seleccionar cuál desmontar
-    chosen="$(awk '/simple-mtpfs/ {print $2}' /etc/mtab | dmenu -p "Que dispositivo desmontar?")" || exit 1
+# Elegir que dispositivo Android desmontar
+chosen="$(awk '/simple-mtpfs/ {print $2}' /etc/mtab | dmenu -p "Que dispositivo desmontar?")" || exit 1
 
-    # Verificar si se seleccionó un dispositivo para desmontar
-    if [ -z "$chosen" ]; then
-        exit
-    fi
+# Verificar si se seleccionó un dispositivo
+[ -z "$chosen" ] && exit
 
-    # Intentar desmontar el dispositivo seleccionado
-    if umount -l "$chosen"; then
-        # Si el desmontaje es exitoso, mostrar una notificación
-            notify-send "🤖 Dispositivo Android $chosen desmontado."
-    else
-        # Si falla el desmontaje, mostrar un mensaje de error
-        echo "Error: Falló el desmontar $chosen"
-    fi
+# Intentar desmontar el dispositivo seleccionado
+if umount -l "$chosen"; then
+	# Si el desmontaje es exitoso, mostrar una notificación
+	notify-send "🤖 Dispositivo Android $chosen desmontado"
+else
+	notify-send "🤖 Hubo un error al desmontar $chosen"
+fi
 }
 
 # Llamar a la función unmountandroid

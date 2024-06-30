@@ -2,7 +2,7 @@
 Type=Application
 Name=lf File Manager (St)
 Comment=Simple terminal-based file manager
-Exec=st -e lf %u
+Exec=st -e lf %F
 Terminal=false
 Icon=utilities-terminal
 Categories=System;FileTools;FileManager

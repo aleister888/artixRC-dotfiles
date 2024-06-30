@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script para autoconfigurar transmission-gtk
+
 CONFDIR="$HOME/.config/transmission"
 FILECONF="$CONFDIR/settings.json"
 

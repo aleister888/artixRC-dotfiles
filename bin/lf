@@ -3,14 +3,13 @@
 # Script de Luke Smith (Ligeramente modificado):
 # https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/lfub
 
-# This is a wrapper script for lf that allows it to create image previews with
-# ueberzug. This works in concert with the lf configuration file and the
-# lf-cleaner script.
+# Este script wrapper nos permite mostrar pre-visualizaciones de
+# archivos con ueberzug
 
 set -e
 
 cleanup() {
-    exec 3>&-
+	exec 3>&-
 	rm "$FIFO_UEBERZUG"
 }
 
@@ -23,5 +22,5 @@ else
 	ueberzug layer -s <"$FIFO_UEBERZUG" -p json &
 	exec 3>"$FIFO_UEBERZUG"
 	trap cleanup HUP INT QUIT TERM PWR EXIT
-	/usr/bin/lf "$(echo $@ | sed 's|file://||; s/%20/ /')"
+	/usr/bin/lf $@
 fi

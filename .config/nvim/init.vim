@@ -28,6 +28,7 @@ nnoremap <leader>( :s/\%#\([^[:space:]]\+\)/(\1)/g<CR>:noh<CR>
 nnoremap <leader>\ :s/\%#\([^[:space:]]\+\)/\\(\1\\)/g<CR>:noh<CR>
 nnoremap <leader>[ :s/\%#\([^[:space:]]\+\)/[\1]/g<CR>:noh<CR>
 nnoremap <leader>{ :s/\%#\([^[:space:]]\+\)/{\1}/g<CR>:noh<CR>
+nnoremap <leader>$ :s/\%#\([^[:space:]]\+\)/$\1$/g<CR>:noh<CR>
 
 " Tema de colores
 Plug 'morhetz/gruvbox'
