@@ -74,8 +74,6 @@ IMG:$ICONPATH/apps/applications-utilities.svg				Ajustes/Sistema
 	IMG:$ICONPATH/apps/gtk-theme-config.svg				Ajustes de Gtk		lxappearance
 	IMG:$ICONPATH/apps/qt5ct.svg					Ajustes de QT5		qt5ct
 
-IMG:$ICONPATH/apps/keepassxc.svg					Contraseñas		dmenupassword
-
 IMG:$ICONPATH/apps/system-file-manager.svg				Archivos		$TERMINAL -e lf
 IMG:$ICONPATH/apps/$TERMINAL.svg					$(echo $TERMINAL | sed 's/^\(.\)/\U\1/')	$TERMINAL
 IMG:$ICONPATH/apps/virt-manager.svg					Virt-Manager		virt-manager

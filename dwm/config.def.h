@@ -112,20 +112,20 @@ static const Rule rules[] = {
 	{ "heroic",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "MultiMC",		NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
 	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	// Espacio 7: Guitarra/Producción MusicAudioPlayal
+	// Espacio 7: Guitarra/Producción Musical || Organizar/Descargar Música
 	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
 	{ "REAPER",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Guitarix",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
-	// Espacio 8: Gráficos || Organizar/Descargar Música || Utilidades/Configuración
+	{ "transmission-gtk",	NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
+	{ "qBittorrent",	NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
+	{ "Lrcget",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
+	{ "Easytag",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
+	{ "Picard",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
+	// Espacio 8: Gráficos || Utilidades/Configuración
 	{ "krita",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Fr.handbrake.ghb",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Gimp",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	{ "Lrcget",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	{ "Easytag",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	{ "Picard",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	{ "transmission-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	{ "qBittorrent",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "KeePassXC",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Timeshift-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "BleachBit",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
@@ -188,6 +188,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 12'") },
 	{ MODKEY|ControlMask,           XK_p,      spawn,            SHCMD("dmenu -C | tr -d '\n' | xclip -selection clipboard") },
+	{ ControlMask,                  XK_p,      spawn,            SHCMD("dmenupassword") },
 	{ MODKEY,                       XK_t,      spawn,            SHCMD("tray-toggle") },
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
