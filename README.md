@@ -34,8 +34,10 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 > [!CAUTION]
 > Si quieres encriptar tu disco duro para proteger la información que contiene, es __obligatorio__ que lo vacíes de toda la información que contenía anteriormente, pues esta seguirá almacenada en el disco sin encriptar hasta que sea sobrescrita. Podemos hacer esto de 3 formas distintas, cada una menos segura/fiable que la anterior:
-> - Llenar de información aleatoria el dispositivo de bloque, `/dev/sda`, por ejemplo. Ejecutando `dd if=/dev/urandom of=/dev/sda`
-> - Llenar la partición ya encriptada `/dev/mapper/ejemplo` de zeros. Ejecutando `dd if=/dev/zero of=/dev/mapper/ejemplo`
+> - Llenar de información aleatoria el dispositivo de bloque, `/dev/sda`
+>   - `dd if=/dev/urandom of=/dev/sda`
+> - Llenar la partición ya encriptada `/dev/mapper/ejemplo` de zeros.
+>   - `dd if=/dev/zero of=/dev/mapper/ejemplo`
 > - Llenando el sistema de archivos (una vez ya instalado el sistema) de zeros creando un archivo que llene la partición, y luego borrandolo.
 >   - Para esto ejecuta: `dd if=/dev/zero of=/partition-mountpoint/archivo` y borra el archivo cuando se llene el disco.
 
@@ -48,7 +50,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 > [!TIP]
 > Para instalar solo los scripts de este repositorio ejecuta _desde el directorio del repositorio_ (con stow instalado):
-> `mkdir -p "$HOME/.local/bin"; stow --target="${HOME}/.local/bin/" bin/`
+> - `mkdir -p "$HOME/.local/bin"; stow --target="${HOME}/.local/bin/" bin/`
 
 ## Cosas por hacer
 
