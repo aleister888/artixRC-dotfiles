@@ -1,17 +1,18 @@
 #!/bin/sh
 
-if [ ! -d $XDG_CACHE_HOME/lf ]; then
-	mkdir $XDG_CACHE_HOME/lf &
-fi
-
 # Visualizador de archivos para LF.
+
+# Crear el directorio para la caché
+[ -d $XDG_CACHE_HOME/lf ] || mkdir $XDG_CACHE_HOME/lf
 
 set -C -f
 IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}"
 
+# Función para mostrar imágenes con ueberzug
 image() {
 	if [ -f "$1" ] && [ -n "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
-		printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' "$4" "$5" "$(($2-1))" "$(($3-1))" "$1" > "$FIFO_UEBERZUG"
+	printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
+		"$4" "$5" "$(($2-1))" "$(($3-1))" "$1" > "$FIFO_UEBERZUG"
 	else
 		mediainfo "$6"
 	fi
@@ -20,35 +21,43 @@ image() {
 # Notesé que la caché se genera en función de la información del archivo,
 # un mismo archivo que esta en múltiples directorios solo generará un archivo en cache.
 
+# Crear preview en función del tipo de archivo
 case "$(xdg-mime query filetype "$1")" in
 
+# Imprimir los archivos de texto con bat
 text/* | */xml | */json | */x-shellscript | */x-xcursor | */x-theme | */x-desktop )
 	bat -fp --terminal-width "$(($4-2))" -f "$1" ;;
 
+# Imprimir los manuales con man
 text/troff) man ./ "$1" | col -b ;;
 
+# Convertir los proyectos de GIMP a .jpg
 image/x-xcf )
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
 	[ ! -f "$CACHE.jpg" ] && convert "$1" "$CACHE.jpg"
 	image "$CACHE.jpg" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
+# Convertir las imágenes vectoriales (.svg) a .png
 image/svg+xml)
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | cut -d' ' -f1)"
 	[ ! -f "$CACHE" ] && inkscape --convert-dpi-method=none -o "$CACHE.png" --export-overwrite -D --export-png-color-mode=RGBA_16 "$1"
 	image "$CACHE.png" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
+# Convertir las imágenes .avif a .png
 image/avif)
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | cut -d' ' -f1)"
 	[ ! -f "$CACHE" ] && convert "$1" "$CACHE.png"
 	image "$CACHE.png" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
+# El resto de imágenes mostarlas tal cual con ueberzug
 image/*)
 	image "$1" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
+# Mostrar la carátula y metadatos de los archivos de audio
 audio/flac | audio/mpeg | audio/x-m4a | audio/mp4 )
 	ffmpeg -i "$1" -y -f ffmetadata "${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt"
 	NAME="$(cat ${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt | grep -i ALBUM | rev | cut -d= -f1 | rev | tr -cd '[:alnum:]._-')"
@@ -58,23 +67,25 @@ audio/flac | audio/mpeg | audio/x-m4a | audio/mp4 )
 	printf "$(perl -E "say '\\n' x $(($(($4-2))/5+2))")$(cat ${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt | grep -ivwE "(comment|encoder|ffmetadata1)")"
 	exit 1 ;;
 
-audio/* | application/octet-stream) mediainfo "$1" | tr -s " " || exit 1;;
-
+# Mostar información sobre los discos/imágenes de instalación
 */x-iso9660-image | */vnd.efi.iso) isoinfo -d -i "$1" || exit 1;;
 
+# Mostrar una pre-visualización e información sobre el video (Convirtiendo un frame a png)
 video/* )
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
 	[ ! -f "$CACHE" ] && ffmpegthumbnailer -i "$1" -o "$CACHE" -s 0
 	image "$CACHE" "$2" "$3" "$4" "$5"
 	printf "$(perl -E "say '\\n' x $(($(($4-2))/5+2))")$(mediainfo "$1" | grep -E "File size|Duration|FPS|Movie name" | grep -v "SPF)" | tr '\t' ' '| tr -s " " | sort | uniq )"
 	exit 1 ;;
+
+# Convertir la primera página a .jpg
 */pdf)
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
 	[ ! -f "$CACHE.jpg" ] && pdftoppm -jpeg -f 1 -singlefile "$1" "$CACHE"
 	image "$CACHE.jpg" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
-# For Mangas in .cbz
+# Mostar la primera página de mangas en formato .cbz
 */vnd.comicbook+zip)
 	NAME="$(echo "$1" | rev | sed 's/ /_/g' | sed 's/\// /g' | awk '{print $1}' | rev)"
 	FIRST="$(unzip -l "$1" | head -5 | tail -1 | awk '{$1=""; $2=""; $3=""; sub("   ", " "); print}' | cut -c 2-)"
@@ -84,22 +95,48 @@ video/* )
 	image "$IMG" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
-*/zip | */x-tar | */x-7z-compressed | */x-compressed-tar )
-	aunpack -l "$1"
+# Mostar un listado de los archivos comprimidos
+*/x-tar | */x-compressed-tar)
+	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}').txt"
+	[ ! -f "$CACHE" ] && tar -tf "$1" | tail -n +1 | tee "$CACHE"
+	cat "$CACHE"
 	exit 1 ;;
 
+# Mostar un listado de los archivos comprimidos
+*/vnd.rar)
+	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}').txt"
+	[ ! -f "$CACHE" ] && unrar l "$1" | tail -n +9 | head -n -3 | awk '{print $4,$5}' | tee "$CACHE"
+	cat "$CACHE"
+	exit 1 ;;
+
+# Mostar un listado de los archivos comprimidos
+*/zip)
+	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}').txt"
+	[ ! -f "$CACHE" ] && unzip -l "$1" | tail -n +4 | head -n -2 | awk '{print $3,$4}' | tee "$CACHE"
+	cat "$CACHE"
+	exit 1 ;;
+
+# Mostar un listado de los archivos comprimidos
+*/x-7z-compressed)
+	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}').txt"
+	[ ! -f "$CACHE" ] && 7z l "$1" | tail -n +21 | head -n -2 | awk '{ for(i=6; i<=NF; i++) printf "%s%s", $i, (i==NF ? "\n" : " ") }' | tee "$CACHE"
+	cat "$CACHE"
+	exit 1 ;;
+
+# Convertir imágenes postscript a .jpg
 */postscript)
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
 	[ ! -f "$CACHE.jpg" ] && convert "$1" "$CACHE.jpg"
 	image "$CACHE.jpg" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
+# Convertir documentos a texto
 *opendocument*) odt2txt "$1" | fold -w $(($(($4-2))/5+2)) ;;
 
+# Mostar información sobre las claves con pgp
 */pgp-encrypted) gpg -d -- "$1" ;;
 
-# If everythting fails, at least use mediainfo
-
+# Si no es ninguno de estos tipos, usar medianfo
 */*) mediainfo "$1" | tr -s " " || exit 1;;
 
 esac
