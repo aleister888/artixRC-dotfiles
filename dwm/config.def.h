@@ -42,7 +42,7 @@ static const char col_orange[]           = "#FE8019";
 
 
 static const char *colors[][3] = {
-	// Colores:             Fuente          Fondo       Borde
+	// Colores:             Fuente      Fondo           Borde
 	[SchemeNorm]        = { foreground, background,     col_blue   }, // Color de las ventanas normales
 	[SchemeSel]         = { foreground, background_sel, col_orange }, // Color de las ventanas seleccionadas
 	[SchemeStatus]      = { foreground, background,     "#000000"  }, // Color de los espacios por defecto
@@ -125,6 +125,7 @@ static const Rule rules[] = {
 	{ "Easytag",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Picard",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "transmission-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	{ "qBittorrent",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "KeePassXC",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Timeshift-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "BleachBit",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
@@ -185,7 +186,8 @@ static const Key keys[] = {
 	// Abrir dmenu
 	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/assets/pdf/help.pdf") },
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 16'") },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 12'") },
+	{ ControlMask,                  XK_p,      spawn,            SHCMD("dmenu -C | xclip -selection clipboard") },
 	{ MODKEY,                       XK_t,      spawn,            SHCMD("tray-toggle") },
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },

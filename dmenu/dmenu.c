@@ -7,6 +7,11 @@
 #include <strings.h>
 #include <time.h>
 #include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <sys/prctl.h>
+#include <sys/select.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -25,6 +30,8 @@
                              * MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
 #define LENGTH(X)             (sizeof X / sizeof X[0])
 #define TEXTW(X)              (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define NUMBERSMAXDIGITS      100
+#define NUMBERSBUFSIZE        (NUMBERSMAXDIGITS * 2) + 1
 
 /* enums */
 enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
@@ -35,6 +42,13 @@ struct item {
 	int out;
 };
 
+static struct {
+	pid_t pid;
+	int enable, in[2], out[2];
+	char buf[256];
+} qalc;
+
+static char numbers[NUMBERSBUFSIZE] = "";
 static char text[BUFSIZ] = "";
 static char *embed;
 static int bh, mw, mh;
@@ -88,7 +102,7 @@ calcoffsets(void)
 	if (lines > 0)
 		n = lines * bh;
 	else
-		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">"));
+		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">") + TEXTW(numbers));
 	/* calculate which items will begin the next page and previous page */
 	for (i = 0, next = curr; next; next = next->right)
 		if ((i += (lines > 0) ? bh : textw_clamp(next->text, n)) > n)
@@ -155,6 +169,21 @@ drawitem(struct item *item, int x, int y, int w)
 }
 
 static void
+recalculatenumbers()
+{
+	unsigned int numer = 0, denom = 0;
+	struct item *item;
+	if (matchend) {
+		numer++;
+		for (item = matchend; item && item->left; item = item->left)
+			numer++;
+	}
+	for (item = items; item && item->text; item++)
+		denom++;
+	snprintf(numbers, NUMBERSBUFSIZE, "%d/%d", numer, denom);
+}
+
+static void
 drawmenu(void)
 {
 	unsigned int curpos;
@@ -179,6 +208,7 @@ drawmenu(void)
 		drw_rect(drw, x + curpos, 2, 2, bh - 4, 1, 0);
 	}
 
+	recalculatenumbers();
 	if (lines > 0) {
 		/* draw vertical list */
 		for (item = curr; item != next; item = item->right)
@@ -193,13 +223,15 @@ drawmenu(void)
 		}
 		x += w;
 		for (item = curr; item != next; item = item->right)
-			x = drawitem(item, x, 0, textw_clamp(item->text, mw - x - TEXTW(">")));
+			x = drawitem(item, x, 0, textw_clamp(item->text, mw - x - TEXTW(">") - TEXTW(numbers)));
 		if (next) {
 			w = TEXTW(">");
 			drw_setscheme(drw, scheme[SchemeNorm]);
-			drw_text(drw, mw - w, 0, w, bh, lrpad / 2, ">", 0);
+			drw_text(drw, mw - w - TEXTW(numbers), 0, w, bh, lrpad / 2, ">", 0);
 		}
 	}
+	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_text(drw, mw - TEXTW(numbers), 0, TEXTW(numbers), bh, lrpad / 2, numbers, 0);
 	drw_map(drw, win, 0, 0, mw, mh);
 }
 
@@ -239,8 +271,81 @@ grabkeyboard(void)
 }
 
 static void
+init_qalc(void)
+{
+  pipe(qalc.in);
+  pipe2(qalc.out, O_NONBLOCK);
+  qalc.pid = fork();
+  if (qalc.pid == -1)
+    die("failed to fork for qalc");
+  if (qalc.pid == 0) {
+    dup2(qalc.in[0], STDIN_FILENO);
+    dup2(qalc.out[1], STDOUT_FILENO);
+    close(qalc.in[1]);
+    close(qalc.out[0]);
+    prctl(PR_SET_PDEATHSIG, SIGTERM);
+    execl("/usr/bin/qalc", "qalc", "-c0", "-t", NULL);
+    die ("execl qalc failed");
+  } else { // parent
+    close(qalc.in[0]);
+    close(qalc.out[1]);
+    items = malloc(sizeof(struct item)*2);
+    items[0].text = malloc(LENGTH(qalc.buf));
+    strcpy(items[0].text, "no result");
+    items[1].out = 0;
+    items[1].text = NULL;
+  }
+}
+
+static void
+recv_qalc(void)
+{
+  ssize_t r = read(qalc.out[0], qalc.buf, LENGTH(qalc.buf));
+
+  if (r < 0)
+    die("error reading qalc.out");
+
+  if (qalc.buf[0] == '\n') {
+    int i;
+    for (i = 3; i < LENGTH(qalc.buf) && qalc.buf[i] != '\n'; ++i)
+      items[0].text[i-3] = qalc.buf[i];
+    items[0].text[i-3] = 0;
+    if (r != LENGTH(qalc.buf))
+      return;
+  }
+
+  while (read(qalc.out[0], qalc.buf, LENGTH(qalc.buf)) != -1)
+    ; // empty the pipe
+  if (errno != EAGAIN && errno != EWOULDBLOCK)
+    die("error emptying qalc.out");
+}
+
+static void
+send_qalc(void)
+{
+  int s = strlen(text);
+  text[s] = '\n';
+  write(qalc.in[1], text, s+1);
+  text[s] = 0;
+}
+
+static void
+match_qalc(void)
+{
+  matches = matchend = NULL;
+  appenditem(items, &matches, &matchend);
+  curr = sel = matches;
+  calcoffsets();
+}
+
+static void
 match(void)
 {
+  if (qalc.enable) {
+    match_qalc();
+    return;
+  }
+
 	static char **tokv = NULL;
 	static int tokn = 0;
 
@@ -535,6 +640,9 @@ insert:
 		break;
 	}
 
+  if (qalc.enable)
+    send_qalc();
+
 draw:
 	drawmenu();
 }
@@ -588,37 +696,52 @@ run(void)
 {
 	XEvent ev;
 
-	while (!XNextEvent(dpy, &ev)) {
-		if (XFilterEvent(&ev, win))
-			continue;
-		switch(ev.type) {
-		case DestroyNotify:
-			if (ev.xdestroywindow.window != win)
-				break;
-			cleanup();
-			exit(1);
-		case Expose:
-			if (ev.xexpose.count == 0)
-				drw_map(drw, win, 0, 0, mw, mh);
-			break;
-		case FocusIn:
-			/* regrab focus from parent window */
-			if (ev.xfocus.window != win)
-				grabfocus();
-			break;
-		case KeyPress:
-			keypress(&ev.xkey);
-			break;
-		case SelectionNotify:
-			if (ev.xselection.property == utf8)
-				paste();
-			break;
-		case VisibilityNotify:
-			if (ev.xvisibility.state != VisibilityUnobscured)
-				XRaiseWindow(dpy, win);
-			break;
-		}
-	}
+  fd_set rfds;
+  int xfd = ConnectionNumber(dpy);
+
+  for (;;) {
+    FD_ZERO(&rfds);
+    FD_SET(xfd, &rfds);
+    FD_SET(qalc.out[0], &rfds);
+
+    if (select(MAX(xfd, qalc.out[0])+1, &rfds, NULL, NULL, NULL) > 0) {
+      if (qalc.enable && FD_ISSET(qalc.out[0], &rfds)) {
+        recv_qalc();
+        drawmenu();
+      }
+      while (XPending(dpy) && !XNextEvent(dpy, &ev)) {
+        if (XFilterEvent(&ev, win))
+          continue;
+        switch(ev.type) {
+          case DestroyNotify:
+            if (ev.xdestroywindow.window != win)
+              break;
+            cleanup();
+            exit(1);
+          case Expose:
+            if (ev.xexpose.count == 0)
+              drw_map(drw, win, 0, 0, mw, mh);
+            break;
+          case FocusIn:
+            /* regrab focus from parent window */
+            if (ev.xfocus.window != win)
+              grabfocus();
+            break;
+          case KeyPress:
+            keypress(&ev.xkey);
+            break;
+          case SelectionNotify:
+            if (ev.xselection.property == utf8)
+              paste();
+            break;
+          case VisibilityNotify:
+            if (ev.xvisibility.state != VisibilityUnobscured)
+              XRaiseWindow(dpy, win);
+            break;
+        }
+      }
+    }
+  }
 }
 
 static void
@@ -711,9 +834,11 @@ setup(void)
 	swa.override_redirect = True;
 	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, 0,
+	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
 	                    CopyFromParent, CopyFromParent, CopyFromParent,
 	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+	if (border_width)
+		XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
 	XSetClassHint(dpy, win, &ch);
 
 
@@ -741,7 +866,7 @@ setup(void)
 static void
 usage(void)
 {
-	die("usage: dmenu [-bfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+	die("usage: dmenu [-bCfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
 }
 
@@ -758,6 +883,8 @@ main(int argc, char *argv[])
 			exit(0);
 		} else if (!strcmp(argv[i], "-b")) /* appears at the bottom of the screen */
 			topbar = 0;
+		else if (!strcmp(argv[i], "-C"))   /* grabs keyboard before reading stdin */
+			qalc.enable = 1;
 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
 			fast = 1;
 		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
@@ -786,6 +913,8 @@ main(int argc, char *argv[])
 			colors[SchemeSel][ColFg] = argv[++i];
 		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
 			embed = argv[++i];
+		else if (!strcmp(argv[i], "-bw"))
+			border_width = atoi(argv[++i]); /* border width */
 		else
 			usage();
 
@@ -810,7 +939,10 @@ main(int argc, char *argv[])
 		die("pledge");
 #endif
 
-	if (fast && !isatty(0)) {
+	if (qalc.enable) {
+		init_qalc();
+		grabkeyboard();
+	} else if (fast && !isatty(0)) {
 		grabkeyboard();
 		readstdin();
 	} else {

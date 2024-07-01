@@ -105,14 +105,14 @@ video/* )
 # Mostar un listado de los archivos comprimidos
 */vnd.rar)
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}').txt"
-	[ ! -f "$CACHE" ] && unrar l "$1" | tail -n +9 | head -n -3 | awk '{print $4,$5}' | tee "$CACHE"
+	[ ! -f "$CACHE" ] && unrar l "$1" | tail -n +9 | head -n -3 | awk '{ for(i=4; i<=NF; i++) printf "%s%s", $i, (i==NF ? "\n" : " ") }' | tee "$CACHE"
 	cat "$CACHE"
 	exit 1 ;;
 
 # Mostar un listado de los archivos comprimidos
 */zip)
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}').txt"
-	[ ! -f "$CACHE" ] && unzip -l "$1" | tail -n +4 | head -n -2 | awk '{print $3,$4}' | tee "$CACHE"
+	[ ! -f "$CACHE" ] && unzip -l "$1" | tail -n +4 | head -n -2 | awk '{ for(i=3; i<=NF; i++) printf "%s%s", $i, (i==NF ? "\n" : " ") }' | tee "$CACHE"
 	cat "$CACHE"
 	exit 1 ;;
 
