@@ -26,12 +26,10 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 ## Características
 
-- Encriptación (`/` y `/home`) de disco (`/boot` queda sin encriptar).
-- Soporte para `btrfs`, `ext4` y `xfs`
+- Auto-particionado de discos, y soporte para encriptación con [LUKS](https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup) (`/boot` queda sin encriptar)
 - Soporte para `BIOS` y `UEFI`
-- Configuración de `Xorg` y `eww` automática, basada en el DPI y resolución de la pantalla.
-    - _Además; dwm, st y dmenu se compilan con el tamaño de fuente recomendado para tu resolución_
-- Entorno configurado para minimizar el número de archivos en `~/` 
+- Configuración automática, basada en el DPI y resolución de la pantalla (Incluso para dwm, etc.)
+- Entorno configurado para minimizar el número de archivos en `$HOME`
     - https://wiki.archlinux.org/title/XDG_Base_Directory
 
 > [!CAUTION]
@@ -49,15 +47,15 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemente desbloquea tu volumen con `cryptsetup luksOpen` y al elegir el disco para `/home` utiliza el dispositivo desbloqueado `/dev/mapper/...` y elige no borrar la partición. Terminada la instalación restaura tu archivo de configuración de `dmcrypt` y la llave para desbloquear `/home` automáticamente
 
 > [!TIP]
-> Para instalar solo los scripts de este repositorio ejecuta desde el directorio del repositorio (con stow instalado):
-> ```
-> mkdir -p "$HOME/.local/bin"; stow --target="${HOME}/.local/bin/" bin/
-> cp assets/pdf/help.pdf "${HOME}/.local/bin/"
-> ```
+> Para instalar solo los scripts de este repositorio ejecuta _desde el directorio del repositorio_ (con stow instalado):
+> `mkdir -p "$HOME/.local/bin"; stow --target="${HOME}/.local/bin/" bin/`
 
 ## Cosas por hacer
 
-- Arreglar crypt-backup de forma que se ejecute como root y haga backups incrementales
+- Añadir README a los directorios de st, etc.
+- Reevisar todo el código de dwm y st (Identación y añadir comentarios en castellano)
+- Crear un setup equivalente para [OpenBSD](https://github.com/aleister888/openBSD-dotfiles)
+- Añadir copias de seguridad incrementales a crypt-backup
 - Mejorar script de particionado/instalación
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
