@@ -350,7 +350,7 @@ trash_dir(){
 
 # Configurar el audio de baja latencia
 audio_setup(){
-	doas usermod -aG realtime,audio,video $USER
+	doas usermod -aG realtime,audio,video,optical,uucp $USER
 	cat /etc/security/limits.conf | grep audio || \
 	echo "@audio - rtprio 95
 	@audio - memlock unlimited
