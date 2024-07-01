@@ -34,8 +34,8 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 > [!CAUTION]
 > Si quieres encriptar tu disco duro para proteger la información que contiene, es __obligatorio__ que lo vacíes de toda la información que contenía anteriormente, pues esta seguirá almacenada en el disco sin encriptar hasta que sea sobrescrita. Podemos hacer esto de 3 formas distintas, cada una menos segura/fiable que la anterior:
-> - Llenar de información aleatoria el dispositivo _/dev/ejemplo_ `dd if=/dev/urandom of=/dev/ejemplo`
-> - Llenar la partición ya encriptada _/dev/mapper/ejemplo_ de zeros `dd if=/dev/zero of=/dev/mapper/ejemplo`
+> - Llenar de información aleatoria el dispositivo: `dd if=/dev/urandom of=/dev/ejemplo`
+> - Llenar la partición ya encriptada de zeros: `dd if=/dev/zero of=/dev/mapper/test`
 > - Llenando el sistema de archivos (una vez ya instalado el sistema) de zeros creando un archivo que llene la partición, y luego borrandolo.
 >   - Para esto ejecuta: `dd if=/dev/zero of=/disco/archivo` y borra el archivo cuando se llene el disco.
 
