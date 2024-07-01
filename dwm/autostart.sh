@@ -35,7 +35,7 @@ ewwspawn(){
 	# Contamos el numero de monitores activos
 	monitors=$(xrandr --listmonitors | grep -c " .:")
 	# Definir el archivo al que apunta el enlace simbólico actual
-	current_link=$(readlink -f "$HOME/.config/eww/dashboard.scss")
+	current_link=$(readlink -f "$XDG_CONFIG_HOME/eww/dashboard.scss")
 
 	# Definir los archivos de los que se crearán los enlaces simbólicos
 	file_1080="$HOME/.dotfiles/.config/eww/dashboard/dashboard1080p.scss"
@@ -47,68 +47,51 @@ ewwspawn(){
 
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
 	if [[ $resolution -le 1080 ]]; then
-		if [[ "$current_link" != "$file_1080" ]]; then
-			ln -sf "$file_1080" "$HOME/.config/eww/dashboard.scss"
-		fi
+		[[ "$current_link" != "$file_1080" ]] && ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	elif [[ $resolution -le 1440 ]]; then
-		if [[ "$current_link" != "$file_1440" ]]; then
-			ln -sf "$file_1440" "$HOME/.config/eww/dashboard.scss"
-		fi
+		[[ "$current_link" != "$file_1440" ]] && ln -sf "$file_1440" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	else
-		if [[ "$current_link" != "$file_2160" ]]; then
-			ln -sf "$file_2160" "$HOME/.config/eww/dashboard.scss"
-		fi
+		[[ "$current_link" != "$file_2160" ]] && ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	fi
 
-	# Cerrar el widget si hay mas de un monitor en uso
-	if [ "$monitors" -gt 1 ] || [ "$(xdotool getactivewindow)" ]; then
+	# Cerrar el widget si hay mas de un monitor en uso o alguna ventana activa
+	if [ "$monitors" -gt 1 ] || xdotool getactivewindow >/dev/null; then
 		pkill eww
-	# Invocar nuestro widget solo si hay un monitor, niguna ventana activa
-	# y eww no esta ya en ejecución
+	# Invocar nuestro widget si hay un solo monitor activo y eww no esta ya en ejecución
 	elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
-		# Ajustar widget en función de la resolución
 		eww open dashboard &
 	fi
 	# Esperar antes de ejecutar el bucle otra vez
-	sleep 0.05;
+	sleep 0.1
 	done
-
-	exit 0
 }
 
 virtualmic(){
 	# Contador para evitar bucles infinitos
 	local counter=0
-	# Realizar la comprobación una vez y salir si se encuentra el sink
-	if pactl list | grep '\(Name\|Monitor Source\): my-combined-sink'; then
-		exit
-	else
-		# En caso contrario, intentar crear el sink cada 5 segundos durante un máximo de 12 intentos
-		while [ $counter -lt 6 ]; do
-			# Verificar si Wireplumber está en ejecución
-			if pgrep wireplumber; then
-				~/.local/bin/pipewire-virtualmic &
-			fi
-			# Incrementar el contador
-			counter=$((counter + 1))
-			# Esperar 5 segundos antes del siguiente intento
-			sleep 5
-		done
-	fi
-	exit 0
+	# Salir si se encuentra el sink
+	pactl list | grep '\(Name\|Monitor Source\): my-combined-sink' && exit
+
+	# En caso contrario, intentar crear el sink cada 5 segundos durante un máximo de 5 intentos
+	while [ $counter -lt 6 ]; do
+		# Verificar si Wireplumber está en ejecución
+		pgrep wireplumber && ~/.local/bin/pipewire-virtualmic &
+		# Esperar 5 segundos antes del siguiente intento
+		counter=$((counter + 1))
+		sleep 5
+	done
+	exit
 }
 
 # Ejecutar picom, ajustando el radio de las esquinas en función de la resolución
 # (Aprovechamos el link simbólico que usamos para ajustar eww según la resolución)
 picomstart(){
-	PICOMOPTS="-c -f --vsync --config=$HOME/.config/picom/picom.conf --corner-radius"
-	if [[ "$current_link" == "$file_1080" ]]; then
-		picom $PICOMOPTS 12
-	elif [[ "$current_link" == "$file_1440" ]]; then
-		picom $PICOMOPTS 18
-	else
-		picom $PICOMOPTS 24
-	fi
+	PICOMOPTS="-c -f --vsync --config=$XDG_CONFIG_HOME/picom/picom.conf --corner-radius"
+	case "$current_link" in
+	"$file_1080") picom $PICOMOPTS 12 ;;
+	"$file_1440") picom $PICOMOPTS 18 ;;
+	*) picom $PICOMOPTS 24 ;;
+	esac
 }
 
 ##########
@@ -124,7 +107,7 @@ fi
 xset -dpms && xset s off &
 
 # Leer la configuración Xresources
-[ -f "$XDG_CONFIG_HOME"/Xresources ] && xrdb -merge "$XDG_CONFIG_HOME/Xresources"
+[ -f "$XDG_CONFIG_HOME/Xresources" ] && xrdb -merge "$XDG_CONFIG_HOME/Xresources"
 
 # Pipewire
 pgrep pipewire || pipewire-start &
@@ -137,12 +120,9 @@ pgrep picom || picomstart &
 dbus-update-activation-environment --all
 pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
-# Auto-montador de discos
-pgrep udiskie		|| udiskie -t -a &
-# Barra de estado
-pgrep dwmblocks		|| dwmblocks &
-# Applet de red
-pgrep nm-applet		|| nm-applet &
+pgrep udiskie		|| udiskie -t -a & # Auto-montador de discos
+pgrep dwmblocks		|| dwmblocks & # Barra de estado
+pgrep nm-applet		|| nm-applet & # Applet de red
 
 # Si se detecta una tarjeta bluetooth, iniciar blueman-applet
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
@@ -166,7 +146,7 @@ virtualmic &
 ewwspawn &
 
 # Salvapantallas
-xautolock -time 1 -locker screensaver &
+xautolock -time 5 -locker screensaver &
 
 while true; do
 	resultado=0 # Reinicamos la variable antes de hacer las comprobaciones
@@ -199,26 +179,34 @@ pgrep redshift || redshift -l 40.42:-3.70 -t 5700:3600 -b 1:0.9 -m randr -v &
 # Limpiar directorio $HOME #
 ############################
 
-[ -d "$HOME/.pki" ]	&& mv -f "$HOME/.pki" "$HOME/.local/share/pki"
-[ -d "$HOME/.gnupg" ]	&& mv -f "$HOME/.gnupg" "$HOME/.local/share/gnupg"
-[ -d "$HOME/.java" ]	&& mv -f "$HOME/.java" "$HOME/.config/java"
-[ -d "$HOME/.cargo" ]	&& mv -f "$HOME/.cargo" "$HOME/.local/share/cargo"
-[ -d "$HOME/go" ]	&& mv -f "$HOME/go" "$HOME/.local/share/go"
+# Mover archivos según la especificación XDG
 
-[ -f "$HOME/.wget-hsts" ] && rm "$HOME/.wget-hsts"
+[ -d "$HOME/.pki" ] && {
+	rsync -a --delete "$HOME/.pki/" "$XDG_DATA_HOME/pki/"
+	rm -rf "$HOME/.pki"
+}
 
-if [ -f "$HOME/.gitconfig" ]; then
-	mkdir -p "$HOME/.config/git"
-	mv -f "$HOME/.gitconfig" "$HOME/.config/git/config"
-fi
+[ -f "$HOME/.pulse-cookie" ] && {
+	mkdir -p "$XDG_CONFIG_HOME/pulse"
+	mv -f "$HOME/.pulse-cookie" "$XDG_CONFIG_HOME/pulse/cookie"
+}
 
-rm -rf "$HOME/.local/share/desktop-directories"
-rm -rf "$HOME/.local/share/applications/wine"*
-rm -rf "$HOME/.config/menus"
+[ -f "$HOME/.gitconfig" ] && {
+	mkdir -p "$XDG_CONFIG_HOME/git"
+	mv -f "$HOME/.gitconfig" "$XDG_CONFIG_HOME/git/config"
+}
+
+[ -d "$HOME/.gnupg" ]	&& mv -f "$HOME/.gnupg" "$XDG_DATA_HOME/gnupg"
+[ -d "$HOME/.java" ]	&& mv -f "$HOME/.java" "$XDG_CONFIG_HOME/java"
+[ -d "$HOME/.cargo" ]	&& mv -f "$HOME/.cargo" "$XDG_DATA_HOME/cargo"
+[ -d "$HOME/go" ]	&& mv -f "$HOME/go" "$XDG_DATA_HOME/go"
+
+# Borrar archivos
+rm -f "$HOME/.wget-hsts"
+rm -rf "$XDG_DATA_HOME/desktop-directories" "$XDG_DATA_HOME/applications/wine"* "$XDG_CONFIG_HOME/menus"
 
 # Borrar el lockfile de firefox
 while true; do
-	pgrep firefox > /dev/null && \
-	find "$HOME/.mozilla" -name "*.parentlock*" -delete
+	pgrep firefox && find "$HOME/.mozilla" -name "*.parentlock" -delete
 	sleep 1
 done
