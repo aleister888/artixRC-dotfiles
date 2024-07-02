@@ -25,15 +25,15 @@
 #include "util.h"
 #include "font.h"
 
-/* macros */
-#define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
-                             * MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
-#define LENGTH(X)             (sizeof X / sizeof X[0])
-#define TEXTW(X)              (drw_fontset_getwidth(drw, (X)) + lrpad)
-#define NUMBERSMAXDIGITS      100
-#define NUMBERSBUFSIZE        (NUMBERSMAXDIGITS * 2) + 1
+// Macros
+#define INTERSECT(x,y,w,h,r)	(MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
+				* MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
+#define LENGTH(X)		(sizeof X / sizeof X[0])
+#define TEXTW(X)		(drw_fontset_getwidth(drw, (X)) + lrpad)
+#define NUMBERSMAXDIGITS	100
+#define NUMBERSBUFSIZE		(NUMBERSMAXDIGITS * 2) + 1
 
-/* enums */
+// Enums
 enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
 
 struct item {
@@ -53,7 +53,7 @@ static char text[BUFSIZ] = "";
 static char *embed;
 static int bh, mw, mh;
 static int inputw = 0, promptw, passwd = 0;
-static int lrpad; /* sum of left and right padding */
+static int lrpad; // Suma del espaciado izq. y derecho
 static size_t cursor;
 static struct item *items = NULL;
 static struct item *matches, *matchend;
@@ -103,7 +103,7 @@ calcoffsets(void)
 		n = lines * bh;
 	else
 		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">") + TEXTW(numbers));
-	/* calculate which items will begin the next page and previous page */
+	// Calcular que items empiezan en la siguente/anterior página
 	for (i = 0, next = curr; next; next = next->right)
 		if ((i += (lines > 0) ? bh : textw_clamp(next->text, n)) > n)
 			break;
@@ -147,7 +147,7 @@ cistrstr(const char *h, const char *n)
 
 	for (; *h; ++h) {
 		for (i = 0; n[i] && tolower((unsigned char)n[i]) ==
-		            tolower((unsigned char)h[i]); ++i)
+			tolower((unsigned char)h[i]); ++i)
 			;
 		if (n[i] == '\0')
 			return (char *)h;
@@ -198,7 +198,7 @@ drawmenu(void)
 		drw_setscheme(drw, scheme[SchemeSel]);
 		x = drw_text(drw, x, 0, promptw, bh, lrpad / 2, prompt, 0);
 	}
-	/* draw input field */
+	// Dibujar campo de entrada
 	w = (lines > 0 || !matches) ? mw - x : inputw;
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	if (passwd) {
@@ -216,11 +216,11 @@ drawmenu(void)
 
 	recalculatenumbers();
 	if (lines > 0) {
-		/* draw vertical list */
+		// Dibujar lista vertical
 		for (item = curr; item != next; item = item->right)
 			drawitem(item, x, y += bh, mw - x);
 	} else if (matches) {
-		/* draw horizontal list */
+		// Dibujar lista horizontal
 		x += inputw;
 		w = TEXTW("<");
 		if (curr->left) {
@@ -266,10 +266,10 @@ grabkeyboard(void)
 
 	if (embed)
 		return;
-	/* try to grab keyboard, we may have to wait for another process to ungrab */
+	// Intenta acaparar el teclado, es posible que sea necesario esperar a que otro proceso deje de usarlo
 	for (i = 0; i < 1000; i++) {
 		if (XGrabKeyboard(dpy, DefaultRootWindow(dpy), True, GrabModeAsync,
-		                  GrabModeAsync, CurrentTime) == GrabSuccess)
+			GrabModeAsync, CurrentTime) == GrabSuccess)
 			return;
 		nanosleep(&ts, NULL);
 	}
@@ -279,78 +279,78 @@ grabkeyboard(void)
 static void
 init_qalc(void)
 {
-  pipe(qalc.in);
-  pipe2(qalc.out, O_NONBLOCK);
-  qalc.pid = fork();
-  if (qalc.pid == -1)
-    die("failed to fork for qalc");
-  if (qalc.pid == 0) {
-    dup2(qalc.in[0], STDIN_FILENO);
-    dup2(qalc.out[1], STDOUT_FILENO);
-    close(qalc.in[1]);
-    close(qalc.out[0]);
-    prctl(PR_SET_PDEATHSIG, SIGTERM);
-    execl("/usr/bin/qalc", "qalc", "-c0", "-t", NULL);
-    die ("execl qalc failed");
-  } else { // parent
-    close(qalc.in[0]);
-    close(qalc.out[1]);
-    items = malloc(sizeof(struct item)*2);
-    items[0].text = malloc(LENGTH(qalc.buf));
-    strcpy(items[0].text, "no result");
-    items[1].out = 0;
-    items[1].text = NULL;
-  }
+	pipe(qalc.in);
+	pipe2(qalc.out, O_NONBLOCK);
+	qalc.pid = fork();
+	if (qalc.pid == -1)
+		die("failed to fork for qalc");
+	if (qalc.pid == 0) {
+		dup2(qalc.in[0], STDIN_FILENO);
+		dup2(qalc.out[1], STDOUT_FILENO);
+		close(qalc.in[1]);
+		close(qalc.out[0]);
+		prctl(PR_SET_PDEATHSIG, SIGTERM);
+		execl("/usr/bin/qalc", "qalc", "-c0", "-t", NULL);
+		die ("execl qalc failed");
+	} else { // Proceso padre
+		close(qalc.in[0]);
+		close(qalc.out[1]);
+		items = malloc(sizeof(struct item)*2);
+		items[0].text = malloc(LENGTH(qalc.buf));
+		strcpy(items[0].text, "no result");
+		items[1].out = 0;
+		items[1].text = NULL;
+	}
 }
 
 static void
 recv_qalc(void)
 {
-  ssize_t r = read(qalc.out[0], qalc.buf, LENGTH(qalc.buf));
+	ssize_t r = read(qalc.out[0], qalc.buf, LENGTH(qalc.buf));
 
-  if (r < 0)
-    die("error reading qalc.out");
+	if (r < 0)
+		die("error reading qalc.out");
 
-  if (qalc.buf[0] == '\n') {
-    int i;
-    for (i = 3; i < LENGTH(qalc.buf) && qalc.buf[i] != '\n'; ++i)
-      items[0].text[i-3] = qalc.buf[i];
-    items[0].text[i-3] = 0;
-    if (r != LENGTH(qalc.buf))
-      return;
-  }
+	if (qalc.buf[0] == '\n') {
+		int i;
+		for (i = 3; i < LENGTH(qalc.buf) && qalc.buf[i] != '\n'; ++i)
+			items[0].text[i-3] = qalc.buf[i];
+			items[0].text[i-3] = 0;
+		if (r != LENGTH(qalc.buf))
+			return;
+	}
 
-  while (read(qalc.out[0], qalc.buf, LENGTH(qalc.buf)) != -1)
-    ; // empty the pipe
-  if (errno != EAGAIN && errno != EWOULDBLOCK)
-    die("error emptying qalc.out");
+	while (read(qalc.out[0], qalc.buf, LENGTH(qalc.buf)) != -1)
+	; // Vaciar re-direccionamiento
+	if (errno != EAGAIN && errno != EWOULDBLOCK)
+	die("error emptying qalc.out");
 }
 
 static void
 send_qalc(void)
 {
-  int s = strlen(text);
-  text[s] = '\n';
-  write(qalc.in[1], text, s+1);
-  text[s] = 0;
+	int s = strlen(text);
+	text[s] = '\n';
+	write(qalc.in[1], text, s+1);
+	text[s] = 0;
 }
 
 static void
 match_qalc(void)
 {
-  matches = matchend = NULL;
-  appenditem(items, &matches, &matchend);
-  curr = sel = matches;
-  calcoffsets();
+	matches = matchend = NULL;
+	appenditem(items, &matches, &matchend);
+	curr = sel = matches;
+	calcoffsets();
 }
 
 static void
 match(void)
 {
-  if (qalc.enable) {
-    match_qalc();
-    return;
-  }
+	if (qalc.enable) {
+		match_qalc();
+		return;
+	}
 
 	static char **tokv = NULL;
 	static int tokn = 0;
@@ -361,7 +361,7 @@ match(void)
 	struct item *item, *lprefix, *lsubstr, *prefixend, *substrend;
 
 	strcpy(buf, text);
-	/* separate input text into tokens to be matched individually */
+	// Separar el texto de entrada en tokens para ser emparejados individualmente
 	for (s = strtok(buf, " "); s; tokv[tokc - 1] = s, s = strtok(NULL, " "))
 		if (++tokc > tokn && !(tokv = realloc(tokv, ++tokn * sizeof *tokv)))
 			die("cannot realloc %zu bytes:", tokn * sizeof *tokv);
@@ -373,9 +373,9 @@ match(void)
 		for (i = 0; i < tokc; i++)
 			if (!fstrstr(item->text, tokv[i]))
 				break;
-		if (i != tokc) /* not all tokens match */
+		if (i != tokc) // No todos los tokens coinciden
 			continue;
-		/* exact matches go first, then prefixes, then substrings */
+		// Las coincidencias exactas van primero, luego los prefijos y después las subcadenas
 		if (!tokc || !fstrncmp(text, item->text, textsize))
 			appenditem(item, &matches, &matchend);
 		else if (!fstrncmp(tokv[0], item->text, len))
@@ -408,7 +408,7 @@ insert(const char *str, ssize_t n)
 {
 	if (strlen(text) + n > sizeof text - 1)
 		return;
-	/* move existing text out of the way, insert new text, and update cursor */
+	// Desplazar el texto existente, insertar el nuevo y actualizar el cursor
 	memmove(&text[cursor + n], &text[cursor], sizeof text - cursor - MAX(n, 0));
 	if (n > 0)
 		memcpy(&text[cursor], str, n);
@@ -420,8 +420,7 @@ static size_t
 nextrune(int inc)
 {
 	ssize_t n;
-
-	/* return location of next utf8 rune in the given direction (+1 or -1) */
+	// Devuelve la ubicación de la siguiente runa utf8 en la dirección dada (+1 o -1)
 	for (n = cursor + inc; n + inc >= 0 && (text[n] & 0xc0) == 0x80; n += inc)
 		;
 	return n;
@@ -430,12 +429,12 @@ nextrune(int inc)
 static void
 movewordedge(int dir)
 {
-	if (dir < 0) { /* move cursor to the start of the word*/
+	if (dir < 0) { // Mueve el cursor al principio de la palabra
 		while (cursor > 0 && strchr(worddelimiters, text[nextrune(-1)]))
 			cursor = nextrune(-1);
 		while (cursor > 0 && !strchr(worddelimiters, text[nextrune(-1)]))
 			cursor = nextrune(-1);
-	} else { /* move cursor to the end of the word */
+	} else { // Mueve el cursor al final de la palabra
 		while (text[cursor] && strchr(worddelimiters, text[cursor]))
 			cursor = nextrune(+1);
 		while (text[cursor] && !strchr(worddelimiters, text[cursor]))
@@ -453,12 +452,12 @@ keypress(XKeyEvent *ev)
 
 	len = XmbLookupString(xic, ev, buf, sizeof buf, &ksym, &status);
 	switch (status) {
-	default: /* XLookupNone, XBufferOverflow */
+	default: // XLookupNone, XBufferOverflow
 		return;
-	case XLookupChars: /* composed string from input method */
+	case XLookupChars: // Cadena compuesta a partir del método de entrada
 		goto insert;
 	case XLookupKeySym:
-	case XLookupBoth: /* a KeySym and a string are returned: use keysym */
+	case XLookupBoth: // Si se devuelven un KeySym y una cadena: Usar KeySym
 		break;
 	}
 
@@ -473,30 +472,30 @@ keypress(XKeyEvent *ev)
 		case XK_g: ksym = XK_Escape;    break;
 		case XK_h: ksym = XK_BackSpace; break;
 		case XK_i: ksym = XK_Tab;       break;
-		case XK_j: /* fallthrough */
-		case XK_J: /* fallthrough */
-		case XK_m: /* fallthrough */
+		case XK_j: // A través
+		case XK_J: // A través
+		case XK_m: // A través
 		case XK_M: ksym = XK_Return; ev->state &= ~ControlMask; break;
 		case XK_n: ksym = XK_Down;      break;
 		case XK_p: ksym = XK_Up;        break;
 
-		case XK_k: /* delete right */
+		case XK_k: // Borrar hacia la derecha
 			text[cursor] = '\0';
 			match();
 			break;
-		case XK_u: /* delete left */
+		case XK_u: // Borrar hacia la izquierda
 			insert(NULL, 0 - cursor);
 			break;
-		case XK_w: /* delete word */
+		case XK_w: // Borrar palabra
 			while (cursor > 0 && strchr(worddelimiters, text[nextrune(-1)]))
 				insert(NULL, nextrune(-1) - cursor);
 			while (cursor > 0 && !strchr(worddelimiters, text[nextrune(-1)]))
 				insert(NULL, nextrune(-1) - cursor);
 			break;
-		case XK_y: /* paste selection */
+		case XK_y: // Pegar selección
 		case XK_Y:
 			XConvertSelection(dpy, (ev->state & ShiftMask) ? clip : XA_PRIMARY,
-			                  utf8, utf8, win, CurrentTime);
+				utf8, utf8, win, CurrentTime);
 			return;
 		case XK_Left:
 		case XK_KP_Left:
@@ -545,7 +544,7 @@ insert:
 		if (text[cursor] == '\0')
 			return;
 		cursor = nextrune(+1);
-		/* fallthrough */
+		// A través
 	case XK_BackSpace:
 		if (cursor == 0)
 			return;
@@ -558,7 +557,7 @@ insert:
 			break;
 		}
 		if (next) {
-			/* jump to end of list and position items in reverse */
+			// Saltar al final de la lista y posicionar los elementos en sentido inverso
 			curr = matchend;
 			calcoffsets();
 			curr = prev;
@@ -588,7 +587,7 @@ insert:
 		}
 		if (lines > 0)
 			return;
-		/* fallthrough */
+		// A través
 	case XK_Up:
 	case XK_KP_Up:
 		if (sel && sel->left && (sel = sel->left)->right == curr) {
@@ -628,7 +627,7 @@ insert:
 		}
 		if (lines > 0)
 			return;
-		/* fallthrough */
+		// A través
 	case XK_Down:
 	case XK_KP_Down:
 		if (sel && sel->right && (sel = sel->right) == next) {
@@ -646,8 +645,8 @@ insert:
 		break;
 	}
 
-  if (qalc.enable)
-    send_qalc();
+	if (qalc.enable)
+		send_qalc();
 
 draw:
 	drawmenu();
@@ -663,8 +662,8 @@ paste(void)
 
 	/* we have been given the current selection, now insert it into input */
 	if (XGetWindowProperty(dpy, win, utf8, 0, (sizeof text / 4) + 1, False,
-	                   utf8, &da, &di, &dl, &dl, (unsigned char **)&p)
-	    == Success && p) {
+		utf8, &da, &di, &dl, &dl, (unsigned char **)&p)
+	== Success && p) {
 		insert(p, (q = strchr(p, '\n')) ? q - p : (ssize_t)strlen(p));
 		XFree(p);
 	}
@@ -678,7 +677,7 @@ readstdin(void)
 	size_t i, junk, itemsiz = 0;
 	ssize_t len;
 
-	/* read each line from stdin and add it to the item list */
+	// Leer cada línea de stdin y añadirla a la lista de elementos
 	for (i = 0; (len = getline(&line, &junk, stdin)) != -1; i++) {
 		if (i + 1 >= itemsiz) {
 			itemsiz += 256;
@@ -689,7 +688,7 @@ readstdin(void)
 			line[len - 1] = '\0';
 		items[i].text = line;
 		items[i].out = 0;
-		line = NULL; /* next call of getline() allocates a new line */
+		line = NULL; // La siguiente llamada a getline() asigna una nueva línea
 	}
 	free(line);
 	if (items)
@@ -702,52 +701,52 @@ run(void)
 {
 	XEvent ev;
 
-  fd_set rfds;
-  int xfd = ConnectionNumber(dpy);
+	fd_set rfds;
+	int xfd = ConnectionNumber(dpy);
 
-  for (;;) {
-    FD_ZERO(&rfds);
-    FD_SET(xfd, &rfds);
-    FD_SET(qalc.out[0], &rfds);
+	for (;;) {
+		FD_ZERO(&rfds);
+		FD_SET(xfd, &rfds);
+		FD_SET(qalc.out[0], &rfds);
 
-    if (select(MAX(xfd, qalc.out[0])+1, &rfds, NULL, NULL, NULL) > 0) {
-      if (qalc.enable && FD_ISSET(qalc.out[0], &rfds)) {
-        recv_qalc();
-        drawmenu();
-      }
-      while (XPending(dpy) && !XNextEvent(dpy, &ev)) {
-        if (XFilterEvent(&ev, win))
-          continue;
-        switch(ev.type) {
-          case DestroyNotify:
-            if (ev.xdestroywindow.window != win)
-              break;
-            cleanup();
-            exit(1);
-          case Expose:
-            if (ev.xexpose.count == 0)
-              drw_map(drw, win, 0, 0, mw, mh);
-            break;
-          case FocusIn:
-            /* regrab focus from parent window */
-            if (ev.xfocus.window != win)
-              grabfocus();
-            break;
-          case KeyPress:
-            keypress(&ev.xkey);
-            break;
-          case SelectionNotify:
-            if (ev.xselection.property == utf8)
-              paste();
-            break;
-          case VisibilityNotify:
-            if (ev.xvisibility.state != VisibilityUnobscured)
-              XRaiseWindow(dpy, win);
-            break;
-        }
-      }
-    }
-  }
+		if (select(MAX(xfd, qalc.out[0])+1, &rfds, NULL, NULL, NULL) > 0) {
+			if (qalc.enable && FD_ISSET(qalc.out[0], &rfds)) {
+				recv_qalc();
+				drawmenu();
+			}
+			while (XPending(dpy) && !XNextEvent(dpy, &ev)) {
+				if (XFilterEvent(&ev, win))
+					continue;
+				switch(ev.type) {
+					case DestroyNotify:
+						if (ev.xdestroywindow.window != win)
+							break;
+						cleanup();
+						exit(1);
+					case Expose:
+						if (ev.xexpose.count == 0)
+							drw_map(drw, win, 0, 0, mw, mh);
+						break;
+					case FocusIn:
+						// Recuperar el foco de la ventana principal
+						if (ev.xfocus.window != win)
+							grabfocus();
+						break;
+					case KeyPress:
+						keypress(&ev.xkey);
+						break;
+					case SelectionNotify:
+						if (ev.xselection.property == utf8)
+							paste();
+						break;
+					case VisibilityNotify:
+						if (ev.xvisibility.state != VisibilityUnobscured)
+							XRaiseWindow(dpy, win);
+						break;
+				}
+			}
+		}
+	}
 }
 
 static void
@@ -765,14 +764,14 @@ setup(void)
 	Window pw;
 	int a, di, n, area = 0;
 #endif
-	/* init appearance */
+	// Apariencia inicial
 	for (j = 0; j < SchemeLast; j++)
 		scheme[j] = drw_scm_create(drw, colors[j], 2);
 
 	clip = XInternAtom(dpy, "CLIPBOARD",   False);
 	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
 
-	/* calculate menu geometry */
+	// Calcular las dimensiones del menú
 	bh = drw->fonts->h;
 	bh = user_bh ? bh + user_bh : bh + 2;
 	lines = MAX(lines, 0);
@@ -785,12 +784,12 @@ setup(void)
 		if (mon >= 0 && mon < n)
 			i = mon;
 		else if (w != root && w != PointerRoot && w != None) {
-			/* find top-level window containing current input focus */
+			// Encuentra la ventana de nivel superior que contiene el foco de entrada actual
 			do {
 				if (XQueryTree(dpy, (pw = w), &dw, &w, &dws, &du) && dws)
 					XFree(dws);
 			} while (w != root && w != pw);
-			/* find xinerama screen with which the window intersects most */
+			// Encontrar la pantalla xinerama con la que más se cruza la ventana
 			if (XGetWindowAttributes(dpy, pw, &wa))
 				for (j = 0; j < n; j++)
 					if ((a = INTERSECT(wa.x, wa.y, wa.width, wa.height, info[j])) > area) {
@@ -798,7 +797,7 @@ setup(void)
 						i = j;
 					}
 		}
-		/* no focused window is on screen, so use pointer location instead */
+		// No hay ventana activa en la pantalla, así que usa la localización del puntero
 		if (mon < 0 && !area && XQueryPointer(dpy, root, &dw, &dw, &x, &y, &di, &di, &du))
 			for (i = 0; i < n; i++)
 				if (INTERSECT(x, y, 1, 1, info[i]) != 0)
@@ -820,7 +819,7 @@ setup(void)
 	{
 		if (!XGetWindowAttributes(dpy, parentwin, &wa))
 			die("could not get embedding window attributes: 0x%lx",
-			    parentwin);
+				parentwin);
 
 		if (centered) {
 			mw = MIN(MAX(max_textw() + promptw, min_width), wa.width);
@@ -833,27 +832,27 @@ setup(void)
 		}
 	}
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
-	inputw = mw / 3; /* input width: ~33% of monitor width */
+	inputw = mw / 3; // Anchura de la entrada: ~33% de la anchura del monitor
 	match();
 
-	/* create menu window */
+	// Crear la ventana del menú
 	swa.override_redirect = True;
 	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
 	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
-	                    CopyFromParent, CopyFromParent, CopyFromParent,
-	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+		CopyFromParent, CopyFromParent, CopyFromParent,
+		CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
 	if (border_width)
 		XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
 	XSetClassHint(dpy, win, &ch);
 
 
-	/* input methods */
+	// Métodos de entrada
 	if ((xim = XOpenIM(dpy, NULL, NULL, NULL)) == NULL)
 		die("XOpenIM failed: could not open input device");
 
 	xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
-	                XNClientWindow, win, XNFocusWindow, win, NULL);
+		XNClientWindow, win, XNFocusWindow, win, NULL);
 
 	XMapRaised(dpy, win);
 	if (embed) {
@@ -872,8 +871,8 @@ setup(void)
 static void
 usage(void)
 {
-	die("usage: dmenu [-bCPfv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
-	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
+	die("usage:	dmenu [-bCPfv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+		"	[-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
 }
 
 int
@@ -883,46 +882,47 @@ main(int argc, char *argv[])
 	int i, fast = 0;
 
 	for (i = 1; i < argc; i++)
-		/* these options take no arguments */
-		if (!strcmp(argv[i], "-v")) {      /* prints version information */
+		// Opciones que no necesitan de argumentos
+		if (!strcmp(argv[i], "-v")) { // Imprime la versión del programa
 			puts("dmenu-"VERSION);
 			exit(0);
-		} else if (!strcmp(argv[i], "-b")) /* appears at the bottom of the screen */
+		} else if (!strcmp(argv[i], "-b")) // Aparecer en la parte inferior de la pantalla
 			topbar = 0;
-		else if (!strcmp(argv[i], "-C"))   /* grabs keyboard before reading stdin */
+		else if (!strcmp(argv[i], "-C")) // Apropiarse del teclado antes de leer stdin
 			qalc.enable = 1;
-		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
+		else if (!strcmp(argv[i], "-f")) // Apropiarse del teclado antes de leer stdin
 			fast = 1;
-		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
+		else if (!strcmp(argv[i], "-c")) // Centrar dmenu en la pantalla
 			centered = 1;
-		else if (!strcmp(argv[i], "-s")) { /* case-sensitive item matching */
+		else if (!strcmp(argv[i], "-s")) { // Fijarse en las mayúsculas
 			fstrncmp = strncmp;
 			fstrstr = strstr;
-		} else if (!strcmp(argv[i], "-P"))   /* is the input a password */
+		} else if (!strcmp(argv[i], "-P")) // La entrada es una contraseña
 			passwd = 1;
 		else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
-		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
+		// Opciones que si necesitan de argumentos
+		else if (!strcmp(argv[i], "-l")) // Número de lineas en las listas verticales
 			lines = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-m"))
 			mon = atoi(argv[++i]);
-		else if (!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
+		else if (!strcmp(argv[i], "-p")) // Añadir texto en el cuadro de entrada
 			prompt = argv[++i];
-		else if (!strcmp(argv[i], "-fn"))  /* font or font set */
+		else if (!strcmp(argv[i], "-fn")) // Fuente
 			fonts[0] = argv[++i];
-		else if (!strcmp(argv[i], "-nb"))  /* normal background color */
+		else if (!strcmp(argv[i], "-nb")) // Color del fondo (normal)
 			colors[SchemeNorm][ColBg] = argv[++i];
-		else if (!strcmp(argv[i], "-nf"))  /* normal foreground color */
+		else if (!strcmp(argv[i], "-nf")) // Color de la fuente (normal)
 			colors[SchemeNorm][ColFg] = argv[++i];
-		else if (!strcmp(argv[i], "-sb"))  /* selected background color */
+		else if (!strcmp(argv[i], "-sb")) // Color del fondo (entrada seleccionada)
 			colors[SchemeSel][ColBg] = argv[++i];
-		else if (!strcmp(argv[i], "-sf"))  /* selected foreground color */
+		else if (!strcmp(argv[i], "-sf")) // Color de la fuente (entrada seleccionada)
 			colors[SchemeSel][ColFg] = argv[++i];
-		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
+		else if (!strcmp(argv[i], "-w")) // Incrustar el ID de la ventana
 			embed = argv[++i];
 		else if (!strcmp(argv[i], "-bw"))
-			border_width = atoi(argv[++i]); /* border width */
+			border_width = atoi(argv[++i]); // Tamaño del borde
 		else
 			usage();
 
@@ -936,7 +936,7 @@ main(int argc, char *argv[])
 		parentwin = root;
 	if (!XGetWindowAttributes(dpy, parentwin, &wa))
 		die("could not get embedding window attributes: 0x%lx",
-		    parentwin);
+			parentwin);
 	drw = drw_create(dpy, screen, root, wa.width, wa.height);
 	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
 		die("no fonts could be loaded.");
@@ -960,5 +960,5 @@ main(int argc, char *argv[])
 	setup();
 	run();
 
-	return 1; /* unreachable */
+	return 1; // Inalcanzable
 }

@@ -99,9 +99,8 @@ drw_free(Drw *drw)
 	free(drw);
 }
 
-/* This function is an implementation detail. Library users should use
- * drw_fontset_create instead.
- */
+// Esta función es un detalle de implementación.
+// Los usuarios de la librería deberían usar drw_fontset_create en su lugar.
 static Fnt *
 xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
 {
@@ -110,11 +109,10 @@ xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
 	FcPattern *pattern = NULL;
 
 	if (fontname) {
-		/* Using the pattern found at font->xfont->pattern does not yield the
-		 * same substitution results as using the pattern returned by
-		 * FcNameParse; using the latter results in the desired fallback
-		 * behaviour whereas the former just results in missing-character
-		 * rectangles being drawn, at least with some fonts. */
+		// Utilizar el patrón encontrado en font->xfont->pattern no produce los
+		// los mismos resultados de sustitución que el patrón devuelto por
+		// FcNameParse; el uso de este último da como resultado el comportamiento fallback
+		// deseado, mientras que el primero sólo hace que se dibujen rectángulos (al menos con algunas fuentes).
 		if (!(xfont = XftFontOpenName(drw->dpy, drw->screen, fontname))) {
 			fprintf(stderr, "error, cannot load font from name: '%s'\n", fontname);
 			return NULL;
@@ -187,20 +185,20 @@ drw_clr_create(Drw *drw, Clr *dest, const char *clrname)
 		return;
 
 	if (!XftColorAllocName(drw->dpy, DefaultVisual(drw->dpy, drw->screen),
-	                       DefaultColormap(drw->dpy, drw->screen),
-	                       clrname, dest))
+		DefaultColormap(drw->dpy, drw->screen),
+		clrname, dest))
 		die("error, cannot allocate color '%s'", clrname);
 }
 
-/* Wrapper to create color schemes. The caller has to call free(3) on the
- * returned color scheme when done using it. */
+// Wrapper para crear esquemas de color. El llamador tiene que llamar a free(3) en el
+// esquema de color devuelto cuando termine de usarlo.
 Clr *
 drw_scm_create(Drw *drw, const char *clrnames[], size_t clrcount)
 {
 	size_t i;
 	Clr *ret;
 
-	/* need at least two colors for a scheme */
+	// Se necesitan, como mínimo, dos colores para un esquema
 	if (!drw || !clrnames || clrcount < 2 || !(ret = ecalloc(clrcount, sizeof(XftColor))))
 		return NULL;
 
@@ -250,7 +248,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 	FcPattern *match;
 	XftResult result;
 	int charexists = 0, overflow = 0;
-	/* keep track of a couple codepoints for which we have no match. */
+	// Seguir la pista de un par de puntos de código para los que no tenemos coincidencia.
 	enum { nomatches_len = 64 };
 	static struct { long codepoint[nomatches_len]; unsigned int idx; } nomatches;
 	static unsigned int ellipsis_width = 0;
@@ -264,8 +262,8 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 		XSetForeground(drw->dpy, drw->gc, drw->scheme[invert ? ColFg : ColBg].pixel);
 		XFillRectangle(drw->dpy, drw->drawable, drw->gc, x, y, w, h);
 		d = XftDrawCreate(drw->dpy, drw->drawable,
-		                  DefaultVisual(drw->dpy, drw->screen),
-		                  DefaultColormap(drw->dpy, drw->screen));
+			DefaultVisual(drw->dpy, drw->screen),
+			DefaultColormap(drw->dpy, drw->screen));
 		x += lpad;
 		w -= lpad;
 	}
@@ -284,7 +282,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 				if (charexists) {
 					drw_font_getexts(curfont, text, utf8charlen, &tmpw, NULL);
 					if (ew + ellipsis_width <= w) {
-						/* keep track where the ellipsis still fits */
+						// Seguir la pista donde aún cabe la elipsis
 						ellipsis_x = x + ew;
 						ellipsis_w = w - ew;
 						ellipsis_len = utf8strlen;
@@ -292,9 +290,8 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 
 					if (ew + tmpw > w) {
 						overflow = 1;
-						/* called from drw_fontset_getwidth_clamp():
-						 * it wants the width AFTER the overflow
-						 */
+						// Llamado desde drw_fontset_getwidth_clamp():
+						// quiere la anchura DESPUÉS del desbordamiento
 						if (!render)
 							x += tmpw;
 						else
@@ -334,12 +331,11 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			charexists = 0;
 			usedfont = nextfont;
 		} else {
-			/* Regardless of whether or not a fallback font is found, the
-			 * character must be drawn. */
+			// Independientemente de si se encuentra o no una fuente alternativa, el carácter debe dibujarse.
 			charexists = 1;
 
 			for (i = 0; i < nomatches_len; ++i) {
-				/* avoid calling XftFontMatch if we know we won't find a match */
+				// Evitar llamar a XftFontMatch si sabemos que no habra ninguna coincidencia
 				if (utf8codepoint == nomatches.codepoint[i])
 					goto no_match;
 			}
@@ -348,7 +344,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			FcCharSetAddChar(fccharset, utf8codepoint);
 
 			if (!drw->fonts->pattern) {
-				/* Refer to the comment in xfont_create for more information. */
+				// Consulte el comentario en xfont_create para más información.
 				die("the first font in the cache must be loaded from a font string.");
 			}
 
@@ -367,7 +363,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 				usedfont = xfont_create(drw, NULL, match);
 				if (usedfont && XftCharExists(drw->dpy, usedfont->xfont, utf8codepoint)) {
 					for (curfont = drw->fonts; curfont->next; curfont = curfont->next)
-						; /* NOP */
+						; // NOP
 					curfont->next = usedfont;
 				} else {
 					xfont_free(usedfont);

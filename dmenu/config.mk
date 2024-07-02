@@ -1,31 +1,31 @@
-# dmenu version
+# Versión de dmenu
 VERSION = 5.2
 
-# paths
+# Directorios
 PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/share/man
 
 X11INC = /usr/X11R6/include
 X11LIB = /usr/X11R6/lib
 
-# Xinerama, comment if you don't want it
+# Xinerama, comentalo para desactivarlo
 XINERAMALIBS  = -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
-# freetype
+# fFeetype
 FREETYPELIBS = -lfontconfig -lXft
-# OpenBSD {uncomment}
+# OpenBSD
 FREETYPEINC = /usr/include/freetype2
 MANPREFIX = ${PREFIX}/share/man
 
-# includes and libs
+# Librerías e inclusiones
 INCS = -I${X11INC} -I${FREETYPEINC}
 LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
 
-# flags
+# Opciones de compilación
 CPPFLAGS = -D_DEFAULT_SOURCE -D_GNU_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
-CFLAGS   = -march=x86-64-v3 -mpclmul -O3 -mtune=generic -O2 -pipe -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
+CFLAGS   = -mpclmul -O3 -mtune=generic -O2 -pipe -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
 LDFLAGS  = ${LIBS}
 
-# compiler and linker
+# Compliador y enlazador
 CC = cc
