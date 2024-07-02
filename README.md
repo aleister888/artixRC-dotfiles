@@ -80,3 +80,4 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 - [14] Barra de estado: https://github.com/torrinfail/dwmblocks
 - [15] Fondo de pantalla: https://gruvbox-wallpapers.pages.dev/
 - [16] Filtro para mpv: https://github.com/hhirtz/mpv-retro-shaders
+- [17] Script para las contraseñas: https://github.com/neelkamal0310/keepassxc-dmenu/blob/main/keepmenu
