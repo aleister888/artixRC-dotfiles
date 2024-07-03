@@ -160,7 +160,7 @@ while true; do
 	[ $(playerctl --player firefox status) == "Playing" ] && \
 	resultado=1
 	# Reinciar el contador de xautolock en función de los resultados
-	[ "$resultado" -gt 0 ] && xautolock -enable
+	[ "$resultado" -gt 0 ] && xautolock -enable && pkill dvdbounce
 	sleep 5 # Esperar 5s antes de hacer la siguiente comprobación
 done &
 
