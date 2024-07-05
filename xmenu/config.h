@@ -1,62 +1,48 @@
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 static struct Config config = {
-	/* font, separate different fonts with comma */
+	// Fuente
 	.font = "Iosevka Nerd Font:bold:pixelsize=22",
 
-	/* colors */
-	.background_color = "#222222",
-	.foreground_color = "#bbbbbb",
-	.selbackground_color = "#222222",
-	.selforeground_color = "#ECECD9",
-	.separator_color = "#282828",
-	.border_color = "#545454",
+	// Esquema de colores
+	.background_color = "#222222",    // Color del fondo (Normal)
+	.foreground_color = "#bbbbbb",    // Color de la fuente (Normal)
+	.selbackground_color = "#222222", // Color del fondo (Selección)
+	.selforeground_color = "#ECECD9", // Color de la fuente (Selección)
+	.separator_color = "#282828",     // Color del separador
+	.border_color = "#545454",        // Color del borde
 
-	/* sizes in pixels */
-	.width_pixels = 64,        /* minimum width of a menu */
-	.height_pixels = 36,        /* height of a single menu item */
-	.border_pixels = 4,         /* menu border */
-	.separator_pixels = 1,      /* space around separator */
-	.gap_pixels = 4,            /* gap between menus */
-	.max_items = 0,             /* maximum number of items of a menu, 0 to compute based on monitor height */
+	// Tamaño (en píxeles)
+	.width_pixels = 64,    // Anchura mínima del menu
+	.height_pixels = 36,   // Altura de las entradas del menu
+	.border_pixels = 4,    // Tamaño del borde
+	.separator_pixels = 1, // Espacio alrededor de los separadores
+	.gap_pixels = 4,       // Espaciado entre menus
+	.max_items = 0,        // Número máximo de elementos de un menú, 0 para calcularlo basado en la altura del monitor
 
-	/* text alignment, set to LeftAlignment, CenterAlignment or RightAlignment */
+	// Alineación del texto:
+	// - LeftAlignment
+	// - CenterAlignment
+	// - RightAlignment
 	.alignment = LeftAlignment,
 
-	/*
-	 * The variables below cannot be set by X resources.
-	 * Their values must be less than .height_pixels.
-	 */
+	// Los ajustes a partir de aquí no pueden establecerse en X resources
 
-	/* geometry of the right-pointing isoceles triangle for submenus */
+	// Geometría del triangulo a la derecha de los menus
 	.triangle_width = 6,
 	.triangle_height = 8,
 
-	/* the icon size is equal to .height_pixels - .iconpadding * 2 */
+	// El tamaño de los iconos es .height_pixels - .iconpadding * 2
 	.iconpadding = 4,
 
-	/* area around the icon, the triangle and the separator */
+	// Área alrededor del icono, el triangulo y el separador
 	.horzpadding = 6,
 };
 
-/*
- * KEYBINDINGS
- *
- * Look at your /usr/include/X11/keysymdef.h  (or the equivalent file
- * in your system) for a list of key symbol constants, and change the
- * macros below accordingly.  All key symbol constants begin with the
- * prefix XK_.
- *
- * For example, to use vim-like key bindings, set KEYSYMLEFT to XK_h,
- * KEYSYMDOWN to XK_j, KEYSYMUP to XK_k, etc.
- *
- * Note that the regular keys like ArrowUp, ArrowDown, Tab, Home, etc
- * will ALWAYS work, so you do not need to set them.
- *
- * If you do not want to set a key binding, keep it with the value of
- * XK_VoidSymbol
- */
-#define KSYMFIRST   XK_VoidSymbol       /* select first item */
-#define KSYMLAST    XK_VoidSymbol       /* select last item */
-#define KSYMUP      XK_VoidSymbol       /* select previous item */
-#define KSYMDOWN    XK_VoidSymbol       /* select next item */
-#define KSYMLEFT    XK_VoidSymbol       /* close current menu */
-#define KSYMRIGHT   XK_VoidSymbol       /* enter selected item */
+// Atajos de teclado
+#define KSYMFIRST   XK_VoidSymbol // Selecciona el primer ítem
+#define KSYMLAST    XK_VoidSymbol // Selecciona el último ítem
+#define KSYMUP      XK_VoidSymbol // Selecciona el ítem anterior
+#define KSYMDOWN    XK_VoidSymbol // Selecciona el próximo ítem
+#define KSYMLEFT    XK_VoidSymbol // Cierra el menú actual
+#define KSYMRIGHT   XK_VoidSymbol // Ingresa al ítem seleccionado

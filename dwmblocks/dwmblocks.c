@@ -1,3 +1,5 @@
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>

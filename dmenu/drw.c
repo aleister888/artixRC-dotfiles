@@ -1,4 +1,5 @@
-/* See LICENSE file for copyright and license details. */
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

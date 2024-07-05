@@ -1,3 +1,6 @@
+> [!CAUTION]
+> - dmenu está configurado para compilar en x86-64-v3 (config.mk: march=x86-64-v3)
+
 ## Modificaciones
 
 - Altura de las lineas configurable: [dmenu-bar-height-5.2.diff](http://tools.suckless.org/dmenu/patches/bar_height/dmenu-bar-height-5.2.diff)

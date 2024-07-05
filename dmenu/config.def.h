@@ -1,4 +1,4 @@
-/* See LICENSE file for copyright and license details. */
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
 static int topbar         = 1;    // Mostar en la parte superior (-b = inferior)
 static int centered       = 1;    // Centrar la ventana (-c)

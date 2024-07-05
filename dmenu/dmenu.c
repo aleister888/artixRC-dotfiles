@@ -1,4 +1,5 @@
-/* See LICENSE file for copyright and license details. */
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 #include <ctype.h>
 #include <locale.h>
 #include <stdio.h>

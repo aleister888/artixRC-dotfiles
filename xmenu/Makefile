@@ -1,26 +1,26 @@
-# program name
+# Nombre de la aplicación
 PROG = xmenu
 
-# paths
-PREFIX    ?= /usr/local
-MANPREFIX ?= ${PREFIX}/share/man
-LOCALINC ?= /usr/local/include
-LOCALLIB ?= /usr/local/lib
-X11INC ?= /usr/X11R6/include
-X11LIB ?= /usr/X11R6/lib
+# Directorio
+PREFIX      ?= /usr/local
+MANPREFIX   ?= ${PREFIX}/share/man
+LOCALINC    ?= /usr/local/include
+LOCALLIB    ?= /usr/local/lib
+X11INC      ?= /usr/X11R6/include
+X11LIB      ?= /usr/X11R6/lib
 FREETYPEINC ?= /usr/include/freetype2
-# OpenBSD (uncomment)
+# Des-comenta esta línea para compilar en OpenBSD
 #FREETYPEINC = ${X11INC}/freetype2
 
-# includes and libs
+# Librerías e inclusiones
 INCS += -I${LOCALINC} -I${X11INC} -I${FREETYPEINC}
 LIBS += -L${LOCALLIB} -L${X11LIB} -lfontconfig -lXft -lX11 -lXinerama -lImlib2
 
-# flags
+# Opciones de compilación
 CFLAGS   += ${DEBUG} -Wall -Wextra ${INCS} ${CPPFLAGS}
 LDFLAGS  += ${LIBS}
 
-# compiler and linker
+# Compliador y enlazador
 CC = cc
 
 bindir = ${DESTDIR}${PREFIX}

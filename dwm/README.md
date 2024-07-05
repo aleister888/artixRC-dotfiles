@@ -1,4 +1,4 @@
-> [!WARNING]
+> [!CAUTION]
 > - DWM está configurado para compilar en x86-64-v3 (config.mk: march=x86-64-v3)
 
 > Cuales son los atajos de teclado?

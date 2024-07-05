@@ -1,3 +1,5 @@
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 static char delim[] ="";
 static unsigned int delimLen = 0;
 

@@ -1,11 +1,13 @@
+# Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 PREFIX  := /usr/local
 CC      := cc
 CFLAGS  := -pedantic -Wall -Wno-deprecated-declarations -Os
 LDFLAGS := -lX11
 
-# FreeBSD (uncomment)
+# Des-comenta esta línea para compilar en FreeBSD
 #LDFLAGS += -L/usr/local/lib -I/usr/local/include
-# # OpenBSD (uncomment)
+# Des-comenta esta línea para compilar en OpenBSD
 #LDFLAGS += -L/usr/X11R6/lib -I/usr/X11R6/include
 
 all: options dwmblocks
