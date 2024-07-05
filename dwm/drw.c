@@ -189,6 +189,8 @@ drw_clr_create(Drw *drw, Clr *dest, const char *clrname)
 		DefaultColormap(drw->dpy, drw->screen),
 		clrname, dest))
 		die("error, cannot allocate color '%s'", clrname);
+
+	dest->pixel |= 0xff << 24;
 }
 
 // Wrapper para crear esquemas de color. El llamador tiene que llamar a free(3) en el
