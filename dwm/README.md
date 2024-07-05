@@ -1,3 +1,6 @@
+> [!WARNING]
+> - DWM está configurado para compilar en x86-64-v3 (config.mk: march=x86-64-v3)
+
 > Cuales son los atajos de teclado?
 
 Puedes consultarlos leyendo el código en [config.def.h](https://github.com/aleister888/artixRC-dotfiles/blob/main/dwm/config.def.h). O en la [guía de usuario](https://github.com/aleister888/artixRC-dotfiles/blob/main/assets/pdf/help.pdf)

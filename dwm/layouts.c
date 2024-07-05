@@ -1,3 +1,5 @@
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
 static void tile(Monitor *m);
 static void monocle(Monitor *m);
 static void centeredmaster(Monitor *m);
@@ -25,7 +27,7 @@ tile(Monitor *m)
 	else
 		mw = m->ww - m->gappx;
 	for (i = 0, my = ty = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
-			if (i < m->nmaster) {
+		if (i < m->nmaster) {
 			h = (m->wh - my) * (c->cfact / mfacts) - m->gappx;
 			resize(c, m->wx + m->gappx, m->wy + my, mw - (2*c->bw) - m->gappx, h - (2*c->bw), 0);
 			if (my + HEIGHT(c) + m->gappx < m->wh)
@@ -49,11 +51,9 @@ monocle(Monitor *m)
 	for (c = m->clients; c; c = c->next)
 		if (ISVISIBLE(c))
 			n++;
-	if (n > 0) /* override layout symbol */
+	if (n > 0) // Mostrar el número de clientes en el espacio para el layout
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-	//resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
-	// Added gaps to monocle layout
 	resize(c, m->wx + gappx, m->wy + gappx, m->ww - 2 * c->bw - gappx * 2, m->wh - 2 * c->bw - gappx * 2, 0);
 }
 
@@ -64,7 +64,7 @@ centeredmaster(Monitor *m)
 	float mfacts = 0, lfacts = 0, rfacts = 0;
 	Client *c;
 
-	/* count number of clients in the selected monitor */
+	// Contar el número de clientes en el monitor seleccionado
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
 		if (n < m->nmaster)
 			mfacts += c->cfact;
@@ -76,25 +76,25 @@ centeredmaster(Monitor *m)
 	if (n == 0)
 		return;
 
-	/* initialize areas */
+	// Iniciar áreas
 	mw = m->ww;
 	mx = 0;
 	my = 0;
 	tw = mw;
 
 	if (n > m->nmaster) {
-		/* go mfact box in the center if more than nmaster clients */
+		// Si hay mas clientes que ventanas principales, ajustar el tamaño de la zona principal
 		mw = m->nmaster ? m->ww * m->mfact : 0;
 		tw = m->ww - mw - gappx;
 
 		if (n - m->nmaster > 1) {
-			/* only one client */
+			// Un solo cliente
 			mx = (m->ww - mw) / 2;
 			tw = (m->ww - mw) / 2;
 		}
 	}
 
-	if (n < m->nmaster ) { // In case master clients goes out of range
+	if (n < m->nmaster ) { // En caso de que el número de ventanas principales se salga del rango
 		mw = m->ww - 2 * gappx;
 		mx = gappx;
 	}
@@ -103,8 +103,8 @@ centeredmaster(Monitor *m)
 	ety = 0;
 	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 	if (i < m->nmaster) {
-		// change i for client numbers
-		// 1 client only
+		// Cambiar i por el número de clientes
+		// 1 solo cliente
 		h = (m->wh - my)  * (c->cfact / mfacts);
 		if ( n - m->nmaster == 1 ){
 			resize(c, m->wx + mx + gappx, m->wy + my + gappx , mw - (2*c->bw) - gappx, h - (2*c->bw) - gappx * 2, 0);
@@ -116,9 +116,9 @@ centeredmaster(Monitor *m)
 		my += HEIGHT(c) + gappx;
 		mfacts -= c->cfact;
 	} else {
-		/* stack clients are stacked vertically */
-		if ((i - m->nmaster) % 2 ) { // Even clients
-			// No master
+		// Los clientes del stack se apilan verticalmente
+		if ((i - m->nmaster) % 2 ) { // Número de clientes par
+			// Sin ventana principal
 			h = (m->wh - ety) * (c->cfact / lfacts);
 			if ( n - m->nmaster == n ){
 				resize(c, m->wx + gappx, m->wy + ety + gappx, tw - (2*c->bw) - gappx, h - (2*c->bw) - gappx * 2, 0);
@@ -127,12 +127,12 @@ centeredmaster(Monitor *m)
 			}
 			ety += HEIGHT(c) + gappx;
 			lfacts -= c->cfact;
-		} else { // Odd clients
+		} else { // Número de clientes impar
 			h = (m->wh - oty) * (c->cfact / rfacts);
-			// 1 client only
+			// 1 Solo cliente
 			if ( n - m->nmaster == 1 ){
 				resize(c, m->wx + mx + mw + gappx, m->wy + oty + gappx, tw - (2*c->bw) - gappx, h - (2*c->bw) - gappx * 2, 0);
-			// No master
+			// Sin ventana principal
 			} else {
 				resize(c, m->wx + mx + mw + gappx, m->wy + oty + gappx, tw - (2*c->bw) - gappx * 2, h - (2*c->bw) - gappx * 2, 0);
 			}
@@ -152,6 +152,7 @@ col(Monitor *m) {
 		if ( n >= m->nmaster)
 			sfacts += c->cfact;
 	}
+
 	if(n == 0)
 		return;
 
@@ -190,8 +191,10 @@ bstack(Monitor *m)
 		else
 			sfacts += c->cfact;
 	}
+
 	if (n == 0)
 		return;
+
 	if(n == 1){
 		c = nexttiled(m->clients);
 		resize(c, m->wx + gappx, m->wy + gappx, m->ww - 2 * c->bw - 2 * gappx, m->wh - 2 * c->bw - 2 * gappx, 0);
@@ -202,6 +205,7 @@ bstack(Monitor *m)
 		mh = m->nmaster ? m->wh * m->mfact : 0;
 	else
 		mh = m->wh;
+
 	for (i = 0, mx = tx = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
 			w = (m->ww - mx) * (c->cfact / mfacts);
@@ -238,8 +242,7 @@ fibonacci(Monitor *mon, int s) {
 	nh = mon->wh - 2*gappx;
 
 	for(i = 0, c = nexttiled(mon->clients); c; c = nexttiled(c->next)) {
-		if((i % 2 && nh / 2 > 2 * c->bw)
-		   || (!(i % 2) && nw / 2 > 2 * c->bw)) {
+		if((i % 2 && nh / 2 > 2 * c->bw) || (!(i % 2) && nw / 2 > 2 * c->bw)) {
 			if(i < n - 1) {
 				if(i % 2)
 					nh = (nh - gappx) / 2;

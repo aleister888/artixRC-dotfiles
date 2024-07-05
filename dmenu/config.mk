@@ -8,13 +8,12 @@ MANPREFIX = ${PREFIX}/share/man
 X11INC = /usr/X11R6/include
 X11LIB = /usr/X11R6/lib
 
-# Xinerama, comentalo para desactivarlo
+# Comenta estas lineas si no quieres usar Xinerama
 XINERAMALIBS  = -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
-# fFeetype
+# Freetype
 FREETYPELIBS = -lfontconfig -lXft
-# OpenBSD
 FREETYPEINC = /usr/include/freetype2
 MANPREFIX = ${PREFIX}/share/man
 

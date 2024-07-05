@@ -1,4 +1,4 @@
-/* See LICENSE file for copyright and license details. */
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
