@@ -1,11 +1,5 @@
-/*
- * appearance
- *
- * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
- */
-static char *font = "Iosevka Nerd Font:bold:pixelsize=18";
-/* Spare fonts */
-static char *font2[] = {
-	"Symbols Nerd Font:style=Regular:pixelsize=18",
-/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
-};
+// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+
+// Tamaño de las fuentes (1080p)
+static char *font = "Iosevka Nerd Font:bold:pixelsize=18"; // Fuente principal
+static char *font2[] = { "Symbols Nerd Font:style=Regular:pixelsize=18" }; // Fuente secundaria

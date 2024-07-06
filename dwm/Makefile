@@ -29,18 +29,7 @@ dwm: ${OBJ}
 	cp -f 2160.h resolution.h
 
 clean:
-	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
-	rm -rf resolution.h
-	rm -rf config.h
-
-dist: clean
-	mkdir -p dwm-${VERSION}
-	cp -R LICENSE Makefile README config.def.h config.mk\
-		dwm.1 drw.h util.h ${SRC} dwm.png transient.c dwm-${VERSION}
-	tar -cf dwm-${VERSION}.tar dwm-${VERSION}
-	gzip dwm-${VERSION}.tar
-	rm -rf dwm-${VERSION}
-	rm -rf resolution.h
+	rm -f *.o dwm resolution.h config.h
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
@@ -51,8 +40,8 @@ install: all
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 uninstall:
-	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
-		${DESTDIR}${PREFIX}/bin/layoutmenu.sh\
+	rm -f ${DESTDIR}${PREFIX}/bin/dwm \
+		${DESTDIR}${PREFIX}/bin/layoutmenu.sh \
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-.PHONY: all clean 1080 2160 dist install uninstall
+.PHONY: all clean 1080 2160 install uninstall

@@ -4,11 +4,11 @@ static char delim[] ="";
 static unsigned int delimLen = 0;
 
 static const Block blocks[] = {
-	// Título                     Comando                Tiempo de Actualización Señal de Actualización
+	// Título                     Comando Tiempo de actualización Señal de actualización
 	// ¿Que canción esta sonando?
-	{"^d^"                        ,"sb-tauon",                    1, 20},
+	{"^d^"                        ,"sb-tauon",                                1, 20},
 	// Estado de la batería (Si la hay)
-	{"^d^"                        ,"sb-bat",                    1, 0},
+	{"^d^"                        ,"sb-bat",                                  1,  0},
 	// Espacio libre
 	{" ^d^^c#D79921^ ^c#FABD2F^" ,"df -h /home | awk '/[0-9]/ {print $4}'", 30,  0},
 	// Version del kernel
@@ -22,5 +22,5 @@ static const Block blocks[] = {
 	// Fecha
 	{" ^d^^c#D65D0E^ ^c#FE8019^" ,"date +'%d/%m'",                         900,  0},
 	// Hora
-	{" ^d^^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                           5,  0},
+	{" ^d^^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          5,  0},
 };

@@ -239,13 +239,10 @@ static void maprequest(XEvent *e);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
-static void pop(Client *c);
 static void propertynotify(XEvent *e);
 static void pushstack(const Arg *arg);
-static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void removesystrayicon(Client *i);
-static void removescratch(const Arg *arg);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
 static void resizebarwin(Monitor *m);
 static void resizeclient(Client *c, int x, int y, int w, int h);
@@ -266,7 +263,6 @@ static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
-static void setscratch(const Arg *arg);
 static void scratchtoggle(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
@@ -307,7 +303,6 @@ static Client *wintosystrayicon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
-static void zoom(const Arg *arg);
 
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
@@ -1658,15 +1653,6 @@ nexttiled(Client *c)
 }
 
 void
-pop(Client *c)
-{
-	detach(c);
-	attach(c);
-	focus(c);
-	arrange(c->mon);
-}
-
-void
 propertynotify(XEvent *e)
 {
 	Client *c;
@@ -1737,12 +1723,6 @@ pushstack(const Arg *arg) {
 	arrange(selmon);
 }
 
-void
-quit(const Arg *arg)
-{
-	running = 0;
-}
-
 Monitor *
 recttomon(int x, int y, int w, int h)
 {
@@ -1755,18 +1735,6 @@ recttomon(int x, int y, int w, int h)
 			r = m;
 		}
 	return r;
-}
-
-void
-removescratch(const Arg *arg)
-{
-	Client *c = selmon->sel;
-	if (!c) {
-		return;
-	} else {
-	XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
-	c->scratchkey = 0;
-	}
 }
 
 void
@@ -2219,18 +2187,6 @@ setmfact(const Arg *arg)
 		return;
 	selmon->mfact = selmon->pertag->mfacts[selmon->pertag->curtag] = f;
 	arrange(selmon);
-}
-
-void
-setscratch(const Arg *arg)
-{
-	Client *c = selmon->sel;
-	if (!c){
-		return;
-	} else {
-	XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
-	c->scratchkey = ((char**)arg->v)[0][0];
-	}
 }
 
 void
@@ -3035,7 +2991,6 @@ updatesystray(void)
 	Client *i;
 	Monitor *m = systraytomon(NULL);
 	unsigned int x = m->mx + m->mw - sp;
-	unsigned int sw = TEXTW(stext) - lrpad + systrayspacing;
 	unsigned int w = 1;
 
 	if (!showsystray)
@@ -3392,18 +3347,6 @@ systraytomon(Monitor *m) {
 	if(systraypinningfailfirst && n < systraypinning)
 		return mons;
 	return t;
-}
-
-void
-zoom(const Arg *arg)
-{
-	Client *c = selmon->sel;
-
-	if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
-		return;
-	if (c == nexttiled(selmon->clients) && !(c = nexttiled(c->next)))
-		return;
-	pop(c);
 }
 
 int

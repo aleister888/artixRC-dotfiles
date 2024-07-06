@@ -53,6 +53,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 ## Cosas por hacer
 
 - Limpiar el código de xmenu y st
+- Arreglar las entradas MAN y código sobre las flags de uso
 - Añadir README explicativo a: bin, assets, dwmblocks y xmenu.
 - Reevisar todo el código de dwm y st (Identación y añadir comentarios en castellano)
 - Crear un setup equivalente para [OpenBSD](https://github.com/aleister888/openBSD-dotfiles)

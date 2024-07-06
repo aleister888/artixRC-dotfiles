@@ -33,8 +33,8 @@ st: $(OBJ)
 	cp -f 2160.h fonts.h
 
 clean:
-	rm -f st $(OBJ) st-$(VERSION).tar.gz
-	rm -f fonts.h
+	rm -f st $(OBJ) st-$(VERSION).tar.gz\
+		*.o fonts.h config.h
 
 dist: clean
 	mkdir -p st-$(VERSION)
@@ -43,7 +43,7 @@ dist: clean
 		st-$(VERSION)
 	tar -cf - st-$(VERSION) | gzip > st-$(VERSION).tar.gz
 	rm -rf st-$(VERSION)
-	rm -f fonts.h
+	rm -f *.o fonts.h
 
 install: st
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

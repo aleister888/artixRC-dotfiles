@@ -237,8 +237,8 @@ drw_rect(Drw *drw, int x, int y, unsigned int w, unsigned int h, int filled, int
 int
 drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lpad, const char *text, int invert)
 {
-	int i, ty, ellipsis_x = 0;
-	unsigned int tmpw, ew, ellipsis_w = 0, ellipsis_len;
+	int ty, ellipsis_x = 0;
+	unsigned int tmpw, ew, ellipsis_w = 0, ellipsis_len, hash, h0, h1;
 	XftDraw *d = NULL;
 	Fnt *usedfont, *curfont, *nextfont;
 	int utf8strlen, utf8charlen, render = x || y || w || h;
@@ -250,9 +250,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 	XftResult result;
 	int charexists = 0, overflow = 0;
 	// Seguir la pista de un par de puntos de código para los que no tenemos coincidencia.
-	enum { nomatches_len = 64 };
-	static struct { long codepoint[nomatches_len]; unsigned int idx; } nomatches;
-	static unsigned int ellipsis_width = 0;
+	static unsigned int nomatches[128], ellipsis_width;
 
 	if (!drw || (render && (!drw->scheme || !w)) || !text || !drw->fonts)
 		return 0;
@@ -335,11 +333,14 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			// Independientemente de si se encuentra o no una fuente alternativa, el carácter debe dibujarse.
 			charexists = 1;
 
-			for (i = 0; i < nomatches_len; ++i) {
-				// Evitar llamar a XftFontMatch si sabemos que no habra ninguna coincidencia
-				if (utf8codepoint == nomatches.codepoint[i])
-					goto no_match;
-			}
+			hash = (unsigned int)utf8codepoint;
+			hash = ((hash >> 16) ^ hash) * 0x21F0AAAD;
+			hash = ((hash >> 15) ^ hash) * 0xD35A2D97;
+			h0 = ((hash >> 15) ^ hash) % LENGTH(nomatches);
+			h1 = (hash >> 17) % LENGTH(nomatches);
+			// Evitar llamar a XftFontMatch si sabemos que no habra ninguna coincidencia
+			if (nomatches[h0] == utf8codepoint || nomatches[h1] == utf8codepoint)
+				goto no_match;
 
 			fccharset = FcCharSetCreate();
 			FcCharSetAddChar(fccharset, utf8codepoint);
@@ -368,7 +369,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 					curfont->next = usedfont;
 				} else {
 					xfont_free(usedfont);
-					nomatches.codepoint[++nomatches.idx % nomatches_len] = utf8codepoint;
+					nomatches[nomatches[h0] ? h1 : h0] = utf8codepoint;
 no_match:
 					usedfont = drw->fonts;
 				}

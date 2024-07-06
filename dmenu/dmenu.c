@@ -29,7 +29,6 @@
 // Macros
 #define INTERSECT(x,y,w,h,r)	(MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
 				* MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
-#define LENGTH(X)		(sizeof X / sizeof X[0])
 #define TEXTW(X)		(drw_fontset_getwidth(drw, (X)) + lrpad)
 #define NUMBERSMAXDIGITS	100
 #define NUMBERSBUFSIZE		(NUMBERSMAXDIGITS * 2) + 1
@@ -315,7 +314,7 @@ recv_qalc(void)
 	if (qalc.buf[0] == '\n') {
 		int i;
 		for (i = 3; i < LENGTH(qalc.buf) && qalc.buf[i] != '\n'; ++i)
-			items[0].text[i-3] = qalc.buf[i];
+		items[0].text[i-3] = qalc.buf[i];
 			items[0].text[i-3] = 0;
 		if (r != LENGTH(qalc.buf))
 			return;
@@ -675,11 +674,11 @@ static void
 readstdin(void)
 {
 	char *line = NULL;
-	size_t i, junk, itemsiz = 0;
+	size_t i, itemsiz = 0, linesiz = 0;
 	ssize_t len;
 
 	// Leer cada línea de stdin y añadirla a la lista de elementos
-	for (i = 0; (len = getline(&line, &junk, stdin)) != -1; i++) {
+	for (i = 0; (len = getline(&line, &linesiz, stdin)) != -1; i++) {
 		if (i + 1 >= itemsiz) {
 			itemsiz += 256;
 			if (!(items = realloc(items, itemsiz * sizeof(*items))))
@@ -687,9 +686,10 @@ readstdin(void)
 		}
 		if (line[len - 1] == '\n')
 			line[len - 1] = '\0';
-		items[i].text = line;
+		if (!(items[i].text = strdup(line)))
+			die("strdup:");
+
 		items[i].out = 0;
-		line = NULL; // La siguiente llamada a getline() asigna una nueva línea
 	}
 	free(line);
 	if (items)
@@ -840,7 +840,7 @@ setup(void)
 	swa.override_redirect = True;
 	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
+	win = XCreateWindow(dpy, root, x, y, mw, mh, border_width,
 		CopyFromParent, CopyFromParent, CopyFromParent,
 		CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
 	if (border_width)
@@ -857,6 +857,7 @@ setup(void)
 
 	XMapRaised(dpy, win);
 	if (embed) {
+		XReparentWindow(dpy, win, parentwin, x, y);
 		XSelectInput(dpy, parentwin, FocusChangeMask | SubstructureNotifyMask);
 		if (XQueryTree(dpy, parentwin, &dw, &w, &dws, &du) && dws) {
 			for (i = 0; i < du && dws[i] != win; ++i)
