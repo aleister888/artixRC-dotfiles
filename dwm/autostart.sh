@@ -88,8 +88,7 @@ virtualmic(){
 picomstart(){
 	PICOMOPTS="-c -f --vsync --config=$XDG_CONFIG_HOME/picom/picom.conf --corner-radius"
 	case "$current_link" in
-	"$file_1080") picom $PICOMOPTS 12 ;;
-	"$file_1440") picom $PICOMOPTS 18 ;;
+	"$file_1080") picom $PICOMOPTS 18 ;;
 	*) picom $PICOMOPTS 24 ;;
 	esac
 }

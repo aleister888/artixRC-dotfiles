@@ -13,7 +13,7 @@ alias c='/bin/clear'
 alias dmk='doas make install'
 alias cp='cp -iv'
 alias cat='bat -p'
-alias ls='exa -lagH --group-directories-first --smart-group'
+alias ls='exa -lagHF --group-directories-first --smart-group'
 alias grep='grep --color=auto'
 
 # Alias para moverse rápidamente entre directorios

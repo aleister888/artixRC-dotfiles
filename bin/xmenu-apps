@@ -67,7 +67,6 @@ IMG:$ICONPATH/apps/applications-utilities.svg				Ajustes/Sistema
 	IMG:$ICONPATH/apps/gnome-disks.svg				Discos			gnome-disks
 	IMG:$ICONPATH/apps/timeshift.svg				Copias de seguridad	timeshift-launcher
 	IMG:$ICONPATH/apps/cheese.svg					Visualizar Webcam	mpv /dev/video0
-	IMG:$ICONPATH/apps/preferences-desktop-font.svg			Visor de fuentes	font-manager
 	IMG:$ICONPATH/apps/cups.svg					Ajuste de impresión	xdg-open http://localhost:631/
 	IMG:$ICONPATH/apps/preferences-system-bluetooth.svg		Dispositivos bluetooth	blueman-manager
 	IMG:$ICONPATH/apps/grandr.svg					Ajustes de pantalla	arandr && nitrogen --restore

@@ -15,25 +15,13 @@ if ! grep -q "kernel.unprivileged_userns_clone" /etc/sysctl.conf; then
 	echo "kernel.unprivileged_userns_clone = 1" | doas tee -a /etc/sysctl.conf
 fi
 
-# Instalar el perfil de Firejail
-doas mkdir -p /opt/firejail/
-doas install -m 644 \
-"$HOME/.dotfiles/assets/configs/steam.profile" \
-"/opt/firejail/steam.profile"
+# Puedes activar firejail para todas las apps con:
+# $ doas firecfg
 
-# Instalar el script de ejecución
-doas install -m 777 \
-"$HOME/.dotfiles/assets/exec/steam" \
-"/usr/local/bin/steam"
+# También puedes desactivarlo con:
+# $	for file in $(/usr/bin/ls /usr/local/bin/)
+# 		do [ "$(readlink $file)" = '/usr/bin/firejail' ] && doas rm "/usr/local/bin/$file"
+# 	done
 
-# Crear archivo .desktop para steam
-echo '[Desktop Entry]
-Name=Steam (Runtime)
-Comment=Application for managing and playing games on Steam
-Exec=/usr/local/bin/steam %U
-Icon=steam
-Terminal=false
-Type=Application
-Categories=Network;FileTransfer;Game;
-MimeType=x-scheme-handler/steam;x-scheme-handler/steamlink;' | \
-tee "$HOME/.local/share/applications/steam.desktop"
+# Para instalarlo solo para Steam:
+doas ln -s /usr/bin/firejail /usr/local/bin/steam
