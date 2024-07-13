@@ -5,6 +5,7 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+source "$HOME/.dotfiles/.profile"
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
 
 # Mostramos el fondo de pantalla
@@ -156,7 +157,7 @@ while true; do
 		resultado=$(($resultado + $?))
 	done
 	# Si firefox esta reproduciendo contenido, no mostrar el salvapantallas
-	[ $(playerctl --player firefox status) == "Playing" ] && \
+	[ "$(playerctl --player firefox status)" == "Playing" ] && \
 	resultado=1
 	# Reinciar el contador de xautolock en función de los resultados
 	[ "$resultado" -gt 0 ] && xautolock -enable && pkill dvdbounce
