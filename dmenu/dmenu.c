@@ -34,7 +34,7 @@
 #define NUMBERSBUFSIZE		(NUMBERSMAXDIGITS * 2) + 1
 
 // Enums
-enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; // Esquema de color
 
 struct item {
 	char *text;
@@ -202,7 +202,7 @@ drawmenu(void)
 	w = (lines > 0 || !matches) ? mw - x : inputw;
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	if (passwd) {
-	        censort = ecalloc(1, sizeof(text));
+		censort = ecalloc(1, sizeof(text));
 		memset(censort, '-', strlen(text));
 		drw_text(drw, x, 0, w, bh, lrpad / 2, censort, 0);
 		free(censort);
@@ -660,7 +660,7 @@ paste(void)
 	unsigned long dl;
 	Atom da;
 
-	/* we have been given the current selection, now insert it into input */
+	// Se nos ha dado la selección actual, ahora insértala en la entrada
 	if (XGetWindowProperty(dpy, win, utf8, 0, (sizeof text / 4) + 1, False,
 		utf8, &da, &di, &dl, &dl, (unsigned char **)&p)
 	== Success && p) {
@@ -903,8 +903,7 @@ main(int argc, char *argv[])
 			passwd = 1;
 		else if (i + 1 == argc)
 			usage();
-		/* these options take one argument */
-		// Opciones que si necesitan de argumentos
+		// Opciones que si necesitan un argumento
 		else if (!strcmp(argv[i], "-l")) // Número de lineas en las listas verticales
 			lines = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-m"))

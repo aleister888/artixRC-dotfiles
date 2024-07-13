@@ -1,34 +1,19 @@
-st - simple terminal
---------------------
-st is a simple terminal emulator for X which sucks less.
+> [!CAUTION]
+> - st está configurado para compilar en x86-64-v3 (config.mk: march=x86-64-v3)
 
+## Modificaciones
 
-Requirements
-------------
-In order to build st you need the Xlib header files.
-
-
-Installation
-------------
-Edit config.mk to match your local setup (st is installed into
-the /usr/local namespace by default).
-
-Afterwards enter the following command to build and install st (if
-necessary as root):
-
-    make clean install
-
-
-Running st
-----------
-If you did not install st with make clean install, you must compile
-the st terminfo entry with the following command:
-
-    tic -sx st.info
-
-See the man page for additional details.
-
-Credits
--------
-Based on Aurélien APTEL <aurelien dot aptel at gmail dot com> bt source code.
-
+- Fondo translucido: [st-alpha-osc11-20220222-0.8.5.diff](http://st.suckless.org/patches/alpha/st-alpha-osc11-20220222-0.8.5.diff)
+- Margenes adaptables: [st-anysize-20220718-baa9357.diff](http://st.suckless.org/patches/anysize/st-anysize-20220718-baa9357.diff)
+- Soporte para las secuencias 22 y 23 de CSI: [st-csi_22_23-0.8.5.diff](http://st.suckless.org/patches/csi_22_23/st-csi_22_23-0.8.5.diff)
+	- Permite restaurar correctamente el título de la ventana
+- Corrige el borrado de caracteres: [st-delkey-20201112-4ef0cbd.diff](http://st.suckless.org/patches/delkey/st-delkey-20201112-4ef0cbd.diff)
+- Añade una entrada .desktop: [st-desktopentry-0.8.5.diff](http://st.suckless.org/patches/desktopentry/st-desktopentry-0.8.5.diff)
+- Nos permite redirigir el output de st:
+	- [st-externalpipe-0.8.4.diff](http://st.suckless.org/patches/externalpipe/st-externalpipe-0.8.4.diff)
+	- [st-externalpipe-eternal-0.8.3.diff](http://st.suckless.org/patches/externalpipe/st-externalpipe-eternal-0.8.3.diff) Necesario para funcionar con scrollback
+- Podemos usar fuentes adicionales: [st-font2-0.8.5.diff](http://st.suckless.org/patches/font2/st-font2-0.8.5.diff)
+- Permite visualizar el texto anteroriormente impreso:
+	- [st-scrollback-20210507-4536f46.diff](http://st.suckless.org/patches/scrollback/st-scrollback-20210507-4536f46.diff)
+	- [st-scrollback-mouse-altscreen-20220127-2c5edf2.diff](http://st.suckless.org/patches/scrollback/st-scrollback-mouse-altscreen-20220127-2c5edf2.diff)
+	- [st-scrollback-reflow-0.9.diff](http://st.suckless.org/patches/scrollback/st-scrollback-reflow-0.9.diff)

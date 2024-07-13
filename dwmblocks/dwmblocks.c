@@ -176,7 +176,7 @@ void statusloop()
 // Controlador ficticio que no hace nada. Vease setupsignals()
 void dummysighandler(int signum)
 {
-    return;
+	return;
 }
 #endif
 

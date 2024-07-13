@@ -99,7 +99,7 @@ main(int argc, char *argv[])
 				// Comprobar los contenido del directorio
 				while ((d = readdir(dir))) {
 					r = snprintf(path, sizeof path, "%s/%s",
-					             *argv, d->d_name);
+						*argv, d->d_name);
 					if (r >= 0 && (size_t)r < sizeof path)
 						test(path, d->d_name);
 				}

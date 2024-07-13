@@ -100,8 +100,8 @@ drw_free(Drw *drw)
 	free(drw);
 }
 
-// Esta función es un detalle de implementación.
-// Los usuarios de la librería deberían usar drw_fontset_create en su lugar.
+// Esta función es un detalle de implementación
+// Los usuarios de la librería deberían usar drw_fontset_create en su lugar
 static Fnt *
 xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
 {
@@ -113,7 +113,7 @@ xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
 		// Utilizar el patrón encontrado en font->xfont->pattern no produce los
 		// los mismos resultados de sustitución que el patrón devuelto por
 		// FcNameParse; el uso de este último da como resultado el comportamiento fallback
-		// deseado, mientras que el primero sólo hace que se dibujen rectángulos (al menos con algunas fuentes).
+		// deseado, mientras que el primero sólo hace que se dibujen rectángulos (al menos con algunas fuentes)
 		if (!(xfont = XftFontOpenName(drw->dpy, drw->screen, fontname))) {
 			fprintf(stderr, "error, cannot load font from name: '%s'\n", fontname);
 			return NULL;
@@ -194,7 +194,7 @@ drw_clr_create(Drw *drw, Clr *dest, const char *clrname)
 }
 
 // Wrapper para crear esquemas de color. El llamador tiene que llamar a free(3) en el
-// esquema de color devuelto cuando termine de usarlo.
+// esquema de color devuelto cuando termine de usarlo
 Clr *
 drw_scm_create(Drw *drw, const char *clrnames[], size_t clrcount)
 {
@@ -251,7 +251,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 	FcPattern *match;
 	XftResult result;
 	int charexists = 0, overflow = 0;
-	// Seguir la pista de un par de puntos de código para los que no tenemos coincidencia.
+	// Seguir la pista de un par de puntos de código para los que no tenemos coincidencia
 	enum { nomatches_len = 64 };
 	static struct { long codepoint[nomatches_len]; unsigned int idx; } nomatches;
 	static unsigned int ellipsis_width = 0;
@@ -320,7 +320,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			if (render) {
 				ty = y + (h - usedfont->h) / 2 + usedfont->xfont->ascent;
 				XftDrawStringUtf8(d, &drw->scheme[invert ? ColBg : ColFg],
-				                  usedfont->xfont, x, ty, (XftChar8 *)utf8str, utf8strlen);
+					usedfont->xfont, x, ty, (XftChar8 *)utf8str, utf8strlen);
 			}
 			x += ew;
 			w -= ew;
@@ -334,7 +334,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			charexists = 0;
 			usedfont = nextfont;
 		} else {
-			// Independientemente de si se encuentra o no una fuente alternativa, el carácter debe dibujarse.
+			// Independientemente de si se encuentra o no una fuente alternativa, el carácter debe dibujarse
 			charexists = 1;
 
 			for (i = 0; i < nomatches_len; ++i) {
@@ -347,7 +347,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			FcCharSetAddChar(fccharset, utf8codepoint);
 
 			if (!drw->fonts->pattern) {
-				// Consulte el comentario en xfont_create para más información.
+				// Consulte el comentario en xfont_create para más información
 				die("the first font in the cache must be loaded from a font string.");
 			}
 

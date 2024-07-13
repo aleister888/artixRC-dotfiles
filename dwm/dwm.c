@@ -1,10 +1,10 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
-// Dynamic window manager (DWM) está diseñado como cualquier otro cliente X.
+// Dynamic window manager (DWM) está diseñado como cualquier otro cliente X
 // Funciona manejando eventos X. Un gestor de ventanas, a diferencia de otros
 // clientes X selecciona SubstructureRedirectMask en la ventana root (principal)
-// para recibir eventos sobre la aparición y desaparición de ventanas.
-// Solo se permite una conexión X a la vez para esto.
+// para recibir eventos sobre la aparición y desaparición de ventanas
+// Solo se permite una conexión X a la vez para esto
 
 // Los controladores de eventos de dwm están organizados en un array al que se accede
 // cada vez que se recibe un nuevo evento. Esto permite despachar eventos en tiempo O(1)
@@ -14,10 +14,10 @@
 // excepto las ventanas que tienen el indicador override_redirect. Los clientes se organizan
 // en una lista enlazada para cada monitor, y se recuerda en que orden las ventanas
 // recibieron el foco (a través de una lista de pila para cada monitor). Cada cliente contiene
-// un arreglo de bits para indicar sus espacio y propiedades.
+// un arreglo de bits para indicar sus espacio y propiedades
 
 // Las propiedades de cada ventana se puede definir en un array en config.h. Donde también
-// se pueden definir las combinaciones de teclas que usa DWM.
+// se pueden definir las combinaciones de teclas que usa DWM
 
 // Para entender todo lo demás, puedes leer main()
 
@@ -85,7 +85,7 @@
 #define VERSION_MINOR			0
 #define XEMBED_EMBEDDED_VERSION (VERSION_MAJOR << 16) | VERSION_MINOR
 
-/* enums */
+// enums
 enum { CurNormal, CurResize, CurMove, CurLast }; // Cursor
 enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm,
 	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm, SchemeScratchSel, SchemeStickyNorm, SchemeStickySel,
@@ -98,7 +98,7 @@ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 enum { Manager, Xembed, XembedInfo, XLast }; // Xembed atoms
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; // atoms predeterminados
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
-       ClkClientWin, ClkRootWin, ClkLast }; // clics
+	ClkClientWin, ClkRootWin, ClkLast }; // clics
 
 typedef union {
 	int i;
@@ -651,7 +651,7 @@ cleanup(void)
 		free(systray);
 	}
 
-    for (i = 0; i < CurLast; i++)
+	for (i = 0; i < CurLast; i++)
 		drw_cur_free(drw, cursor[i]);
 	for (i = 0; i < LENGTH(colors) + 1; i++)
 		free(scheme[i]);
@@ -742,7 +742,7 @@ clientmessage(XEvent *e)
 			setfullscreen(c, (cme->data.l[0] == 1 // _NET_WM_STATE_ADD
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
 
-        if (cme->data.l[1] == netatom[NetWMSticky]
+	if (cme->data.l[1] == netatom[NetWMSticky]
 	|| cme->data.l[2] == netatom[NetWMSticky])
 		setsticky(c, (cme->data.l[0] == 1 || (cme->data.l[0] == 2 && !c->issticky)));
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
@@ -1370,9 +1370,9 @@ grabkeys(void)
 				if (keys[i].keysym == syms[(k - start) * skip])
 					for (j = 0; j < LENGTH(modifiers); j++)
 						XGrabKey(dpy, k,
-							 keys[i].mod | modifiers[j],
-							 root, True,
-							 GrabModeAsync, GrabModeAsync);
+							keys[i].mod | modifiers[j],
+							root, True,
+							GrabModeAsync, GrabModeAsync);
 		XFree(syms);
 	}
 }
@@ -1436,12 +1436,12 @@ layoutmenu(const Arg *arg) {
 	int i;
 
 	if (!(p = popen(layoutmenu_cmd, "r")))
-		 return;
+		return;
 	s = fgets(c, sizeof(c), p);
 	pclose(p);
 
 	if (!s || *s == '\0' || c[0] == '\0')
-		 return;
+		return;
 
 	i = atoi(c);
 	setlayout(&((Arg) { .v = &layouts[i] }));
@@ -1670,7 +1670,7 @@ propertynotify(XEvent *e)
 		updatesystray();
 	}
 
-    if ((ev->window == root) && (ev->atom == XA_WM_NAME))
+	if ((ev->window == root) && (ev->atom == XA_WM_NAME))
 		updatestatus();
 	else if (ev->state == PropertyDelete)
 		return; // Ignorar
@@ -1812,12 +1812,12 @@ resizemouse(const Arg *arg)
 		None, cursor[CurResize]->cursor, CurrentTime) != GrabSuccess)
 		return;
 	if (!XQueryPointer (dpy, c->win, &dummy, &dummy, &di, &di, &nx, &ny, &dui))
-	       return;
+		return;
 	horizcorner = nx < c->w / 2;
 	vertcorner = ny < c->h / 2;
 	XWarpPointer (dpy, None, c->win, 0, 0, 0, 0,
-		      horizcorner ? (-c->bw) : (c->w + c->bw - 1),
-		      vertcorner ? (-c->bw) : (c->h + c->bw - 1));
+		horizcorner ? (-c->bw) : (c->w + c->bw - 1),
+		vertcorner ? (-c->bw) : (c->h + c->bw - 1));
 
 	do {
 		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
@@ -1852,8 +1852,8 @@ resizemouse(const Arg *arg)
 		}
 	} while (ev.type != ButtonRelease);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0,
-		      horizcorner ? (-c->bw) : (c->w + c->bw - 1),
-		      vertcorner ? (-c->bw) : (c->h + c->bw - 1));
+		horizcorner ? (-c->bw) : (c->w + c->bw - 1),
+		vertcorner ? (-c->bw) : (c->h + c->bw - 1));
 	XUngrabPointer(dpy, CurrentTime);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
 	if ((m = recttomon(c->x, c->y, c->w, c->h)) != selmon) {
@@ -2219,7 +2219,7 @@ setup(void)
 	vp = (topbar == 1) ? vertpad : - vertpad;
 	bh = drw->fonts->h + user_bh;
 	updategeom();
-	/* init atoms */
+	// Inicializar atoms
 	utf8string = XInternAtom(dpy, "UTF8_STRING", False);
 	wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
 	wmatom[WMDelete] = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
@@ -2481,7 +2481,7 @@ togglefloating(const Arg *arg)
 	if (selmon->sel->isfloating)
 		// Restaurar las últimas dimensiones conocidas
 		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
-		       selmon->sel->sfw, selmon->sel->sfh, False);
+			selmon->sel->sfw, selmon->sel->sfh, False);
 	else {
 		// Restaurar las últimas dimensiones conocidas
 		selmon->sel->sfx = selmon->sel->x;
@@ -2584,7 +2584,7 @@ togglescratch(const Arg *arg)
 				c->x = c->mon->wx + (c->x - mon->wx) * ((double)(abs(c->mon->ww - WIDTH(c))) / MAX(abs(mon->ww - WIDTH(c)), 1));
 				c->y = c->mon->wy + (c->y - mon->wy) * ((double)(abs(c->mon->wh - HEIGHT(c))) / MAX(abs(mon->wh - HEIGHT(c)), 1));
 			} else if (c->x < c->mon->mx || c->x > c->mon->mx + c->mon->mw ||
-			           c->y < c->mon->my || c->y > c->mon->my + c->mon->mh)	{
+				c->y < c->mon->my || c->y > c->mon->my + c->mon->mh)	{
 				c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
 				c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
 			}
@@ -2608,7 +2608,7 @@ togglesticky(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
-    setsticky(selmon->sel, !selmon->sel->issticky);
+	setsticky(selmon->sel, !selmon->sel->issticky);
 	arrange(selmon);
 }
 
@@ -2735,7 +2735,7 @@ unmapnotify(XEvent *e)
 			unmanage(c, 0);
 	}
 	else if ((c = wintosystrayicon(ev->window))) {
-		// A veces los iconos desmapean ocasionalmente sus ventanas, pero no las destruyen.
+		// A veces los iconos desmapean ocasionalmente sus ventanas, pero no las destruyen
 		// Como apaño mapeamos esas ventanas de vuelta
 		XMapRaised(dpy, c->win);
 		updatesystray();
@@ -3164,18 +3164,18 @@ winpid(Window w)
 #endif // Linux
 
 #ifdef __OpenBSD__
-        Atom type;
-        int format;
-        unsigned long len, bytes;
-        unsigned char *prop;
-        pid_t ret;
+	Atom type;
+	int format;
+	unsigned long len, bytes;
+	unsigned char *prop;
+	pid_t ret;
 
-        if (XGetWindowProperty(dpy, w, XInternAtom(dpy, "_NET_WM_PID", 0), 0, 1, False, AnyPropertyType, &type, &format, &len, &bytes, &prop) != Success || !prop)
-               return 0;
+	if (XGetWindowProperty(dpy, w, XInternAtom(dpy, "_NET_WM_PID", 0), 0, 1, False, AnyPropertyType, &type, &format, &len, &bytes, &prop) != Success || !prop)
+		return 0;
 
-        ret = *(pid_t*)prop;
-        XFree(prop);
-        result = ret;
+	ret = *(pid_t*)prop;
+	XFree(prop);
+	result = ret;
 
 #endif // OpenBSD
 	return result;
@@ -3300,7 +3300,7 @@ wintomon(Window w)
 
 // No hay forma de comprobar los accesos a ventanas destruidas, por lo que esos casos son
 // ignorados (especialmente en UnmapNotify's). Otros tipos de errores llaman a al gestor
-// de errores por defecto de Xlibs, que puede llamar a exit (una salida).
+// de errores por defecto de Xlibs, que puede llamar a exit (una salida)
 int
 xerror(Display *dpy, XErrorEvent *ee)
 {
@@ -3325,7 +3325,7 @@ xerrordummy(Display *dpy, XErrorEvent *ee)
 	return 0;
 }
 
-// Comprobar al inicio si otro gestor de ventanas se está ejecutando ya.
+// Comprobar al inicio si otro gestor de ventanas se está ejecutando ya
 int
 xerrorstart(Display *dpy, XErrorEvent *ee)
 {

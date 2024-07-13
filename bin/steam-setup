@@ -24,4 +24,4 @@ fi
 # 	done
 
 # Para instalarlo solo para Steam:
-doas ln -s /usr/bin/firejail /usr/local/bin/steam
+#doas ln -s /usr/bin/firejail /usr/local/bin/steam

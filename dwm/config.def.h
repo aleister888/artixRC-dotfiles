@@ -295,7 +295,7 @@ static const Key keys[] = {
 };
 
 // Botónes del ratón
-// Click puede ser ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, o ClkRootWin.
+// Click puede ser ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, o ClkRootWin
 static const Button buttons[] = {
 	// Click                Combinación     Botón           Función         Argumento
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {.v = &layouts[0]} },

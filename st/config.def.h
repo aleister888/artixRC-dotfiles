@@ -1,243 +1,206 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
-static int borderpx = 2;
+static int borderpx = 2; // Margen
 
-/*
- * What program is execed by st depends of these precedence rules:
- * 1: program passed with -e
- * 2: scroll and/or utmp
- * 3: SHELL environment variable
- * 4: value of shell in /etc/passwd
- * 5: value of shell in config.h
- */
+// Qué programa se ejecuta con `exec` depende de estas reglas de precedencia:
+// 1: Programa pasado con -e
+// 2: `scroll` y/o `utmp`
+// 3: Variable de entorno SHELL
+// 4: Valor de `shell` en /etc/passwd
+// 5: Valor de `shell` en config.h
+//
 static char *shell = "/bin/sh";
 char *utmp = NULL;
-/* scroll program: to enable use a string like "scroll" */
+// Programa de desplazamiento: para habilitar, usa una cadena como "scroll"
 char *scroll = NULL;
 char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 
-/* identification sequence returned in DA and DECID */
+// Secuencia de identificación devuelta en DA y DECID
 char *vtiden = "\033[?6c";
 
-/* Kerning / character bounding-box multipliers */
+// Kerning / multiplicadores del cuadro delimitador de caracteres
 static float cwscale = 1.0;
 static float chscale = 1.0;
 
-/*
- * word delimiter string
- *
- * More advanced example: L" `'\"()[]{}"
- */
+// Cadena de delimitadores de palabras
+// Ejemplo más avanzado: L" `'\"()[]{}"
 wchar_t *worddelimiters = L" ";
 
-/* selection timeouts (in milliseconds) */
+// Tiempos de espera para selección (en milisegundos)
 static unsigned int doubleclicktimeout = 300;
 static unsigned int tripleclicktimeout = 600;
 
-/* alt screens */
+// Pantallas alternativas
 int allowaltscreen = 1;
 
-/* allow certain non-interactive (insecure) window operations such as:
-   setting the clipboard text */
+// Permitir ciertas operaciones de ventana no interactivas
+// (inseguras) como: establecer el texto del portapapeles
 int allowwindowops = 0;
 
-/*
- * draw latency range in ms - from new content/keypress/etc until drawing.
- * within this range, st draws when content stops arriving (idle). mostly it's
- * near minlatency, but it waits longer for slow updates to avoid partial draw.
- * low minlatency will tear/flicker more, as it can "detect" idle too early.
- */
+// Rango de latencia de dibujo en ms - desde nuevo contenido/pulsación de tecla/etc. hasta el dibujo
+// Dentro de este rango, st dibuja cuando el contenido deja de llegar (inactividad). Generalmente
+// está cerca de `minlatency`, pero espera más tiempo para actualizaciones lentas y evitar un
+// dibujo parcial. Un `minlatency` bajo causará más desgarro y parpadeo, ya que puede "detectar"
+// la inactividad demasiado pronto
 static double minlatency = 8;
 static double maxlatency = 33;
 
-/*
- * blinking timeout (set to 0 to disable blinking) for the terminal blinking
- * attribute.
- */
+// Timeout de parpadeo (establecer en 0 para deshabilitar el parpadeo)
+// para el atributo de parpadeo del terminal
 static unsigned int blinktimeout = 800;
 
-/*
- * thickness of underline and bar cursors
- */
+// Grosor del subrayado y de los cursores de barra
 static unsigned int cursorthickness = 2;
 
-/*
- * bell volume. It must be a value between -100 and 100. Use 0 for disabling
- * it
- */
+// Volumen del timbre. Debe ser un valor entre -100 y 100. Usa 0 para desactivarlo
 static int bellvolume = 0;
 
-/* default TERM value */
+// Valor predeterminado de TERM
 char *termname = "st-256color";
 
-/*
- * spaces per tab
- *
- * When you are changing this value, don't forget to adapt the »it« value in
- * the st.info and appropriately install the st.info in the environment where
- * you use this st version.
- *
- *	it#$tabspaces,
- *
- * Secondly make sure your kernel is not expanding tabs. When running `stty
- * -a` »tab0« should appear. You can tell the terminal to not expand tabs by
- *  running following command:
- *
- *	stty tabs
- */
+// Espacios por tabulación
+//
+// Cuando cambies este valor, no olvides adaptar el valor de »it« en
+// st.info e instalar el st.info en el entorno donde uses esta versión de st
+// 	it#$tabspaces,
+//
+// En segundo lugar, asegúrate de que tu kernel no expanda tabulaciones. Al ejecutar `stty -a`
+// debería aparecer »tab0«. Puedes decirle al terminal que no expanda tabulaciones
+// ejecutando el siguiente comando:
+// 	stty tabs
+
 unsigned int tabspaces = 8;
 
-/* bg opacity */
+// Opacidad del fondo
 float alpha = 0.95;
 
-/* Terminal colors (16 first used in escape sequence) */
+// Colores del terminal (los 16 primeros se usan en secuencias de escape)
 static const char *colorname[] = {
-	/* 8 normal colors */
-	[0] = "#101010", /* hard contrast: #1d2021 / soft contrast: #32302f */
-	[1] = "#cc241d", /* red     */
-	[2] = "#98971a", /* green   */
-	[3] = "#d79921", /* yellow  */
-	[4] = "#458588", /* blue    */
-	[5] = "#b16286", /* magenta */
-	[6] = "#689d6a", /* cyan    */
-	[7] = "#a89984", /* white   */
-
-	/* 8 bright colors */
-	[8]  = "#928374", /* black   */
-	[9]  = "#fb4934", /* red     */
-	[10] = "#b8bb26", /* green   */
-	[11] = "#fabd2f", /* yellow  */
-	[12] = "#83a598", /* blue    */
-	[13] = "#d3869b", /* magenta */
-	[14] = "#8ec07c", /* cyan    */
-	[15] = "#ebdbb2", /* white   */
+	// 8 colores normales
+	[0]  = "#101010", // Contraste fuerte: #1d2021 / contraste suave: #32302f
+	[1]  = "#cc241d", // Rojo
+	[2]  = "#98971a", // Verde
+	[3]  = "#d79921", // Amarillo
+	[4]  = "#458588", // Azul
+	[5]  = "#b16286", // Magenta
+	[6]  = "#689d6a", // Cian
+	[7]  = "#a89984", // Blanco
+	
+	// 8 colores brillantes
+	[8]  = "#928374", // Negro
+	[9]  = "#fb4934", // Rojo
+	[10] = "#b8bb26", // Verde
+	[11] = "#fabd2f", // Amarillo
+	[12] = "#83a598", // Azul
+	[13] = "#d3869b", // Magenta
+	[14] = "#8ec07c", // Cian
+	[15] = "#ebdbb2", // Blanco
 };
 
-
-/*
- * Default colors (colorname index)
- * foreground, background, cursor, reverse cursor
- */
+// Colores predeterminados (índice de colorname)
+// Fuente, fondo, cursor, cursor invertido
 unsigned int defaultfg = 15;
 unsigned int defaultbg = 0;
 unsigned int defaultcs = 15;
 static unsigned int defaultrcs = 257;
 
-/*
- * Default shape of cursor
- * 2: Block ("█")
- * 4: Underline ("_")
- * 6: Bar ("|")
- * 7: Snowman ("☃")
- */
+// Forma predeterminada del cursor
+// 2: Bloque ("█")
+// 4: Subrayado ("_")
+// 6: Barra ("|")
+// 7: Muñeco de nieve ("☃")
 static unsigned int cursorshape = 2;
 
-/*
- * Default columns and rows numbers
- */
-
+// Número predeterminado de columnas y filas
 static unsigned int cols = 80;
 static unsigned int rows = 24;
 
-/*
- * Default colour and shape of the mouse cursor
- */
+// Color y forma predeterminados del cursor del ratón
 static unsigned int mouseshape = XC_xterm;
 static unsigned int mousefg = 7;
 static unsigned int mousebg = 0;
 
-/*
- * Color used to display font attributes when fontconfig selected a font which
- * doesn't match the ones requested.
- */
+// Color utilizado para mostrar atributos de fuente cuando fontconfig
+// selecciona una fuente que no coincide con las solicitadas
 static unsigned int defaultattr = 11;
 
-/*
- * Force mouse select/shortcuts while mask is active (when MODE_MOUSE is set).
- * Note that if you want to use ShiftMask with selmasks, set this to an other
- * modifier, set to 0 to not use it.
- */
+// Forzar selección/atajos del ratón mientras la máscara está activa
+// (cuando MODE_MOUSE está activado). Ten en cuenta que si quieres
+// usar `ShiftMask` con `selmasks`, establece esto en otro modificador,
+// o en 0 para no usarlo
 static uint forcemousemod = ShiftMask;
 
-/*
- * Internal mouse shortcuts.
- * Beware that overloading Button1 will disable the selection.
- */
+// Atajos internos del ratón
+// Ten en cuenta que mapear `Button1` impedirá la selección
 static MouseShortcut mshortcuts[] = {
-	/* mask                 button   function        argument       release */
-	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
-	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
-	{ ShiftMask,            Button5, ttysend,        {.s = "\033[6;2~"} },
-	{ XK_ANY_MOD,           Button4, kscrollup,      {.i = 1},		0, /* !alt */ -1 },
-	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = 1},		0, /* !alt */ -1 },
+	// Modificador	Botón		Función		Argumento	Liberación
+	{ XK_ANY_MOD,	Button2,	selpaste,	{.i = 0}, 1 },
+	{ ShiftMask,	Button4,	ttysend,	{.s = "\033[5;2~"} },
+	{ ShiftMask,	Button5,	ttysend,	{.s = "\033[6;2~"} },
+	{ XK_ANY_MOD,	Button4,	kscrollup,	{.i = 1}, 0, /* !alt */ -1 },
+	{ XK_ANY_MOD,	Button5,	kscrolldown,	{.i = 1}, 0, /* !alt */ -1 },
 };
 
-/* Internal keyboard shortcuts. */
+// Atajos internos de teclado
 #define MODKEY Mod1Mask
 #define TERMMOD (ControlMask|ShiftMask)
 
 static char *openurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -o", "externalpipe", NULL };
 
 static Shortcut shortcuts[] = {
-	/* mask                 keysym          function        argument */
-	{ XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
-	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
-	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
-	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ ControlMask,          XK_plus,        zoom,           {.f = +1} },
-	{ ControlMask,          XK_minus,       zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	// Modificador		Tecla		Función		Argumento
+	{ XK_ANY_MOD,		XK_Break,	sendbreak,	{.i =  0} },
+	{ ControlMask,		XK_Print,	toggleprinter,	{.i =  0} },
+	{ ShiftMask,		XK_Print,	printscreen,	{.i =  0} },
+	{ XK_ANY_MOD,		XK_Print,	printsel,	{.i =  0} },
+	{ ControlMask,		XK_plus,	zoom,		{.f = +1} },
+	{ ControlMask,		XK_minus,	zoom,		{.f = -1} },
+	{ TERMMOD,		XK_Prior,	zoom,		{.f = +1} },
+	{ TERMMOD,		XK_Next,	zoom,		{.f = -1} },
+	{ TERMMOD,		XK_Home,	zoomreset,	{.f =  0} },
 	// Copiar/Pegar
-	{ MODKEY,               XK_c,           clipcopy,       {.i =  0} },
-	{ MODKEY,               XK_v,           clippaste,      {.i =  0} },
-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+	{ MODKEY,		XK_c,		clipcopy,	{.i =  0} },
+	{ MODKEY,		XK_v,		clippaste,	{.i =  0} },
+	{ TERMMOD,		XK_Y,		selpaste,	{.i =  0} },
+	{ ShiftMask,		XK_Insert,	selpaste,	{.i =  0} },
+	{ TERMMOD,		XK_Num_Lock,	numlock,	{.i =  0} },
 	// Abrir URL
-	{ MODKEY,               XK_l,           externalpipe,   {.v = openurlcmd } },
+	{ MODKEY,		XK_l,		externalpipe,	{.v = openurlcmd } },
 };
 
-/*
- * Special keys (change & recompile st.info accordingly)
- *
- * Mask value:
- * * Use XK_ANY_MOD to match the key no matter modifiers state
- * * Use XK_NO_MOD to match the key alone (no modifiers)
- * appkey value:
- * * 0: no value
- * * > 0: keypad application mode enabled
- * *   = 2: term.numlock = 1
- * * < 0: keypad application mode disabled
- * appcursor value:
- * * 0: no value
- * * > 0: cursor application mode enabled
- * * < 0: cursor application mode disabled
- *
- * Be careful with the order of the definitions because st searches in
- * this table sequentially, so any XK_ANY_MOD must be in the last
- * position for a key.
- */
-
-/*
- * If you want keys other than the X11 function keys (0xFD00 - 0xFFFF)
- * to be mapped below, add them to this array.
- */
+// Teclas especiales (cambia y recompila st.info en consecuencia)
+//
+// Valor de máscara:
+// * Usa `XK_ANY_MOD` para coincidir con la tecla sin importar el estado de los modificadores
+// * Usa `XK_NO_MOD` para coincidir solo con la tecla (sin modificadores)
+//
+// Valor de `appkey`:
+// 	0: sin valor
+// 	> 0: modo de aplicación del teclado numérico habilitado
+// 		= 2: term.numlock = 1
+// 	< 0: modo de aplicación del teclado numérico deshabilitado
+//
+// Valor de `appcursor`:
+// 	0: sin valor
+// 	> 0: modo de aplicación del cursor habilitado
+// 	< 0: modo de aplicación del cursor deshabilitado
+//
+// Ten cuidado con el orden de las definiciones porque st busca en
+// esta tabla secuencialmente, por lo que cualquier `XK_ANY_MOD` debe estar en la última
+// posición para una tecla
+//
+// Si quieres que las teclas diferentes de las teclas de función de X11 (0xFD00 - 0xFFFF)
+// se mapeen a continuación, añádelas a este array
 static KeySym mappedkeys[] = { -1 };
 
-/*
- * State bits to ignore when matching key or button events.  By default,
- * numlock (Mod2Mask) and keyboard layout (XK_SWITCH_MOD) are ignored.
- */
+// Bits de estado a ignorar al coincidir eventos de tecla o botón. Por defecto,
+// numlock (Mod2Mask) y la disposición del teclado (XK_SWITCH_MOD) son ignorados
 static uint ignoremod = Mod2Mask|XK_SWITCH_MOD;
 
-/*
- * This is the huge key array which defines all compatibility to the Linux
- * world. Please decide about changes wisely.
- */
+// Este es el enorme array de teclas que define toda la compatibilidad con el mundo de Linux
+// Por favor, decide sobre los cambios con sabiduría
 static Key key[] = {
-	/* keysym           mask            string      appkey appcursor */
+	// Keysym           Máscara         Cadena      appkey appcursor
 	{ XK_KP_Home,       ShiftMask,      "\033[2J",       0,   -1},
 	{ XK_KP_Home,       ShiftMask,      "\033[1;2H",     0,   +1},
 	{ XK_KP_Home,       XK_ANY_MOD,     "\033[H",        0,   -1},
@@ -449,21 +412,17 @@ static Key key[] = {
 	{ XK_F35,           XK_NO_MOD,      "\033[23;5~",    0,    0},
 };
 
-/*
- * Selection types' masks.
- * Use the same masks as usual.
- * Button1Mask is always unset, to make masks match between ButtonPress.
- * ButtonRelease and MotionNotify.
- * If no match is found, regular selection is used.
- */
+// Máscaras de tipos de selección
+// Usa las mismas máscaras que de costumbre
+// Button1Mask siempre está desactivado, para que las máscaras coincidan entre ButtonPress,
+// ButtonRelease y MotionNotify
+// Si no se encuentra coincidencia, se usa la selección regular
 static uint selmasks[] = {
 	[SEL_RECTANGULAR] = Mod1Mask,
 };
 
-/*
- * Printable characters in ASCII, used to estimate the advance width
- * of single wide characters.
- */
+// Caracteres imprimibles en ASCII, utilizados para estimar el ancho de avance
+// de caracteres anchos individuales
 static char ascii_printable[] =
 	" !\"#$%&'()*+,-./0123456789:;<=>?"
 	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
