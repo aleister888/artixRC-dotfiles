@@ -13,7 +13,7 @@ IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
 	IMG:$ICONPATH/apps/discord.svg					Discord			discord
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
-	IMG:$ICONPATH/apps/telegram.svg					Telegram		Forkgram
+	IMG:$ICONPATH/apps/telegram.svg					Telegram		telegram-desktop
 	IMG:$ICONPATH/apps/syncthing.svg				Syncthing (Reiniciar)	pkill syncthing; syncthing --no-browser --no-default-folder --reset-deltas
 
 IMG:$ICONPATH/apps/multimedia.svg					Sonido y Video

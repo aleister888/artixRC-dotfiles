@@ -17,7 +17,7 @@
 #include <X11/extensions/Xinerama.h>
 #include <Imlib2.h>
 
-/* macros */
+// Macros
 #define MAXPATHS 128            /* maximal number of paths to look for icons */
 #define ICONPATH "ICONPATH"     /* environment variable name */
 #define CLASS               "XMenu"

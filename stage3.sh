@@ -7,21 +7,21 @@
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
 # Funciones que invocaremos a menudo
-whip_msg(){
+whip_msg(){ # Mensajes de tailbox
 	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --msgbox "$2" 10 60
 }
 
-whip_yes(){
+whip_yes(){ # Elegir con whiptail
 	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --yesno "$2" 10 60
 }
 
-pacinstall() {
+pacinstall() { # Instalar paquetes con pacman
 	doas pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
-yayinstall() {
+yayinstall() { # Instalar paquetes con yay
 	yay -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
@@ -130,7 +130,7 @@ done
 
 	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
-	[ "$noprivacy"	== "true" ] && packages+=" discord forkgram-bin"
+	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
 	[ "$office"	== "true" ] && packages+=" libreoffice"
 	[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 	if [ "$daw"	== "true" ]; then
