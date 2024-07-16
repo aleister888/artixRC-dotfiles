@@ -75,7 +75,7 @@ void getcmd(const Block *block, char *output)
 	// Recotar \n si esta al final de la salida
 	i = output[i-1] == '\n' ? i-1 : i;
 	if (delim[0] != '\0') {
-		strncpy(output+i, delim, delimLen); 
+		strncpy(output+i, delim, delimLen);
 	}
 	else
 		output[i++] = '\0';

@@ -56,7 +56,7 @@ static void
 usage(void)
 {
 	fprintf(stderr, "uso: %s [-abcdefghlpqrsuvwx] "
-	        "[-n archivo] [-o archivo] [archivo...]\n", argv0);
+	"[-n archivo] [-o archivo] [archivo...]\n", argv0);
 	exit(2); // Como test(1), devuelve > 1 en caso de error
 }
 

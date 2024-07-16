@@ -72,7 +72,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 // Opacidad del fondo
-float alpha = 0.85;
+float alpha = 0.80;
 
 // Colores del terminal (los 16 primeros se usan en secuencias de escape)
 static const char *colorname[] = {
@@ -85,7 +85,7 @@ static const char *colorname[] = {
 	[5]  = "#b16286", // Magenta
 	[6]  = "#689d6a", // Cian
 	[7]  = "#a89984", // Blanco
-	
+
 	// 8 colores brillantes
 	[8]  = "#928374", // Negro
 	[9]  = "#fb4934", // Rojo

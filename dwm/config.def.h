@@ -65,9 +65,11 @@ static const char *colors[][3] = {
 	// Los valores con "#000000" no son usados pero no pueden estar vacios
 };
 
-static const int tagschemes[] = { SchemeTag1,  SchemeTag2,  SchemeTag3,
-                                  SchemeTag4,  SchemeTag5,  SchemeTag6,
-                                  SchemeTag7,  SchemeTag8 };
+static const int tagschemes[] = {
+	SchemeTag1,  SchemeTag2,  SchemeTag3,
+	SchemeTag4,  SchemeTag5,  SchemeTag6,
+	SchemeTag7,  SchemeTag8
+};
 
 typedef struct {
 	const char *name;
@@ -143,27 +145,27 @@ static const Rule rules[] = {
 #include "layouts.c" // Archivo con los layouts
 
 static const Layout layouts[] = {
-	{ "[]=",      tile },           // Layout por defecto
-	{ "><>",      NULL },           // Ningún layout significa comportamiento flotante
-	{ "[M]",      monocle },        // Las ventanas ocupan toda la pantalla
-	{ "|M|",      centeredmaster }, // 3 Columnas (Zona principal centrada)
-	{ "|||",      col },            // Columnas (Zona principal a la izquierda)
-	{ "TTT",      bstack },         // Zona principal en la parte superior
- 	{ "[@]",      spiral },         // Layouts fibonacci
- 	{ "[\\]",     dwindle },
+	{ "[]=",	tile }, // Layout por defecto
+	{ "><>",	NULL }, // Ningún layout significa comportamiento flotante
+	{ "[M]",	monocle }, // Las ventanas ocupan toda la pantalla
+	{ "|M|",	centeredmaster }, // 3 Columnas (Zona principal centrada)
+	{ "|||",	col }, // Columnas (Zona principal a la izquierda)
+	{ "TTT",	bstack }, // Zona principal en la parte superior
+	{ "[@]",	spiral }, // Layouts fibonacci
+	{ "[\\]",	dwindle },
 };
 
 // Definiciones de las Teclas
 #define MODKEY Mod1Mask // Super (Win) como modificador
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY,			KEY,	view,		{.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,		KEY,	toggleview,	{.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,		KEY,	tag,		{.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask,	KEY,	toggletag,	{.ui = 1 << TAG} },
 #define STACKKEYS(MOD,ACTION) \
-/* Poner el foco/Mover a la posición anterior */	{ MOD, XK_comma,  ACTION##stack, {.i = INC(-1) } }, \
-/* Poner el foco/Mover a la posición posterior */	{ MOD, XK_period, ACTION##stack, {.i = INC(+1) } }, \
-/* Poner el foco/Mover a la primera ventana principal */{ MOD, XK_minus,  ACTION##stack, {.i = 0 } },
+/* Poner el foco/Mover a la posición anterior */		{ MOD, XK_comma,  ACTION##stack, {.i = INC(-1) } }, \
+/* Poner el foco/Mover a la posición posterior */		{ MOD, XK_period, ACTION##stack, {.i = INC(+1) } }, \
+/* Poner el foco/Mover a la primera ventana principal */	{ MOD, XK_minus,  ACTION##stack, {.i = 0 } },
 
 // Invocador de comandos
 #define SHCMD(cmd) { .v = (const char*[]){ "/usr/bin/zsh", "-c", cmd, NULL } }
@@ -171,9 +173,9 @@ static const Layout layouts[] = {
 // Comandos
 static char dmenumon[2] = "0"; // Comando para ejecutar dmenu
 static const char *dmenucmd[] = { "dbus-launch", "dmenu_run",
-"-m",  dmenumon,       "-nb", background,
-"-nf", foreground,     "-sb", background_sel,
-"-sf", foreground,     "-c","-l", DLINES, NULL };
+"-m",	dmenumon,	"-nb", background,
+"-nf",	foreground,	"-sb", background_sel,
+"-sf",	foreground,	"-c","-l", DLINES, NULL };
 static const char *termcmd[]  = { TERM, NULL };      // Terminal
 static const char *layoutmenu_cmd = "layoutmenu.sh"; // Script para cambiar el layout
 static const char *scratchpadcmd[] = { "s", NULL };  // Tecla para los scratchpads

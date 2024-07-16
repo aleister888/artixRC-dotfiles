@@ -840,7 +840,7 @@ ttynew(const char *line, char *cmd, const char *out, char **args)
 	if (out) {
 		term.mode |= MODE_PRINT;
 		iofd = (!strcmp(out, "-")) ?
-			  1 : open(out, O_WRONLY | O_CREAT, 0666);
+			1 : open(out, O_WRONLY | O_CREAT, 0666);
 		if (iofd < 0) {
 			fprintf(stderr, "Error opening %s:%s\n",
 				out, strerror(errno));
@@ -1426,7 +1426,7 @@ tsetchar(Rune u, const Glyph *attr, int x, int y)
 
 	// La tabla es orgullosamente robada de rxvt
 	if (term.trantbl[term.charset] == CS_GRAPHIC0 &&
-	   BETWEEN(u, 0x41, 0x7e) && vt100_0[u - 0x41])
+	BETWEEN(u, 0x41, 0x7e) && vt100_0[u - 0x41])
 		utf8decode(vt100_0[u - 0x41], &u, UTF_SIZ);
 
 	if (term.line[y][x].mode & ATTR_WIDE) {
@@ -1437,7 +1437,7 @@ tsetchar(Rune u, const Glyph *attr, int x, int y)
 	} else if (term.line[y][x].mode & ATTR_WDUMMY) {
 		term.line[y][x-1].u = ' ';
 		term.line[y][x-1].mode &= ~ATTR_WIDE;
-  }
+	}
 
 	term.dirty[y] = 1;
 	term.line[y][x] = *attr;
@@ -1776,12 +1776,10 @@ tsetmode(int priv, int set, const int *args, int narg)
 				xsetmode(set, MODE_BRCKTPASTE);
 				break;
 			// Modos de ratón no implementados. Ver comentarios debajo:
-			case 1001: // Modo de resaltado del ratón; puede colgar el
-				   // terminal por diseño si implementado
-			case 1005: // Modo de ratón UTF-8, confundirá aplicaciones que
-				   // no soporten UTF-8 y luit
+			case 1001: // Modo de resaltado del ratón; puede colgar el terminal por diseño si implementado
+			case 1005: // Modo de ratón UTF-8, confundirá aplicaciones que no soporten UTF-8 y luit
 			case 1015: // Cursor de urxvt; incompatible y
-				   // puede confundirse con otros códigos códigos
+				// puede confundirse con otros códigos códigos
 				break;
 			default:
 				fprintf(stderr,
@@ -1929,8 +1927,8 @@ csihandle(void)
 			break;
 		case 2: // Todo
 			if (IS_SET(MODE_ALTSCREEN)) {
-  			tclearregion(0, 0, term.col-1, term.row-1, 1);
-  			break;
+			tclearregion(0, 0, term.col-1, term.row-1, 1);
+			break;
 			}
 			// Esto es loo que hace vte:
 			// tscrollup(0, term.row-1, term.row, SCROLL_SAVEHIST);
@@ -2687,8 +2685,7 @@ tputc(Rune u)
 	// porque consume todos los caracteres siguientes hasta recibir
 	// un ESC, un SUB, un ST, o cualquier otro carácter de control C1
 	if (term.esc & ESC_STR) {
-		if (u == '\a' || u == 030 || u == 032 || u == 033 ||
-		   ISCONTROLC1(u)) {
+		if (u == '\a' || u == 030 || u == 032 || u == 033 || ISCONTROLC1(u)) {
 			term.esc &= ~(ESC_START|ESC_STR);
 			term.esc |= ESC_STR_END;
 			goto check_control_code;

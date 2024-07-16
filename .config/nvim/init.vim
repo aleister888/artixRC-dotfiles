@@ -11,10 +11,10 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Auto-cerrar llaves, paréntesis, ...
 Plug 'LunarWatcher/auto-pairs'
 function! MoveCursorLeftIfNeeded()
-    let col = col('.')
-    if col > 1
-        call feedkeys("\<C-Left>")
-    endif
+	let col = col('.')
+	if col > 1
+		call feedkeys("\<C-Left>")
+	endif
 endfunction
 
 " Presionando ,, vamos al princio del patrón que queremos sustituir
@@ -45,12 +45,46 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc-vimtex'
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 
+" Navegador de archivos
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
+" Encontrar archivos con telescope
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+nnoremap <leader>g <cmd>Telescope live_grep<cr>
+
+" Árbol de directorios
+Plug 'preservim/nerdtree'
+nnoremap <leader>t :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
+" Customizar NERDTree con el esquema de colores Gruvbox
+autocmd vimenter * highlight NERDTreeDir guifg=#8ec07c
+autocmd vimenter * highlight NERDTreeDirSlash guifg=#8ec07c
+autocmd vimenter * highlight NERDTreeOpenable guifg=#83a598
+autocmd vimenter * highlight NERDTreeClosable guifg=#83a598
+autocmd vimenter * highlight NERDTreeExecFile guifg=#b8bb26
+autocmd vimenter * highlight NERDTreeCWD guifg=#fabd2f
+
 " Snippets
 Plug 'sirver/ultisnips'
 let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
+
+" Barra de estado
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" Ajustes de airline
+let g:airline_powerline_fonts = 0
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'gruvbox'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline#extensions#tabline#show_buffers = 1
+let g:airline#extensions#tabline#show_tabs = 1
 
 call plug#end()
 
@@ -66,7 +100,7 @@ set ignorecase
 set smartcase
 set mouse=a
 set noshowmode
-set encoding=utf-8
+set encoding=UTF-8
 set wildmode=longest,list,full
 set autochdir
 set cursorline
@@ -99,13 +133,13 @@ nnoremap <F5> :AutoPairsToggle<CR>
 let g:coc = 0
 
 function! CocToggle()
-    if g:coc
-        CocEnable
-        let g:coc = 0
-    else
-        CocDisable
-        let g:coc = 1
-    endif
+	if g:coc
+		CocEnable
+		let g:coc = 0
+	else
+		CocDisable
+		let g:coc = 1
+	endif
 endfunction
 
 " Automatizar tareas cuando se escribe en un archivo

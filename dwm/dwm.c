@@ -1938,8 +1938,7 @@ runautostart(void)
 		}
 	} else {
 		// Espacio para segmentos de ruta, separadores y nul
-		pathpfx = ecalloc(1, strlen(home) + strlen(localshare)
-		                     + strlen(dwmdir) + 3);
+		pathpfx = ecalloc(1, strlen(home) + strlen(localshare) + strlen(dwmdir) + 3);
 
 		if (sprintf(pathpfx, "%s/%s/%s", home, localshare, dwmdir) < 0) {
 			free(pathpfx);
@@ -2058,7 +2057,7 @@ sendevent(Window w, Atom proto, int mask, long d0, long d1, long d2, long d3, lo
 	else {
 		exists = True;
 		mt = proto;
-    }
+	}
 
 	if (exists) {
 		ev.type = ClientMessage;
@@ -2316,16 +2315,14 @@ shiftviewclients(const Arg *arg)
 	#endif // Parche Scratchpads
 	if (arg->i > 0) // Desplazamiento circular a la izquierda
 		do {
-			shifted.ui = (shifted.ui << arg->i)
-			   | (shifted.ui >> (LENGTH(tags) - arg->i));
+			shifted.ui = (shifted.ui << arg->i) | (shifted.ui >> (LENGTH(tags) - arg->i));
 			#if SCRATCHPADS_PATCH
 			shifted.ui &= ~SPTAGMASK;
 			#endif // Parche Scratchpads
 		} while (tagmask && !(shifted.ui & tagmask));
 	else // Desplazamiento circular a la derecha
 		do {
-			shifted.ui = (shifted.ui >> (- arg->i)
-			   | shifted.ui << (LENGTH(tags) + arg->i));
+			shifted.ui = (shifted.ui >> (- arg->i) | shifted.ui << (LENGTH(tags) + arg->i));
 			#if SCRATCHPADS_PATCH
 			shifted.ui &= ~SPTAGMASK;
 			#endif // Parche Scratchpads
