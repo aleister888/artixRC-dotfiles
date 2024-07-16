@@ -84,7 +84,7 @@ compare_and_append() {
 
 	if [ -e "$og_file" ]; then
 		if [ -e "$bk_file" ]; then
-	            bk_time=$(date -r "$bk_file" +%Y%m%d%H%M%S 2>/dev/null)
+		bk_time=$(date -r "$bk_file" +%Y%m%d%H%M%S 2>/dev/null)
 			if [ "$og_time" -gt "$bk_time" ]; then
 				echo "rm -rf \"$bk_file\"" >> "$SYNC_DIFF"
 			fi

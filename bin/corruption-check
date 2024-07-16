@@ -61,7 +61,7 @@ process_flac() {
 	# es porque el recodificado se ha recodifcado hasta donde habia un error/corrupción,
 	# podriamos afirmar entonces que el archivo esta corrupto.
 	if [ "$og_duration" -ne "$recode_duration" ]; then
-	    echo "$FILE" >> "$FINAL_LOG"
+		echo "$FILE" >> "$FINAL_LOG"
 	fi
 }
 

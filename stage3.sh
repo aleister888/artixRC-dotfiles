@@ -159,11 +159,11 @@ kb_layout_conf(){
 	# Configurar el layout de teclado para Xorg
 	doas mkdir -p /etc/X11/xorg.conf.d/
 echo "Section \"InputClass\"
-        Identifier \"system-keyboard\"
-        MatchIsKeyboard \"on\"
-        Option \"XkbLayout\" \"$final_layout\"
-        Option \"XkbModel\" \"pc105\"
-        Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
+	Identifier \"system-keyboard\"
+	MatchIsKeyboard \"on\"
+	Option \"XkbLayout\" \"$final_layout\"
+	Option \"XkbModel\" \"pc105\"
+	Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
 EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	# Si elegimos español, configurar el layout de la tty en español también
 	[ "$final_layout" == "es" ] && doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps

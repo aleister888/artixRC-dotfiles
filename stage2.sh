@@ -107,9 +107,9 @@ install_grub(){
 	local boot_drive=$(df /boot | awk 'NR==2 {print $1}')
 	case "$boot_drive" in
 	*"nvme"*)
-	        boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
+		boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
 	*)
-	        boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
+		boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
 	esac
 
 	# Instalar GRUB

@@ -87,8 +87,8 @@ scheme_show(){
 
 	# Creamos el esquema que whiptail nos mostrará
 	scheme="/dev/$ROOT_DISK    $(lsblk -dn -o size /dev/"$ROOT_DISK")
-  /dev/$bootpart  $bootmount
-  /dev/$rootpart  $roottype
+	/dev/$bootpart  $bootmount
+	/dev/$rootpart  $roottype
 	"
 	if [ "$crypt_root" == "true" ]; then
 	scheme+="/dev/mapper/root  /"
@@ -103,12 +103,12 @@ scheme_show(){
 	if [ "$home_partition" == "true" ]; then
 	scheme+="
 /dev/$HOME_DISK    $(lsblk -dn -o size /dev/"$HOME_DISK")
-  /dev/$homepart  $hometype"
+	/dev/$homepart  $hometype"
 	fi
 
 	if [ "$crypt_home" == "true" ]; then
 	scheme+="
-    /dev/mapper/home  /home"
+	/dev/mapper/home  /home"
 	fi
 
 	scheme+="
