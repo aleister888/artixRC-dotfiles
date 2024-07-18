@@ -64,6 +64,13 @@ autocmd vimenter * highlight NERDTreeClosable guifg=#83a598
 autocmd vimenter * highlight NERDTreeExecFile guifg=#b8bb26
 autocmd vimenter * highlight NERDTreeCWD guifg=#fabd2f
 
+" Desactivar la barra de estado cuando se abre nerdtree
+autocmd FileType nerdtree set laststatus=0
+autocmd BufLeave NERD_tree_* set laststatus=2
+
+" Iconos
+Plug 'ryanoasis/vim-devicons'
+
 " Snippets
 Plug 'sirver/ultisnips'
 let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
@@ -95,7 +102,7 @@ let g:airline#extensions#whitespace#tab_symbol = '(\t)'
 let g:airline#extensions#whitespace#trail_symbol = '().'
 let g:airline#extensions#whitespace#leading_space = 1
 let g:airline#extensions#whitespace#leading_tab = 1
-
+let g:airline#extensions#wordcount#format = '%d w'
 
 call plug#end()
 
