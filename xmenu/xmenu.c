@@ -478,7 +478,7 @@ getmonitor(struct Monitor *mon)
 		if (!mflag || config.monitor < 0 || config.monitor >= nmons) {
 			for (i = 0; i < nmons; i++) {
 				if (BETWEEN(cursx, info[i].x_org, info[i].x_org + info[i].width) &&
-				    BETWEEN(cursy, info[i].y_org, info[i].y_org + info[i].height)) {
+				BETWEEN(cursy, info[i].y_org, info[i].y_org + info[i].height)) {
 					selmon = i;
 					break;
 				}
@@ -593,14 +593,14 @@ allocmenu(struct Menu *parent, struct Item *list, int level)
 	swa.border_pixel = dc.border.pixel;
 	swa.save_under = True;  /* pop-up windows should save_under*/
 	swa.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask
-	               | PointerMotionMask | LeaveWindowMask;
+	| PointerMotionMask | LeaveWindowMask;
 	if (wflag)
 		swa.event_mask |= StructureNotifyMask;
 	menu->win = XCreateWindow(dpy, rootwin, 0, 0, 1, 1, config.border_pixels,
-	                          CopyFromParent, CopyFromParent, CopyFromParent,
-	                          CWOverrideRedirect | CWBackPixel |
-	                          CWBorderPixel | CWEventMask | CWSaveUnder,
-	                          &swa);
+		CopyFromParent, CopyFromParent, CopyFromParent,
+		CWOverrideRedirect | CWBackPixel |
+		CWBorderPixel | CWEventMask | CWSaveUnder,
+		&swa);
 
 	menu->xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 	                      XNClientWindow, menu->win, XNFocusWindow, menu->win, NULL);

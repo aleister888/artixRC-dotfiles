@@ -1,8 +1,8 @@
 " Auto-instalar vim-plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 " Plugins
@@ -76,15 +76,26 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Ajustes de airline
+let g:airline_theme = 'gruvbox'
 let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'gruvbox'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'default'
-let g:airline#extensions#tabline#show_buffers = 1
-let g:airline#extensions#tabline#show_tabs = 1
+let g:airline_right_alt_sep = ''
+let g:airline_symbols = {}
+let g:airline_symbols.branch = '   '
+let g:airline_symbols.readonly = '   '
+let g:airline_symbols.linenr = '   '
+let g:airline_symbols.maxlinenr = '   '
+let g:airline_symbols.dirty = '  '
+let g:airline_symbols.colnr = ' C:'
+let g:airline#extensions#whitespace#symbol = '( )'
+let g:airline#extensions#whitespace#space_symbol = '( )'
+let g:airline#extensions#whitespace#tab_symbol = '(\t)'
+let g:airline#extensions#whitespace#trail_symbol = '().'
+let g:airline#extensions#whitespace#leading_space = 1
+let g:airline#extensions#whitespace#leading_tab = 1
+
 
 call plug#end()
 
@@ -114,7 +125,7 @@ set termguicolors
 colorscheme gruvbox
 hi Normal guibg=NONE ctermbg=NONE
 if !has('gui_running')
-  set t_Co=256
+	set t_Co=256
 endif
 
 " Activar/Desactivar sugerencias de entrada
