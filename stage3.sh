@@ -64,7 +64,7 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gtk"
 # Aplicaciones GUI
-packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli mate-calc bleachbit baobab gcolor2 gnome-disk-utility"
+packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit baobab gcolor2 gnome-disk-utility"
 # Misc
 packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock"
 # WM

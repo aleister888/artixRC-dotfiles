@@ -194,7 +194,6 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 12'") },
 	{ MODKEY|ControlMask,           XK_p,      spawn,            SHCMD("dmenu -C -l 1 | tr -d '\n' | xclip -selection clipboard") },
-	{ ControlMask,                  XK_p,      spawn,            SHCMD("dmenupassword") },
 	{ MODKEY,                       XK_t,      spawn,            SHCMD("tray-toggle") },
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
