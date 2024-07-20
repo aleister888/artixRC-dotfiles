@@ -1,0 +1,12 @@
+#!/bin/sh
+
+cd $HOME/.dotfiles
+
+for dir in dmenu dwm dwmblocks st; do
+	REPO="$HOME/.dotfiles/$dir"
+	doas make clean --directory "$REPO"
+	sed 's/pixelsize=[0-9]*/pixelsize=40/g' \
+		"$REPO"/config.def.h | tee "$REPO"/config.h
+	doas make install --directory "$REPO"
+	doas make clean --directory "$REPO"
+done

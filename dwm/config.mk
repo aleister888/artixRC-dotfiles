@@ -2,6 +2,7 @@
 VERSION = 6.5
 
 # Directorios
+PREFIX = /usr/local
 MANPREFIX = /usr/local/share/man
 X11INC = /usr/X11R6/include
 X11LIB = /usr/X11R6/lib

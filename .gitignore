@@ -12,6 +12,7 @@ dmenu/dmenu
 dmenu.o
 drw.o
 dwmblocks/blocks.h
+dwmblocks/config.h
 dwmblocks/dwmblocks
 dwm/config.h
 dwm/dwm
