@@ -1,5 +1,9 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
+// Tamaño de las fuentes
+static char *font = "Iosevka Nerd Font:bold:pixelsize=24"; // Fuente principal
+static char *font2[] = { "Symbols Nerd Font:style=Regular:pixelsize=20" }; // Fuente secundaria
+
 static int borderpx = 2; // Margen
 
 // Qué programa se ejecuta con `exec` depende de estas reglas de precedencia:

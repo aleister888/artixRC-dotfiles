@@ -11,25 +11,16 @@ all: dwm
 .c.o:
 	${CC} -c ${CFLAGS} $<
 
-${OBJ}: config.h config.mk resolution.h
+${OBJ}: config.h config.mk
 
 config.h:
 	cp config.def.h $@
 
-resolution.h:
-	cp 1080.h $@
-
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
-1080:
-	cp -f 1080.h resolution.h
-
-2160:
-	cp -f 2160.h resolution.h
-
 clean:
-	rm -f *.o dwm resolution.h config.h
+	rm -f *.o dwm config.h
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
@@ -44,4 +35,4 @@ uninstall:
 		${DESTDIR}${PREFIX}/bin/layoutmenu.sh \
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-.PHONY: all clean 1080 2160 install uninstall
+.PHONY: all clean install uninstall

@@ -1,6 +1,5 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
-#include "fonts.h"
 #include <errno.h>
 #include <math.h>
 #include <limits.h>

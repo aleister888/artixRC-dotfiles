@@ -51,7 +51,6 @@
 
 #include "drw.h"
 #include "util.h"
-#include "resolution.h"
 
 // Macros
 #define BUTTONMASK		(ButtonPressMask|ButtonReleaseMask)

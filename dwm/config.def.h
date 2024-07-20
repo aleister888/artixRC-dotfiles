@@ -6,6 +6,10 @@
 #define TERMC  "st-256color" // Clase de ventana de la terminal
 #define BROWSER "firefox" // Navegador Web
 
+// Tamaño de la fuente y los margenes
+static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font:bold:pixelsize=24" };
+static const unsigned int gappx = 24;
+
 // Constantes
 static const unsigned int borderpx       = gappx/5;   // Borde en pixeles de las ventanas
 static const int vertpad                 = gappx;     // Separación vertical de la barra

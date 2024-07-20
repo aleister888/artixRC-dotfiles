@@ -1,5 +1,9 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
+// Tamaño de la fuente y los bordes (1080p)
+static const char *fonts[] = { "Iosevka Nerd Font:bold:pixelsize=24:antialias=true:autohint=true" };
+static unsigned int border_width = 5;
+
 static int topbar         = 1;    // Mostar en la parte superior (-b = inferior)
 static int centered       = 1;    // Centrar la ventana (-c)
 static int min_width      = 500;  // Mínimo de caractéres cuando esta centrado

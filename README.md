@@ -28,7 +28,6 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 - Auto-particionado de discos, y soporte para encriptación con [LUKS](https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup) (`/boot` queda sin encriptar)
 - Soporte para `BIOS` y `UEFI`
-- Configuración automática, basada en el DPI y resolución de la pantalla (Incluso para dwm, etc.)
 - Entorno configurado para minimizar el número de archivos en `$HOME`
     - https://wiki.archlinux.org/title/XDG_Base_Directory
 

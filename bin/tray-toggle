@@ -1,10 +1,8 @@
 #!/bin/sh
 
-GAPPX=$(grep gappx $HOME/.dotfiles/dwm/resolution.h 2>/dev/null | tr -d -c 0-9)
+GAPPX=$(grep gappx $HOME/.dotfiles/dwm/config.def.h 2>/dev/null | head -n1 | tr -d -c 0-9)
 RESOLUTION=$(readlink $HOME/.config/eww/dashboard.scss | tr -d -c 0-9)
 
-[ -z $GAPPX ] && GAPPX=24
-[ -z $RESOLUTION ] && RESOLUTION=1080
 if [ "$RESOLUTION" = "2160" ]; then SIZE=64; else SIZE=32; fi
 
 if pgrep trayer; then

@@ -204,15 +204,15 @@ nnoremap <F2> :call PairToggle()<CR>
 " Función para ejecutar comandos en la terminal
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
 
-autocmd BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h " Compilar dwmblocks
-	\ execute g:terminal_cmd . ' "cd ' . '~/.dotfiles/dwmblocks/' .
-	\ '; doas make install" && killall dwmblocks; dwmblocks &'
-autocmd BufWritePost ~/.dotfiles/dwm/config.def.h " Compilar dwm
-	\ execute g:terminal_cmd . ' "cd ' . '~/.dotfiles/dwm/' . '; doas make install'
-autocmd BufWritePost ~/.dotfiles/st/config.def.h " Compilar st
-	\ execute g:terminal_cmd . ' "cd ' . '~/.dotfiles/st/' . '; doas make install'
-autocmd BufWritePost ~/.dotfiles/dmenu/config.def.h " Compilar dmenu
-	\ execute g:terminal_cmd . ' "cd ' . '~/.dotfiles/dmenu/' . '; doas make install'
+autocmd BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
+	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwmblocks/' .
+	\ '; doas make clean install" && killall dwmblocks; dwmblocks &'
+autocmd BufWritePost ~/.dotfiles/dwm/config.def.h
+	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwm/; doas make clean install"'
+autocmd BufWritePost ~/.dotfiles/st/config.def.h
+	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/st/; doas make clean install"'
+autocmd BufWritePost ~/.dotfiles/dmenu/config.def.h
+	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
 
 autocmd BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 

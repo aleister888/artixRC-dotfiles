@@ -306,11 +306,7 @@ dotfiles_install(){
 # Instalamos dwm y otras aplicaciones suckless
 suckless_install(){
 	# Instalar software suckless
-	if [ "$resolution" == "720p" ] || [ "$resolution" == "1080p" ]; then
-		for app in dwm dmenu st; do doas make 1080 install --directory "$HOME/.dotfiles/$app" >/dev/null; done
-	else
-		for app in dwm dmenu st; do doas make 2160 install --directory "$HOME/.dotfiles/$app" >/dev/null; done
-	fi
+	for app in dwm dmenu st; do doas make install --directory "$HOME/.dotfiles/$app" >/dev/null; done
 	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
