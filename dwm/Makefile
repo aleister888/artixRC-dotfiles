@@ -24,8 +24,8 @@ clean:
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
-	install -m 755 dwm ${DESTDIR}${PREFIX}/bin
-	install -m 755 layoutmenu.sh ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 dwm ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 layoutmenu.sh ${DESTDIR}${PREFIX}/bin
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1

@@ -87,9 +87,10 @@
 // enums
 enum { CurNormal, CurResize, CurMove, CurLast }; // Cursor
 enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm,
-	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm, SchemeScratchSel, SchemeStickyNorm, SchemeStickySel,
-	SchemeTag1, SchemeTag2,  SchemeTag3,  SchemeTag4,
-	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8}; // Esquema de colores
+	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm,
+	SchemeScratchSel, SchemeStickyNorm, SchemeStickySel,
+	SchemeTag1, SchemeTag2,  SchemeTag3,  SchemeTag4, // Esquema de colores
+	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8, SchemeTag9};
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 	NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
 	NetWMFullscreen, NetWMSticky, NetActiveWindow, NetWMWindowType,

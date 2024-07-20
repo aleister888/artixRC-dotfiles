@@ -28,8 +28,8 @@ clean:
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
-	install -m 755 st ${DESTDIR}${PREFIX}/bin
-	install -m 755 st-urlhandler ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 st ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 st-urlhandler ${DESTDIR}${PREFIX}/bin
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < st.1 > ${DESTDIR}${MANPREFIX}/man1/st.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/st.1

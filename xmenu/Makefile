@@ -44,9 +44,9 @@ clean:
 
 install: all
 	mkdir -p ${bindir}/bin
-	install -m 755 ${PROG} ${bindir}/bin/${PROG}
+	install -Dm 755 ${PROG} ${bindir}/bin/${PROG}
 	mkdir -p ${mandir}/man1
-	install -m 644 ${PROG}.1 ${mandir}/man1/${PROG}.1
+	install -Dm 644 ${PROG}.1 ${mandir}/man1/${PROG}.1
 
 uninstall:
 	rm -f ${bindir}/bin/${PROG}

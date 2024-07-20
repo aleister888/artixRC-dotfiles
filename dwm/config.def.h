@@ -66,13 +66,14 @@ static const char *colors[][3] = {
 	[SchemeTag6]        = { col_blue,   background_sel, "#000000"  },
 	[SchemeTag7]        = { col_green,  background_sel, "#000000"  },
 	[SchemeTag8]        = { col_yellow, background_sel, "#000000"  },
+	[SchemeTag9]        = { col_purple, background_sel, "#000000"  },
 	// Los valores con "#000000" no son usados pero no pueden estar vacios
 };
 
 static const int tagschemes[] = {
-	SchemeTag1,  SchemeTag2,  SchemeTag3,
-	SchemeTag4,  SchemeTag5,  SchemeTag6,
-	SchemeTag7,  SchemeTag8
+	SchemeTag1, SchemeTag2, SchemeTag3,
+	SchemeTag4, SchemeTag5, SchemeTag6,
+	SchemeTag7, SchemeTag8, SchemeTag9,
 };
 
 typedef struct {
@@ -81,9 +82,9 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", };
-static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", };
-static const int taglayouts[]	= {   0,   0,   0,   0,   0,   0,   0,   0, };
+static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󰊗"};
+static const int taglayouts[]	= {   0,   0,   0,   0,   0,   0,   0,   0,   0};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -296,7 +297,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                        6)
 	TAGKEYS(                        XK_8,                        7)
 	TAGKEYS(                        XK_9,                        8)
-	TAGKEYS(                        XK_0,                        9)
 };
 
 // Botónes del ratón
@@ -307,8 +307,8 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button3,        layoutmenu,     {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xmenu-apps") },
-	{ ClkClientWin,         MODKEY|ControlMask,         Button1,        movemouse,      {0} },
-	{ ClkClientWin,         MODKEY|ControlMask,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY|ControlMask,Button1,     movemouse,      {0} },
+	{ ClkClientWin,         MODKEY|ControlMask,Button3,     resizemouse,    {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },

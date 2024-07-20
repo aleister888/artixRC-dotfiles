@@ -27,10 +27,10 @@ clean:
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
-	install -m 755 dmenu ${DESTDIR}${PREFIX}/bin
-	install -m 755 dmenu_path ${DESTDIR}${PREFIX}/bin
-	install -m 755 dmenu_run ${DESTDIR}${PREFIX}/bin
-	install -m 755 stest ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 dmenu ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 dmenu_path ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 dmenu_run ${DESTDIR}${PREFIX}/bin
+	install -Dm 755 stest ${DESTDIR}${PREFIX}/bin
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < dmenu.1 > ${DESTDIR}${MANPREFIX}/man1/dmenu.1
 	sed "s/VERSION/${VERSION}/g" < stest.1 > ${DESTDIR}${MANPREFIX}/man1/stest.1
