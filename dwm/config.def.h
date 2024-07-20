@@ -12,6 +12,7 @@ static const int vertpad                 = gappx;     // Separación vertical de
 static const int sidepad                 = gappx;     // Separación horizontal de la barra
 static const int user_bh                 = gappx/4*3; // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;         // Pixeles de cercanía para pegarse al borde (0 = desactivado)
+static const unsigned int cursorupdate   = 0;         // Actualizar ventana enfocada en funcion del cursor
 static const unsigned int systraypinning = 0;         // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayspacing = gappx/2;   // Espaciado de la barra de tareas
 static const int systraypinningfailfirst = 1;         // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor

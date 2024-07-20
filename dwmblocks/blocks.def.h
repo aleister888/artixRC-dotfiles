@@ -22,5 +22,5 @@ static const Block blocks[] = {
 	// Fecha
 	{" ^d^^c#D65D0E^ ^c#FE8019^" ,"date +'%d/%m'",                         900,  0},
 	// Hora
-	{" ^d^^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          5,  0},
+	{" ^d^^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M:%S '",                       1,  0},
 };

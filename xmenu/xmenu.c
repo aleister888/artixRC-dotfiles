@@ -18,42 +18,42 @@
 #include <Imlib2.h>
 
 // Macros
-#define MAXPATHS 128            /* maximal number of paths to look for icons */
-#define ICONPATH "ICONPATH"     /* environment variable name */
-#define CLASS               "XMenu"
-#define LEN(x)              (sizeof (x) / sizeof (x[0]))
-#define BETWEEN(x, a, b)    ((a) <= (x) && (x) <= (b))
+#define MAXPATHS	128 // Número máximo de directorios en los que buscar los iconos
+#define ICONPATH	"ICONPATH" // Nombre de la variable de entorno
+#define CLASS		"XMenu"
+#define LEN(x)		(sizeof (x) / sizeof (x[0]))
+#define BETWEEN(x, a, b)((a) <= (x) && (x) <= (b))
 #define GETNUM(n, s) { \
 	unsigned long __TMP__; \
 	if ((__TMP__ = strtoul((s), NULL, 10)) < INT_MAX) \
 		(n) = __TMP__; \
 	}
 
-/* Actions for the main loop */
+// Acciones del bucle principal
 enum {
 	ACTION_NOP    = 0,
-	ACTION_CLEAR  = 1<<0,     /* clear text */
-	ACTION_SELECT = 1<<1,     /* select item */
-	ACTION_MAP    = 1<<2,     /* remap menu windows */
-	ACTION_DRAW   = 1<<3,     /* redraw menu windows */
-	ACTION_WARP   = 1<<4,     /* warp the pointer */
+	ACTION_CLEAR  = 1<<0, // Limpar texto
+	ACTION_SELECT = 1<<1, // Seleccionar item
+	ACTION_MAP    = 1<<2, // Remapear las ventanas de menu
+	ACTION_DRAW   = 1<<3, // Re-dibujar las ventanas del menu
+	ACTION_WARP   = 1<<4, // Deformar el puntero
 };
 
-/* enum for keyboard menu navigation */
+// enum para navegación por menús de teclado
 enum { ITEMPREV, ITEMNEXT, ITEMFIRST, ITEMLAST };
 
-/* enum for text alignment */
+// enum para la alineación del texto
 enum {LeftAlignment, CenterAlignment, RightAlignment};
 
-/* color enum */
+// enum para los colores
 enum {ColorFG, ColorBG, ColorLast};
 
-/* EWMH atoms */
+// EWMH atoms
 enum {NetWMName, NetWMWindowType, NetWMWindowTypePopupMenu, NetLast};
 
-/* configuration structure */
+// Estructura de la configuración
 struct Config {
-	/* the values below are set by config.h */
+	// Estos valores están definidos en config.h
 	const char *font;
 	const char *background_color;
 	const char *foreground_color;
@@ -73,15 +73,15 @@ struct Config {
 	int horzpadding;
 	int alignment;
 
-	/* the values below are set by options */
+	// Estos valores son establecidos por opciones
 	int monitor;
-	int posx, posy;         /* rootmenu position */
+	int posx, posy; // Posición del menú principal
 
-	/* the value below is computed by xmenu */
+	// Valor computado por xmenu
 	int iconsize;
 };
 
-/* draw context structure */
+// Dibujar la estructura del contexto
 struct DC {
 	XftColor normal[ColorLast];
 	XftColor selected[ColorLast];
@@ -95,10 +95,10 @@ struct DC {
 	size_t nfonts;
 };
 
-/* menu item structure */
+// Estructura de los elementos de menú
 struct Item {
-	char *label;            /* string to be drawed on menu */
-	char *output;           /* string to be outputed when item is clicked */
+	char *label; // Cadena que se dibujará en el menú
+	char *output; // Cadena que se mostrará al hacer clic en un elemento
 	char *file;             /* filename of the icon */
 	int y;                  /* item y position relative to menu */
 	int h;                  /* item height */
