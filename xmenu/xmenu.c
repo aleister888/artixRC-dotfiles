@@ -99,7 +99,7 @@ struct DC {
 struct Item {
 	char *label; // Cadena que se dibujará en el menú
 	char *output; // Cadena que se mostrará al hacer clic en un elemento
-	char *file;             /* filename of the icon */
+	char *file; // Nombre de archivo del icono
 	int y;                  /* item y position relative to menu */
 	int h;                  /* item height */
 	int textw;              /* text width */

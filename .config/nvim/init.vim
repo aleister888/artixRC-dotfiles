@@ -1,74 +1,67 @@
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim' " Directorio donde instalar vim-plug
-let plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' " Url de vim-plug
-
-" Instalar vim-plug si no lo está ya
-if empty(glob(data_dir . '/autoload/plug.vim')) " Creamos los directorios necesarios
-	silent execute '!wget -O ' . data_dir . '/autoload/plug.vim ' . plug_url
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC " Instalamos los plugins
+" Auto-instalar vim-plug
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+
 let mapleader = "," " Definir la tecla leader
+
 
 " Cargar plugins
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Iconos
-Plug 'ryanoasis/vim-devicons'
 
-" Auto-cerrar llaves, paréntesis, ...
-Plug 'LunarWatcher/auto-pairs'
+Plug 'ryanoasis/vim-devicons' " Iconos
+Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
+Plug 'morhetz/gruvbox' " Tema de colores
 
-" Tema de colores
-Plug 'morhetz/gruvbox'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
+let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
-" Pre-visualización de colores
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
-let g:Hexokinase_highlighters = [
-\   'backgroundfull',
-\ ]
-
-" Sugerencias de entrada
-Plug 'lervag/vimtex'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-vimtex'
+Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
+Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
+let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex']
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
+augroup my_coc_highlights
+	au!
+	au ColorScheme * highlight CocHighlightText gui=NONE guibg=#3C3836
+	au ColorScheme * highlight CocHighlightRead gui=NONE guibg=#3C3836
+	au ColorScheme * highlight CocHighlightWrite gui=NONE guibg=#3C3836
+	au ColorScheme * highlight CocErrorSign guifg=#B16286
+	au ColorScheme * highlight CocWarningSign guifg=#fabd2f
+	au ColorScheme * highlight CocInfoSign guifg=#83a598
+	au ColorScheme * highlight CocHintSign guifg=#8ec07c
+	au ColorScheme * highlight CocErrorFloat guibg=#222222 guifg=#B16286
+	au ColorScheme * highlight CocWarningFloat guibg=#222222 guifg=#fabd2f
+	au ColorScheme * highlight CocInfoFloat guibg=#222222 guifg=#8ec07c
+	au ColorScheme * highlight CocHintFloat guibg=#222222 guifg=#98971A
+	au ColorScheme * highlight CocFloating guibg=#222222
+	au ColorScheme * highlight CocMenuSel guibg=#3C3836
+augroup END
 
-" Navegador de archivos
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
-" Encontrar archivos con telescope
-nnoremap <leader>f <cmd>Telescope find_files<cr>
-nnoremap <leader>g <cmd>Telescope live_grep<cr>
-
-" Árbol de directorios
-Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree' " Árbol de directorios
 let NERDTreeShowHidden=1
 nnoremap <silent><leader>t :NERDTreeToggle<CR>
 " Customizar NERDTree con el esquema de colores Gruvbox
-autocmd vimenter * highlight NERDTreeDir guifg=#8ec07c
-autocmd vimenter * highlight NERDTreeDirSlash guifg=#8ec07c
-autocmd vimenter * highlight NERDTreeOpenable guifg=#83a598
-autocmd vimenter * highlight NERDTreeClosable guifg=#83a598
-autocmd vimenter * highlight NERDTreeExecFile guifg=#b8bb26
-autocmd vimenter * highlight NERDTreeCWD guifg=#fabd2f
+let g:NERDTreeDirArrowExpandable="+"
+let g:NERDTreeDirArrowCollapsible="~"
 
-" Mostar solo una barra de estado a la vez
-set laststatus=3
-autocmd BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
-autocmd BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
+set laststatus=3 " Mostar solo una barra de estado a la vez
+au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
+au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
 
-" Snippets
-Plug 'sirver/ultisnips'
+Plug 'sirver/ultisnips' " Snippets
 let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
 
-" Barra de estado
-Plug 'vim-airline/vim-airline'
-
-" Ajustes de la barra de estado
-let g:airline_theme = 'gruvbox'
+Plug 'vim-airline/vim-airline' " Barra de estado
+Plug 'vim-airline/vim-airline-themes'
+let g:airline_theme = 'base16_gruvbox_dark_medium'
 let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
@@ -89,7 +82,9 @@ let g:airline#extensions#whitespace#leading_space = 1
 let g:airline#extensions#whitespace#leading_tab = 1
 let g:airline#extensions#wordcount#format = '%d w'
 
+
 call plug#end()
+
 
 " Mostramos en la barra de estado si
 " auto-pairs y coc.nvim estan activos
@@ -99,8 +94,8 @@ endfunction
 function! AutoPairsStatus()
 	return g:pair ? '  {}' : ''
 endfunction
-
 let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}'])
+
 
 " Ajustes generales
 syntax enable
@@ -112,6 +107,7 @@ set number relativenumber cursorline " Opciones del cursor
 set ic | set ignorecase | set incsearch " Ajustes de búsqueda
 set noshowmode | set clipboard+=unnamedplus " Ajustes de pantalla
 
+
 " Tema de colores
 set background=dark termguicolors
 colorscheme gruvbox
@@ -120,10 +116,11 @@ if !has('gui_running')
 	set t_Co=256
 endif
 
-" Atajos de teclado
+
+" Atajos de teclado:
+
 
 " Presionando ,, vamos al principio de la palabra
-" (solo tenemos en cuenta los espacios como separadores)
 function! MoveCursorLeftIfNeeded()
 	let col = col('.')
 	if col > 1
@@ -133,7 +130,6 @@ endfunction
 nnoremap <silent><leader>, :call MoveCursorLeftIfNeeded()<CR>
 
 " Si presionamos: ,"   ,"   ,'   ,(   ,\   ,[   ,{
-" rodeamos la palabra por el limitador escogido
 nnoremap <silent><leader>" :s/\%#\([^[:space:]]\+\)/"\1"/g<CR>:noh<CR>
 nnoremap <silent><leader>' :s/\%#\([^[:space:]]\+\)/'\1'/g<CR>:noh<CR>
 nnoremap <silent><leader>( :s/\%#\([^[:space:]]\+\)/(\1)/g<CR>:noh<CR>
@@ -149,37 +145,27 @@ nnoremap <silent><F3> :setlocal spell! spelllang=es_es<CR>
 nnoremap <silent><F4> :setlocal spell! spelllang=en_us<CR>
 
 " Compilar documentos (laTeX)
-autocmd Filetype tex map <M-g> :! arara % && notify-send "Document Compiled" <CR><CR>
-autocmd Filetype tex map <M-S-g> :! xelatex % <CR>
-autocmd Filetype tex map <M-h> :! setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
-
+au Filetype tex map <M-g> :! arara % && notify-send "Document Compiled" <CR><CR>
+au Filetype tex map <M-S-g> :! xelatex % <CR>
+au Filetype tex map <M-h> :! setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
 " Compilar documentos (Groff)
-
 " Groff -> PDF
-autocmd Filetype groff map <M-g> :!
+au Filetype groff map <M-g> :!
 	\ groff -ms % -T pdf > $(echo % \| sed 's/ms$/pdf/') <CR><CR>
-
 " Groff -> PS -> PDF
-autocmd Filetype groff map <M-S-g> :!
+au Filetype groff map <M-S-g> :!
 	\ groff -ms % -T ps > $(echo % \| sed 's/ms$/ps/')
 	\ | time ps2pdf $(echo % \| sed 's/ms$/ps/') <CR>
-
 " Pic -> Groff -> PDF
-autocmd Filetype groff map <C-g> :!
+au Filetype groff map <C-g> :!
 	\ pic % \| groff -ms -T pdf > $(echo % \| sed 's/ms$/pdf/') <CR>
-
 " Pic -> Groff -> PS -> PDF
-autocmd Filetype groff map <C-S-g> :!
+au Filetype groff map <C-S-g> :!
 	\ pic % \| groff -ms -T ps > $(echo % \| sed 's/ms$/ps/')
 	\ | time ps2pdf $(echo % \| sed 's/ms$/ps/') <CR>
-
 " Abrir PDF
-autocmd Filetype groff map <M-w> :!
+au Filetype groff map <M-w> :!
 	\ setsid /usr/bin/zathura $(echo % \| sed 's/ms$/pdf/') <CR><CR>
-
-" C
-" autocmd Filetype c map <M-g> :! gcc % -o $(echo % \| sed 's/.c$//') -lm <CR>
-" autocmd Filetype c map <M-h> :terminal $PWD/$(echo % \| sed 's/.c$//')<CR>
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1
@@ -199,46 +185,40 @@ endfunction
 inoremap <F2> <C-O>:call PairToggle()<CR>
 nnoremap <F2> :call PairToggle()<CR>
 
-" Automatizar tareas cuando se escribe en un archivo
+
+" Automatizar tareas:
+
 
 " Función para ejecutar comandos en la terminal
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
-
-autocmd BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
+au BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwmblocks/' .
 	\ '; doas make clean install" && killall dwmblocks; dwmblocks &'
-autocmd BufWritePost ~/.dotfiles/dwm/config.def.h
+au BufWritePost ~/.dotfiles/dwm/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwm/; doas make clean install"'
-autocmd BufWritePost ~/.dotfiles/st/config.def.h
+au BufWritePost ~/.dotfiles/st/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/st/; doas make clean install"'
-autocmd BufWritePost ~/.dotfiles/dmenu/config.def.h
+au BufWritePost ~/.dotfiles/dmenu/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
+au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 
-autocmd BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 
-" Auto acentuar carácteres con groff
-
-" a:
-autocmd Filetype groff inoremap á  \['a] | autocmd Filetype groff inoremap Á  \['A]
-autocmd Filetype groff inoremap â  \[^a] | autocmd Filetype groff inoremap Â  \[^A]
-autocmd Filetype groff inoremap ä  \[:a] | autocmd Filetype groff inoremap Ä  \[:A]
-" e:
-autocmd Filetype groff inoremap é  \['e] | autocmd Filetype groff inoremap É  \['E]
-autocmd Filetype groff inoremap ê  \[^e] | autocmd Filetype groff inoremap Ê  \[^E]
-autocmd Filetype groff inoremap ë  \[:e] | autocmd Filetype groff inoremap Ë  \[:E]
-" i:
-autocmd Filetype groff inoremap í  \['i] | autocmd Filetype groff inoremap Í  \['I]
-autocmd Filetype groff inoremap î  \[^i] | autocmd Filetype groff inoremap Î  \[^I]
-autocmd Filetype groff inoremap ï  \[:i] | autocmd Filetype groff inoremap Ï  \[:I]
-" o:
-autocmd Filetype groff inoremap ó  \['o] | autocmd Filetype groff inoremap Ó  \['O]
-autocmd Filetype groff inoremap ô  \[^o] | autocmd Filetype groff inoremap Ô  \[^O]
-autocmd Filetype groff inoremap ö  \[:o] | autocmd Filetype groff inoremap Ö  \[:O]
-" u:
-autocmd Filetype groff inoremap ú  \['u] | autocmd Filetype groff inoremap Ú  \['U]
-autocmd Filetype groff inoremap û  \[^u] | autocmd Filetype groff inoremap Û  \[^U]
-autocmd Filetype groff inoremap ü  \[:u] | autocmd Filetype groff inoremap Ü  \[:U]
-" misc.
-autocmd Filetype groff inoremap ñ  \[~n] | autocmd Filetype groff inoremap Ñ  \[~N]
-autocmd Filetype groff inoremap ç  \[,c] | autocmd Filetype groff inoremap Ç  \[,C]
-autocmd Filetype groff inoremap ·  \[pc] | autocmd Filetype groff inoremap ×  \[mu]
+" Auto acentuar carácteres con groff:
+au Filetype groff inoremap á  \['a] | au Filetype groff inoremap Á  \['A]
+au Filetype groff inoremap â  \[^a] | au Filetype groff inoremap Â  \[^A]
+au Filetype groff inoremap ä  \[:a] | au Filetype groff inoremap Ä  \[:A]
+au Filetype groff inoremap é  \['e] | au Filetype groff inoremap É  \['E]
+au Filetype groff inoremap ê  \[^e] | au Filetype groff inoremap Ê  \[^E]
+au Filetype groff inoremap ë  \[:e] | au Filetype groff inoremap Ë  \[:E]
+au Filetype groff inoremap í  \['i] | au Filetype groff inoremap Í  \['I]
+au Filetype groff inoremap î  \[^i] | au Filetype groff inoremap Î  \[^I]
+au Filetype groff inoremap ï  \[:i] | au Filetype groff inoremap Ï  \[:I]
+au Filetype groff inoremap ó  \['o] | au Filetype groff inoremap Ó  \['O]
+au Filetype groff inoremap ô  \[^o] | au Filetype groff inoremap Ô  \[^O]
+au Filetype groff inoremap ö  \[:o] | au Filetype groff inoremap Ö  \[:O]
+au Filetype groff inoremap ú  \['u] | au Filetype groff inoremap Ú  \['U]
+au Filetype groff inoremap û  \[^u] | au Filetype groff inoremap Û  \[^U]
+au Filetype groff inoremap ü  \[:u] | au Filetype groff inoremap Ü  \[:U]
+au Filetype groff inoremap ñ  \[~n] | au Filetype groff inoremap Ñ  \[~N]
+au Filetype groff inoremap ç  \[,c] | au Filetype groff inoremap Ç  \[,C]
+au Filetype groff inoremap ·  \[pc] | au Filetype groff inoremap ×  \[mu]
