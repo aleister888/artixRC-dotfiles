@@ -4,7 +4,7 @@
 static char *font = "Iosevka Nerd Font:bold:pixelsize=20"; // Fuente principal
 static char *font2[] = { "Symbols Nerd Font:style=Regular:pixelsize=20" }; // Fuente secundaria
 
-static int borderpx = 2; // Margen
+static int borderpx = 0; // Margen
 
 // Qué programa se ejecuta con `exec` depende de estas reglas de precedencia:
 // 1: Programa pasado con -e

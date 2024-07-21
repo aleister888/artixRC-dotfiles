@@ -16,6 +16,8 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'ryanoasis/vim-devicons' " Iconos
 Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 Plug 'morhetz/gruvbox' " Tema de colores
+Plug 'akinsho/bufferline.nvim' " Tabs
+Plug 'dstein64/nvim-scrollview' " Scrollbar
 
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
@@ -61,7 +63,7 @@ let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
 
 Plug 'vim-airline/vim-airline' " Barra de estado
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme = 'base16_gruvbox_dark_medium'
+let g:airline_theme = 'term'
 let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
@@ -111,7 +113,6 @@ set noshowmode | set clipboard+=unnamedplus " Ajustes de pantalla
 " Tema de colores
 set background=dark termguicolors
 colorscheme gruvbox
-hi Normal guibg=NONE ctermbg=NONE
 if !has('gui_running')
 	set t_Co=256
 endif
@@ -222,3 +223,5 @@ au Filetype groff inoremap ü  \[:u] | au Filetype groff inoremap Ü  \[:U]
 au Filetype groff inoremap ñ  \[~n] | au Filetype groff inoremap Ñ  \[~N]
 au Filetype groff inoremap ç  \[,c] | au Filetype groff inoremap Ç  \[,C]
 au Filetype groff inoremap ·  \[pc] | au Filetype groff inoremap ×  \[mu]
+
+so ~/.config/nvim/bufferline.lua

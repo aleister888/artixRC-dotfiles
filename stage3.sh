@@ -4,7 +4,9 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+
 
 # Funciones que invocaremos a menudo
 whip_msg(){ # Mensajes de tailbox
@@ -36,12 +38,9 @@ service_add(){
 	doas rc-update add "$1" default
 }
 
-############
-# Paquetes #
-############
 
-# Desinstala estos paquetes al instalar KDE luego de usar DWM
-# picom blueman dunst
+# Paquetes
+
 
 # Sistema
 packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley libqalculate ca-certificates npm"
@@ -70,8 +69,8 @@ packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf 
 # WM
 packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom lxappearance polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
 
-# Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
+# Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 driver_choose(){
 	# Opciones posibles
 	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM" "optimus" "Portatil")
@@ -90,6 +89,7 @@ driver_choose(){
 	esac
 }
 
+
 # Elegimos que paquetes instalar
 packages_show(){
 	local scheme # Variable con la lista de paquetes a instalar
@@ -103,31 +103,32 @@ packages_show(){
 	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60
 }
 
+
 # Elegir el software a instalar
 packages_choose(){
-local packages_confirm="false"
-# Definimos todas las variables menos daw y virt como locales
-local music noprivacy office latex
-
-while [ "$packages_confirm" == "false" ]; do
-	variables=("virt" "music" "noprivacy" "daw" "office" "latex")
-	# Reiniciamos las variables si no confirmamos la selección
-	for var in "${variables[@]}"; do eval "$var=false"; done
-
-	whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && virt="true"
-	whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && music="true"
-	whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && noprivacy="true"
-	whip_yes "Oficina" "¿Deseas instalar software de ofimatica?" && office="true"
-	whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)" && latex="true"
-	whip_yes "DAW" "¿Deseas instalar software de produccion de audio?" && daw="true"
-
-	if packages_show; then
-		packages_confirm=true
-	else
-		whip_msg "Operacion cancelada" "Se te volvera a preguntar que software desea instalar"
-	fi
-done
-
+	local packages_confirm="false"
+	# Definimos todas las variables menos daw y virt como locales
+	local music noprivacy office latex
+	
+	while [ "$packages_confirm" == "false" ]; do
+		variables=("virt" "music" "noprivacy" "daw" "office" "latex")
+		# Reiniciamos las variables si no confirmamos la selección
+		for var in "${variables[@]}"; do eval "$var=false"; done
+	
+		whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && virt="true"
+		whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && music="true"
+		whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && noprivacy="true"
+		whip_yes "Oficina" "¿Deseas instalar software de ofimatica?" && office="true"
+		whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)" && latex="true"
+		whip_yes "DAW" "¿Deseas instalar software de produccion de audio?" && daw="true"
+	
+		if packages_show; then
+			packages_confirm=true
+		else
+			whip_msg "Operacion cancelada" "Se te volvera a preguntar que software desea instalar"
+		fi
+	done
+	
 	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
@@ -142,6 +143,7 @@ done
 	fi
 }
 
+
 # Elegimos distribución de teclado
 kb_layout_select(){
 	# Hacer un array con las diferentes distribuciones posibles y elegir nuestro layout
@@ -155,10 +157,11 @@ kb_layout_select(){
 	${keyboard_array[@]})
 }
 
+
+# Configurar la distribución de teclado
 kb_layout_conf(){
-	# Configurar el layout de teclado para Xorg
-	doas mkdir -p /etc/X11/xorg.conf.d/
-echo "Section \"InputClass\"
+	doas mkdir -p /etc/X11/xorg.conf.d/ # X11
+	echo "Section \"InputClass\"
 	Identifier \"system-keyboard\"
 	MatchIsKeyboard \"on\"
 	Option \"XkbLayout\" \"$final_layout\"
@@ -258,7 +261,7 @@ makeuserjs(){
 	doas mkdir -p /usr/local/lib /etc/pacman.d/hooks
 	doas install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
 	# Trigger the update when needed via a pacman hook.
-	doas cp $HOME/.dotfiles/assets/system/arkenfox.hook /etc/pacman.d/hooks/arkenfox.hook
+	doas cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
 }
 firefox_configure(){
 	browserdir="/home/$USER/.mozilla/firefox"
@@ -297,7 +300,7 @@ dotfiles_install(){
 	done
 	# Instalamos nuestros archivos de configuración
 	"$HOME/.dotfiles/update.sh"
-	echo 'ZDOTDIR=$HOME/.config/zsh' | doas tee /etc/zsh/zshenv
+	echo "ZDOTDIR=\$HOME/.config/zsh" | doas tee /etc/zsh/zshenv
 	doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
 }
 
@@ -314,7 +317,8 @@ suckless_install(){
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
-	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" "$HOME/.config/keepassxc/keepassxc.ini"
+	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" \
+		"$HOME/.config/keepassxc/keepassxc.ini"
 }
 
 # Crear enlaces simbólicos a /usr/local/bin para ciertos scripts
@@ -346,8 +350,8 @@ trash_dir(){
 
 # Configurar el audio de baja latencia
 audio_setup(){
-	doas usermod -aG realtime,audio,video,optical,uucp $USER
-	cat /etc/security/limits.conf | grep audio || \
+	doas usermod -aG realtime,audio,video,optical,uucp "$USER"
+	grep audio /etc/security/limits.conf || \
 	echo "@audio - rtprio 95
 	@audio - memlock unlimited
 	$USER hard nofile 524288" | \
@@ -466,7 +470,8 @@ net.ipv6.conf.all.forwarding=1' | doas tee -a /etc/sysctl.conf
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 # Permitir a Steam controlar mandos de PlayStation 4
-doas cp $HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules /usr/lib/udev/rules.d/
+doas cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
+	/usr/lib/udev/rules.d/
 
 # Descargar wordlist
 "$HOME/.dotfiles/bin/wordlist"
@@ -486,7 +491,7 @@ doas rfkill unblock wifi
 { lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && doas rfkill unblock bluetooth
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
-doas usermod -aG network $USER
+doas usermod -aG network "$USER"
 [ -e /sys/class/power_supply/BAT0 ] && \
 doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
@@ -495,7 +500,7 @@ doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/
 doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
 
 # /etc/polkit-1/rules.d/99-artix.rules
-doas usermod -aG storage,input,users $USER
+doas usermod -aG storage,input,users "$USER"
 
 # Permitir hacer click tocando el trackpad (X11)
 # Créditos para: <luke@lukesmith.xyz>
@@ -504,7 +509,7 @@ doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/
 
 # Crear directorio para montar dispositivos android
 doas mkdir /mnt/ANDROID
-doas chown $USER /mnt/ANDROID
+doas chown "$USER" /mnt/ANDROID
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$virt" == "true" ] && virt_conf
@@ -522,8 +527,8 @@ _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/en
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 
 # Borrar archivos innecesarios
-rm $HOME/.bash* 2>/dev/null
-rm $HOME/.wget-hsts 2>/dev/null
+rm "$HOME"/.bash* 2>/dev/null
+rm "$HOME"/.wget-hsts 2>/dev/null
 
 # Finalmente configurar doas de forma más segura
 doas chown -c root:root /etc/doas.conf

@@ -70,10 +70,6 @@ timezoneset(){
 # Crear usuario y establecer la contraseña para el usuario root
 set_password() {
 	local user="$1"
-	local prompt="Contraseña: $1"
-	local password=""
-	local confirm=""
-
 	while true; do
 		whip_msg "$user" "A continuacion, se te pedira la contraseña de $user:"
 		passwd "$user" && break
