@@ -5,7 +5,7 @@
 
 # Antes de ejecutar el script comprobamos que no exista ya
 # un micrófono virtual
-if [ ! $(pactl list | grep my-combined-sink) ]; then
+if pactl list | grep -q my-combined-sink; then
 
 # Creamos un sink virtual
 pactl load-module module-null-sink media.class=Audio/Sink sink_name=my-combined-sink channel_map=stereo

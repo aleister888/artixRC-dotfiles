@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd $HOME/.dotfiles
+cd "$HOME/.dotfiles" || exit
 
 for dir in dmenu dwm dwmblocks st; do
 	REPO="$HOME/.dotfiles/$dir"

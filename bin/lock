@@ -6,4 +6,4 @@
 REGULARUSER="$(getent passwd 1000 | cut -d: -f1)"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR=/run/user/1000
-su $REGULARUSER -c "i3lock-fancy"
+su "$REGULARUSER" -c "i3lock-fancy"

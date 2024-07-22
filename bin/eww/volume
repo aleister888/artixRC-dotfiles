@@ -9,13 +9,13 @@ percentage () {
 	local icon3=$4
 	local icon4=$5
 	if [ "$val" -le 15 ]; then
-		echo $icon1
+		echo "$icon1"
 	elif [ "$val" -le 30 ]; then
-		echo $icon2
+		echo "$icon2"
 	elif [ "$val" -le 60 ]; then
-		echo $icon3
+		echo "$icon3"
 	else
-		echo $icon4
+		echo "$icon4"
 	fi
 }
 
@@ -41,27 +41,27 @@ get_icon () {
 	if [[ $vol == "0%" ]]; then
 		echo "󰖁"
 	else
-		echo $(percentage "$vol" "󰖁" "󰕿" "󰖀" "󰕾")
+		percentage "$vol" "󰖁" "󰕿" "󰖀" "󰕾"
 	fi
 }
 
 get_vol () {
 	local percent=$(get_percentage)
-	echo $percent | tr -d '%'
+	echo "$percent" | tr -d '%'
 }
 
 set_vol () {
-	val=$(echo $1 | tr '.' ' ' | awk '{print $1}')
-	if test $val -gt 100; then
+	val=$(echo "$1" | tr '.' ' ' | awk '{print $1}')
+	if test "$val" -gt 100; then
 		val=100
 	fi
-	pactl set-sink-volume @DEFAULT_SINK@ $val%
+	pactl set-sink-volume @DEFAULT_SINK@ "$val"%
 }
 
 case $1 in
 	"icon") get_icon ;;
 	"vol") get_vol ;;
 	"muted") is_muted ;;
-	"set") set_vol $2 ;;
+	"set") set_vol "$2" ;;
 esac
 

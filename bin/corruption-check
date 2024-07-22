@@ -14,8 +14,8 @@ OUT_FOLDER="/tmp/flac" # Carpeta de salida para archivos cortados
 [ ! -d $OUT_FOLDER ] && mkdir $OUT_FOLDER
 
 # Limpiar los archivos de guardado
-> "$LOG_FILE"
-> "$FINAL_LOG"
+true > "$LOG_FILE"
+true > "$FINAL_LOG"
 find "$OUT_FOLDER" -type f -delete
 
 # Verificar si el directorio existe

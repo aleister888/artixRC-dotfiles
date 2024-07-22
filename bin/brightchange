@@ -21,10 +21,10 @@ calculate_brightness() {
 	# y cambiarlo gradualmente
 	if [ "$mode" == "inc" ]; then
 		# Salirse del script si el brillo ya esta al máximo
-		[ "$(( $(cat /sys/class/backlight/intel_backlight/max_brightness) / 100 * 95))" -le "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" ] && exit 1
+		[ "$(( $(cat /sys/class/backlight/intel_backlight/max_brightness) * 95 / 100))" -le "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" ] && exit 1
 		new_brightness=$((actual + increment)) # Aumentar el brillo gradualmente
-		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $(($max-$gradient)) ]; do
-			actual=$((actual + $gradient))
+		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $((max-gradient)) ]; do
+			actual=$((actual + gradient))
 			echo $actual | doas /usr/bin/tee /sys/class/backlight/intel_backlight/brightness
 		done
 	elif [ "$mode" == "dec" ]; then
@@ -32,7 +32,7 @@ calculate_brightness() {
 		[ "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" -le "$increment" ] && exit 1
 		new_brightness=$((actual - increment)) # Bajar el brillo gradualmente (Mínimo 25%)
 		while [ "$actual" -gt "$new_brightness" ] && [ "$actual" -ge "$increment" ]; do
-			actual=$((actual - $gradient))
+			actual=$((actual - gradient))
 			echo $actual | doas /usr/bin/tee /sys/class/backlight/intel_backlight/brightness
 		done
 	fi

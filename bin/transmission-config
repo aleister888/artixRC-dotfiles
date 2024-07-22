@@ -5,9 +5,9 @@
 CONFDIR="$HOME/.config/transmission"
 FILECONF="$CONFDIR/settings.json"
 
-rm -rf $CONFDIR; mkdir -p $CONFDIR
-for dir in blocklists resume torrents; do mkdir $CONFDIR/$dir; done
-echo -e '{\n}' | tee $CONFDIR/bandwidth-groups.json
+rm -rf "$CONFDIR"; mkdir -p "$CONFDIR"
+for dir in blocklists resume torrents; do mkdir "$CONFDIR/$dir"; done
+echo -e '{\n}' | tee "$CONFDIR/bandwidth-groups.json"
 echo -e "{
     \"download-dir\": \"/home/$USER/Descargas\",
     \"incomplete-dir\": \"/home/$USER/Descargas\",
@@ -18,4 +18,4 @@ echo -e "{
     \"port-forwarding-enabled\": false,
     \"peer-port-random-on-start\": true,
     \"user-has-given-informed-consent\": true
-}" | tee $FILECONF
+}" | tee "$FILECONF"

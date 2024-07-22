@@ -3,9 +3,9 @@
 share_toggle(){
 	case "$3" in
 		out)
-		out1="out1"; local out2="out2" ;;
+		out1="out1"; out2="out2" ;;
 		*)
-		out1="output_FL"; local out2="output_FR" ;;
+		out1="output_FL"; out2="output_FR" ;;
 	esac
 	if pw-link -P "$1:$out1" my-combined-sink:playback_FL; then
 		pw-link -P "$1:$out2" my-combined-sink:playback_FR

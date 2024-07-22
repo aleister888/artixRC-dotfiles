@@ -6,8 +6,8 @@ NAME="$(date +"%d%m%Y_%H%M%S").jpg"
 SCRENDIR="$HOME/Imágenes/Screenshots"
 FILE="$SCRENDIR/$NAME"
 
-if [ ! -d $SCRENDIR ]; then
-	mkdir -p $SCRENDIR
+if [ ! -d "$SCRENDIR" ]; then
+	mkdir -p "$SCRENDIR"
 fi
 
 all_clip(){

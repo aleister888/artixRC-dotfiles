@@ -6,13 +6,13 @@ interface="eth0"
 # Verifica la existencia de los archivos antes de leerlos
 if [ -f "/sys/class/net/$interface/statistics/rx_bytes" ] && [ -f "/sys/class/net/$interface/statistics/tx_bytes" ]; then
 	# Lee los valores de recepción y transmisión inicial
-	read R1 < "/sys/class/net/$interface/statistics/rx_bytes"
-	read T1 < "/sys/class/net/$interface/statistics/tx_bytes"
+	read -r R1 < "/sys/class/net/$interface/statistics/rx_bytes"
+	read -r T1 < "/sys/class/net/$interface/statistics/tx_bytes"
 	# Espera 1 segundo
 	sleep 1
 	# Lee los valores de recepción y transmisión después de 1 segundo
-	read R2 < "/sys/class/net/$interface/statistics/rx_bytes"
-	read T2 < "/sys/class/net/$interface/statistics/tx_bytes"
+	read -r R2 < "/sys/class/net/$interface/statistics/rx_bytes"
+	read -r T2 < "/sys/class/net/$interface/statistics/tx_bytes"
 	
 	# Calcula la cantidad de datos recibidos y transmitidos en KB/s
 	RBPS=$(( (R2 - R1) / 1024 ))

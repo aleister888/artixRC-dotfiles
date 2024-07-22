@@ -16,7 +16,9 @@ ALARMA="$1"
 
 # Imprime todos los dispositivos de salida
 getout(){
-pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | sed 's/Name: //' | sed 's/^.//' | grep output
+pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | \
+	awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | \
+	sed 's/Name: //' | sed 's/^.//' | grep output
 }
 
 # Función para hacer sonar la alarma hasta que la apage
@@ -41,7 +43,7 @@ SPEAKERS="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
 OG_SINK="$(pactl get-default-sink)"
 
 # Si el dispositivo de audio no son los altavoces, cambiar a estos antes de reproducir la alarma
-if [ $(pactl get-default-sink) != $SPEAKERS ]; then
+if [ "$(pactl get-default-sink)" != $SPEAKERS ]; then
 	# Cambiamos a altavoces
 	pactl set-default-sink $SPEAKERS
 	# Hacer sonar la alarma
