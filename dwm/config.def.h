@@ -158,6 +158,7 @@ static const Layout layouts[] = {
 	{ "TTT",	bstack }, // Zona principal en la parte superior
 	{ "[@]",	spiral }, // Layouts fibonacci
 	{ "[\\]",	dwindle },
+	{ "[D]",	deck },
 };
 
 // Definiciones de las Teclas

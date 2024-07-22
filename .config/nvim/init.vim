@@ -17,7 +17,12 @@ Plug 'ryanoasis/vim-devicons' " Iconos
 Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 Plug 'morhetz/gruvbox' " Tema de colores
 Plug 'akinsho/bufferline.nvim' " Tabs
+
 Plug 'dstein64/nvim-scrollview' " Scrollbar
+let g:scrollview_excluded_filetypes = ['nerdtree']
+let g:scrollview_signs_on_startup = ['all']
+let g:scrollview_diagnostics_severities =
+      \ [luaeval('vim.diagnostic.severity.ERROR')]
 
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
@@ -25,7 +30,7 @@ let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
 Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
-let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex' ]
+let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 augroup my_coc_highlights
 	au!
@@ -63,7 +68,7 @@ let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
 
 Plug 'vim-airline/vim-airline' " Barra de estado
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme = 'term'
+let g:airline_theme = 'gruvbox'
 let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
@@ -113,6 +118,11 @@ set noshowmode | set clipboard+=unnamedplus " Ajustes de pantalla
 " Tema de colores
 set background=dark termguicolors
 colorscheme gruvbox
+autocmd VimEnter * highlight Normal ctermbg=none guibg=none
+autocmd VimEnter * highlight NonText ctermbg=none guibg=none
+autocmd VimEnter * highlight LineNr ctermbg=none guibg=none
+autocmd VimEnter * highlight Folded ctermbg=none guibg=none
+autocmd VimEnter * highlight EndOfBuffer ctermbg=none guibg=none
 if !has('gui_running')
 	set t_Co=256
 endif

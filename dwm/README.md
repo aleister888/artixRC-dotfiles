@@ -33,3 +33,5 @@ Puedes consultarlos leyendo el código en [config.def.h](https://github.com/alei
 - Atajo de teclado para cambiar entre espacios ocupados fácilmente: [dwm-shiftviewclients-6.2.diff](https://github.com/bakkeby/patches/blob/master/dwm/dwm-shiftviewclients-6.2.diff)
 - Ventanas semi-visibles: [dwm-renamedscratchpads-6.3.diff](https://github.com/bakkeby/patches/blob/master/dwm/dwm-renamedscratchpads-6.3.diff)
 - Ventanas persistentes: [dwm-sticky-6.4.diff](http://dwm.suckless.org/patches/sticky/dwm-sticky-6.4.diff)
+- Layout deck: [dwm-deck-6.2.diff](http://dwm.suckless.org/patches/deck/dwm-deck-6.2.diff)
+  - [dwm-deck-tilegap-6.1.diff](http://dwm.suckless.org/patches/deck/dwm-deck-tilegap-6.1.diff)

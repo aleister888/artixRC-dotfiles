@@ -9,4 +9,5 @@ cat <<EOF | xmenu
 TTT Bottom stack	5
 [@] Spiral		6
 [\\] Dwindle		7
+[D] Deck		8
 EOF
