@@ -20,9 +20,6 @@ Plug 'akinsho/bufferline.nvim' " Tabs
 
 Plug 'dstein64/nvim-scrollview' " Scrollbar
 let g:scrollview_excluded_filetypes = ['nerdtree']
-let g:scrollview_signs_on_startup = ['all']
-let g:scrollview_diagnostics_severities =
-      \ [luaeval('vim.diagnostic.severity.ERROR')]
 
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
