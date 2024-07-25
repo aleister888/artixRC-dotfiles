@@ -104,9 +104,9 @@ install_grub(){
 	boot_drive=$(df /boot | awk 'NR==2 {print $1}')
 	case "$boot_drive" in
 	*"nvme"*)
-		boot_drive="${boot_drive%p[0-9]*}" ;;
+		boot_drive="${boot_drive%p[0-9]}" ;;
 	*)
-		boot_drive="${boot_drive%%[0-9]*}" ;;
+		boot_drive="${boot_drive%[0-9]}" ;;
 	esac
 
 	# Instalar GRUB
@@ -245,7 +245,7 @@ microcode_detect
 packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
 
 # Instalamos los paquetes necesarios
-pacinstall "$packages"
+pacinstall $packages
 
 lsblk -nl -o NAME | grep crypthome && home_keyfile
 

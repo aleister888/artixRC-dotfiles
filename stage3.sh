@@ -418,7 +418,7 @@ whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20
 doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
-yayinstall "$packages"
+yayinstall $packages
 
 # Descargar e instalar nuestras fuentes
 fontdownload
