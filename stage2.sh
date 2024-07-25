@@ -85,7 +85,7 @@ user_create(){
 
 # Detectamos el fabricante del procesador
 microcode_detect(){
-manufacturer=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | awk '{print $3}')
+manufacturer=$(grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1)
 if [ "$manufacturer" == "GenuineIntel" ]; then
 	echo_msg "Detectado procesador Intel."
 	packages+=" intel-ucode"
@@ -97,25 +97,26 @@ fi
 
 # Instalamos GRUB
 install_grub(){
-	local cryptdisk="$(lsblk -fn -o NAME | grep cryptroot -B 1 | grep -oE "[a-z].*" | head -n1)"
-	local cryptid="$(lsblk -nd -o UUID /dev/$cryptdisk)"
-	local decryptid="$(lsblk -n -o UUID /dev/mapper/cryptroot)"
-	local boot_drive=$(df /boot | awk 'NR==2 {print $1}')
+	local cryptdisk cryptid decryptid boot_drive
+	cryptdisk=$(lsblk -fn -o NAME | grep cryptroot -B 1 | grep -oE "[a-z].*" | head -n1)
+	cryptid=$(lsblk -nd -o UUID /dev/"$cryptdisk")
+	decryptid=$(lsblk -n -o UUID /dev/mapper/cryptroot)
+	boot_drive=$(df /boot | awk 'NR==2 {print $1}')
 	case "$boot_drive" in
 	*"nvme"*)
-		boot_drive=$(echo $boot_drive | sed 's/p[0-9]*$//') ;;
+		boot_drive="${boot_drive%p[0-9]*}" ;;
 	*)
-		boot_drive=$(echo $boot_drive | sed 's/[0-9]*$//') ;;
+		boot_drive="${boot_drive%%[0-9]*}" ;;
 	esac
 
 	# Instalar GRUB
 	if [ ! -d /sys/firmware/efi ]; then
-		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix $boot_drive --recheck
+		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix "$boot_drive" --recheck
 	else
 		if lsblk -f | grep crypt; then
-			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable $boot_drive
+			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable "$boot_drive"
 		else
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck --removable $boot_drive
+			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck --removable "$boot_drive"
 		fi
 	fi
 
@@ -130,7 +131,8 @@ install_grub(){
 # Creamos nuestro swap
 swap_create(){
 	# Detectamos el tipo de partición que tenemos
-	local rootype=$( lsblk -nlf -o FSTYPE $( df / | awk 'NR==2 {print $1}' ) )
+	local rootype
+	rootype=$( lsblk -nlf -o FSTYPE "$( df / | awk 'NR==2 {print $1}' )" )
 
 	# Btrfs necesita un volumen solo para el swapfile, porque no puede hacer snapshots
 	# de volúmenes con swapfiles
@@ -182,7 +184,7 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 	pacinstall reflector
 
 	# Escoger mirrors más rápidos de los repositorios de Arch
-	reflector --verbose --latest 10 --sort rate --download-timeout 1 --connection-timeout 1 --threads $(nproc) --save /etc/pacman.d/mirrorlist-arch
+	reflector --verbose --latest 10 --sort rate --download-timeout 1 --connection-timeout 1 --threads "$(nproc)" --save /etc/pacman.d/mirrorlist-arch
 
 	# Configurar cronie para actualizar automáticamente los mirrors de Arch
 	grep "reflector" /etc/crontab || \
@@ -243,7 +245,7 @@ microcode_detect
 packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
 
 # Instalamos los paquetes necesarios
-pacinstall $packages
+pacinstall "$packages"
 
 lsblk -nl -o NAME | grep crypthome && home_keyfile
 
@@ -258,23 +260,12 @@ if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null;
 	echo_msg "Bluetooth detectado. Se instaló bluez."
 fi
 
-# Instalamos grub
-install_grub
-
-# Creamos nuestro swap
-swap_create
-
-# Regenerar el initramfs
-mkinitcpio -P
-
-# Definimos el nombre de nuestra máquina y creamos el archivo hosts
-hostname_config
-
-# Activar repositorios de Arch Linux
-arch_support
-
-# Configurar la codificación del sistema
-genlocale
+install_grub # Instalamos grub
+swap_create # Creamos nuestro swap
+mkinitcpio -P # Regenerar el initramfs
+hostname_config # Definimos el nombre de nuestra máquina y creamos el archivo hosts
+arch_support # Activar repositorios de Arch Linux
+genlocale # Configurar la codificación del sistema
 
 service_add NetworkManager
 service_add cupsd

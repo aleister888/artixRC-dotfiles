@@ -316,7 +316,7 @@ suckless_install(){
 
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
-	[ ! -d $HOME/.config/keepassxc ] && mkdir -p $HOME/.config/keepassxc
+	[ ! -d "$HOME/.config/keepassxc" ] && mkdir -p "$HOME/.config/keepassxc"
 	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" \
 		"$HOME/.config/keepassxc/keepassxc.ini"
 }
@@ -418,7 +418,7 @@ whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20
 doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
-yayinstall $packages
+yayinstall "$packages"
 
 # Descargar e instalar nuestras fuentes
 fontdownload
