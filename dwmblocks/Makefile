@@ -1,7 +1,7 @@
 # Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
 PREFIX  := /usr/local
-CC      := gcc # Compilador
+CC      := cc # Compilador
 CFLAGS  := -pedantic -Wall -Wno-deprecated-declarations -Os
 LDFLAGS := -lX11
 

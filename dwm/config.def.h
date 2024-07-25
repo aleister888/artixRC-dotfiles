@@ -94,7 +94,7 @@ static const Rule rules[] = {
 	// Ventanas flotantes
 	{ "Yad",		NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	{ "Gcolor3",		NULL,	NULL,	0,	1,	0,	0,	-1,     0},
-	{ "Pavucontrol",	NULL,	NULL,	0,	1,	0,	0,	-1,     0},
+	{ "pavucontrol",	NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	{ "Alarm-clock-applet",	NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	{ "Galculator",		NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	// Espacio 1: Música
@@ -139,7 +139,6 @@ static const Rule rules[] = {
 	{ "Gnome-disks",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Nitrogen",		NULL,	NULL,	1 << 7,	1,	0,	0,	-1,     0},
 	{ "Blueman-manager",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
-	{ "Arandr",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "Lxappearance",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "qt5ct",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "baobab",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},

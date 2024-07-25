@@ -1,6 +1,9 @@
 # Versión dwm
 VERSION = 6.5
 
+# Descomenta para compilar en OpenBSD
+#KVMLIB = -lkvm
+
 # Directorios
 PREFIX = /usr/local
 MANPREFIX = /usr/local/share/man
@@ -28,4 +31,4 @@ CFLAGS = -march=x86-64-v3 -O3 -Os ${INCS} ${CPPFLAGS} \
 LDFLAGS = ${LIBS}
 
 # Compliador y enlazador
-CC = gcc
+CC = cc

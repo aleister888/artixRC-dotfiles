@@ -27,4 +27,4 @@ CFLAGS = -march=x86-64-v3 -O3 -Os ${INCS} ${CPPFLAGS} \
 LDFLAGS  = ${LIBS}
 
 # Compliador y enlazador
-CC = gcc
+CC = cc

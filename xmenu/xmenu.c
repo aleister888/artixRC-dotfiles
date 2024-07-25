@@ -100,39 +100,39 @@ struct Item {
 	char *label; // Cadena que se dibujará en el menú
 	char *output; // Cadena que se mostrará al hacer clic en un elemento
 	char *file; // Nombre de archivo del icono
-	int y;                  /* item y position relative to menu */
-	int h;                  /* item height */
-	int textw;              /* text width */
-	struct Item *prev;      /* previous item */
-	struct Item *next;      /* next item */
-	struct Menu *submenu;   /* submenu spawned by clicking on item */
-	Drawable sel, unsel;    /* pixmap for selected and unselected item */
+	int y; // Ítem y posición relativa al menú
+	int h; // Altura del ítem
+	int textw; // Anchura del ítem
+	struct Item *prev; // Ítem anterior
+	struct Item *next; // Siguiente ítem
+	struct Menu *submenu; // Submenu que se abre al hacer clic
+	Drawable sel, unsel; // Mapa de píxeles para los elementos seleccionados/(no seleccionados)
 	Imlib_Image icon;
 };
 
-/* monitor geometry structure */
+// Estructura geométrica
 struct Monitor {
-	int x, y, w, h;         /* monitor geometry */
+	int x, y, w, h; // Geometría del monitor
 };
 
-/* menu structure */
+// Estructura de los menús
 struct Menu {
-	struct Menu *parent;    /* parent menu */
-	struct Item *caller;    /* item that spawned the menu */
-	struct Item *list;      /* list of items contained by the menu */
-	struct Item *first;     /* first item displayed on the menu */
-	struct Item *selected;  /* item currently selected in the menu */
-	int x, y, w, h;         /* menu geometry */
-	int hasicon;            /* whether the menu has item with icons */
-	int drawn;              /* whether the menu was already drawn */
-	int maxtextw;           /* maximum text width */
-	int level;              /* menu level relative to root */
-	int overflow;           /* whether the menu is higher than the monitor */
-	Window win;             /* menu window to map on the screen */
-	XIC xic;                /* input context */
+	struct Menu *parent; // Menú principal
+	struct Item *caller; // Ítem que crea el menú
+	struct Item *list; // Lista de los items contenidos por el menu
+	struct Item *first; // Primer ítem mostrado en el menú
+	struct Item *selected; // Ítem seleccionado en el menú
+	int x, y, w, h; // Geometría del menú
+	int hasicon; // ¿Tiene iconos el menú?
+	int drawn; // ¿Ha sido dibujado ya el menú?
+	int maxtextw; // Anchura máxima del texto
+	int level; // Nivel del menú relativo a la raíz
+	int overflow; // ¿Esta el menú está más alto que el monitor?
+	Window win; // Ventana de menú para mapear en la pantalla
+	XIC xic; // Contexto de entrada
 };
 
-/* X stuff */
+// X11
 static Display *dpy;
 static Visual *visual;
 static Window rootwin;
@@ -148,11 +148,11 @@ static int screen;
 static int depth;
 static XIM xim;
 
-/* flags */
-static int iflag = 0;                   /* whether to disable icons */
-static int rflag = 0;                   /* whether to disable right-click */
-static int mflag = 0;                   /* whether the user specified a monitor with -p */
-static int pflag = 0;                   /* whether the user specified a position with -p */
+// Opciones
+static int iflag = 0; // ¿Desactivar iconos?
+static int rflag = 0; // ¿Desactivar clic-derecho?
+static int mflag = 0; // ¿Se ha especificado un monitor con -p?
+static int pflag = 0; // ¿Se ha especificado una posición con -p?
 static int wflag = 0;                   /* whether to let the window manager control XMenu */
 static int rootmodeflag = 0;            /* wheter to run in root mode */
 static int passclickflag = 0;           /* whether to pass click to root window */

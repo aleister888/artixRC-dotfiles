@@ -9,7 +9,7 @@ RADIOFLAG="$TERMTITLE scratchpad mpv"
 #	Icono								Nombre			Comando
 cat <<EOF | xmenu -r | /bin/sh &
 IMG:$ICONPATH/apps/internet-web-browser.svg				Internet
-	IMG:$ICONPATH/apps/$BROWSER.svg					$(echo $BROWSER | sed 's/^\(.\)/\U\1/')	$BROWSER
+	IMG:$ICONPATH/apps/$BROWSER.svg					$(echo "$BROWSER" | sed 's/^\(.\)/\U\1/')	$BROWSER
 	IMG:$ICONPATH/apps/discord.svg					Discord			discord
 	IMG:$ICONPATH/apps/thunderbird.svg				Thunderbird		thunderbird
 	IMG:$ICONPATH/apps/qbittorrent.svg				qBittorrent		qbittorrent
@@ -73,7 +73,7 @@ IMG:$ICONPATH/apps/applications-utilities.svg				Ajustes/Sistema
 	IMG:$ICONPATH/apps/qt5ct.svg					Ajustes de QT5		qt5ct
 
 IMG:$ICONPATH/apps/system-file-manager.svg				Archivos		$TERMINAL -e lf
-IMG:$ICONPATH/apps/$TERMINAL.svg					$(echo $TERMINAL | sed 's/^\(.\)/\U\1/')	$TERMINAL
+IMG:$ICONPATH/apps/$TERMINAL.svg					$(echo "$TERMINAL" | sed 's/^\(.\)/\U\1/')	$TERMINAL
 IMG:$ICONPATH/apps/virt-manager.svg					Virt-Manager		virt-manager
 IMG:$ICONPATH/apps/remmina.svg						Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes
 

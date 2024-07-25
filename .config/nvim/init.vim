@@ -15,8 +15,13 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'ryanoasis/vim-devicons' " Iconos
 Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
-Plug 'morhetz/gruvbox' " Tema de colores
+Plug 'morhetz/gruvbox' " Tema
 Plug 'akinsho/bufferline.nvim' " Tabs
+
+" Búsqueda
+Plug 'ctrlpvim/ctrlp.vim'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
 
 Plug 'dstein64/nvim-scrollview' " Scrollbar
 let g:scrollview_excluded_filetypes = ['nerdtree']
@@ -29,22 +34,13 @@ Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
 let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
-augroup my_coc_highlights
-	au!
-	au ColorScheme * highlight CocHighlightText gui=NONE guibg=#3C3836
-	au ColorScheme * highlight CocHighlightRead gui=NONE guibg=#3C3836
-	au ColorScheme * highlight CocHighlightWrite gui=NONE guibg=#3C3836
-	au ColorScheme * highlight CocErrorSign guifg=#B16286
-	au ColorScheme * highlight CocWarningSign guifg=#fabd2f
-	au ColorScheme * highlight CocInfoSign guifg=#83a598
-	au ColorScheme * highlight CocHintSign guifg=#8ec07c
-	au ColorScheme * highlight CocErrorFloat guibg=#222222 guifg=#B16286
-	au ColorScheme * highlight CocWarningFloat guibg=#222222 guifg=#fabd2f
-	au ColorScheme * highlight CocInfoFloat guibg=#222222 guifg=#8ec07c
-	au ColorScheme * highlight CocHintFloat guibg=#222222 guifg=#98971A
-	au ColorScheme * highlight CocFloating guibg=#222222
-	au ColorScheme * highlight CocMenuSel guibg=#3C3836
-augroup END
+let g:coc_preferences = {
+	\ 'suggest.maxCompleteItemCount': 50,
+	\ 'suggest.detailField': 'menu',
+	\ 'suggest.fixIncomplete': 1,
+	\ 'coc.preferences.formatOnType': v:false,
+	\ 'coc.preferences.formatOnSaveFiletypes': []
+	\ }
 
 Plug 'preservim/nerdtree' " Árbol de directorios
 let NERDTreeShowHidden=1
@@ -65,7 +61,7 @@ let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
 
 Plug 'vim-airline/vim-airline' " Barra de estado
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme = 'gruvbox'
+let g:airline_theme = 'monochrome'
 let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
@@ -86,7 +82,6 @@ let g:airline#extensions#whitespace#leading_space = 1
 let g:airline#extensions#whitespace#leading_tab = 1
 let g:airline#extensions#wordcount#format = '%d w'
 
-
 call plug#end()
 
 
@@ -98,28 +93,33 @@ endfunction
 function! AutoPairsStatus()
 	return g:pair ? '  {}' : ''
 endfunction
-let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}'])
+function! TabStatus()
+	return g:tab ? '  \t' : ''
+endfunction
+let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
 
 
 " Ajustes generales
 syntax enable
+set noexpandtab
 set title encoding=UTF-8
 set mouse=a scrolloff=10
 set list hidden autochdir
 set ttimeoutlen=0 wildmode=longest,list,full
 set number relativenumber cursorline " Opciones del cursor
 set ic | set ignorecase | set incsearch " Ajustes de búsqueda
-set noshowmode | set clipboard+=unnamedplus " Ajustes de pantalla
+set clipboard+=unnamedplus " Ajustes de pantalla
 
 
 " Tema de colores
 set background=dark termguicolors
+set fillchars+=vert:\  " Espacio como separadores
 colorscheme gruvbox
+let g:gruvbox_contrast_dark = "hard"
 autocmd VimEnter * highlight Normal ctermbg=none guibg=none
 autocmd VimEnter * highlight NonText ctermbg=none guibg=none
 autocmd VimEnter * highlight LineNr ctermbg=none guibg=none
 autocmd VimEnter * highlight Folded ctermbg=none guibg=none
-autocmd VimEnter * highlight EndOfBuffer ctermbg=none guibg=none
 if !has('gui_running')
 	set t_Co=256
 endif
@@ -192,6 +192,19 @@ function! PairToggle()
 endfunction
 inoremap <F2> <C-O>:call PairToggle()<CR>
 nnoremap <F2> :call PairToggle()<CR>
+
+" Alternar como se visualizan las tabulaciones
+let g:tab = 1
+set tabstop=2
+function! TabExp()
+	if &tabstop == 2
+		set tabstop=8
+	else
+		set tabstop=2
+	endif
+	let g:tab = !g:tab
+endfunction
+nnoremap <F5> :call TabExp()<CR>
 
 
 " Automatizar tareas:
