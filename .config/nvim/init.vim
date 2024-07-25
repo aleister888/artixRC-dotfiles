@@ -212,14 +212,18 @@ nnoremap <F2> :call PairToggle()<CR>
 " Alternar como se visualizan las tabulaciones
 let g:tab = 1
 set tabstop=2
+set shiftwidth=2
 function! TabExp()
 	if &tabstop == 2
 		set tabstop=8
+		set shiftwidth=8
 	else
 		set tabstop=2
+		set shiftwidth=2
 	endif
 	let g:tab = !g:tab
 endfunction
+inoremap <F5> <C-O>:call TabExp()<CR>
 nnoremap <F5> :call TabExp()<CR>
 
 

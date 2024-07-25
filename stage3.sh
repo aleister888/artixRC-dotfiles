@@ -43,7 +43,7 @@ service_add(){
 
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley libqalculate ca-certificates npm"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley libqalculate ca-certificates npm zenity"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -135,7 +135,7 @@ packages_choose(){
 	[ "$office"	== "true" ] && packages+=" libreoffice"
 	[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
 	if [ "$daw"	== "true" ]; then
-		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins vst3-plugins surge-xt"
+		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins surge-xt-vst3 surge-xt"
 		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
