@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Bucle para compilar todas las apps
+for dir in dmenu dwm st; do
+
+	# Definir el directorio que contiene el código
+	REPO="$HOME/.dotfiles/$dir"
+	# Hacer make clean para borrar cualquier config.h
+	doas make clean --directory "$REPO" >/dev/null 2>&1
+
+	# Crear un config.h con el tamaño de fuente aumentado
+	sed 's/pixelsize=[0-9]*/pixelsize=40/g' \
+		"$REPO"/config.def.h | tee "$REPO"/config.h >/dev/null
+
+	if [ $dir = "dwm" ]; then # Ajustes solo para dwm
+		# Cambiar el tamañó de los márgenes
+		sed -i 's/gappx = [0-9]*/gappx = 32/g' "$REPO"/config.h
+		# Activar la barra de tareas
+		sed -i 's/showsystray.*=.*;/showsystray = 1;/g' "$REPO"/config.h
+	fi
+	
+	# Compilar
+	doas make install --directory "$REPO" >/dev/null 2>&1 && \
+		echo "$dir compilado con éxito"
+	doas make clean --directory "$REPO" >/dev/null 2>&1
+done
