@@ -9,6 +9,7 @@ pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR 2>/dev/null
 # Sink del micrófono virtual
 sink1=my-combined-sink:playback_FL
 sink2=my-combined-sink:playback_FR
+
 # Dispositivos a elegir (Añadir)
 devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
 # Dispositivos a elegir (Borrar)
@@ -24,15 +25,17 @@ device_add(){
 local selected_device
 selected_device=$(echo "$devices" | dmenu -p "Elige el dispositivo:" -l 14 )
 
-# Comprobar si el dispositivo es estéreo para añadir ambas entradas
+# No se eligió ningún dispositivo
 if [ -z "$selected_device" ]; then
 	exit 1
+# Si el dispositivo elegido es estéreo, añade ambos canales
 elif echo "$devices" | grep "${selected_device%FL}FR"; then
 	pw-link "$selected_device" "$sink1"
 	pw-link "${selected_device%FL}FR" "$sink2"
 elif echo "$devices" | grep "${selected_device%FR}FL"; then
 	pw-link "${selected_device%FR}FL" "$sink1"
 	pw-link "$selected_device" "$sink2"
+# Si es mono, añade el mismo canal dos veces
 else
 	pw-link "$selected_device" "$sink1"
 	pw-link "$selected_device" "$sink2"
