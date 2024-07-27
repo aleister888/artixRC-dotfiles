@@ -51,7 +51,7 @@ packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans noto-font
 # Archivos comprimidos
 packages+=" xarchiver atool tar unrar gzip unzip zip p7zip lha lrzip lzip lzop unarj"
 # Servicios
-packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc irqbalance-openrc"
+packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc"
 # Documentos
 packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
@@ -63,9 +63,9 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gtk"
 # Aplicaciones GUI
-packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit baobab gcolor2 gnome-disk-utility"
+packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit gcolor2 gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock"
+packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock libqalculate"
 # WM
 packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
 
@@ -133,9 +133,9 @@ packages_choose(){
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
 	[ "$office"	== "true" ] && packages+=" libreoffice"
-	[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin $(pacman -Ssq texlive)"
+	[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin texlive-langspanish $(pacman -Ssq texlive | grep -v ".*-lang.*")"
 	if [ "$daw"	== "true" ]; then
-		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo clap-plugins surge-xt-vst3 surge-xt"
+		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo surge-xt-clap surge-xt-vst3 surge-xt"
 		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
@@ -477,7 +477,6 @@ doas cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
 "$HOME/.dotfiles/bin/wordlist"
 
 # Activar servicios
-service_add irqbalance
 service_add syslog-ng
 service_add elogind
 

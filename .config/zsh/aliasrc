@@ -36,11 +36,11 @@ alias grub-update='doas grub-mkconfig -o /boot/grub/grub.cfg'
 
 # Limpiar dependencias innecesarias
 alias cleanup='yay -Rcns $(yay -Qdtq) 2>/dev/null'
-alias deepcleanup='yay -Rcns $(pacman -Qqdn | pacman -Rsu --print-format %n -) 2>/dev/null'
+alias deepcleanup='yay -Rcns $(pacman -Qqdn | pacman -Rsu --print-format %n -)'
 
 # Función para reinstalar paquetes
 reinstall() {
-	yay -S `pacman -Q | grep -vx "$(pacman -Qm)" | awk '{print $1}'`
+	yay -S $(pacman -Q | grep -vx $(pacman -Qm) | awk '{print $1}')
 }
 
 # Alias para encontrar enlaces simbólicos rotos y archivos no reclamados

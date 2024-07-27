@@ -16,7 +16,7 @@ XINERAMAFLAGS = -DXINERAMA
 # Librerías e inclusiones
 INCS = -I${X11INC} \
 	`$(PKG_CONFIG) --cflags freetype2`
-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} \
+LIBS = -L${X11LIB} -lX11 -lfontconfig -lXft ${XINERAMALIBS} \
 	`$(PKG_CONFIG) --libs fontconfig` \
 	`$(PKG_CONFIG) --libs xft`
 

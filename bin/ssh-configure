@@ -14,19 +14,13 @@ doas ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
 awk '$5 >= 3071' /etc/ssh/moduli | doas tee /etc/ssh/moduli.safe
 doas mv -f /etc/ssh/moduli.safe /etc/ssh/moduli
 # Restrict supported key exchange, cipher, and MAC algorithms
-echo "\n# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256\nCiphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\nMACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com\nHostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com" | doas tee /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
+echo -e "# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256\nCiphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\nMACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com\nHostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com" | doas tee /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
 # Deshabilitar el inicio de sesión como root
 doas sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin no|' /etc/ssh/sshd_config
 # Numero de intentos 6->4
 doas sed -i 's|#MaxAuthTries 6|MaxAuthTries 4|' /etc/ssh/sshd_config
 # Máximo 5 minutos de inactividad
 doas sed -i 's|#ClientAliveInterval 0|ClientAliveInterval 300|' /etc/ssh/sshd_config
-# Deshabilitar X11 Forwarding
-doas sed -i 's|#X11Forwarding no|X11Forwarding no|' /etc/ssh/sshd_config
-# Desactivar inicios de sesión sin contraseña
-doas sed -i 's|#PermitEmptyPasswords no|PermitEmptyPasswords no|' /etc/ssh/sshd_config
-# Desactivar inicios de sesión sin contraseña
-doas sed -i 's|#PermitEmptyPasswords no|PermitEmptyPasswords no|' /etc/ssh/sshd_config
 
 # Instalar y configurar UFW
 doas pacman -Sy --noconfirm ufw-openrc
