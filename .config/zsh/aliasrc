@@ -2,13 +2,10 @@
 
 # Alias para herramientas comunes
 alias wget='wget --hsts-file="$XDG_CONFIG_HOME"/wget-hsts'
-alias yarn='yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config'
 alias gpg2='gpg2 --homedir "$XDG_DATA_HOME"/gnupg'
-alias svn='svn --config-dir $XDG_CONFIG_HOME/subversion'
 
 # Alias de comandos básicos
 alias v='nvim'
-alias d='devour'
 alias c='/bin/clear'
 alias dmk='doas make install'
 alias cp='cp -iv'
@@ -21,7 +18,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Actualizar el sistema
-alias update='yay -Syuu --removemake --ignore i3lock-fancy-git --ignore i3lock-fancy-rapid-git --ignore eww-git --ignore hydroxide-git'
+alias update='yay -Syuu --answerclean --answerdiff --removemake --ignore i3lock-fancy-git --ignore i3lock-fancy-rapid-git --ignore eww-git'
 
 # Customizar firefox
 fffix(){
@@ -36,11 +33,22 @@ alias grub-update='doas grub-mkconfig -o /boot/grub/grub.cfg'
 
 # Limpiar dependencias innecesarias
 alias cleanup='yay -Rcns $(yay -Qdtq) 2>/dev/null'
-alias deepcleanup='yay -Rcns $(pacman -Qqdn | pacman -Rsu --print-format %n -)'
+alias deepcleanup='deps=$(pacman -Qqdn); [ -n "$deps" ] && yay -Rcns $deps'
 
-# Función para reinstalar paquetes
+# Función para reinstalar todos los paquetes
 reinstall() {
-	yay -S $(pacman -Q | grep -vx $(pacman -Qm) | awk '{print $1}')
+	yay -S $(pacman -Qq | grep -v "$(pacman -Qqm)")
+}
+
+# Función para restaurar los paquetes
+# instalados explícitamente como tales
+reexplicit() {
+	for pack in $(yay -Qq); do
+		if grep -E "\[ALPM\] installed" /var/log/pacman.log | \
+		grep "$pack" >/dev/null 2>&1; then
+			doas pacman -D --asexplicit "$pack"
+		fi
+	done
 }
 
 # Alias para encontrar enlaces simbólicos rotos y archivos no reclamados
@@ -52,7 +60,15 @@ alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
 alias pac='doas find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
 
 wininfo(){
-xprop | awk '
-	/^WM_CLASS/{sub(/.* =/, "instancia:"); sub(/,/, "\nclase:"); print}
-	/^WM_NAME/{sub(/.* =/, "título:"); print}'
+	xprop | awk '
+		/^WM_CLASS/ {
+			sub(/^.* = /, "instance:");
+			sub(/,/, "\nclass:");
+			print
+		}
+		/^WM_NAME/ {
+			sub(/^.* = /, "title:");
+			print
+		}
+	'
 }
