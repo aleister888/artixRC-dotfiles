@@ -153,12 +153,12 @@ static int iflag = 0; // ¿Desactivar iconos?
 static int rflag = 0; // ¿Desactivar clic-derecho?
 static int mflag = 0; // ¿Se ha especificado un monitor con -p?
 static int pflag = 0; // ¿Se ha especificado una posición con -p?
-static int wflag = 0;                   /* whether to let the window manager control XMenu */
-static int rootmodeflag = 0;            /* wheter to run in root mode */
-static int passclickflag = 0;           /* whether to pass click to root window */
-static int firsttime = 1;               /* set to 0 after first run */
+static int wflag = 0; // ¿Dejar al administrador de ventanas controlar a Xmenu?
+static int rootmodeflag = 0; // ¿Ejecutar en modo root?
+static int passclickflag = 0; // ¿Pasar los clics a la ventana root?
+static int firsttime = 1; // Establecer como 0 despúes de la primer ejecución
 
-/* arguments */
+// Argumentos
 static unsigned int button = 0;         /* button to trigger pmenu in root mode */
 static unsigned int modifier = 0;       /* modifier to trigger pmenu */
 

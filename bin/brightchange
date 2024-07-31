@@ -3,10 +3,17 @@
 # Prevenir que el script se ejecute dos veces a la vez
 [ $(pgrep -c brightchange) -ge 2 ] && exit
 
-# Script para cambiar el brillo directamente usando /sys/class/backlight/intel_backlight/brightness
+# Script para cambiar el brillo directamente usando $brightdev/brightness
 # (Solo funciona en portátiles con procesadores intel)
 
-[ -f /sys/class/backlight/intel_backlight/max_brightness ] || exit 1
+manufacturer=$(grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1)
+if [ "$manufacturer" == "GenuineIntel" ]; then
+	brightdev=/sys/class/backlight/intel_backlight
+else
+	brightdev=/sys/class/backlight/amdgpu_bl1
+fi
+
+[ -f $brightdev/max_brightness ] || exit 1
 
 # Calcular el nuevo valor para el brillo
 calculate_brightness() {
@@ -21,28 +28,28 @@ calculate_brightness() {
 	# y cambiarlo gradualmente
 	if [ "$mode" == "inc" ]; then
 		# Salirse del script si el brillo ya esta al máximo
-		[ "$(( $(cat /sys/class/backlight/intel_backlight/max_brightness) * 95 / 100))" -le "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" ] && exit 1
+		[ "$(( $(cat $brightdev/max_brightness) * 95 / 100))" -le "$(cat $brightdev/actual_brightness)" ] && exit 1
 		new_brightness=$((actual + increment)) # Aumentar el brillo gradualmente
 		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $((max-gradient)) ]; do
 			actual=$((actual + gradient))
-			echo $actual | doas /usr/bin/tee /sys/class/backlight/intel_backlight/brightness
+			echo $actual | doas /usr/bin/tee $brightdev/brightness
 		done
 	elif [ "$mode" == "dec" ]; then
 		# Salirse del script si el brillo ya está al mínimo
-		[ "$(cat /sys/class/backlight/intel_backlight/actual_brightness)" -le "$increment" ] && exit 1
+		[ "$(cat $brightdev/actual_brightness)" -le "$increment" ] && exit 1
 		new_brightness=$((actual - increment)) # Bajar el brillo gradualmente (Mínimo 25%)
 		while [ "$actual" -gt "$new_brightness" ] && [ "$actual" -ge "$increment" ]; do
 			actual=$((actual - gradient))
-			echo $actual | doas /usr/bin/tee /sys/class/backlight/intel_backlight/brightness
+			echo $actual | doas /usr/bin/tee $brightdev/brightness
 		done
 	fi
 }
 
-max_brightness=$(cat /sys/class/backlight/intel_backlight/max_brightness)
-current_brightness=$(cat /sys/class/backlight/intel_backlight/brightness)
+max_brightness=$(cat $brightdev/max_brightness)
+current_brightness=$(cat $brightdev/brightness)
 calculate_brightness "$max_brightness" "$current_brightness" "$1"
 # Calcular el brillo y redondearlo al múltiplo de 25 más cercano
-result=$(awk "BEGIN {print (100 / $max_brightness * $(cat /sys/class/backlight/intel_backlight/brightness))}")
+result=$(awk "BEGIN {print (100 / $max_brightness * $(cat $brightdev/brightness))}")
 rounded=$(echo "scale=0; (($result + 12.5) / 25) * 25" | bc)
 
 # Notificar el nivel de brillo

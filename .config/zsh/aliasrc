@@ -33,7 +33,6 @@ alias grub-update='doas grub-mkconfig -o /boot/grub/grub.cfg'
 
 # Limpiar dependencias innecesarias
 alias cleanup='yay -Rcns $(yay -Qdtq) 2>/dev/null'
-alias deepcleanup='deps=$(pacman -Qqdn); [ -n "$deps" ] && yay -Rcns $deps'
 
 # Función para reinstalar todos los paquetes
 reinstall() {
