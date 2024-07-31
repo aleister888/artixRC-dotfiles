@@ -8,9 +8,10 @@
 
 # Instalar paquetes
 
-sudo apt update
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo add-apt-repository ppa:neovim-ppa/stable
-sudo apt install neovim zsh golang
+sudo apt update
+sudo apt install neovim zsh golang gnupg2 exa bat nodejs shellcheck -y
 
 
 # Configurar zsh
