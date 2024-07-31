@@ -32,6 +32,7 @@ let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
 Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
+let g:coc_disable_startup_warning = 1
 let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 let g:coc_preferences = {
