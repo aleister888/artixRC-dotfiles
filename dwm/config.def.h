@@ -19,7 +19,7 @@ static const unsigned int snap           = 0;         // Pixeles de cercanía pa
 static const unsigned int systraypinning = 0;         // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayspacing = gappx/2;   // Espaciado de la barra de tareas
 static const int systraypinningfailfirst = 1;         // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
-static const int showsystray             = 0;         // ¿Barra de tareas? (0: Desactivada)
+static const int showsystray             = 1;         // ¿Barra de tareas? (0: Desactivada)
 static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;         // 0 Para desactivar la barra
 static const int topbar                  = 1;         // 0 Para la barra en la parte inferior
@@ -110,15 +110,9 @@ static const Rule rules[] = {
 	{ "discord",		NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
 	{ "TelegramDesktop",	NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
 	{ "TelegramDesktop","telegram-desktop","Media viewer",1 << 4,1,0,0,	-1,     0},
-	// Espacio 6: Gaming y Virtualización
+	// Espacio 6: Virtualización
 	{ "Virt-manager",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "steam",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "Lutris",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "heroic",		NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
-	{ "MultiMC",		NULL,	NULL,	1 << 5,	1,	0,	0,	-1,     0},
-	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 5,	0,	0,	0,	-1,     0},
 	// Espacio 7: Guitarra/Producción Musical || Organizar/Descargar Música
 	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	-1,     0},
 	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	-1,     0},
@@ -142,6 +136,14 @@ static const Rule rules[] = {
 	{ "Lxappearance",	NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "qt5ct",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
 	{ "baobab",		NULL,	NULL,	1 << 7,	0,	0,	0,	-1,     0},
+	// Espacio 9: Juegos
+	{ "steam",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Lutris",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "heroic",		NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "MultiMC",		NULL,	NULL,	1 << 8,	1,	0,	0,	-1,     0},
+	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 8,	0,	0,	0,	-1,     0},
+	{ "Minecraft* 1.21",	NULL,	NULL,	1 << 8, 0,	0,	0,	-1,	0},
 	// Scratchpad
 	{ NULL,	NULL,"scratchpad",              0,      1,      1,      1,      -1,     's'},
 };

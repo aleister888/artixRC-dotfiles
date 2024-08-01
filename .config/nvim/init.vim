@@ -18,11 +18,6 @@ Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 Plug 'morhetz/gruvbox' " Tema
 Plug 'akinsho/bufferline.nvim' " Tabs
 
-" Búsqueda
-Plug 'ctrlpvim/ctrlp.vim'
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-
 Plug 'dstein64/nvim-scrollview' " Scrollbar
 let g:scrollview_excluded_filetypes = ['nerdtree']
 
