@@ -129,7 +129,7 @@ packages_choose(){
 		fi
 	done
 	
-	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-hw-display-virtio-gpu qemu-chardev-spice"
+	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-hw-display-virtio-gpu qemu-chardev-spice qemu-hw-usb-redirect"
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
 	[ "$office"	== "true" ] && packages+=" libreoffice"

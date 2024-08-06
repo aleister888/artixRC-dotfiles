@@ -1,6 +1,7 @@
 assets/pdf/help-1.cpt
 *.aux
 bookmarks
+.config/eww/C*
 .config/zsh/ohmyzsh
 .config/zsh/zsh-autosuggestions
 .config/zsh/zsh-history-substring-search

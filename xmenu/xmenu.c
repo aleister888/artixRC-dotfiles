@@ -159,7 +159,7 @@ static int passclickflag = 0; // ¿Pasar los clics a la ventana root?
 static int firsttime = 1; // Establecer como 0 despúes de la primer ejecución
 
 // Argumentos
-static unsigned int button = 0; // Botón para hacerque pmenu vuelva al menú principa
+static unsigned int button = 0; // Botón para hacer que pmenu vuelva al menú principal
 static unsigned int modifier = 0; // Modificador para activar pmenu
 
 /* icons paths */
