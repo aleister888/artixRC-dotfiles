@@ -159,8 +159,8 @@ static int passclickflag = 0; // ¿Pasar los clics a la ventana root?
 static int firsttime = 1; // Establecer como 0 despúes de la primer ejecución
 
 // Argumentos
-static unsigned int button = 0;         /* button to trigger pmenu in root mode */
-static unsigned int modifier = 0;       /* modifier to trigger pmenu */
+static unsigned int button = 0; // Botón para hacerque pmenu vuelva al menú principa
+static unsigned int modifier = 0; // Modificador para activar pmenu
 
 /* icons paths */
 static char *iconstring = NULL;         /* string read from getenv */

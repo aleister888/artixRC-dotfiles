@@ -65,7 +65,7 @@ packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gt
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit gcolor2 gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock libqalculate"
+packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock libqalculate remmina gtk-vnc libvncserver"
 # WM
 packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
 
@@ -129,7 +129,7 @@ packages_choose(){
 		fi
 	done
 	
-	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-full edk2-ovmf dnsmasq"
+	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-hw-display-virtio-gpu qemu-chardev-spice"
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
 	[ "$office"	== "true" ] && packages+=" libreoffice"
@@ -138,8 +138,8 @@ packages_choose(){
 		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo surge-xt-clap surge-xt-vst3 surge-xt"
 		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
-		ln -s "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Tabs"
 		doas ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop /usr/share/applications/
+		doas ln -s /usr/bin/tuxguitar-bin /usr/bin/tuxguitar
 	fi
 }
 

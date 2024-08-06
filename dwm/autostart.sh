@@ -63,7 +63,7 @@ ewwspawn(){
 		eww open dashboard &
 	fi
 	# Esperar antes de ejecutar el bucle otra vez
-	sleep 0.1
+	sleep 0.2
 	done
 }
 
