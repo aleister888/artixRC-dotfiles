@@ -19,32 +19,21 @@ _comp_options+=(globdots) # Incluir archivos ocultos
 autoload -U select-word-style
 select-word-style bash
 
-# Recuperación en caso de paquetes rotos
-function recovery-pacman() {
-    yay "$@"  \
-    --logfile /dev/null   \
-    --noscriptlet     \
-    --dbonly          \
-    --overwrite "*"   \
-    --nodeps          \
-    --needed
-}
-
 # Cambiar directorios con lf (Ctrl+O)
 lfcd () {
-    tmp="$(mktemp)"
-    lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
+	tmp="$(mktemp)"
+	lf -last-dir-path="$tmp" "$@"
+	if [ -f "$tmp" ]; then
+		dir="$(cat "$tmp")"
+		rm -f "$tmp"
+		[ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+	fi
 }
 bindkey -s '^o' 'lfcd\n'
 
 # Historial en directorio temporal
-HISTSIZE=256
-SAVEHIST=128
+HISTSIZE=512
+SAVEHIST=512
 HISTFILE=/tmp/zsh_history
 
 # Bindings de teclado

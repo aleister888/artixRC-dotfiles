@@ -50,6 +50,17 @@ reexplicit() {
 	done
 }
 
+# Recuperación en caso de paquetes rotos
+recoverypacman() {
+	yay "$@"  \
+	--logfile /dev/null   \
+	--noscriptlet     \
+	--dbonly          \
+	--overwrite "*"   \
+	--nodeps          \
+	--needed
+}
+
 # Alias para encontrar enlaces simbólicos rotos y archivos no reclamados
 alias brokenlink='find / -xtype l -print 2>/dev/null'
 alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/null'
@@ -60,14 +71,14 @@ alias pac='doas find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
 
 wininfo(){
 	xprop | awk '
-		/^WM_CLASS/ {
-			sub(/^.* = /, "instance:");
-			sub(/,/, "\nclass:");
-			print
-		}
-		/^WM_NAME/ {
-			sub(/^.* = /, "title:");
-			print
-		}
+	/^WM_CLASS/ {
+		sub(/^.* = /, "instance:");
+		sub(/,/, "\nclass:");
+		print
+	}
+	/^WM_NAME/ {
+		sub(/^.* = /, "title:");
+		print
+	}
 	'
 }
