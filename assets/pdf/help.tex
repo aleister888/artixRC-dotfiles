@@ -215,7 +215,7 @@ SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 @hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
-@reboot usuario syncthing --no-browser --no-default-folder
+@reboot usuario ionice -c3 syncthing --no-browser --no-default-folder
 \end{lstlisting}
 
 \begin{itemize}
