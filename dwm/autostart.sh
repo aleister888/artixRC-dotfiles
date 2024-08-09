@@ -161,7 +161,7 @@ while true; do
 	resultado=1
 	# Reinciar el contador de xautolock en función de los resultados
 	[ "$resultado" -gt 0 ] && xautolock -enable && pkill dvdbounce
-	sleep 5 # Esperar 5s antes de hacer la siguiente comprobación
+	sleep 0.5 # Esperar 0.5s antes de hacer la siguiente comprobación
 done &
 
 # Servidor VNC Local (Solo para equipos que no lleven batería)
