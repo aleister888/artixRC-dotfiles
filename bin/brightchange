@@ -6,8 +6,7 @@
 # Script para cambiar el brillo directamente usando $brightdev/brightness
 # (Solo funciona en portátiles con procesadores intel)
 
-manufacturer=$(grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1)
-if [ "$manufacturer" == "GenuineIntel" ]; then
+if grep "GenuineIntel" /proc/cpuinfo; then
 	brightdev=/sys/class/backlight/intel_backlight
 else
 	brightdev=/sys/class/backlight/amdgpu_bl1
