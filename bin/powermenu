@@ -4,10 +4,11 @@
 options=(
 	"  Bloquear"
 	"  Suspender"
-	"  Despertarse 7:00"
+	"  Suspender hasta las 7:00"
 	"  Cerrar sesión"
 	"  Reinciar"
 	"  Apagar"
+	"  BIOS"
 	"  Reinciar dwm"
 )
 
@@ -22,5 +23,6 @@ case $chosen in
 	"${options[3]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas pkill X;;
 	"${options[4]}") doas /usr/bin/openrc-shutdown -r now;;
 	"${options[5]}") doas /usr/bin/openrc-shutdown -p now;;
-	"${options[6]}") pkill dwm;;
+	"${options[6]}") loginctl reboot --firmware-setup;;
+	"${options[7]}") pkill dwm;;
 esac
