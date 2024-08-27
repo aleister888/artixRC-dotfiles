@@ -3,6 +3,6 @@ case "${1-}" in
 	'pre')
 		pkill dvdbounce
 		sleep 1
-		/usr/local/bin/lock
+		/usr/local/bin/lock &
 	;;
 esac

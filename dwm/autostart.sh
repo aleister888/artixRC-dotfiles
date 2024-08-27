@@ -151,7 +151,7 @@ xautolock -time 5 -locker screensaver &
 while true; do
 	resultado=0 # Reinicamos la variable antes de hacer las comprobaciones
 	# Si alguna de estas aplicaciones esta activa, no mostrar el salvapantallas
-	processes=("i3lock" "mpv" "vlc" "looking-glass")
+	processes=("i3lock" "mpv" "vlc" "looking-glass" "display-lock")
 	for process in "${processes[@]}"; do
 		! pgrep "$process" > /dev/null
 		resultado=$(($resultado + $?))
