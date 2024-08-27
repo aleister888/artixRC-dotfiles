@@ -18,9 +18,6 @@ Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 Plug 'morhetz/gruvbox' " Tema
 Plug 'akinsho/bufferline.nvim' " Tabs
 
-Plug 'dstein64/nvim-scrollview' " Scrollbar
-let g:scrollview_excluded_filetypes = ['nerdtree']
-
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 

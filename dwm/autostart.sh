@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck source=/dev/null
 
 # Auto-instalador para Artix OpenRC
 # (Script Iniciador del entorno de escritorio)
@@ -6,7 +7,9 @@
 # Licencia: GNU GPLv3
 
 source "$HOME/.dotfiles/.profile"
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
+
+XDG_RUNTIME_DIR=/run/user/$(id -u)
+export XDG_RUNTIME_DIR
 
 # Mostramos el fondo de pantalla
 nitrogen --restore
@@ -16,7 +19,7 @@ nitrogen --restore
 
 # Cerrar instancias previas del script
 INSTANCIAS="$(pgrep -c -x "$(basename "$0")")"
-for i in $(seq $(($INSTANCIAS - 1))); do
+for _ in $(seq $((INSTANCIAS - 1))); do
 	pkill -o "$(basename "$0")"
 done
 
@@ -87,10 +90,9 @@ virtualmic(){
 # Ejecutar picom, ajustando el radio de las esquinas en función de la resolución
 # (Aprovechamos el link simbólico que usamos para ajustar eww según la resolución)
 picomstart(){
-	PICOMOPTS="-c -f --vsync --config=$XDG_CONFIG_HOME/picom/picom.conf --corner-radius"
 	case "$current_link" in
-	"$file_1080") picom $PICOMOPTS 18 ;;
-	*) picom $PICOMOPTS 24 ;;
+	"$file_1080") picom --corner-radius 18 ;;
+	*) picom --corner-radius 24 ;;
 	esac
 }
 
@@ -154,7 +156,7 @@ while true; do
 	processes=("i3lock" "mpv" "vlc" "looking-glass" "display-lock")
 	for process in "${processes[@]}"; do
 		! pgrep "$process" > /dev/null
-		resultado=$(($resultado + $?))
+		resultado=$((resultado + $?))
 	done
 	# Si firefox esta reproduciendo contenido, no mostrar el salvapantallas
 	[ "$(playerctl --player firefox status)" == "Playing" ] && \
@@ -209,4 +211,10 @@ rm -rf "$XDG_DATA_HOME/desktop-directories" "$XDG_DATA_HOME/applications/wine"* 
 while true; do
 	pgrep firefox && find "$HOME/.mozilla" -name "*.parentlock" -delete
 	sleep 1
-done
+done &
+
+# Arreglar bug con Thinkpad T14s (Gen 1)
+if [ "$(< /sys/devices/virtual/dmi/id/board_name)" = "20UJS21R00" ]; then
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+fi
