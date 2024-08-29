@@ -7,37 +7,44 @@ if [ -d "$HOME/.local/bin" ] ; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
-# Añadir scripts de eww a $PATH
-if [ -d "$HOME/.local/bin/eww" ]; then
-	PATH="$HOME/.local/bin/eww:$PATH"
-fi
-# Añadir scripts de dwmblocks a $PATH
-if [ -d "$HOME/.local/bin/sb" ]; then
-	PATH="$HOME/.local/bin/sb:$PATH"
+if [ ! -e /usr/bin/plasmashell ]; then
+	# Añadir scripts de eww a $PATH
+	if [ -d "$HOME/.local/bin/eww" ]; then
+		PATH="$HOME/.local/bin/eww:$PATH"
+	fi
+	# Añadir scripts de dwmblocks a $PATH
+	if [ -d "$HOME/.local/bin/sb" ]; then
+		PATH="$HOME/.local/bin/sb:$PATH"
+	fi
+
+	# Definir cursor usado por X11
+	export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
+	export XCURSOR_PATH=/usr/share/icons/
+	export XCURSOR_THEME=capitaine-cursors
+	export XCURSOR_SIZE=64
+
+	# Usar el filechooser del portal GTK
+	export GDK_SCALE=1
+	export GTK_USE_PORTAL=1
+	export GTK_THEME=Gruvbox-Dark
+
+	# Hacer que las aplicaciones QT sigan los ajustes de QT5CT
+	export QT_QPA_PLATFORMTHEME="qt5ct"
+	
+	# XDG
+	export XDG_CURRENT_DESKTOP=X-Generic
+
+	# Apps
+	export OPENER="xdg-open"
 fi
 
 export PIPEWIRE_LATENCY="256/48000"
 
-# Definir cursor usado por X11
-export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons
-export XCURSOR_PATH=/usr/share/icons/
-export XCURSOR_THEME=capitaine-cursors
-export XCURSOR_SIZE=64
-
 # Arreglar aplicaciones de java
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-# Usar el filechooser del portal GTK
-export GDK_SCALE=1
-export GTK_USE_PORTAL=1
-export GTK_THEME=Gruvbox-Dark
-
-# Hacer que las aplicaciones QT sigan los ajustes de QT5CT
-export QT_QPA_PLATFORMTHEME="qt5ct"
-
 # XDG
-export XDG_CURRENT_DESKTOP=X-Generic
-export XDG_CONFIG_HOME="$HOME/.config"
+	export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
@@ -52,7 +59,6 @@ export TERMEXEC=""
 export TERM="st-256color"
 export BROWSER="firefox"
 export VIDEO="mpv"
-export OPENER="xdg-open"
 export PAGER="less"
 export VIEWER="nsxiv"
 

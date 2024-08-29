@@ -5,49 +5,53 @@
 # Licencia: GNU GPLv3
 
 
-# URL con el respositorio
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
 
 # Funciones que invocaremos a menudo
-
 whip_msg(){ # Mensajes de tailbox
 	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --msgbox "$2" 10 60
 }
+
 whip_yes(){ # Elegir con whiptail
 	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --yesno "$2" 10 60
 }
+
 pacinstall() { # Instalar paquetes con pacman
 	doas pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
+
 yayinstall() { # Instalar paquetes con yay
 	yay -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
-whip_menu(){ # Menus de whitpail
+
+whip_menu(){
 	local TITLE=$1
 	local MENU=$2
 	shift 2
 	whiptail --backtitle "$REPO_URL" --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
-service_add(){ # Activar servicio
+
+service_add(){
 	doas rc-update add "$1" default
 }
 
 
 # Paquetes
 
+
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g network-manager-applet rsync mailcap gawk desktop-file-utils xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley libqalculate npm zenity"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
-packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans ttf-roboto noto-fonts-emoji gnu-free-fonts noto-fonts-cjk ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd"
+packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans ttf-roboto noto-fonts-emoji gnu-free-fonts noto-fonts-cjk"
 # Archivos comprimidos
 packages+=" xarchiver atool tar unrar gzip unzip zip p7zip lha lrzip lzip lzop unarj"
 # Servicios
-packages+=" syslog-ng syslog-ng-openrc"
+packages+=" syslog-ng syslog-ng-openrc xorg-xdm xdm-openrc"
 # Documentos
 packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
@@ -55,15 +59,15 @@ packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates
 # Multimedia
 packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mediainfo feh vlc pavucontrol gimp sxiv nsxiv tauon-music-box"
 # Herramientas de terminal
-packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt"
+packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt dragon-drop"
 # Apariencia
-packages+=" qt5ct qt5-tools"
+packages+=" papirus-icon-theme qt5ct capitaine-cursors qt5-tools gruvbox-dark-gtk"
 # Aplicaciones GUI
-packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit"
+packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit gcolor2 gnome-disk-utility"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina gtk-vnc libvncserver xdg-xmenu-git"
+packages+=" syncthing fluidsynth extra/github-cli redshift pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks xautolock libqalculate remmina gtk-vnc libvncserver xdg-xmenu-git"
 # WM
-packages+=" thunderbird-dark-reader timeshift"
+packages+=" thunderbird-dark-reader i3lock-fancy-git i3lock-fancy-rapid-git tigervnc gnome-firmware udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git timeshift trayer"
 
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
@@ -75,11 +79,11 @@ driver_choose(){
 	${driver_options[@]})
 	case $graphic_driver in
 	amd)
-		packages+=" xf86-video-amdgpu libva-mesa-driver lib32-libva-mesa-driver vulkan-radeon lib32-vulkan-radeon" ;;
+		packages+=" xf86-video-amdgpu libva-mesa-driver lib32-vulkan-radeon" ;;
 	nvidia)
 		packages+=" dkms nvidia-dkms nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
 	intel)
-		packages+=" xf86-video-intel libva-intel-driver lib32-libva-intel-driver vulkan-intel lib32-vulkan-intel" ;;
+		packages+=" xf86-video-intel libva-intel-driver lib32-vulkan-intel" ;;
 	virtual)
 		packages+=" xf86-video-vmware xf86-input-vmmouse vulkan-virtio lib32-vulkan-virtio" ;;
 	esac
@@ -111,18 +115,12 @@ packages_choose(){
 		# Reiniciamos las variables si no confirmamos la selección
 		for var in "${variables[@]}"; do eval "$var=false"; done
 	
-		whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && \
-			virt="true"
-		whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && \
-			music="true"
-		whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && \
-			noprivacy="true"
-		whip_yes "Oficina" "¿Deseas instalar software de ofimatica?" && \
-			office="true"
-		whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)" && \
-			latex="true"
-		whip_yes "DAW" "¿Deseas instalar software de produccion de audio?" && \
-			daw="true"
+		whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && virt="true"
+		whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && music="true"
+		whip_yes "Privacidad" "¿Deseas instalar aplicaciones que promueven plataformas propietarias (Discord y Telegram)?" && noprivacy="true"
+		whip_yes "Oficina" "¿Deseas instalar software de ofimatica?" && office="true"
+		whip_yes "laTeX" "¿Deseas instalar laTeX? (Esto llevara mucho tiempo)" && latex="true"
+		whip_yes "DAW" "¿Deseas instalar software de produccion de audio?" && daw="true"
 	
 		if packages_show; then
 			packages_confirm=true
@@ -174,16 +172,6 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	[ "$final_layout" == "es" ] && doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 }
 
-
-# Elegir si usar DWM o KDE
-desktop_choose(){
-	# Opciones posibles
-	desktop_options=("kde" "KDE Plasma" "dwm" "Dynamic Window Manager")
-	# Elegimos nuestra tarjeta gráfica
-	chosen_desktop=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
-	${desktop_options[@]})
-}
-
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make(){
 	mkdir -p "$HOME/.config"
@@ -207,11 +195,33 @@ xresources_make(){
 	esac
 	# Calculamos el DPI en función de la resolución y el tamaño de la pantalla
 	display_dpi=$(echo "scale=2; sqrt($width^2 + $height^2) / $size" | bc)
-	rounded_dpi=$(echo "($display_dpi + 0.5) / 0.5" | bc) # Redondeamos el DPI
+	rounded_dpi=$(echo "($display_dpi + 0.5) / 1" | bc) # Redondeamos el DPI
 	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 0.75
 	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE" # Añadimos nuestro DPI a el arcivo Xresources
 }
 
+# Descargar e instalar nuestras fuentes
+fontdownload() {
+	# Definir las URLs de descarga y los nombres de archivo
+	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
+	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
+	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
+	# Archivos temporales
+	AGAVE_ZIP="/tmp/Agave.zip"
+	SYMBOLS_ZIP="/tmp/Symbols.zip"
+	IOSEVKA_ZIP="/tmp/Iosevka.zip"
+	# Definir directorios de destino
+	AGAVE_DIR="/usr/share/fonts/Agave"
+	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
+	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
+	# Descargar y extraer fuentes
+	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
+	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
+	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
+	doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
+	doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
+	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
+}
 
 # Instalar nuestras extensiones de navegador
 # Código extraído de larbs.xyz/larbs.sh
@@ -225,11 +235,9 @@ installffaddons(){
 	mkdir -p "$pdir/extensions/"
 	for addon in $addonlist; do
 		if [ "$addon" == "ublock-origin" ]; then
-			addonurl="$(curl -sL https://api.github.com/repos/gorhill/uBlock/releases/latest | \
-				grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4)"
+			addonurl="$(curl -sL https://api.github.com/repos/gorhill/uBlock/releases/latest | grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4)"
 		else
-			addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | \
-				grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
+			addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
 		fi
 		file="${addonurl##*/}"
 		curl -LOs "$addonurl" > "$addontmp/$file"
@@ -398,38 +406,11 @@ pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-ja
 kb_layout_select
 kb_layout_conf
 
-# Elegir si usar DWM o KDE
-desktop_choose
+# Calcular el DPI de nuestra pantalla y configurar Xresources
+xresources_make
 
-case $chosen_desktop in
-	kde)
-		packages+=" plasma-desktop sddm-openrc"
-		service_add sddm
-	dwm)
-		# Instalar paquetes necesarios para dwm
-		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils"
-		# Calcular el DPI de nuestra pantalla y configurar Xresources
-		xresources_make
-		# Instalamos dwm y otras utilidades
-		suckless_install
-		# Configuramos Tauon Music Box (Nuestro reproductor de música)
-		"$HOME/.dotfiles/bin/tauon-config"
-		# Creamos nuestro xinitrc
-		doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-		# Configurar keepassxc para que siga el tema de QT
-		keepass_configure
-		# Configurar y activar xdm
-		service_add xdm
-		doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-		doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
-		# Suspender de forma automatica cuando la bateria cae por debajo del 5%
-		[ -e /sys/class/power_supply/BAT0 ] && \
-		doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
-		# Permitir hacer click tocando el trackpad (X11)
-		# Créditos para: <luke@lukesmith.xyz>
-		[ -e /sys/class/power_supply/BAT0 ] && \
-		doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
-esac
+# A partir de aquí no se necesita interacción del usuario
+whip_msg "Tiempo de espera" "La instalacion va a terminarse, esto tomara unos 20min aprox. (Depende de la velocidad de tu conexion a Internet)"
 
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
@@ -438,6 +419,9 @@ doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
 yayinstall $packages
+
+# Descargar e instalar nuestras fuentes
+fontdownload
 
 doas archlinux-java set java-17-openjdk
 
@@ -450,6 +434,16 @@ vim_configure
 mkdir -p "$HOME/.config"
 dotfiles_install
 
+# Instalamos dwm y otras utilidades
+suckless_install
+
+# Configuramos Tauon Music Box (Nuestro reproductor de música)
+"$HOME/.dotfiles/bin/tauon-config"
+# Creamos nuestro xinitrc
+doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
+
+# Configurar keepassxc para que siga el tema de QT
+keepass_configure
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link
 # Crear el directorio /.Trash con permisos adecuados
@@ -486,6 +480,11 @@ doas cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
 service_add syslog-ng
 service_add elogind
 
+# Configurar y activar xdm
+service_add xdm
+doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+
 # Activar WiFi y Bluetooth
 doas rfkill unblock wifi
 { lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && doas rfkill unblock bluetooth
@@ -495,8 +494,17 @@ doas usermod -aG network "$USER"
 [ -e /sys/class/power_supply/BAT0 ] && \
 doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
+# Suspender de forma automatica cuando la bateria cae por debajo del 5%
+[ -e /sys/class/power_supply/BAT0 ] && \
+doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
+
 # /etc/polkit-1/rules.d/99-artix.rules
 doas usermod -aG storage,input,users "$USER"
+
+# Permitir hacer click tocando el trackpad (X11)
+# Créditos para: <luke@lukesmith.xyz>
+[ -e /sys/class/power_supply/BAT0 ] && \
+doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Crear directorio para montar dispositivos android
 doas mkdir /mnt/ANDROID

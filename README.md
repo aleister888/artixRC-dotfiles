@@ -51,6 +51,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 ## Cosas por hacer
 
+- Añadir soporte para KDE
 - Añadir entradas .desktop customizadas
 - Limpiar el código de xmenu
 - Arreglar las entradas MAN y código sobre las flags de uso

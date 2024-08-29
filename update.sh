@@ -41,9 +41,11 @@ ln -s $HOME/.dotfiles/.profile $HOME/.config/zsh/.zprofile 2>/dev/null
 find "$HOME/.local/bin"	-type l ! -exec test -e {} \; -delete
 find "$HOME/.config"	-type l ! -exec test -e {} \; -delete
 
-# Enlazar nuestro script de inicio
-[ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
-ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
+if [ ! -e /usr/bin/plasmashell ]; then
+	# Enlazar nuestro script de inicio
+	[ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
+	ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
+fi
 
 # Descargar shader de mpv
 [ ! -e "$HOME/.config/mpv/shaders/crt-lottes.glsl" ] && \
@@ -54,12 +56,14 @@ ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
 # Configurar apariencia #
 #########################
 
-# Crear el archivo de configuración bg-saved.cfg
-mkdir -p "$HOME/.config/nitrogen"
-echo "[xin_-1]
-file=$HOME/.dotfiles/assets/wallpaper
-mode=5
-bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
+if [ ! -e /usr/bin/plasmashell ]; then
+	# Crear el archivo de configuración bg-saved.cfg
+	mkdir -p "$HOME/.config/nitrogen"
+	echo "[xin_-1]
+	file=$HOME/.dotfiles/assets/wallpaper
+	mode=5
+	bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
+fi
 
 ##################################################
 # Configurar GTK y QT (Si KDE no está instalado) #
@@ -69,47 +73,45 @@ ASSETDIR="$HOME/.dotfiles/assets/configs"
 THEME_DIR="/usr/share/themes"
 
 # Copiar la configuración de GTK
-rm -rf $HOME/.config/gtk-[2-4].0
-cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
-cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
-cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
-
-if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
-	# Clona el tema de gtk4
-	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
-	# Copia el tema deseado a la carpeta de temas
-	doas bash /tmp/Gruvbox_Theme/themes/install.sh
+if [ ! -e /usr/bin/plasmashell ]; then
+	rm -rf $HOME/.config/gtk-[2-4].0
+	cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
+	cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
+	cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
+	if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
+		# Clona el tema de gtk4
+		git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
+		# Copia el tema deseado a la carpeta de temas
+		doas bash /tmp/Gruvbox_Theme/themes/install.sh
+	fi
+	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
+	doas mkdir -p /root/.config
+	doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
+	doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
+	doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
+	# Definimos nuestros directorios marca-páginas
+	echo "file:///home/$USER
+	file:///home/$USER/Descargas
+	file:///home/$USER/Documentos
+	file:///home/$USER/Imágenes
+	file:///home/$USER/Vídeos
+	file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
+	# Configuramos QT
+	echo "[Appearance]
+	color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
+	custom_palette=true
+	icon_theme=gruvbox-dark-icons-gtk
+	standard_dialogs=default
+	style=Fusion
+	
+	[Fonts]
+	fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
+	general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
+	
+	# Configurar el tema del cursor
+	mkdir -p "$HOME/.local/share/icons/default"
+	cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 fi
-
-# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-doas mkdir -p /root/.config
-doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
-doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
-doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
-
-# Definimos nuestros directorios marca-páginas
-echo "file:///home/$USER
-file:///home/$USER/Descargas
-file:///home/$USER/Documentos
-file:///home/$USER/Imágenes
-file:///home/$USER/Vídeos
-file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
-
-# Configuramos QT
-echo "[Appearance]
-color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
-custom_palette=true
-icon_theme=gruvbox-dark-icons-gtk
-standard_dialogs=default
-style=Fusion
-
-[Fonts]
-fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
-general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
-
-# Configurar el tema del cursor
-mkdir -p "$HOME/.local/share/icons/default"
-cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 
 ###############
 # Plugins ZSH #
