@@ -71,3 +71,5 @@ setopt promptsubst
 printf '\033[?1h\033=' >/dev/tty
 
 pfetch
+
+source "$HOME/.profile"

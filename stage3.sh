@@ -403,7 +403,7 @@ desktop_choose
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc" ;;
+		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons power-profiles-daemon sddm-kcm breeze-gtk" ;;
 	dwm)
 		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils" ;;
 esac
@@ -415,6 +415,8 @@ doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
 yayinstall $packages
+# Instalamos dwm y otras utilidades
+suckless_install
 
 case $chosen_desktop in
 	kde)
@@ -422,8 +424,6 @@ case $chosen_desktop in
 	dwm)
 		# Calcular el DPI de nuestra pantalla y configurar Xresources
 		xresources_make
-		# Instalamos dwm y otras utilidades
-		suckless_install
 		# Configuramos Tauon Music Box (Nuestro reproductor de música)
 		"$HOME/.dotfiles/bin/tauon-config"
 		# Creamos nuestro xinitrc
