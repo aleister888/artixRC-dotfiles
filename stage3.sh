@@ -61,7 +61,7 @@ packages+=" qt5ct qt5-tools"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina gtk-vnc libvncserver xdg-xmenu-git"
+packages+=" syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina gtk-vnc libvncserver"
 # WM
 packages+=" thunderbird-dark-reader timeshift"
 
@@ -403,7 +403,7 @@ desktop_choose
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons power-profiles-daemon sddm-kcm breeze-gtk wl-clipboard" ;;
+		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard xdg-xmenu-git" ;;
 	dwm)
 		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils" ;;
 esac
