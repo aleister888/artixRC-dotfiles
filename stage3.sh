@@ -178,7 +178,7 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 # Elegir si usar DWM o KDE
 desktop_choose(){
 	# Opciones posibles
-	desktop_options=("kde" "KDE Plasma" "dwm" "Dynamic Window Manager")
+	desktop_options=("kde" "Plasma" "dwm" "DWM")
 	# Elegimos nuestra tarjeta gráfica
 	chosen_desktop=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
 	${desktop_options[@]})
@@ -403,11 +403,23 @@ desktop_choose
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc"
-		service_add sddm
+		packages+=" plasma-desktop sddm-openrc" ;;
 	dwm)
-		# Instalar paquetes necesarios para dwm
-		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils"
+		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils" ;;
+esac
+
+# Antes de instalar los paquetes, configurar makepkg para
+# usar todos los núcleos durante la compliación
+# Créditos para: <luke@lukesmith.xyz>
+doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
+
+# Instalamos todos los paquetes a la vez
+yayinstall $packages
+
+case $chosen_desktop in
+	kde)
+		service_add sddm ;;
+	dwm)
 		# Calcular el DPI de nuestra pantalla y configurar Xresources
 		xresources_make
 		# Instalamos dwm y otras utilidades
@@ -428,16 +440,8 @@ case $chosen_desktop in
 		# Permitir hacer click tocando el trackpad (X11)
 		# Créditos para: <luke@lukesmith.xyz>
 		[ -e /sys/class/power_supply/BAT0 ] && \
-		doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
+		doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf" ;;
 esac
-
-# Antes de instalar los paquetes, configurar makepkg para
-# usar todos los núcleos durante la compliación
-# Créditos para: <luke@lukesmith.xyz>
-doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
-
-# Instalamos todos los paquetes a la vez
-yayinstall $packages
 
 doas archlinux-java set java-17-openjdk
 
