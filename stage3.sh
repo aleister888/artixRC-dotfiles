@@ -43,7 +43,7 @@ packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib nt
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
-packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans ttf-roboto noto-fonts-emoji gnu-free-fonts noto-fonts-cjk ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd"
+packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans ttf-roboto noto-fonts-emoji gnu-free-fonts noto-fonts-cjk"
 # Archivos comprimidos
 packages+=" xarchiver atool tar unrar gzip unzip zip p7zip lha lrzip lzip lzop unarj"
 # Servicios
@@ -212,6 +212,28 @@ xresources_make(){
 	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE" # Añadimos nuestro DPI a el arcivo Xresources
 }
 
+# Descargar e instalar nuestras fuentes
+fontdownload() {
+	# Definir las URLs de descarga y los nombres de archivo
+	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
+	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
+	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
+	# Archivos temporales
+	AGAVE_ZIP="/tmp/Agave.zip"
+	SYMBOLS_ZIP="/tmp/Symbols.zip"
+	IOSEVKA_ZIP="/tmp/Iosevka.zip"
+	# Definir directorios de destino
+	AGAVE_DIR="/usr/share/fonts/Agave"
+	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
+	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
+	# Descargar y extraer fuentes
+	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
+	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
+	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
+	doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
+	doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
+	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
+}
 
 # Instalar nuestras extensiones de navegador
 # Código extraído de larbs.xyz/larbs.sh
@@ -403,7 +425,7 @@ desktop_choose
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview" ;;
+		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd" ;;
 	dwm)
 		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils" ;;
 esac
@@ -422,6 +444,8 @@ case $chosen_desktop in
 	kde)
 		service_add sddm ;;
 	dwm)
+		# Instalar fuentes necesarias
+		fontdownload
 		# Calcular el DPI de nuestra pantalla y configurar Xresources
 		xresources_make
 		# Configuramos Tauon Music Box (Nuestro reproductor de música)
