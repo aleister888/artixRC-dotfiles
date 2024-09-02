@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Pipewire
+Comment=Starts pipewire audio server
+Icon=emblem-music-symbolic
+Exec=/usr/local/bin/pipewire-start
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;
