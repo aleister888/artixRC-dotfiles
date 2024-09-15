@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Looking Glass
+Exec=looking-glass-client -p 6000 -m 110
+Icon=preferences-desktop-remote-desktop

@@ -170,6 +170,10 @@ cp -f "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applica
 [ ! -e "$HOME/.local/share/applications/image.desktop" ] && \
 cp -f "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop"
 
+# Creamos el archivo .desktop para el visor de imagenes
+[ ! -e "$HOME/.local/share/applications/looking-glass.desktop" ] && \
+cp -f "$HOME/.dotfiles/assets/desktop/looking-glass.desktop" "$HOME/.local/share/applications/looking-glass.desktop"
+
 # Nuestra función para establecer nuestro visor de imagenes, video, audio y editor de texto
 set_default_mime_types(){
 	local pattern="$1"

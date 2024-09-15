@@ -40,6 +40,7 @@ map D trash
 map <c-d> clean-trash
 map <a-d> restore-trash
 # volver a $HOME
+map <esc> home
 map Z home
 # Extraer y comprimir Archivos
 map E extract
