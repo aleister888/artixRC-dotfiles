@@ -29,3 +29,7 @@ user_pref("browser.toolbars.bookmarks.visibility", "always");
 user_pref("browser.tabs.inTitlebar", 0);
 
 user_pref("privacy.resistFingerprinting", false);
+
+// Desactivar funciones expermientales
+user_pref("browser.preferences.experimental", false)
+user_pref("browser.preferences.experimental.hidden", true)
