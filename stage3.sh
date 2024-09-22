@@ -141,6 +141,8 @@ packages_choose(){
 		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
 		doas ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop /usr/share/applications/
+		[ ! -d /usr/share/icons/hicolor/96x96/apps ] && doas mkdir -p /usr/share/icons/hicolor/96x96/apps
+		doas ln -s /opt/tuxguitar/share/pixmaps/tuxguitar.png /usr/share/icons/hicolor/96x96/apps/
 		doas ln -s /usr/bin/tuxguitar-bin /usr/bin/tuxguitar
 	fi
 }
@@ -544,6 +546,7 @@ _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/en
 
 # Install mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
+WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q dotnet45
 
 # Borrar archivos innecesarios
 rm "$HOME"/.bash* 2>/dev/null
