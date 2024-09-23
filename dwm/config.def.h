@@ -217,6 +217,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F11,    spawn,            SHCMD("pkill dwm") },
 	// Ajustes de audio
 	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pavucontrol") },
+	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 	// Cambiar música
 	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -54 dwmblocks") },
 	{ MODKEY,                       XK_x,      spawn,            SHCMD("playerctl -p tauon next; pkill -54 dwmblocks") },
