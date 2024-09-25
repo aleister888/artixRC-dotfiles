@@ -217,7 +217,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F11,    spawn,            SHCMD("pkill dwm") },
 	// Ajustes de audio
 	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pavucontrol") },
-	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
+	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 	// Cambiar música
 	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -54 dwmblocks") },
 	{ MODKEY,                       XK_x,      spawn,            SHCMD("playerctl -p tauon next; pkill -54 dwmblocks") },
@@ -310,7 +310,7 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button3,        layoutmenu,     {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xdg-xmenu") },
-	{ ClkRootWin,           ShiftMask,      Button3,        spawn,          SHCMD("xmenu-apps") },
+	{ ClkRootWin,           0,              Button2,        spawn,          SHCMD("xmenu-apps") },
 	{ ClkClientWin,         MODKEY|ControlMask,Button1,     movemouse,      {0} },
 	{ ClkClientWin,         MODKEY|ControlMask,Button3,     resizemouse,    {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
