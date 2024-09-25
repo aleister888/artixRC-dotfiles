@@ -39,7 +39,7 @@ service_add(){ # Activar servicio
 # Paquetes
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse earlyoom-openrc"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -91,7 +91,7 @@ packages_show(){
 	local scheme # Variable con la lista de paquetes a instalar
 	scheme="Se instalaran:\n"
 	[ "$virt"      == "true" ] && scheme+="Virt-Manager\n"
-	[ "$music"     == "true" ] && scheme+="Easytag Picard Flacon Cuetools\n"
+	[ "$music"     == "true" ] && scheme+="Easytag Picard Flacon Cuetools Lrcget\n"
 	[ "$noprivacy" == "true" ] && scheme+="Telegram Discord\n"
 	[ "$office"    == "true" ] && scheme+="Libreoffice\n"
 	[ "$latex"     == "true" ] && scheme+="TeX-live\n"
@@ -132,7 +132,7 @@ packages_choose(){
 	done
 	
 	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-chardev-spice qemu-hw-usb-redirect qemu-hw-usb-host qemu-hw-display-virtio-gpu qemu-hw-display-virtio-gpu-gl qemu-hw-display-virtio-gpu-pci qemu-hw-display-virtio-gpu-pci-gl qemu-hw-display-virtio-vga qemu-hw-display-virtio-vga-gl"
-	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools"
+	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools lrcget-bin"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
 	[ "$office"	== "true" ] && packages+=" libreoffice"
 	[ "$latex"	== "true" ] && packages+=" texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex"
@@ -351,6 +351,7 @@ scripts_link(){
 		"pipewire-start"
 		"tray-toggle"
 		"lock"
+		"xmenu-apps"
 	)
 	for file in "${files[@]}"; do
 		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
@@ -427,7 +428,7 @@ desktop_choose
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration" ;;
+		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark" ;;
 	dwm)
 		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils" ;;
 esac
@@ -471,6 +472,14 @@ esac
 
 doas archlinux-java set java-17-openjdk
 
+# Instalamos lrcput si elegimos instalar herramientas para gestionar nuestra música
+if [ "$music" == "true" ]; then
+	mkdir -p ~/.local/bin
+	wget -q "https://raw.githubusercontent.com/TonyCollett/lrcput/refs/heads/main/lrcput.py" \
+		-O ~/.local/bin/lrcput.py
+	sed -i '1i #!/usr/bin/python' ~/.local/bin/lrcput.py
+	chmod +x ~/.local/bin/lrcput.py
+fi
 # Configurar firefox para proteger la privacidad
 firefox_configure
 # Configurar neovim e instalar los plugins
@@ -489,17 +498,6 @@ echo "@reboot $USER syncthing --no-browser --no-default-folder" | doas tee -a /e
 # Configurar el audio de baja latencia
 audio_setup
 
-# Configurar /etc/sysctl.conf
-echo 'vm.swappiness=10
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.accept_redirects = 0
-net.ipv4.conf.all.send_redirects=1
-net.ipv4.conf.default.send_redirects=1
-net.ipv6.conf.all.accept_redirects = 0
-net.ipv6.conf.default.accept_redirects = 0
-net.ipv4.ip_forward=1
-net.ipv6.conf.all.forwarding=1' | doas tee -a /etc/sysctl.conf
-
 # Si estamos usando una máquina virtual,
 # configuramos X11 para usar 1080p como resolución
 [ "$graphic_driver" == "virtual" ] && \
@@ -515,6 +513,7 @@ doas cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
 # Activar servicios
 service_add syslog-ng
 service_add elogind
+service_add earlyoom
 
 # Activar WiFi y Bluetooth
 doas rfkill unblock wifi
