@@ -57,7 +57,7 @@ packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv 
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt"
 # Apariencia
-packages+=" qt5ct qt5-tools"
+packages+=" qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit"
 # Misc
@@ -428,9 +428,9 @@ desktop_choose
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark" ;;
+		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall" ;;
 	dwm)
-		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk papirus-icon-theme capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils" ;;
+		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp" ;;
 esac
 
 # Antes de instalar los paquetes, configurar makepkg para
@@ -445,7 +445,10 @@ suckless_install
 
 case $chosen_desktop in
 	kde)
+		# Activar Display Manager
 		service_add sddm ;;
+		# Añadir servicio de gestión de energía
+		service_add power-profiles-daemon
 	dwm)
 		# Instalar fuentes necesarias
 		fontdownload
@@ -457,6 +460,8 @@ case $chosen_desktop in
 		doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
 		# Configurar keepassxc para que siga el tema de QT
 		keepass_configure
+		# Añadir servicio de gestión de energía
+		service_add tlp
 		# Configurar y activar xdm
 		service_add xdm
 		doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources

@@ -45,6 +45,8 @@ if [ ! -e /usr/bin/plasmashell ]; then
 	# Enlazar nuestro script de inicio
 	[ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
 	ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
+else # Crear .desktop para iniciar pipewire (En caso de que xdg-autostart falle)
+	cp ~/.dotfiles/assets/desktop/pipewire.desktop ~/.local/share/applications/
 fi
 
 # Descargar shader de mpv
@@ -143,9 +145,6 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 ############################
 # Aplicaciones por defecto #
 ############################
-
-# Borramos ajustes ya guardados
-find ~/.local/share/applications -type f ! -name 'steam.desktop' -delete
 
 rm -f $HOME/.config/mimeapps.list
 rm -rf ~/.local/share/mime

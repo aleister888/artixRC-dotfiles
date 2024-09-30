@@ -51,8 +51,6 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 ## Cosas por hacer
 
-- Añadir soporte para KDE
-- Añadir entradas .desktop customizadas
 - Limpiar el código de xmenu
 - Arreglar las entradas MAN y código sobre las flags de uso
 - Añadir README explicativo a: bin, assets, dwmblocks y xmenu.
@@ -62,6 +60,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
     - Arreglar instalación fuera del LiveISO
+- Añadir soporte para pipewire-virtualmic y dmenu para KDE Plasma
 
 ## Recursos/fuentes usadas y Créditos
 

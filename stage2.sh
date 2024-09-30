@@ -26,7 +26,7 @@ echo_msg(){
 
 # Instalamos base-devel manualmente para usar doas en vez de sudo
 devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages tlp tlp-openrc cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc"
+packages="$devel_packages cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc"
 
 # Establecer zona horaria
 timezoneset(){
@@ -270,7 +270,6 @@ genlocale # Configurar la codificación del sistema
 service_add NetworkManager
 service_add cupsd
 service_add cronie
-service_add tlp
 service_add acpid
 service_add ntpd
 rc-update add device-mapper boot
