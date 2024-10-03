@@ -698,6 +698,29 @@ Para más información sobre como configurar un VFIO passthought puede consultar
 \end{itemize}
 \end{mybox}
 
+\section{VirtioFS}
+
+Podemos usar virtiofs para compartir directorios del host con nuestra máquina virtual. Para ello, necesitamos añadir los directorios deseados desde Virt-Manager, seleccionando: Añadir hardware, Sistema de archivos, eligiendo la Ruta de origen (la carpeta que queremos compartir) y la Ruta objetivo (el nombre con el que aparecerá en nuestra máquina invitada).
+
+\vspace{5pt}
+
+También necesitamos instalar los controladores de VirtIO en el host. Si todavía tenemos montado el disco que contiene estos controladores, encontraremos en el CD un instalador (virtio-win-gt-x64.msi) para los controladores, así como otro instalador \emph{opcional} para añadir la integración con el host (virtio-win-guest-tools.exe), que permite funciones como compartir el portapapeles, entre otras.
+
+\vspace{5pt}
+
+Después de instalar los controladores, debemos instalar \href{https://github.com/winfsp/winfsp}{WinFSP} para poder montar sistemas de archivos VirtioFS.
+
+\vspace{5pt}
+
+Una vez que tenemos todo instalado, podemos crear un script `.bat` que monte nuestras carpetas en la máquina invitada. Por ejemplo, si tenemos dos carpetas cuyas rutas objetivo son ``documentos'' y ``videos'', y queremos montarlas en ``Y:'' y ``Z:'', respectivamente, podemos crear un script para montar ambas de la siguiente manera:
+
+\vspace{5pt}
+
+\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+"C:\Program Files (x86)\WinFsp\bin\launchctl-x64.exe" start virtiofs documentos documentos Y:
+"C:\Program Files (x86)\WinFsp\bin\launchctl-x64.exe" start virtiofs videos videos Z:
+\end{lstlisting}
+
 \section{SSH}
 
 Si queremos conectarnos a un equipo remoto a través de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}. Por defecto incluyo un script que configura SSH de forma muy básica, configurando SSH para poder acceder a tu equipo remoto con una contraseña. Para activar SSH simplemente ejecuta:
@@ -829,5 +852,29 @@ Aquí tienes una lista de buscadores útiles, para añadirlos a tu buscador simp
 \end{multicols}
 
 Las Wikis de Gentoo y Alpine nos resultarán de utilidad, pues ambas distribuciones utilizan OpenRC en vez de SystemD. De hecho, si no encuentras un script de OpenRC para algún servicio en los repositorios de Artix, puedes copiar el script que utilizan Alpine o Gentoo.
+
+\section{Miscelánea}
+
+\subsection*{Configuraciones locales}
+
+Nuestra configuración de \texttt{zsh} tiene varios \emph{alias} configurados en:
+
+\begin{center}
+\path{~/.config/zsh/aliasrc}
+\end{center}
+
+Si deseamos añadir alias de forma no global, sin tener que añadir archivos al repositorio y de manera exclusiva para nuestro equipo, podemos crear un archivo con más funciones y abreviaciones en:
+
+\begin{center}
+\path{~/.config/useralias}
+\end{center}
+
+\subsection*{Aviso de Uso}
+
+Este proyecto es para uso personal. Se comparte con la intención de que pueda ser útil para otros, pero se proporciona tal cual, sin ninguna garantía. No se asume responsabilidad por ninguna pérdida de datos o problemas que puedan surgir del uso de este proyecto.
+
+\vspace{5pt}
+
+No obstante, se aceptan propuestas de mejora razonables. Si alguien desea contribuir a hacer este setup más extensible y robusto, puede realizar un merge request sin inconveniente.
 
 \end{document}

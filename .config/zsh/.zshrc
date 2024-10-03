@@ -31,10 +31,8 @@ lfcd () {
 }
 bindkey -s '^o' 'lfcd\n'
 
-# Historial en directorio temporal
 HISTSIZE=512
 SAVEHIST=512
-HISTFILE=/tmp/zsh_history
 
 # Bindings de teclado
 bindkey  "^[[3~" delete-char

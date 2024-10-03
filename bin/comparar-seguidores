@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Consigue tu informe de Instagram en:
+# https://accountscenter.instagram.com/info_and_permissions/dyi
+
+# Script para ver:
+# - Quién de tus seguidos no te sigue de vuelta
+# - Tus solicitudes de seguimiento pendientes
+
+# Verifica si se pasó el argumento
+if [ -z "$1" ]; then
+    echo "Uso: $0 <informe_instagram_comprimido>"
+    exit 1
+fi
+
+IN="$1" # Informe de Instagram comprimido proporcionado como primer argumento
+OUT="/tmp/$$" # Directorio temporal para extraer el informe
+
+# Descomprime el informe
+aunpack -fq "$IN" -X "$OUT"
+
+# Extraer seguidores y seguidos del informe
+seguidores=$(grep -oP 'href="https://www\.instagram\.com/\K[^"]+' "$OUT/connections/followers_and_following/followers_1.html")
+seguidos=$(grep -oP 'href="https://www\.instagram\.com/\K[^"]+' "$OUT/connections/followers_and_following/following.html")
+
+# Encontrar gente que no te sigue de vuelta
+no_seguidores=$(echo "$seguidos" | grep -Fxv -f <(echo "$seguidores"))
+echo "$no_seguidores" > ./vuelta.txt
+
+# Extraer solicitudes de seguimiento pendientes
+pending_requests=$(grep -oP 'href="https://www\.instagram\.com/\K[^"]+' "$OUT/connections/followers_and_following/pending_follow_requests.html")
+echo "$pending_requests" > ./peticiones.txt
+
+# Limpieza de archivos temporales
+rm -rf "$OUT"
+
+echo "Informe generado:"
+echo "- Usuarios que no te siguen de vuelta guardados en 'vuelta.txt'"
+echo "- Solicitudes de seguimiento pendientes guardadas en 'peticiones.txt'"

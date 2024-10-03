@@ -3,6 +3,12 @@
 # Abreviaciones
 . "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
 
+# Aquí puedes colocar alias sin que estos esten
+# dentro de la estructura del repositorio
+if [ -e "${XDG_CONFIG_HOME:-$HOME/.config}/useralias" ]; then
+	. "${XDG_CONFIG_HOME:-$HOME/.config}/useralias"
+fi
+
 if [ -d "$HOME/.local/bin" ] ; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
