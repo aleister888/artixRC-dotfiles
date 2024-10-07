@@ -4,13 +4,10 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
-
 # URL con el respositorio
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
-
 # Funciones que invocaremos a menudo
-
 whip_msg(){ # Mensajes de tailbox
 	whiptail --backtitle "$REPO_URL" \
 	--title "$1" --msgbox "$2" 10 60
@@ -62,7 +59,7 @@ packages+=" qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit"
 # Misc
-packages+=" syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick ueberzug inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina gtk-vnc libvncserver"
+packages+=" syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina gtk-vnc libvncserver ueberzugpp libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules"
 # WM
 packages+=" thunderbird-dark-reader timeshift"
 
@@ -442,7 +439,7 @@ desktop_choose # Elegimos si usar DWM o KDE
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall plasma-wayland-protocols plasma-disks fwupd plasma-thunderbolt print-manager system-config-printer" ;;
+		packages+=" plasma-desktop sddm-openrc kitty discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall plasma-wayland-protocols plasma-disks fwupd plasma-thunderbolt print-manager system-config-printer wayland-protocols" ;;
 	dwm)
 		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol" ;;
 esac

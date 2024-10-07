@@ -84,7 +84,6 @@ fi
 
 
 ASSETDIR="$HOME/.dotfiles/assets/configs"
-THEME_DIR="/usr/share/themes"
 
 # Copiar la configuración de GTK
 if [ ! -e /usr/bin/plasmashell ]; then
@@ -162,12 +161,10 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 ############################
 
 
-if [ ! -e /usr/bin/plasmashell ]; then
-	rm -f "$HOME/.config/mimeapps.list"
-	rm -rf ~/.local/share/mime
-	mkdir -p "$HOME/.local/share/mime/packages"
-	doas rm -f /usr/share/applications/mimeinfo.cache
-fi
+rm -f "$HOME/.config/mimeapps.list"
+rm -rf ~/.local/share/mime
+mkdir -p "$HOME/.local/share/mime/packages"
+doas rm -f /usr/share/applications/mimeinfo.cache
 
 update-mime-database ~/.local/share/mime
 doas update-mime-database /usr/share/mime
@@ -175,20 +172,22 @@ doas update-mime-database /usr/share/mime
 [ ! -d "$HOME/.local/share/applications" ] && \
 	mkdir -p "$HOME/.local/share/applications"
 
-# Creamos el archivo .desktop para lf
-[ ! -e "$HOME/.local/share/applications/lft.desktop" ] && \
-cp -f "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/lft.desktop"
-
-# Creamos el archivo .desktop para nvim
-[ ! -e "$HOME/.local/share/applications/nvimt.desktop" ] && \
-cp -f "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/nvimt.desktop"
+# Creamos los archivos .desktop para programas de terminal (x11->st, wayland->kitty)
+if [ ! -e /usr/bin/plasmashell ]; then # Si KDE Plasma no esta instalado, usar st
+	# Creamos el archivo .desktop para lf
+	ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop"
+	# Creamos el archivo .desktop para nvim
+	ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop"
+elif [ -e /usr/bin/plasmashell ]; then
+	# Creamos el archivo .desktop para lf
+	ln -s "$HOME/.dotfiles/assets/desktop/lfw.desktop" "$HOME/.local/share/applications/file.desktop"
+	# Creamos el archivo .desktop para nvim
+	ln -s "$HOME/.dotfiles/assets/desktop/nvimw.desktop" "$HOME/.local/share/applications/text.desktop"
+fi
 
 # Creamos el archivo .desktop para el visor de imagenes
-[ ! -e "$HOME/.local/share/applications/image.desktop" ] && \
 cp -f "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop"
-
 # Creamos el archivo .desktop para el visor de imagenes
-[ ! -e "$HOME/.local/share/applications/looking-glass.desktop" ] && \
 cp -f "$HOME/.dotfiles/assets/desktop/looking-glass.desktop" "$HOME/.local/share/applications/looking-glass.desktop"
 
 # Nuestra función para establecer nuestro visor de imagenes, video, audio y editor de texto
@@ -209,11 +208,11 @@ else
 fi
 set_default_mime_types "^video" "mpv.desktop"
 set_default_mime_types "^audio" "mpv.desktop"
-set_default_mime_types "^text" "nvimt.desktop"
+set_default_mime_types "^text" "text.desktop"
 
 # Establecemos el administrador de archivos predetermiando
-xdg-mime default lfst.desktop inode/directory
-xdg-mime default lfst.desktop x-directory/normal
+xdg-mime default file.desktop inode/directory
+xdg-mime default file.desktop x-directory/normal
 update-desktop-database "$HOME/.local/share/applications"
 
 

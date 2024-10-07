@@ -10,9 +10,21 @@ IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}"
 
 # Función para mostrar imágenes con ueberzug
 image() {
-	if [ -f "$1" ] && [ -n "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
-	printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
-		"$4" "$5" "$(($2-1))" "$(($3-1))" "$1" > "$FIFO_UEBERZUG"
+	X=$4; Y=$5; MW=$(($2-1)); MH=$(($3-1)) # Variables de posición y geometría
+
+	if [ -f "$1" ] && [ -n "$DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
+
+		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+
+			printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
+			"$X" "$Y" "$MW" "$MH" "$1" > "$FIFO_UEBERZUG"
+
+		elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+
+			ueberzugpp cmd -s "$UB_SOCKET" -a add -i PREVIEW -x "$X" -y "$Y" --max-width "$MW" --max-height "$MH" -f "$1"
+			exit 1
+
+		fi
 	else
 		mediainfo "$6"
 	fi
@@ -24,6 +36,9 @@ image() {
 # Crear preview en función del tipo de archivo
 case "$(xdg-mime query filetype "$1")" in
 
+# Imprimir los manuales con man
+text/troff) man ./ "$1" | col -b ;;
+
 # Imprimir los archivos de texto con bat
 text/* | */xml | */json | */x-shellscript | */x-xcursor | */x-theme | */x-desktop | */x-troff-man)
 # Comprobar si es un archivo de texto
@@ -33,9 +48,6 @@ case "$(file --dereference --brief --mime-type -- "$1")" in
 	# Si es un archivo de texto mostrarlo con bat
 	*/*) bat -fp --terminal-width "$(($4-2))" -f "$1" ;;
 esac ;;
-
-# Imprimir los manuales con man
-text/troff) man ./ "$1" | col -b ;;
 
 # Convertir los proyectos de GIMP a .jpg
 image/x-xcf )
