@@ -38,8 +38,9 @@ service_add(){ # Activar servicio
 
 # Paquetes
 
+
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools arandr xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse earlyoom-openrc"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse earlyoom-openrc"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -53,7 +54,7 @@ packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
 packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates-mozilla"
 # Multimedia
-packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mediainfo feh vlc pavucontrol gimp sxiv nsxiv tauon-music-box"
+packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mediainfo feh vlc gimp sxiv nsxiv tauon-music-box"
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt"
 # Apariencia
@@ -160,9 +161,6 @@ kb_layout_select(){
 	final_layout=$(whip_menu "Teclado" "Por favor, elige una distribucion de teclado:" \
 	${keyboard_array[@]})
 }
-
-
-# Configurar la distribución de teclado
 kb_layout_conf(){
 	doas mkdir -p /etc/X11/xorg.conf.d/ # X11
 	echo "Section \"InputClass\"
@@ -185,6 +183,7 @@ desktop_choose(){
 	chosen_desktop=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
 	${desktop_options[@]})
 }
+
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make(){
@@ -214,6 +213,7 @@ xresources_make(){
 	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE" # Añadimos nuestro DPI a el arcivo Xresources
 }
 
+
 # Descargar e instalar nuestras fuentes
 fontdownload() {
 	# Definir las URLs de descarga y los nombres de archivo
@@ -237,7 +237,8 @@ fontdownload() {
 	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
 }
 
-# Instalar nuestras extensiones de navegador
+
+# Configurar firefox e instalar nuestras extensiones
 # Código extraído de larbs.xyz/larbs.sh
 # https://github.com/LukeSmithxyz/voidrice
 # Créditos para: Luke Smith <luke@lukesmith.xyz>
@@ -299,7 +300,8 @@ vim_configure(){
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
-# Instalar los archivos de configuración locales y en github
+
+# Instalar los archivos de configuración e instalar plugins de zsh
 dotfiles_install(){
 	# Plugins de zsh a clonar
 	plugins=(
@@ -320,7 +322,9 @@ dotfiles_install(){
 	doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
 }
 
-# Vamos a configurar nuestro entorno de trabajo
+
+# Configurar el entorno de trabajo
+
 
 # Instalamos dwm y otras aplicaciones suckless
 suckless_install(){
@@ -330,12 +334,14 @@ suckless_install(){
 	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
+
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d "$HOME/.config/keepassxc" ] && mkdir -p "$HOME/.config/keepassxc"
 	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" \
 		"$HOME/.config/keepassxc/keepassxc.ini"
 }
+
 
 # Crear enlaces simbólicos a /usr/local/bin para ciertos scripts
 scripts_link(){
@@ -358,12 +364,14 @@ scripts_link(){
 	done
 }
 
+
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir(){
 	doas mkdir --parent /.Trash
 	doas chmod a+rw /.Trash
 	doas chmod +t /.Trash
 }
+
 
 # Configurar el audio de baja latencia
 audio_setup(){
@@ -374,6 +382,7 @@ audio_setup(){
 	$USER hard nofile 524288" | \
 	doas tee -a /etc/security/limits.conf
 }
+
 
 # Si se eligió instalar virt-manager, configurarlo adecuadamente
 virt_conf(){
@@ -392,9 +401,11 @@ virt_conf(){
 	doas virsh net-autostart default
 }
 
+
 ##########################
 # Aquí empieza el script #
 ##########################
+
 
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
 tmp_dir="/tmp/yay_install_temp"
@@ -402,46 +413,50 @@ mkdir -p "$tmp_dir"
 git clone https://aur.archlinux.org/yay.git "$tmp_dir"
 sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 
-# Escogemos que drivers de video instalar
-driver_choose
 
-# Instalar blueman si se encontro una tarjeta bluetooth
+driver_choose # Escogemos que drivers de vídeo instalar
+
+
+# Instalar blueman si el dispositivo tiene soporte bluetooth
 { lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && packages+=" blueman"
 # Crear directorios
 for dir in Documentos Descargas Música Imágenes Public Vídeos; do mkdir -p "$HOME/$dir"; done
 ln -s "$HOME/Descargas" "$HOME/Downloads"
 
-# Elegimos que paquetes instalar
-packages_choose
+
+packages_choose # Elegimos que paquetes instalar
+
 
 # Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
-# Instalamos pipewire antes de nada, porque si no tendremos conflictos
-# (Para algunos paquetes se instala jack2 en vez de pipewire-jack por defecto).
+# Instalamos pipewire antes para evitar conflictos
 pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber
+
 
 # Elegimos distribución de teclado
 kb_layout_select
 kb_layout_conf
 
-# Elegir si usar DWM o KDE
-desktop_choose
+
+desktop_choose # Elegimos si usar DWM o KDE
+
 
 case $chosen_desktop in
 	kde)
 		packages+=" plasma-desktop sddm-openrc konsole discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall plasma-wayland-protocols plasma-disks fwupd plasma-thunderbolt print-manager system-config-printer" ;;
 	dwm)
-		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp" ;;
+		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol" ;;
 esac
+
 
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
 # Créditos para: <luke@lukesmith.xyz>
 doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
-# Instalamos todos los paquetes a la vez
-yayinstall $packages
-# Instalamos dwm y otras utilidades
-suckless_install
+
+yayinstall $packages # Instalamos todos los paquetes a la vez
+suckless_install # Instalamos dwm y otras utilidades
+
 
 case $chosen_desktop in
 	kde)
@@ -475,7 +490,10 @@ case $chosen_desktop in
 		doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf" ;;
 esac
 
+
+# Establecemos la versión de java por defecto
 doas archlinux-java set java-17-openjdk
+
 
 # Instalamos lrcput si elegimos instalar herramientas para gestionar nuestra música
 if [ "$music" == "true" ]; then
@@ -485,76 +503,114 @@ if [ "$music" == "true" ]; then
 	sed -i '1i #!/usr/bin/python' ~/.local/bin/lrcput.py
 	chmod +x ~/.local/bin/lrcput.py
 fi
-# Configurar firefox para proteger la privacidad
-firefox_configure
-# Configurar neovim e instalar los plugins
-vim_configure
 
-# Instalar los archivos de configuración locales y en github
+
+firefox_configure # Configurar firefox
+vim_configure # Configurar neovim
+
+
+# Instalar los archivos de configuración e instalar plugins de zsh
 mkdir -p "$HOME/.config"
 dotfiles_install
 
-# Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
-scripts_link
-# Crear el directorio /.Trash con permisos adecuados
-trash_dir
+
+scripts_link # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
+trash_dir # Crear el directorio /.Trash con permisos adecuados
 # Configurar syncthing para que se inicie con el ordenador
 echo "@reboot $USER syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
-# Configurar el audio de baja latencia
-audio_setup
+audio_setup # Configurar el audio de baja latencia
+
 
 # Si estamos usando una máquina virtual,
 # configuramos X11 para usar 1080p como resolución
 [ "$graphic_driver" == "virtual" ] && \
 doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
+
 # Permitir a Steam controlar mandos de PlayStation 4
 doas cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
 	/usr/lib/udev/rules.d/
 
-# Descargar wordlist
-"$HOME/.dotfiles/bin/wordlist"
+
+"$HOME/.dotfiles/bin/wordlist" # Descargar wordlist
+
 
 # Activar servicios
 service_add syslog-ng
 service_add elogind
 service_add earlyoom
 
+
 # Activar WiFi y Bluetooth
 doas rfkill unblock wifi
-{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null && doas rfkill unblock bluetooth
+{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null \
+	&& doas rfkill unblock bluetooth
+
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 doas usermod -aG network "$USER"
 [ -e /sys/class/power_supply/BAT0 ] && \
 doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
+
 # /etc/polkit-1/rules.d/99-artix.rules
 doas usermod -aG storage,input,users "$USER"
+
 
 # Crear directorio para montar dispositivos android
 doas mkdir /mnt/ANDROID
 doas chown "$USER" /mnt/ANDROID
 
+
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$virt" == "true" ] && virt_conf
+
 
 # Scripts de elogind
 doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart"		/lib/elogind/system-sleep/nm-restart
 doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock"	/lib/elogind/system-sleep/display-lock
+
 
 # Añadir entradas a /etc/environment
 echo 'CARGO_HOME="~/.local/share/cargo"
 GNUPGHOME="~/.local/share/gnupg"
 _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/environment
 
+
+# Ocultar archivos .desktop innecesarios
+ 	desktopent=(
+		"xdvi"
+		"envy24control"
+		"echomixer"
+		"hdajackretask"
+		"hdspconf"
+		"hdspmixer"
+		"hwmixvolume"
+		"qvidcap"
+		"qv4l2"
+		"Surge-XT"
+		"Surge-XT-FX"
+		"jconsole-java-openjdk"
+		"jshell-java-openjdk"
+		"lstopo"
+	)
+	# Ruta done para clonar los repositorios
+	# Clonamos cada repositorio
+	for entry in "${desktopent[@]}"; do
+		doas cp /usr/share/applications/$entry.desktop /usr/local/share/applications/$entry.desktop && \
+		echo 'NoDisplay=true' | doas tee -a /usr/local/share/applications/$entry.desktop
+	done
+
+
 # Install mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q dotnet45
 
+
 # Borrar archivos innecesarios
 rm "$HOME"/.bash* 2>/dev/null
 rm "$HOME"/.wget-hsts 2>/dev/null
+
 
 # Finalmente configurar doas de forma más segura
 doas chown -c root:root /etc/doas.conf
@@ -565,5 +621,6 @@ permit nopass :wheel as root cmd /usr/local/bin/wake
 permit nopass :wheel as root cmd /usr/bin/tee
 permit nopass :wheel as root cmd /usr/bin/pacman
 permit nopass :wheel as root cmd pacman' | doas tee /etc/doas.conf
+
 
 mkdir -p "$HOME/.local/share/gnupg"
