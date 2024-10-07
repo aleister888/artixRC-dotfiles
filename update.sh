@@ -4,26 +4,34 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+
 # Actualizar repositorio
 sh -c "cd $HOME/.dotfiles && git pull" >/dev/null
 
-# Si el script se ejecuta con -f, arreglar los permisos de todos
-# los archivos en $HOME (Consume muchos recursos)
-while getopts ":f" opt; do case $opt in
+
+# Si el script se ejecuta con -f, arreglar los permisos de todos los archivos en $HOME
+while getopts ":f" opt; do
+	case $opt in
 	f)
-	# Corregir los permisos de los directorios
-	find $HOME/ -type d -exec chmod 700 {} +
-	# Corregir los permisos de los archivos multimedia
-	find $HOME/ -type f | \
-	parallel 'case $(xdg-mime query filetype {}) \
-		in image/*|audio/*|video/*|text/plain) \
-		[ "$(stat -c "%a" {})" != "600" ] && chmod 600 {} ;; esac'
-	;;
-esac; done
+		# Arreglar los permisos de los directorios
+		find "$HOME" -type d -exec chmod 700 {} +
+		# Arreglar los permisos de los archivos multimedia
+		find "$HOME" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" \
+		-o -iname "*.mp3" -o -iname "*.wav" -o -iname "*.mp4" -o -iname "*.avi" -o -iname "*.txt" \) \
+		-exec chmod 600 {} +
+		;;
+	\?)
+		echo "Opción inválida: -$OPTARG" >&2
+		exit 1
+		;;
+	esac
+done
+
 
 #######################################
 # Archivos de configuración y scripts #
 #######################################
+
 
 # Crear los directorios necesarios
 [ -d "$HOME/.config" ]		|| mkdir -p "$HOME/.config"
@@ -54,9 +62,11 @@ fi
 	wget -q "https://raw.githubusercontent.com/hhirtz/mpv-retro-shaders/master/crt-lottes.glsl" \
 	-O "$HOME/.config/mpv/shaders/crt-lottes.glsl" >/dev/null
 
+
 #########################
 # Configurar apariencia #
 #########################
+
 
 if [ ! -e /usr/bin/plasmashell ]; then
 	# Crear el archivo de configuración bg-saved.cfg
@@ -67,9 +77,11 @@ if [ ! -e /usr/bin/plasmashell ]; then
 	bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 fi
 
+
 ##################################################
 # Configurar GTK y QT (Si KDE no está instalado) #
 ##################################################
+
 
 ASSETDIR="$HOME/.dotfiles/assets/configs"
 THEME_DIR="/usr/share/themes"
@@ -115,9 +127,11 @@ if [ ! -e /usr/bin/plasmashell ]; then
 	cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 fi
 
+
 ###############
 # Plugins ZSH #
 ###############
+
 
 plugin_install(){
 	git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
@@ -142,14 +156,18 @@ sh -c "cd $HOME/.config/zsh/zsh-history-substring-search && git pull" >/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-syntax-highlighting && git pull" >/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 
+
 ############################
 # Aplicaciones por defecto #
 ############################
 
-rm -f $HOME/.config/mimeapps.list
-rm -rf ~/.local/share/mime
-mkdir -p $HOME/.local/share/mime/packages
-doas rm -f /usr/share/applications/mimeinfo.cache
+
+if [ ! -e /usr/bin/plasmashell ]; then
+	rm -f "$HOME/.config/mimeapps.list"
+	rm -rf ~/.local/share/mime
+	mkdir -p "$HOME/.local/share/mime/packages"
+	doas rm -f /usr/share/applications/mimeinfo.cache
+fi
 
 update-mime-database ~/.local/share/mime
 doas update-mime-database /usr/share/mime
@@ -182,21 +200,27 @@ set_default_mime_types(){
 	done
 }
 
-set_default_mime_types "^image" "image.desktop"
+if [ ! -e /usr/bin/plasmashell ]; then
+	set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
+	set_default_mime_types "^image" "image.desktop"
+else
+	set_default_mime_types "^*/pdf" "okularApplication_pdf.desktop"
+	set_default_mime_types "^image" "org.kde.gwenview.desktop"
+fi
 set_default_mime_types "^video" "mpv.desktop"
 set_default_mime_types "^audio" "mpv.desktop"
 set_default_mime_types "^text" "nvimt.desktop"
-set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
 
-# Establecemos por defecto el administrador de archivos
+# Establecemos el administrador de archivos predetermiando
 xdg-mime default lfst.desktop inode/directory
 xdg-mime default lfst.desktop x-directory/normal
 update-desktop-database "$HOME/.local/share/applications"
-# Usar xdg-open para firefox
-mkdir -p "$HOME/.local/share/dbus-1/services/"
-echo "Exec=/bin/false" > "$HOME/.local/share/dbus-1/services/org.freedesktop.FileManager1.service"
 
-xdg-settings set default-web-browser firefox.desktop 2>/dev/null
+
+mkdir -p "$HOME/.local/share/dbus-1/services/" # Usar xdg-open para firefox
+echo "Exec=/bin/false" > "$HOME/.local/share/dbus-1/services/org.freedesktop.FileManager1.service"
+xdg-settings set default-web-browser firefox.desktop 2>/dev/null # Establecer navegador predeterminado
+
 
 # Definir asociaciones para archivos de Microsoft Excel
 excel_associations=(
@@ -259,4 +283,29 @@ done
 # Definir asociaciones para archivos de Microsoft Word
 for association in "${word_associations[@]}"; do
 	xdg-mime default libreoffice-writer.desktop "$association"
+done
+
+
+# Ocultar archivos .desktop innecesarios
+desktopent=(
+	"xdvi"
+	"envy24control"
+	"echomixer"
+	"hdajackretask"
+	"hdspconf"
+	"hdspmixer"
+	"hwmixvolume"
+	"qvidcap"
+	"qv4l2"
+	"Surge-XT"
+	"Surge-XT-FX"
+	"jconsole-java-openjdk"
+	"jshell-java-openjdk"
+	"lstopo"
+)
+# Ruta done para clonar los repositorios
+# Clonamos cada repositorio
+for entry in "${desktopent[@]}"; do
+	doas cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" && \
+	echo 'NoDisplay=true' | doas tee -a "/usr/local/share/applications/$entry.desktop"
 done

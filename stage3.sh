@@ -465,6 +465,9 @@ case $chosen_desktop in
 		# Añadir servicio de gestión de energía
 		service_add power-profiles-daemon
 	dwm)
+		# Crear directorio para montar dispositivos android
+		doas mkdir /mnt/ANDROID
+		doas chown "$USER" /mnt/ANDROID
 		# Instalar fuentes necesarias
 		fontdownload
 		# Calcular el DPI de nuestra pantalla y configurar Xresources
@@ -557,11 +560,6 @@ doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/
 doas usermod -aG storage,input,users "$USER"
 
 
-# Crear directorio para montar dispositivos android
-doas mkdir /mnt/ANDROID
-doas chown "$USER" /mnt/ANDROID
-
-
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$virt" == "true" ] && virt_conf
 
@@ -575,31 +573,6 @@ doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock"	/lib/elogind/sy
 echo 'CARGO_HOME="~/.local/share/cargo"
 GNUPGHOME="~/.local/share/gnupg"
 _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/environment
-
-
-# Ocultar archivos .desktop innecesarios
- 	desktopent=(
-		"xdvi"
-		"envy24control"
-		"echomixer"
-		"hdajackretask"
-		"hdspconf"
-		"hdspmixer"
-		"hwmixvolume"
-		"qvidcap"
-		"qv4l2"
-		"Surge-XT"
-		"Surge-XT-FX"
-		"jconsole-java-openjdk"
-		"jshell-java-openjdk"
-		"lstopo"
-	)
-	# Ruta done para clonar los repositorios
-	# Clonamos cada repositorio
-	for entry in "${desktopent[@]}"; do
-		doas cp /usr/share/applications/$entry.desktop /usr/local/share/applications/$entry.desktop && \
-		echo 'NoDisplay=true' | doas tee -a /usr/local/share/applications/$entry.desktop
-	done
 
 
 # Install mfc42
