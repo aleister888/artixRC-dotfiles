@@ -404,6 +404,11 @@ virt_conf(){
 ##########################
 
 
+pacinstall go sudo
+echo "root ALL=(ALL:ALL) ALL
+%wheel ALL=(ALL) NOPASSWD: ALL" | doas tee /etc/sudoers
+
+
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
 tmp_dir="/tmp/yay_install_temp"
 mkdir -p "$tmp_dir"
@@ -591,6 +596,10 @@ permit nopass :wheel as root cmd /usr/local/bin/wake
 permit nopass :wheel as root cmd /usr/bin/tee
 permit nopass :wheel as root cmd /usr/bin/pacman
 permit nopass :wheel as root cmd pacman' | doas tee /etc/doas.conf
+
+
+doas rm /etc/sudoers
+doas pacman -Rcns sudo
 
 
 mkdir -p "$HOME/.local/share/gnupg"
