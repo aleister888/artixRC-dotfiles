@@ -463,9 +463,9 @@ suckless_install # Instalamos dwm y otras utilidades
 case $chosen_desktop in
 	kde)
 		# Activar Display Manager
-		service_add sddm ;;
+		service_add sddm
 		# Añadir servicio de gestión de energía
-		service_add power-profiles-daemon
+		service_add power-profiles-daemon ;;
 	dwm)
 		# Crear directorio para montar dispositivos android
 		doas mkdir /mnt/ANDROID
