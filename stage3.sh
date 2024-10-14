@@ -592,7 +592,7 @@ _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/en
 
 # Install mfc42
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
-WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q dotnet45
+#WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q dotnet45
 
 
 # Borrar archivos innecesarios
@@ -613,7 +613,7 @@ permit nopass :wheel as root cmd pacman' | doas tee /etc/doas.conf
 
 # Borrar sudo del sistema
 doas rm /etc/sudoers
-doas pacman -Rcns sudo
+doas pacman -Rcns sudo --noconfirm
 yayinstall doas-sudo-shim
 
 
