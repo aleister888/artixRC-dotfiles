@@ -267,6 +267,7 @@ hostname_config # Definimos el nombre de nuestra máquina y creamos el archivo h
 arch_support # Activar repositorios de Arch Linux
 genlocale # Configurar la codificación del sistema
 
+# Activamos servicios
 service_add NetworkManager
 service_add cupsd
 service_add cronie
@@ -277,7 +278,6 @@ rc-update add dmcrypt boot
 rc-update add dmeventd boot
 
 # Sustituir sudo por doas
-ln -s /usr/bin/doas /usr/bin/sudo
 ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 

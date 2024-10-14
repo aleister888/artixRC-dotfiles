@@ -37,7 +37,7 @@ service_add(){ # Activar servicio
 
 
 # Sistema
-packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse earlyoom-openrc doas-sudo-shim"
+packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse earlyoom-openrc"
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
@@ -187,27 +187,43 @@ xresources_make(){
 	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
-	# Elegimos la resolución de nuestro monitor
+	# Selección de resolución del monitor
 	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
-	"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K")
-	# Elegimos el tamaño de nuestro monitor
+		"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K")
+	
+	# Selección del tamaño del monitor en pulgadas (diagonal)
 	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
-	"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
-	case $resolution in # Elegimos la resolución y establecemos variables con las dimensiones
-		"720p")
-			width=1280 height=720 ;;
-		"1080p")
-			width=1920 height=1080 ;;
-		"1440p")
-			width=2560 height=1440 ;;
-		"2160p")
-			width=3840 height=2160 ;;
+		"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
+	
+	# Definimos la resolución elegida
+	case $resolution in
+		"720p")  width=1280; height=720 ;;
+		"1080p") width=1920; height=1080 ;;
+		"1440p") width=2560; height=1440 ;;
+		"2160p") width=3840; height=2160 ;;
 	esac
-	# Calculamos el DPI en función de la resolución y el tamaño de la pantalla
-	display_dpi=$(echo "scale=2; sqrt($width^2 + $height^2) / $size" | bc)
-	rounded_dpi=$(echo "($display_dpi + 0.5) / 0.5" | bc) # Redondeamos el DPI
+	
+	# Relación de aspecto (asumimos 16:9)
+	aspect_ratio_width=16
+	aspect_ratio_height=9
+	
+	# Cálculo de las dimensiones físicas horizontales y verticales en pulgadas
+	diagonal_ratio=$(echo "scale=6; sqrt($aspect_ratio_width^2 + $aspect_ratio_height^2)" | bc)
+	screen_width_inches=$(echo "scale=6; $size * $aspect_ratio_width / $diagonal_ratio" | bc)
+	screen_height_inches=$(echo "scale=6; $size * $aspect_ratio_height / $diagonal_ratio" | bc)
+	
+	# Cálculo del DPI real para ancho y alto
+	dpi_width=$(echo "scale=2; $width / $screen_width_inches" | bc)
+	dpi_height=$(echo "scale=2; $height / $screen_height_inches" | bc)
+	
+	# Promediamos el DPI horizontal y vertical
+	display_dpi=$(echo "scale=2; ($dpi_width + $dpi_height) / 2" | bc)
+	
+	# Redondeamos el DPI al entero más cercano
+	rounded_dpi=$(printf "%.0f" $display_dpi)
 	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 0.75
-	echo "Xft.dpi:$rounded_dpi" >> "$XRES_FILE" # Añadimos nuestro DPI a el arcivo Xresources
+	# Añadimos nuestro DPI a el arcivo Xresources
+	echo "Xft.dpi:$rounded_dpi" | tee -a "$XRES_FILE"
 }
 
 
@@ -403,8 +419,10 @@ virt_conf(){
 # Aquí empieza el script #
 ##########################
 
-doas rm /usr/bin/sudo
-pacinstall go sudo
+# Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
+# Instalamos pipewire antes para evitar conflictos. Instalamos go y sudo para poder instalar yay
+# (makepkg -si necesita sudo)
+pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber go sudo
 echo "root ALL=(ALL:ALL) ALL
 %wheel ALL=(ALL) NOPASSWD: ALL" | doas tee /etc/sudoers
 
@@ -427,11 +445,6 @@ ln -s "$HOME/Descargas" "$HOME/Downloads"
 
 
 packages_choose # Elegimos que paquetes instalar
-
-
-# Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
-# Instalamos pipewire antes para evitar conflictos
-pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber
 
 
 # Elegimos distribución de teclado
@@ -598,8 +611,10 @@ permit nopass :wheel as root cmd /usr/bin/pacman
 permit nopass :wheel as root cmd pacman' | doas tee /etc/doas.conf
 
 
+# Borrar sudo del sistema
 doas rm /etc/sudoers
 doas pacman -Rcns sudo
+yayinstall doas-sudo-shim
 
 
 mkdir -p "$HOME/.local/share/gnupg"
