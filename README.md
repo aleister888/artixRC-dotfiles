@@ -51,16 +51,19 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 ## Cosas por hacer
 
-- Limpiar el código de xmenu
-- Arreglar las entradas MAN y código sobre las flags de uso
-- Añadir README explicativo a: bin, assets, dwmblocks y xmenu.
-- Crear un setup equivalente para [OpenBSD](https://github.com/aleister888/openBSD-dotfiles)
-- Añadir copias de seguridad incrementales a crypt-backup
-- Mejorar script de particionado/instalación
+- Hacer que SDDM tenga el tema Plasma por defecto
+- Configurar teclado KDE y bindings por defecto
+- Añadir soporte para pipewire-virtualmic para KDE Plasma
+- Mejorar s1-2 para restarurar /home con LUKS y poder instalar desde una instalación existente, etc.
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
     - Arreglar instalación fuera del LiveISO
-- Añadir soporte para pipewire-virtualmic y dmenu para KDE Plasma
+    - Mostrar que comandos se van a ejecutar sobre que discos antes de confirmar nada
+- Añadir README explicativo a: bin, assets, dwmblocks y xmenu.
+- Añadir copias de seguridad incrementales a crypt-backup
+- Limpiar el código de xmenu
+- Arreglar las entradas MAN y código sobre las flags de uso
+- Crear un setup equivalente para [OpenBSD](https://github.com/aleister888/openBSD-dotfiles)
 
 ## Recursos/fuentes usadas y Créditos
 
