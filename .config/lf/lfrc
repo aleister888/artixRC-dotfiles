@@ -24,7 +24,7 @@ set previewer '~/.config/lf/scope'
 
 set info size:time
 # Relación entre columnas
-set ratios 1:1:1
+set ratios 3:5:4
 # Definir Archivos Ocultos
 set hiddenfiles ".*:*.aux:*.toc:*timeshift:*.reapeaks"
 
@@ -106,7 +106,7 @@ cmd compress ${{
 	7z)
 		7z a /tmp/$(date +'%H_%M_%S').7z . >/dev/null && \
 		whiptail --title "Operación Completada" \
-		--msgbox "Archivo comprimido en: 7z a /tmp/$(date +'%H_%M_%S').7z" 10 60 ;;
+		--msgbox "Archivo comprimido en: /tmp/$(date +'%H_%M_%S').7z" 10 60 ;;
 	esac
 }}
 
