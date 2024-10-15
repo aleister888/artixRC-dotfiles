@@ -45,6 +45,7 @@ map <a-d> restore-trash
 # volver a $HOME
 map <esc> home
 map Z home
+map T cd /tmp
 # Extraer y comprimir Archivos
 map E extract
 map <c-e> compress
