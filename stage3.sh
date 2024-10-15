@@ -457,7 +457,7 @@ desktop_choose # Elegimos si usar DWM o KDE
 
 case $chosen_desktop in
 	kde)
-		packages+=" plasma-desktop sddm-openrc kitty discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall plasma-wayland-protocols plasma-disks fwupd plasma-thunderbolt print-manager system-config-printer wayland-protocols" ;;
+		packages+=" plasma-desktop sddm-openrc kitty discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk okular gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall plasma-wayland-protocols plasma-disks fwupd plasma-thunderbolt print-manager system-config-printer wayland-protocols devour" ;;
 	dwm)
 		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors dragon-drop xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol" ;;
 esac
@@ -477,6 +477,9 @@ case $chosen_desktop in
 	kde)
 		# Activar Display Manager
 		service_add sddm
+		# Copiar .Xresources con el tema breeze dark
+		mkdir -p "$HOME/.config"
+		cp "$HOME/.dotfiles/assets/configs/Xresources-KDE" "$HOME/.config/Xresources"
 		# Añadir servicio de gestión de energía
 		service_add power-profiles-daemon ;;
 	dwm)
@@ -506,6 +509,8 @@ case $chosen_desktop in
 		# Créditos para: <luke@lukesmith.xyz>
 		[ -e /sys/class/power_supply/BAT0 ] && \
 		doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf" ;;
+		# Bloquear la pantalla al suspender el portátil
+		doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock
 esac
 
 
@@ -580,8 +585,7 @@ doas usermod -aG storage,input,users "$USER"
 
 
 # Scripts de elogind
-doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart"		/lib/elogind/system-sleep/nm-restart
-doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock"	/lib/elogind/system-sleep/display-lock
+doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
 
 
 # Añadir entradas a /etc/environment
