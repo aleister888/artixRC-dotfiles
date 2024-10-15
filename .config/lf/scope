@@ -81,8 +81,11 @@ audio/flac | audio/mpeg | audio/x-m4a | audio/mp4 )
 	NAME="$(cat ${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt | grep -i ALBUM | rev | cut -d= -f1 | rev | tr -cd '[:alnum:]._-')"
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$NAME"
 	[ ! -f "$CACHE.jpg" ] && ffmpeg -nostdin -i "$1" "$CACHE.jpg"
-	image "$CACHE.jpg" "$2" "$3" "$4" "$5"
-	printf "$(perl -E "say '\\n' x $(($(($4-2))/5+2))")$(cat ${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt | grep -ivwE "(comment|encoder|ffmetadata1)")"
+	image "$CACHE.jpg" "$2" "$3" "$4" "$5" &
+	{
+		printf '\n%.0s' $(seq $(( $4 / 4 )))
+		cat "${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt" | grep -ivwE "(comment|encoder|ffmetadata1)"
+	}
 	exit 1 ;;
 
 # Mostar información sobre los discos/imágenes de instalación
@@ -92,8 +95,11 @@ audio/flac | audio/mpeg | audio/x-m4a | audio/mp4 )
 video/* )
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
 	[ ! -f "$CACHE" ] && ffmpegthumbnailer -i "$1" -o "$CACHE" -s 0
-	image "$CACHE" "$2" "$3" "$4" "$5"
-	printf "$(perl -E "say '\\n' x $(($(($4-2))/5+2))")$(mediainfo "$1" | grep -E "File size|Duration|FPS|Movie name" | grep -v "SPF)" | tr '\t' ' '| tr -s " " | sort | uniq )"
+	image "$CACHE" "$2" "$3" "$4" "$5" &
+	{
+		printf '\n%.0s' $(seq $(( $4 / 5)))
+		mediainfo "$1" | grep -E "File size|Duration|FPS|Movie name" | grep -v "SPF)" | tr '\t' ' '| tr -s " " | sort | uniq
+	}
 	exit 1 ;;
 
 # Convertir la primera página a .jpg
