@@ -47,6 +47,7 @@ IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
 	IMG:$ICONPATH/apps/tuxguitar.svg				Tuxguitar	pw-links tuxguitar
 	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	Máq. Virtual	pw-links qemu
 	IMG:$ICONPATH/apps/telegram.svg					Telegram	pw-links telegram
+	IMG:$ICONPATH/apps/spotify.svg					Spotify		pw-links spotify
 
 IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
 	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar		tuxguitar-bin

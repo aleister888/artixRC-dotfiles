@@ -277,7 +277,6 @@ rc-update add device-mapper boot
 rc-update add dmcrypt boot
 rc-update add dmeventd boot
 
-# Sustituir sudo por doas
 ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
 

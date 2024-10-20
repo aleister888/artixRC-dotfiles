@@ -95,13 +95,13 @@ if [ ! -e /usr/bin/plasmashell ]; then
 		# Clona el tema de gtk4
 		git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
 		# Copia el tema deseado a la carpeta de temas
-		doas bash /tmp/Gruvbox_Theme/themes/install.sh
+		sudo bash /tmp/Gruvbox_Theme/themes/install.sh
 	fi
 	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-	doas mkdir -p /root/.config
-	doas cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
-	doas cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
-	doas cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
+	sudo mkdir -p /root/.config
+	sudo cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
+	sudo cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
+	sudo cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
 	# Definimos nuestros directorios marca-páginas
 	echo "file:///home/$USER
 	file:///home/$USER/Descargas
@@ -164,10 +164,10 @@ sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 rm -f "$HOME/.config/mimeapps.list"
 rm -rf ~/.local/share/mime
 mkdir -p "$HOME/.local/share/mime/packages"
-doas rm -f /usr/share/applications/mimeinfo.cache
+sudo rm -f /usr/share/applications/mimeinfo.cache
 
 update-mime-database ~/.local/share/mime
-doas update-mime-database /usr/share/mime
+sudo update-mime-database /usr/share/mime
 
 [ ! -d "$HOME/.local/share/applications" ] && \
 	mkdir -p "$HOME/.local/share/applications"
@@ -305,6 +305,6 @@ desktopent=(
 # Ruta done para clonar los repositorios
 # Clonamos cada repositorio
 for entry in "${desktopent[@]}"; do
-	doas cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" && \
-	echo 'NoDisplay=true' | doas tee -a "/usr/local/share/applications/$entry.desktop"
+	sudo cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" && \
+	echo 'NoDisplay=true' | sudo tee -a "/usr/local/share/applications/$entry.desktop"
 done

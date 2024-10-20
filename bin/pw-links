@@ -32,4 +32,6 @@ telegram)
 	share_toggle "Telegram Desktop" telegram ;;
 reaper)
 	share_toggle REAPER cockos-reaper out ;;
+spotify)
+	share_toggle spotify spotify ;;
 esac

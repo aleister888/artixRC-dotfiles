@@ -51,7 +51,7 @@ packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
 # Firefox y thunderbird
 packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates-mozilla"
 # Multimedia
-packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mediainfo feh vlc gimp sxiv nsxiv tauon-music-box"
+packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mediainfo feh vlc gimp sxiv nsxiv tauon-music-box easyeffects"
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt"
 # Apariencia
@@ -129,7 +129,7 @@ packages_choose(){
 		fi
 	done
 	
-	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-chardev-spice qemu-hw-usb-redirect qemu-hw-usb-host qemu-hw-display-virtio-gpu qemu-hw-display-virtio-gpu-gl qemu-hw-display-virtio-gpu-pci qemu-hw-display-virtio-gpu-pci-gl qemu-hw-display-virtio-vga qemu-hw-display-virtio-vga-gl"
+	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-chardev-spice qemu-hw-usb-redirect qemu-hw-usb-host qemu-hw-display-virtio-gpu qemu-hw-display-virtio-gpu-gl qemu-hw-display-virtio-gpu-pci qemu-hw-display-virtio-gpu-pci-gl qemu-hw-display-virtio-vga qemu-hw-display-virtio-vga-gl bridge-utils"
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools lrcget-bin"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
 	[ "$office"	== "true" ] && packages+=" libreoffice"
@@ -607,12 +607,8 @@ rm "$HOME"/.wget-hsts 2>/dev/null
 # Finalmente configurar doas de forma más segura
 doas chown -c root:root /etc/doas.conf
 doas chmod -c 0400 /etc/doas.conf
-echo 'permit persist keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel
-permit nopass :wheel as root cmd /usr/bin/openrc-shutdown
-permit nopass :wheel as root cmd /usr/local/bin/wake
-permit nopass :wheel as root cmd /usr/bin/tee
-permit nopass :wheel as root cmd /usr/bin/pacman
-permit nopass :wheel as root cmd pacman' | doas tee /etc/doas.conf
+echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' | \
+	doas tee /etc/doas.conf
 
 
 # Borrar sudo del sistema

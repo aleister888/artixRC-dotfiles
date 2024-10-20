@@ -10,88 +10,90 @@ let mapleader = "," " Definir la tecla leader
 
 
 " Cargar plugins
-call plug#begin('~/.local/share/nvim/plugged')
+if $USER !=# 'root'
+	call plug#begin('~/.local/share/nvim/plugged')
 
 
-Plug 'ryanoasis/vim-devicons' " Iconos
-Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
-Plug 'morhetz/gruvbox' " Tema
-Plug 'akinsho/bufferline.nvim' " Tabs
+	Plug 'ryanoasis/vim-devicons' " Iconos
+	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
+	Plug 'morhetz/gruvbox' " Tema
+	Plug 'akinsho/bufferline.nvim' " Tabs
 
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
-let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
+	let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
-Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
-Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
-let g:coc_disable_startup_warning = 1
-let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
-inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
-let g:coc_preferences = {
-	\ 'suggest.maxCompleteItemCount': 50,
-	\ 'suggest.detailField': 'menu',
-	\ 'suggest.fixIncomplete': 1,
-	\ 'coc.preferences.formatOnType': v:false,
-	\ 'coc.preferences.formatOnSaveFiletypes': []
-	\ }
-augroup my_coc_highlights
-	au!
-	au ColorScheme * highlight CocHighlightText gui=NONE guibg=#3C3836
-	au ColorScheme * highlight CocHighlightRead gui=NONE guibg=#3C3836
-	au ColorScheme * highlight CocHighlightWrite gui=NONE guibg=#3C3836
-	au ColorScheme * highlight CocErrorSign guifg=#B16286
-	au ColorScheme * highlight CocWarningSign guifg=#fabd2f
-	au ColorScheme * highlight CocInfoSign guifg=#83a598
-	au ColorScheme * highlight CocHintSign guifg=#8ec07c
-	au ColorScheme * highlight CocErrorFloat guibg=#222222 guifg=#B16286
-	au ColorScheme * highlight CocWarningFloat guibg=#222222 guifg=#fabd2f
-	au ColorScheme * highlight CocInfoFloat guibg=#222222 guifg=#8ec07c
-	au ColorScheme * highlight CocHintFloat guibg=#222222 guifg=#98971A
-	au ColorScheme * highlight CocFloating guibg=#222222
-	au ColorScheme * highlight CocMenuSel guibg=#3C3836
-augroup END
+	Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
+	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
+	Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
+	let g:coc_disable_startup_warning = 1
+	let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
+	inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
+	let g:coc_preferences = {
+		\ 'suggest.maxCompleteItemCount': 50,
+		\ 'suggest.detailField': 'menu',
+		\ 'suggest.fixIncomplete': 1,
+		\ 'coc.preferences.formatOnType': v:false,
+		\ 'coc.preferences.formatOnSaveFiletypes': []
+		\ }
+	augroup my_coc_highlights
+		au!
+		au ColorScheme * highlight CocHighlightText gui=NONE guibg=#3C3836
+		au ColorScheme * highlight CocHighlightRead gui=NONE guibg=#3C3836
+		au ColorScheme * highlight CocHighlightWrite gui=NONE guibg=#3C3836
+		au ColorScheme * highlight CocErrorSign guifg=#B16286
+		au ColorScheme * highlight CocWarningSign guifg=#fabd2f
+		au ColorScheme * highlight CocInfoSign guifg=#83a598
+		au ColorScheme * highlight CocHintSign guifg=#8ec07c
+		au ColorScheme * highlight CocErrorFloat guibg=#222222 guifg=#B16286
+		au ColorScheme * highlight CocWarningFloat guibg=#222222 guifg=#fabd2f
+		au ColorScheme * highlight CocInfoFloat guibg=#222222 guifg=#8ec07c
+		au ColorScheme * highlight CocHintFloat guibg=#222222 guifg=#98971A
+		au ColorScheme * highlight CocFloating guibg=#222222
+		au ColorScheme * highlight CocMenuSel guibg=#3C3836
+	augroup END
 
-Plug 'preservim/nerdtree' " Árbol de directorios
-let NERDTreeShowHidden=1
-nnoremap <silent><leader>t :NERDTreeToggle<CR>
-" Customizar NERDTree con el esquema de colores Gruvbox
-let g:NERDTreeDirArrowExpandable="+"
-let g:NERDTreeDirArrowCollapsible="~"
+	Plug 'preservim/nerdtree' " Árbol de directorios
+	let NERDTreeShowHidden=1
+	nnoremap <silent><leader>t :NERDTreeToggle<CR>
+	" Customizar NERDTree con el esquema de colores Gruvbox
+	let g:NERDTreeDirArrowExpandable="+"
+	let g:NERDTreeDirArrowCollapsible="~"
 
-set laststatus=3 " Mostar solo una barra de estado a la vez
-au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
-au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
+	set laststatus=3 " Mostar solo una barra de estado a la vez
+	au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
+	au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
 
-Plug 'sirver/ultisnips' " Snippets
-let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
+	Plug 'sirver/ultisnips' " Snippets
+	let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
+	let g:UltiSnipsExpandTrigger = '<tab>'
+	let g:UltiSnipsJumpForwardTrigger = '<tab>'
+	let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
 
-Plug 'vim-airline/vim-airline' " Barra de estado
-Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme = 'monochrome'
-let g:airline_powerline_fonts = 0
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols = {}
-let g:airline_symbols.branch = '   '
-let g:airline_symbols.readonly = '󰌾 '
-let g:airline_symbols.linenr = '   '
-let g:airline_symbols.maxlinenr = '   '
-let g:airline_symbols.dirty = '  '
-let g:airline_symbols.colnr = ' C:'
-let g:airline#extensions#whitespace#symbol = '( )'
-let g:airline#extensions#whitespace#space_symbol = '( )'
-let g:airline#extensions#whitespace#tab_symbol = '(\t)'
-let g:airline#extensions#whitespace#trail_symbol = '().'
-let g:airline#extensions#whitespace#leading_space = 1
-let g:airline#extensions#whitespace#leading_tab = 1
-let g:airline#extensions#wordcount#format = '%d w'
+	Plug 'vim-airline/vim-airline' " Barra de estado
+	Plug 'vim-airline/vim-airline-themes'
+	let g:airline_theme = 'monochrome'
+	let g:airline_powerline_fonts = 0
+	let g:airline_left_sep = ''
+	let g:airline_left_alt_sep = ''
+	let g:airline_right_sep = ''
+	let g:airline_right_alt_sep = ''
+	let g:airline_symbols = {}
+	let g:airline_symbols.branch = '   '
+	let g:airline_symbols.readonly = '󰌾 '
+	let g:airline_symbols.linenr = '   '
+	let g:airline_symbols.maxlinenr = '   '
+	let g:airline_symbols.dirty = '  '
+	let g:airline_symbols.colnr = ' C:'
+	let g:airline#extensions#whitespace#symbol = '( )'
+	let g:airline#extensions#whitespace#space_symbol = '( )'
+	let g:airline#extensions#whitespace#tab_symbol = '(\t)'
+	let g:airline#extensions#whitespace#trail_symbol = '().'
+	let g:airline#extensions#whitespace#leading_space = 1
+	let g:airline#extensions#whitespace#leading_tab = 1
+	let g:airline#extensions#wordcount#format = '%d w'
 
-call plug#end()
+	call plug#end()
+endif
 
 
 " Mostramos en la barra de estado si
@@ -105,7 +107,9 @@ endfunction
 function! TabStatus()
 	return g:tab ? '  \t' : ''
 endfunction
-let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
+if $USER !=# 'root'
+	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
+endif
 
 
 " Ajustes generales
@@ -123,7 +127,9 @@ set clipboard+=unnamedplus " Ajustes de pantalla
 " Tema de colores
 set background=dark termguicolors
 set fillchars+=vert:\  " Espacio como separadores
-colorscheme gruvbox
+if $USER !=# 'root'
+	colorscheme gruvbox
+endif
 let g:gruvbox_contrast_dark = "hard"
 autocmd VimEnter * highlight Normal ctermbg=none guibg=none
 autocmd VimEnter * highlight NonText ctermbg=none guibg=none
@@ -257,4 +263,6 @@ au Filetype groff inoremap ñ  \[~n] | au Filetype groff inoremap Ñ  \[~N]
 au Filetype groff inoremap ç  \[,c] | au Filetype groff inoremap Ç  \[,C]
 au Filetype groff inoremap ·  \[pc] | au Filetype groff inoremap ×  \[mu]
 
-so ~/.config/nvim/bufferline.lua
+if $USER !=# 'root'
+	so ~/.config/nvim/bufferline.lua
+endif
