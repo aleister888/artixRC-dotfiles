@@ -38,7 +38,7 @@ deepcleanup() {
 	pacman -Qqd 2>/dev/null | \
 	pacman -Rsu --print - 2>/dev/null | \
 	grep - | sed 's/-[0-9].*//g' > /tmp/pacman_unneeded
-	doas pacman -Rcns $(cat /tmp/pacman_unneeded)
+	doas pacman -Rcns $(cat /tmp/pacman_unneeded | grep -v ca-certificates)
 }
 
 # Función para reinstalar todos los paquetes
