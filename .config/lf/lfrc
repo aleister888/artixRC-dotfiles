@@ -192,7 +192,7 @@ cmd open ${{
 				setsid -f gwenview "$f"
 			else
 				$HOME/.local/bin/rotdir "$f" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\|svg\)\(_large\)*$" |
-				nsxiv -aio | while read -r file; do
+				devour nsxiv -aio | while read -r file; do
 					[ -n "$file" ] && /usr/bin/lf -remote "send select \"$file\"" && /usr/bin/lf -remote "send toggle"
 				done &
 			fi ;;
