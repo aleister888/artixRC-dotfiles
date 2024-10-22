@@ -47,7 +47,7 @@ packages+=" xarchiver atool tar unrar gzip unzip zip p7zip lha lrzip lzip lzop u
 # Servicios
 packages+=" syslog-ng syslog-ng-openrc"
 # Documentos
-packages+=" poppler zathura zathura-pdf-poppler zathura-cb"
+packages+=" poppler zathura zathura-pdf-mupdf tesseract-data-spa zathura-cb"
 # Firefox y thunderbird
 packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates-mozilla"
 # Multimedia
