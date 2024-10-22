@@ -6,11 +6,13 @@ set adjust-open width
 set sandbox none
 set statusbar-h-padding 0
 set statusbar-v-padding 0
+set page-padding 2
 
 map w adjust_window width
 map W adjust_window best-fit
+map [fullscreen] w adjust_window width
+map [fullscreen] W adjust_window best-fit
 map f toggle_fullscreen
-map [fullscreen] f toggle_fullscreen page-padding 1
 
 set adjust-open width
 set recolor true
@@ -29,10 +31,10 @@ set completion-group-fg         "#928374"
 set completion-highlight-bg     "#83a598"
 set completion-highlight-fg     "#504945"
 
-set index-bg                    "#504945"
+set index-bg                    "#222222"
 set index-fg                    "#ebdbb2"
 set index-active-bg             "#83a598"
-set index-active-fg             "#504945"
+set index-active-fg             "#222222"
 
 set inputbar-bg                 "#222222"
 set inputbar-fg                 "#ebdbb2"
@@ -40,8 +42,8 @@ set inputbar-fg                 "#ebdbb2"
 set statusbar-bg                "#504945"
 set statusbar-fg                "#ebdbb2"
 
-set highlight-color             "#fabd2f"
-set highlight-active-color      "#fe8019"
+set highlight-color             "rgba(131, 165, 152, 0.5)"
+set highlight-active-color      "rgba(184, 187, 38, 0.5)"
 
 set default-bg                  "#3C3836"
 set default-fg                  "#ebdbb2"

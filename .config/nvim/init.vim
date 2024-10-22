@@ -168,27 +168,11 @@ nnoremap <silent><F3> :setlocal spell! spelllang=es_es<CR>
 nnoremap <silent><F4> :setlocal spell! spelllang=en_us<CR>
 
 " Compilar documentos (laTeX)
-au Filetype tex map <M-g> :! arara % && notify-send "Document Compiled" <CR><CR>
-au Filetype tex map <M-S-g> :! xelatex % <CR>
-au Filetype tex map <M-h> :! setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
-" Compilar documentos (Groff)
-" Groff -> PDF
-au Filetype groff map <M-g> :!
-	\ groff -ms % -T pdf > $(echo % \| sed 's/ms$/pdf/') <CR><CR>
-" Groff -> PS -> PDF
-au Filetype groff map <M-S-g> :!
-	\ groff -ms % -T ps > $(echo % \| sed 's/ms$/ps/')
-	\ | time ps2pdf $(echo % \| sed 's/ms$/ps/') <CR>
-" Pic -> Groff -> PDF
-au Filetype groff map <C-g> :!
-	\ pic % \| groff -ms -T pdf > $(echo % \| sed 's/ms$/pdf/') <CR>
-" Pic -> Groff -> PS -> PDF
-au Filetype groff map <C-S-g> :!
-	\ pic % \| groff -ms -T ps > $(echo % \| sed 's/ms$/ps/')
-	\ | time ps2pdf $(echo % \| sed 's/ms$/ps/') <CR>
-" Abrir PDF
-au Filetype groff map <M-w> :!
-	\ setsid /usr/bin/zathura $(echo % \| sed 's/ms$/pdf/') <CR><CR>
+au Filetype tex nmap <leader>f <plug>(vimtex-toc-toggle)<CR>
+au Filetype tex nmap <leader>g :w<CR>:!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
+au Filetype tex nmap <leader>v :!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
+au Filetype tex nmap <leader>b :!xelatex %<CR>
+au Filetype tex nmap <leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1
@@ -225,11 +209,7 @@ endfunction
 inoremap <F5> <C-O>:call TabExp()<CR>
 nnoremap <F5> :call TabExp()<CR>
 
-
-" Automatizar tareas:
-
-
-" Función para ejecutar comandos en la terminal
+" Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
 au BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwmblocks/' .
@@ -241,27 +221,6 @@ au BufWritePost ~/.dotfiles/st/config.def.h
 au BufWritePost ~/.dotfiles/dmenu/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
 au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
-
-
-" Auto acentuar carácteres con groff:
-au Filetype groff inoremap á  \['a] | au Filetype groff inoremap Á  \['A]
-au Filetype groff inoremap â  \[^a] | au Filetype groff inoremap Â  \[^A]
-au Filetype groff inoremap ä  \[:a] | au Filetype groff inoremap Ä  \[:A]
-au Filetype groff inoremap é  \['e] | au Filetype groff inoremap É  \['E]
-au Filetype groff inoremap ê  \[^e] | au Filetype groff inoremap Ê  \[^E]
-au Filetype groff inoremap ë  \[:e] | au Filetype groff inoremap Ë  \[:E]
-au Filetype groff inoremap í  \['i] | au Filetype groff inoremap Í  \['I]
-au Filetype groff inoremap î  \[^i] | au Filetype groff inoremap Î  \[^I]
-au Filetype groff inoremap ï  \[:i] | au Filetype groff inoremap Ï  \[:I]
-au Filetype groff inoremap ó  \['o] | au Filetype groff inoremap Ó  \['O]
-au Filetype groff inoremap ô  \[^o] | au Filetype groff inoremap Ô  \[^O]
-au Filetype groff inoremap ö  \[:o] | au Filetype groff inoremap Ö  \[:O]
-au Filetype groff inoremap ú  \['u] | au Filetype groff inoremap Ú  \['U]
-au Filetype groff inoremap û  \[^u] | au Filetype groff inoremap Û  \[^U]
-au Filetype groff inoremap ü  \[:u] | au Filetype groff inoremap Ü  \[:U]
-au Filetype groff inoremap ñ  \[~n] | au Filetype groff inoremap Ñ  \[~N]
-au Filetype groff inoremap ç  \[,c] | au Filetype groff inoremap Ç  \[,C]
-au Filetype groff inoremap ·  \[pc] | au Filetype groff inoremap ×  \[mu]
 
 if $USER !=# 'root'
 	so ~/.config/nvim/bufferline.lua
