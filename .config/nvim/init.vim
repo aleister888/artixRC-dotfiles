@@ -13,7 +13,6 @@ let mapleader = "," " Definir la tecla leader
 if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
-
 	Plug 'ryanoasis/vim-devicons' " Iconos
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
@@ -21,6 +20,27 @@ if $USER !=# 'root'
 
 	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 	let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+
+	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " Previews de markdown en local
+	let g:mkdp_auto_start = 0
+	let g:mkdp_preview_options = {
+		\ 'mkit': {},
+		\ 'katex': {},
+		\ 'uml': {},
+		\ 'maid': {},
+		\ 'disable_sync_scroll': 0,
+		\ 'sync_scroll_type': 'middle',
+		\ 'hide_yaml_meta': 1,
+		\ 'sequence_diagrams': {},
+		\ 'flowchart_diagrams': {},
+		\ 'content_editable': v:false,
+		\ 'disable_filename': 0,
+		\ 'toc': {}
+		\ }
+	function OpenMarkdownPreview (url)
+		execute "silent ! firefox --new-window " . a:url
+	endfunction
+	let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 
 	Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
 	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
@@ -172,6 +192,9 @@ au Filetype tex nmap <leader>f <plug>(vimtex-toc-toggle)<CR>
 au Filetype tex nmap <leader>g :!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
 au Filetype tex nmap <leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
 au Filetype tex nmap <leader>j :!xelatex %<CR>
+
+" Abrir preview (Markdown)
+au Filetype markdown nmap <leader>h :MarkdownPreviewToggle<CR>
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1
