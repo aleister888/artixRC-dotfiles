@@ -134,6 +134,7 @@ endif
 
 " Ajustes generales
 syntax enable
+set colorcolumn=100
 set noexpandtab
 set title encoding=UTF-8
 set mouse=a scrolloff=10
