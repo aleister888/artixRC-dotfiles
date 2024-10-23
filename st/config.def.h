@@ -1,7 +1,7 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
 // Tamaño de las fuentes
-static char *font = "Iosevka Nerd Font:bold:pixelsize=20"; // Fuente principal
+static char *font = "Iosevka Nerd Font:pixelsize=20"; // Fuente principal
 static char *font2[] = { "Symbols Nerd Font:style=Regular:pixelsize=20" }; // Fuente secundaria
 
 static int borderpx = 0; // Margen
