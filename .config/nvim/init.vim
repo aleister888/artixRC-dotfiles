@@ -41,7 +41,7 @@ if $USER !=# 'root'
 		\ 'toc': {}
 		\ }
 	function OpenMarkdownPreview (url)
-		execute "silent ! setsid -f firefox --new-window " . a:url
+		execute "silent ! setsid -f surf " . a:url
 	endfunction
 	let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 

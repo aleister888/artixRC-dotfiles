@@ -57,7 +57,7 @@ packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ff
 # Apariencia
 packages+=" qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
-packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit"
+packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit surf"
 # Misc
 packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina gtk-vnc libvncserver ueberzugpp libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules"
 # WM

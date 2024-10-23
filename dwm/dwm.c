@@ -90,7 +90,8 @@ enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm,
 	SchemeInfoSel, SchemeInfoNorm, SchemeScratchNorm,
 	SchemeScratchSel, SchemeStickyNorm, SchemeStickySel,
 	SchemeTag1, SchemeTag2,  SchemeTag3,  SchemeTag4, // Esquema de colores
-	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8, SchemeTag9};
+	SchemeTag5, SchemeTag6,  SchemeTag7,  SchemeTag8,
+	SchemeTag9, SchemeTag10, SchemeTag11, SchemeTag12};
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 	NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
 	NetWMFullscreen, NetWMSticky, NetActiveWindow, NetWMWindowType,

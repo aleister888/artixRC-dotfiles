@@ -67,13 +67,17 @@ static const char *colors[][3] = {
 	[SchemeTag7]        = { col_green,  background_sel, "#000000"  },
 	[SchemeTag8]        = { col_yellow, background_sel, "#000000"  },
 	[SchemeTag9]        = { col_purple, background_sel, "#000000"  },
+	[SchemeTag10]       = { col_orange, background_sel, "#000000"  },
+	[SchemeTag11]       = { col_orange, background_sel, "#000000"  },
+	[SchemeTag12]       = { col_orange, background_sel, "#000000"  },
 	// Los valores con "#000000" no son usados pero no pueden estar vacios
 };
 
 static const int tagschemes[] = {
-	SchemeTag1, SchemeTag2, SchemeTag3,
-	SchemeTag4, SchemeTag5, SchemeTag6,
-	SchemeTag7, SchemeTag8, SchemeTag9,
+	SchemeTag1,  SchemeTag2,  SchemeTag3,
+	SchemeTag4,  SchemeTag5,  SchemeTag6,
+	SchemeTag7,  SchemeTag8,  SchemeTag9,
+	SchemeTag10, SchemeTag11, SchemeTag12,
 };
 
 typedef struct {
@@ -82,9 +86,9 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󰊗"};
-static const int taglayouts[]	= {   2,   0,   0,   0,   2,   0,   0,   0,   0};
+static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c"};
+static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󰊗", "A", "B", "C"};
+static const int taglayouts[]	= {   2,   0,   0,   0,   2,   0,   0,   0,   0,   0,   0,   0};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -97,6 +101,7 @@ static const Rule rules[] = {
 	{ "pavucontrol",	NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	{ "Alarm-clock-applet",	NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	{ "Galculator",		NULL,	NULL,	0,	1,	0,	0,	-1,     0},
+	{ "easyeffects",	NULL,	NULL,	0,	1,	0,	0,	-1,     0},
 	// Espacio 1: Música
 	{ "tauonmb",		NULL,	NULL,	1 << 0,	0,	0,	0,	-1,     0},
 	// Espacio 2: Correo
@@ -300,6 +305,9 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                        6)
 	TAGKEYS(                        XK_8,                        7)
 	TAGKEYS(                        XK_9,                        8)
+	TAGKEYS(                        XK_0,                        9)
+	TAGKEYS(                        XK_apostrophe,              10)
+	TAGKEYS(                        XK_exclamdown,              11)
 };
 
 // Botónes del ratón
