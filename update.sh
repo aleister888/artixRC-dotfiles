@@ -200,12 +200,12 @@ set_default_mime_types(){
 }
 
 if [ ! -e /usr/bin/plasmashell ]; then
-	set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
 	set_default_mime_types "^image" "image.desktop"
 else
-	set_default_mime_types "^*/pdf" "okularApplication_pdf.desktop"
 	set_default_mime_types "^image" "org.kde.gwenview.desktop"
 fi
+
+set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
 set_default_mime_types "^video" "mpv.desktop"
 set_default_mime_types "^audio" "mpv.desktop"
 set_default_mime_types "^text" "text.desktop"

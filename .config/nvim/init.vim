@@ -220,7 +220,6 @@ endfunction
 command TocToggle call s:TocToggle()
 au FileType markdown nmap <leader>f :TocToggle<CR>
 au Filetype markdown nmap <leader>h :MarkdownPreviewToggle<CR>
-au Filetype markdown set colorcolumn=100
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1
