@@ -21,6 +21,9 @@ if $USER !=# 'root'
 	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 	let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
+	" Markdown
+	Plug 'preservim/vim-markdown'
+	let g:vim_markdown_folding_disabled = 1
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " Previews de markdown en local
 	let g:mkdp_auto_start = 0
 	let g:mkdp_preview_options = {
@@ -134,7 +137,6 @@ endif
 
 " Ajustes generales
 syntax enable
-set colorcolumn=100
 set noexpandtab
 set title encoding=UTF-8
 set mouse=a scrolloff=10
@@ -142,6 +144,7 @@ set list hidden autochdir
 set ttimeoutlen=0 wildmode=longest,list,full
 set number relativenumber cursorline " Opciones del cursor
 set ic | set ignorecase | set incsearch " Ajustes de búsqueda
+set conceallevel=2
 set clipboard+=unnamedplus " Ajustes de pantalla
 
 
@@ -163,6 +166,15 @@ endif
 
 " Atajos de teclado:
 
+
+" Activar/Desactivar concealing
+nnoremap <leader>c :exec &conceallevel == 0 ? "set conceallevel=2" : "set conceallevel=0"<CR>
+
+" Shift+Enter para añadir una nueva linea sin identado (Markdown)
+function! NoIndentNewline()
+	call feedkeys("\<Esc>o\<C-u>", 'n')
+endfunction
+au Filetype markdown inoremap <S-CR> <Esc>:call NoIndentNewline()<CR>
 
 " Presionando ,, vamos al principio de la palabra
 function! MoveCursorLeftIfNeeded()
@@ -194,8 +206,21 @@ au Filetype tex nmap <leader>g :!arara % && notify-send -t 1500 "Compliación Ex
 au Filetype tex nmap <leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
 au Filetype tex nmap <leader>j :!xelatex %<CR>
 
-" Abrir preview (Markdown)
+" https://github.com/preservim/vim-markdown/issues/356#issuecomment-617365622
+function s:TocToggle()
+	if index(["markdown", "qf"], &filetype) == -1
+		return
+	endif
+	if get(getloclist(0, {'winid':0}), 'winid', 0)
+		lclose
+	else
+		Tocv
+	endif
+endfunction
+command TocToggle call s:TocToggle()
+au FileType markdown nmap <leader>f :TocToggle<CR>
 au Filetype markdown nmap <leader>h :MarkdownPreviewToggle<CR>
+au Filetype markdown set colorcolumn=100
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1

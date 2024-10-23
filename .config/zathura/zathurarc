@@ -10,9 +10,12 @@ set page-padding 2
 
 map w adjust_window width
 map W adjust_window best-fit
+
 map [fullscreen] w adjust_window width
 map [fullscreen] W adjust_window best-fit
+
 map f toggle_fullscreen
+map [fullscreen] f toggle_fullscreen
 
 set adjust-open width
 set recolor true
