@@ -9,25 +9,6 @@
 sh -c "cd $HOME/.dotfiles && git pull" >/dev/null
 
 
-# Si el script se ejecuta con -f, arreglar los permisos de todos los archivos en $HOME
-while getopts ":f" opt; do
-	case $opt in
-	f)
-		# Arreglar los permisos de los directorios
-		find "$HOME" -type d -exec chmod 700 {} +
-		# Arreglar los permisos de los archivos multimedia
-		find "$HOME" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" \
-		-o -iname "*.mp3" -o -iname "*.wav" -o -iname "*.mp4" -o -iname "*.avi" -o -iname "*.txt" \) \
-		-exec chmod 600 {} +
-		;;
-	\?)
-		echo "Opción inválida: -$OPTARG" >&2
-		exit 1
-		;;
-	esac
-done
-
-
 #######################################
 # Archivos de configuración y scripts #
 #######################################
@@ -49,13 +30,9 @@ ln -s $HOME/.dotfiles/.profile $HOME/.config/zsh/.zprofile 2>/dev/null
 find "$HOME/.local/bin"	-type l ! -exec test -e {} \; -delete
 find "$HOME/.config"	-type l ! -exec test -e {} \; -delete
 
-if [ ! -e /usr/bin/plasmashell ]; then
-	# Enlazar nuestro script de inicio
-	[ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
-	ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
-else # Crear .desktop para iniciar pipewire (En caso de que xdg-autostart falle)
-	cp ~/.dotfiles/assets/desktop/pipewire.desktop ~/.local/share/applications/
-fi
+# Enlazar nuestro script de inicio
+[ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
+ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
 
 # Descargar shader de mpv
 [ ! -e "$HOME/.config/mpv/shaders/crt-lottes.glsl" ] && \
@@ -68,63 +45,59 @@ fi
 #########################
 
 
-if [ ! -e /usr/bin/plasmashell ]; then
-	# Crear el archivo de configuración bg-saved.cfg
-	mkdir -p "$HOME/.config/nitrogen"
-	echo "[xin_-1]
-	file=$HOME/.dotfiles/assets/wallpaper
-	mode=5
-	bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
-fi
+# Crear el archivo de configuración bg-saved.cfg
+mkdir -p "$HOME/.config/nitrogen"
+echo "[xin_-1]
+file=$HOME/.dotfiles/assets/wallpaper
+mode=5
+bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 
 
-##################################################
-# Configurar GTK y QT (Si KDE no está instalado) #
-##################################################
+#######################
+# Configurar GTK y QT #
+#######################
 
 
 ASSETDIR="$HOME/.dotfiles/assets/configs"
 
 # Copiar la configuración de GTK
-if [ ! -e /usr/bin/plasmashell ]; then
-	rm -rf $HOME/.config/gtk-[2-4].0
-	cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
-	cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
-	cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
-	if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
-		# Clona el tema de gtk4
-		git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
-		# Copia el tema deseado a la carpeta de temas
-		sudo bash /tmp/Gruvbox_Theme/themes/install.sh
-	fi
-	# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-	sudo mkdir -p /root/.config
-	sudo cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
-	sudo cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
-	sudo cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
-	# Definimos nuestros directorios marca-páginas
-	echo "file:///home/$USER
-	file:///home/$USER/Descargas
-	file:///home/$USER/Documentos
-	file:///home/$USER/Imágenes
-	file:///home/$USER/Vídeos
-	file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
-	# Configuramos QT
-	echo "[Appearance]
-	color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
-	custom_palette=true
-	icon_theme=gruvbox-dark-icons-gtk
-	standard_dialogs=default
-	style=Fusion
-	
-	[Fonts]
-	fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
-	general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
-	
-	# Configurar el tema del cursor
-	mkdir -p "$HOME/.local/share/icons/default"
-	cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
+rm -rf $HOME/.config/gtk-[2-4].0
+cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
+cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
+cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
+if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
+	# Clona el tema de gtk4
+	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
+	# Copia el tema deseado a la carpeta de temas
+	sudo bash /tmp/Gruvbox_Theme/themes/install.sh
 fi
+# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
+sudo mkdir -p /root/.config
+sudo cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
+sudo cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
+sudo cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
+# Definimos nuestros directorios marca-páginas
+echo "file:///home/$USER
+file:///home/$USER/Descargas
+file:///home/$USER/Documentos
+file:///home/$USER/Imágenes
+file:///home/$USER/Vídeos
+file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
+# Configuramos QT
+echo "[Appearance]
+color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
+custom_palette=true
+icon_theme=gruvbox-dark-icons-gtk
+standard_dialogs=default
+style=Fusion
+
+[Fonts]
+fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
+general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
+
+# Configurar el tema del cursor
+mkdir -p "$HOME/.local/share/icons/default"
+cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
 
 
 ###############
@@ -172,18 +145,11 @@ sudo update-mime-database /usr/share/mime
 [ ! -d "$HOME/.local/share/applications" ] && \
 	mkdir -p "$HOME/.local/share/applications"
 
-# Creamos los archivos .desktop para programas de terminal (x11->st, wayland->kitty)
-if [ ! -e /usr/bin/plasmashell ]; then # Si KDE Plasma no esta instalado, usar st
-	# Creamos el archivo .desktop para lf
-	ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop"
-	# Creamos el archivo .desktop para nvim
-	ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop"
-elif [ -e /usr/bin/plasmashell ]; then
-	# Creamos el archivo .desktop para lf
-	ln -s "$HOME/.dotfiles/assets/desktop/lfw.desktop" "$HOME/.local/share/applications/file.desktop"
-	# Creamos el archivo .desktop para nvim
-	ln -s "$HOME/.dotfiles/assets/desktop/nvimw.desktop" "$HOME/.local/share/applications/text.desktop"
-fi
+# Creamos el archivo .desktop para lf
+ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop"
+# Creamos el archivo .desktop para nvim
+ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop"
+
 
 # Creamos el archivo .desktop para el visor de imagenes
 cp -f "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop"
@@ -199,11 +165,7 @@ set_default_mime_types(){
 	done
 }
 
-if [ ! -e /usr/bin/plasmashell ]; then
-	set_default_mime_types "^image" "image.desktop"
-else
-	set_default_mime_types "^image" "org.kde.gwenview.desktop"
-fi
+set_default_mime_types "^image" "image.desktop"
 
 set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
 set_default_mime_types "^video" "mpv.desktop"

@@ -23,4 +23,4 @@ fi
 
 # Ejecutar xfreerdp3 con los parámetros proporcionados
 xfreerdp3 /u:"$user" /p:"$password" /v:"$IP" /auth-pkg-list:"!kerberos" \
-	/sound:sys:alsa /size:1920x1080 /smart-sizing:1920x1080 +clipboard
+	/sound:sys:alsa /size:1920x1080 /smart-sizing:1920x1080 /jpeg-quality:50 /compression-level:2 +clipboard

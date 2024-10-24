@@ -59,7 +59,7 @@ packages+=" qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent-qt5 handbrake handbrake-cli bleachbit surf"
 # Misc
-packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzugpp libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules"
+packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzugpp libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol devour"
 # WM
 packages+=" thunderbird-dark-reader timeshift"
 
@@ -171,15 +171,6 @@ EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	[ "$final_layout" == "es" ] && doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 }
 
-
-# Elegir si usar DWM o KDE
-desktop_choose(){
-	# Opciones posibles
-	desktop_options=("kde" "Plasma" "dwm" "DWM")
-	# Elegimos nuestra tarjeta gráfica
-	chosen_desktop=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
-	${desktop_options[@]})
-}
 
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources
@@ -452,17 +443,6 @@ kb_layout_select
 kb_layout_conf
 
 
-desktop_choose # Elegimos si usar DWM o KDE
-
-
-case $chosen_desktop in
-	kde)
-		packages+=" plasma-desktop sddm-openrc kitty discover kscreen pipewire-autostart packagekit-qt6 plasma-nm plasma-pa kde-gtk-config bluedevil kdeplasma-addons sddm-kcm breeze-gtk wl-clipboard dolphin kdegraphics-thumbnailers kimageformats qt6-imageformats kdesk-thumbnailres ffmpegthumbs taglib kwalletmanager spectacle kalk gwenview ttf-iosevka-nerd ttf-iosevka-nerd ttf-agave-nerd appmenu-gtk-module plasma5-integration raw-thumbnailer ark power-profiles-daemon-openrc power-profiles-daemon plasma-firewall plasma-wayland-protocols plasma-disks fwupd plasma-thunderbolt print-manager system-config-printer wayland-protocols plasma-browser-integration" ;;
-	dwm)
-		packages+=" gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom polkit-gnome gnome-keyring dunst xdg-xmenu-git j4-dmenu-desktop eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol devour" ;;
-esac
-
-
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
 # Créditos para: <luke@lukesmith.xyz>
@@ -473,45 +453,54 @@ yayinstall $packages # Instalamos todos los paquetes a la vez
 suckless_install # Instalamos dwm y otras utilidades
 
 
-case $chosen_desktop in
-	kde)
-		# Activar Display Manager
-		service_add sddm
-		# Copiar .Xresources con el tema breeze dark
-		mkdir -p "$HOME/.config"
-		cp "$HOME/.dotfiles/assets/configs/Xresources-KDE" "$HOME/.config/Xresources"
-		# Añadir servicio de gestión de energía
-		service_add power-profiles-daemon ;;
-	dwm)
-		# Crear directorio para montar dispositivos android
-		doas mkdir /mnt/ANDROID
-		doas chown "$USER" /mnt/ANDROID
-		# Instalar fuentes necesarias
-		fontdownload
-		# Calcular el DPI de nuestra pantalla y configurar Xresources
-		xresources_make
-		# Configuramos Tauon Music Box (Nuestro reproductor de música)
-		"$HOME/.dotfiles/bin/tauon-config"
-		# Creamos nuestro xinitrc
-		doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
-		# Configurar keepassxc para que siga el tema de QT
-		keepass_configure
-		# Añadir servicio de gestión de energía
-		service_add tlp
-		# Configurar y activar xdm
-		service_add xdm
-		doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-		doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
-		# Suspender de forma automatica cuando la bateria cae por debajo del 5%
-		[ -e /sys/class/power_supply/BAT0 ] && \
-		doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
-		# Permitir hacer click tocando el trackpad (X11)
-		# Créditos para: <luke@lukesmith.xyz>
-		[ -e /sys/class/power_supply/BAT0 ] && \
-		doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
-		# Bloquear la pantalla al suspender el portátil
-		doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock ;;
-esac
+# Crear directorio para montar dispositivos android
+doas mkdir /mnt/ANDROID
+doas chown "$USER" /mnt/ANDROID
+
+
+# Instalar fuentes necesarias
+fontdownload
+
+
+# Calcular el DPI de nuestra pantalla y configurar Xresources
+xresources_make
+
+
+# Configuramos Tauon Music Box (Nuestro reproductor de música)
+"$HOME/.dotfiles/bin/tauon-config"
+
+
+# Creamos nuestro xinitrc
+doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
+
+
+# Configurar keepassxc para que siga el tema de QT
+keepass_configure
+
+
+# Añadir servicio de gestión de energía
+service_add tlp
+
+
+# Configurar y activar xdm
+service_add xdm
+doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+
+
+# Suspender de forma automatica cuando la bateria cae por debajo del 5%
+[ -e /sys/class/power_supply/BAT0 ] && \
+doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
+
+
+# Permitir hacer click tocando el trackpad (X11)
+# Créditos para: <luke@lukesmith.xyz>
+[ -e /sys/class/power_supply/BAT0 ] && \
+doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
+
+
+# Bloquear la pantalla al suspender el portátil
+doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock ;;
 
 
 # Establecemos la versión de java por defecto

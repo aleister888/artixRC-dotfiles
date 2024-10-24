@@ -51,9 +51,6 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 ## Cosas por hacer
 
-- Hacer que SDDM tenga el tema Plasma por defecto
-- Configurar teclado KDE y bindings por defecto
-- Añadir soporte para pipewire-virtualmic para KDE Plasma
 - Mejorar s1-2 para restarurar /home con LUKS y poder instalar desde una instalación existente, etc.
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave

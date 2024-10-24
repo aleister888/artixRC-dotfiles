@@ -169,48 +169,44 @@ cmd fzf_jump ${{
 cmd open ${{
 	case $(xdg-mime query filetype "$(readlink -f $f)") in
 		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
-			[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f ark "$fx" || xarchiver "$fx" ;;
+			xarchiver "$fx" ;;
 	
 		*/zip | */vnd.comicbook+zip)
 			if [[ "$(readlink -f $f)" == *.cbz ]]; then
-				[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f okular "$f" || zathura "$f"
+				zathura "$f"
 			else
-				[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f ark "$fx" || xarchiver "$fx"
+				xarchiver "$fx"
 			fi ;;
 	
 		*/vnd.*document*)
 			setsid -f libreoffice "$fx" ;;
 	
 		*/pdf | */epub*)
-			[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f okular "$f" || zathura "$f" ;;
+			zathura "$f" ;;
 	
 		text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop )
 			$EDITOR "$fx" ;;
 	
 		image/*)
-			if [[ "$XDG_CURRENT_DESKTOP" = "KDE" ]]; then
-				setsid -f gwenview "$f"
-			else
-				$HOME/.local/bin/rotdir "$f" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\|svg\)\(_large\)*$" |
-				devour nsxiv -aio | while read -r file; do
-					[ -n "$file" ] && /usr/bin/lf -remote "send select \"$file\"" && /usr/bin/lf -remote "send toggle"
-				done &
-			fi ;;
+			$HOME/.local/bin/rotdir "$f" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\|svg\)\(_large\)*$" |
+			devour nsxiv -aio | while read -r file; do
+				[ -n "$file" ] && /usr/bin/lf -remote "send select \"$file\"" && /usr/bin/lf -remote "send toggle"
+			done & ;;
 	
 		audio/*)
 			/usr/bin/mpv --audio-display=no "$f" ;;
 	
 		video/*)
-			[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f /usr/bin/mpv "$f" || /usr/bin/mpv "$f" ;;
+			/usr/bin/mpv "$f" ;;
 	
 		*/x-keepass2)
-			[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f keepassxc "$f" || keepassxc "$f" ;;
+			keepassxc "$f" ;;
 	
 		*/x-reaper-*)
-			[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f reaper "$f" || reaper "$f" ;;
+			reaper "$f" ;;
 	
 		*/x-tuxguitar | application/gpx+xml | application/x-gnuplot | application/x-gtp)
-			[[ "$XDG_CURRENT_DESKTOP" = "KDE" ]] && setsid -f tuxguitar-bin "$fx" || tuxguitar-bin "$fx" ;;
+			tuxguitar-bin "$fx" ;;
 	
 		*)
 			for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done ;;
