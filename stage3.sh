@@ -17,7 +17,7 @@ whip_yes(){ # Elegir con whiptail
 	--title "$1" --yesno "$2" 10 60
 }
 pacinstall() { # Instalar paquetes con pacman
-	doas pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
+	sudo pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 yayinstall() { # Instalar paquetes con yay
 	yay -Sy --noconfirm --disable-download-timeout --needed "$@"
@@ -29,7 +29,7 @@ whip_menu(){ # Menus de whitpail
 	whiptail --backtitle "$REPO_URL" --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 service_add(){ # Activar servicio
-	doas rc-update add "$1" default
+	sudo rc-update add "$1" default
 }
 
 
@@ -138,10 +138,10 @@ packages_choose(){
 		packages+=" tuxguitar-bin reaper yabridge yabridgectl gmetronome drumgizmo surge-xt-clap surge-xt-vst3 surge-xt"
 		mkdir -p "$HOME/Documentos/Guitarra/Tabs" "$HOME/Documentos/Guitarra/REAPER Media"
 		ln -s "$HOME/Documentos/Guitarra/REAPER Media" "$HOME/Documentos/REAPER Media"
-		doas ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop /usr/share/applications/
-		[ ! -d /usr/share/icons/hicolor/96x96/apps ] && doas mkdir -p /usr/share/icons/hicolor/96x96/apps
-		doas ln -s /opt/tuxguitar/share/pixmaps/tuxguitar.png /usr/share/icons/hicolor/96x96/apps/
-		doas ln -s /usr/bin/tuxguitar-bin /usr/bin/tuxguitar
+		sudo ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop /usr/share/applications/
+		[ ! -d /usr/share/icons/hicolor/96x96/apps ] && sudo mkdir -p /usr/share/icons/hicolor/96x96/apps
+		sudo ln -s /opt/tuxguitar/share/pixmaps/tuxguitar.png /usr/share/icons/hicolor/96x96/apps/
+		sudo ln -s /usr/bin/tuxguitar-bin /usr/bin/tuxguitar
 	fi
 }
 
@@ -159,16 +159,16 @@ kb_layout_select(){
 	${keyboard_array[@]})
 }
 kb_layout_conf(){
-	doas mkdir -p /etc/X11/xorg.conf.d/ # X11
+	sudo mkdir -p /etc/X11/xorg.conf.d/ # X11
 	echo "Section \"InputClass\"
 	Identifier \"system-keyboard\"
 	MatchIsKeyboard \"on\"
 	Option \"XkbLayout\" \"$final_layout\"
 	Option \"XkbModel\" \"pc105\"
 	Option \"XkbOptions\" \"terminate:ctrl_alt_bksp\"
-EndSection" | doas tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
+EndSection" | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
 	# Si elegimos español, configurar el layout de la tty en español también
-	[ "$final_layout" == "es" ] && doas sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
+	[ "$final_layout" == "es" ] && sudo sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 }
 
 
@@ -233,12 +233,12 @@ fontdownload() {
 	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
 	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
 	# Descargar y extraer fuentes
-	doas wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
-	doas wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
-	doas wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
-	doas aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
-	doas aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
-	doas aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
+	sudo wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
+	sudo wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
+	sudo wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
+	sudo aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
+	sudo aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
+	sudo aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
 }
 
 
@@ -277,12 +277,12 @@ makeuserjs(){
 	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
 	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
 	cat "$arkenfox" "$overrides" | tee "$userjs"
-	doas chown "$USER" "$arkenfox" "$userjs"
+	sudo chown "$USER" "$arkenfox" "$userjs"
 	# Install the updating script.
-	doas mkdir -p /usr/local/lib /etc/pacman.d/hooks
-	doas install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
+	sudo mkdir -p /usr/local/lib /etc/pacman.d/hooks
+	sudo install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
 	# Trigger the update when needed via a pacman hook.
-	doas cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
+	sudo cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
 }
 firefox_configure(){
 	browserdir="/home/$USER/.mozilla/firefox"
@@ -322,8 +322,8 @@ dotfiles_install(){
 	done
 	# Instalamos nuestros archivos de configuración
 	"$HOME/.dotfiles/update.sh"
-	echo "ZDOTDIR=\$HOME/.config/zsh" | doas tee /etc/zsh/zshenv
-	doas chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
+	echo "ZDOTDIR=\$HOME/.config/zsh" | sudo tee /etc/zsh/zshenv
+	sudo chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
 }
 
 
@@ -333,9 +333,9 @@ dotfiles_install(){
 # Instalamos dwm y otras aplicaciones suckless
 suckless_install(){
 	# Instalar software suckless
-	for app in dwm dmenu st; do doas make install --directory "$HOME/.dotfiles/$app" >/dev/null; done
-	doas make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
-	doas make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
+	for app in dwm dmenu st; do sudo make install --directory "$HOME/.dotfiles/$app" >/dev/null; done
+	sudo make install --directory "$HOME/.dotfiles/dwmblocks" >/dev/null
+	sudo make install --directory "$HOME/.dotfiles/xmenu" >/dev/null
 }
 
 
@@ -364,45 +364,45 @@ scripts_link(){
 		"xmenu-apps"
 	)
 	for file in "${files[@]}"; do
-		doas ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
+		sudo ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
 	done
 }
 
 
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir(){
-	doas mkdir --parent /.Trash
-	doas chmod a+rw /.Trash
-	doas chmod +t /.Trash
+	sudo mkdir --parent /.Trash
+	sudo chmod a+rw /.Trash
+	sudo chmod +t /.Trash
 }
 
 
 # Configurar el audio de baja latencia
 audio_setup(){
-	doas usermod -aG realtime,audio,video,optical,uucp "$USER"
+	sudo usermod -aG realtime,audio,video,optical,uucp "$USER"
 	grep audio /etc/security/limits.conf || \
 	echo "@audio - rtprio 95
 	@audio - memlock unlimited
 	$USER hard nofile 524288" | \
-	doas tee -a /etc/security/limits.conf
+	sudo tee -a /etc/security/limits.conf
 }
 
 
 # Si se eligió instalar virt-manager, configurarlo adecuadamente
 virt_conf(){
 	# Configurar QEMU para usar el usuario actual
-	doas sed -i "s/^#user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
-	doas sed -i "s/^#group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
+	sudo sed -i "s/^#user = .*/user = \"$USER\"/" /etc/libvirt/qemu.conf
+	sudo sed -i "s/^#group = .*/group = \"$USER\"/" /etc/libvirt/qemu.conf
 	# Configurar libvirt
-	doas sed -i "s/^#unix_sock_group = .*/unix_sock_group = \"$USER\"/" /etc/libvirt/libvirtd.conf
-	doas sed -i "s/^#unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
+	sudo sed -i "s/^#unix_sock_group = .*/unix_sock_group = \"$USER\"/" /etc/libvirt/libvirtd.conf
+	sudo sed -i "s/^#unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
 	# Agregar el usuario al grupo libvirt
-	doas usermod -aG libvirt,libvirt-qemu,kvm "$USER"
+	sudo usermod -aG libvirt,libvirt-qemu,kvm "$USER"
 	# Activar sericios necesarios
 	service_add libvirtd
 	service_add virtlogd
 	# Autoinciar red virtual
-	doas virsh net-autostart default
+	#sudo virsh net-autostart default
 }
 
 
@@ -415,7 +415,7 @@ virt_conf(){
 # (makepkg -si necesita sudo)
 pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber go sudo
 echo "root ALL=(ALL:ALL) ALL
-%wheel ALL=(ALL) NOPASSWD: ALL" | doas tee /etc/sudoers
+%wheel ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers
 
 
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
@@ -446,7 +446,7 @@ kb_layout_conf
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
 # Créditos para: <luke@lukesmith.xyz>
-doas sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
+sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 
 yayinstall $packages # Instalamos todos los paquetes a la vez
@@ -454,8 +454,8 @@ suckless_install # Instalamos dwm y otras utilidades
 
 
 # Crear directorio para montar dispositivos android
-doas mkdir /mnt/ANDROID
-doas chown "$USER" /mnt/ANDROID
+sudo mkdir /mnt/ANDROID
+sudo chown "$USER" /mnt/ANDROID
 
 
 # Instalar fuentes necesarias
@@ -471,7 +471,7 @@ xresources_make
 
 
 # Creamos nuestro xinitrc
-doas cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
+sudo cp "$HOME/.dotfiles/assets/configs/xinitrc" /etc/X11/xinit/xinitrc
 
 
 # Configurar keepassxc para que siga el tema de QT
@@ -484,27 +484,27 @@ service_add tlp
 
 # Configurar y activar xdm
 service_add xdm
-doas cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-doas cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+sudo cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+sudo cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
 
 
 # Suspender de forma automatica cuando la bateria cae por debajo del 5%
 [ -e /sys/class/power_supply/BAT0 ] && \
-doas cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
+sudo cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
 
 
 # Permitir hacer click tocando el trackpad (X11)
 # Créditos para: <luke@lukesmith.xyz>
 [ -e /sys/class/power_supply/BAT0 ] && \
-doas cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
+sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 
 # Bloquear la pantalla al suspender el portátil
-doas install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock ;;
+sudo install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock
 
 
 # Establecemos la versión de java por defecto
-doas archlinux-java set java-17-openjdk
+sudo archlinux-java set java-17-openjdk
 
 
 # Instalamos lrcput si elegimos instalar herramientas para gestionar nuestra música
@@ -529,18 +529,18 @@ dotfiles_install
 scripts_link # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 trash_dir # Crear el directorio /.Trash con permisos adecuados
 # Configurar syncthing para que se inicie con el ordenador
-echo "@reboot $USER syncthing --no-browser --no-default-folder" | doas tee -a /etc/crontab
+echo "@reboot $USER syncthing --no-browser --no-default-folder" | sudo tee -a /etc/crontab
 audio_setup # Configurar el audio de baja latencia
 
 
 # Si estamos usando una máquina virtual,
 # configuramos X11 para usar 1080p como resolución
 [ "$graphic_driver" == "virtual" ] && \
-doas cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
+sudo cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 
 # Permitir a Steam controlar mandos de PlayStation 4
-doas cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
+sudo cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
 	/usr/lib/udev/rules.d/
 
 
@@ -554,19 +554,19 @@ service_add earlyoom
 
 
 # Activar WiFi y Bluetooth
-doas rfkill unblock wifi
+sudo rfkill unblock wifi
 { lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null \
-	&& doas rfkill unblock bluetooth
+	&& sudo rfkill unblock bluetooth
 
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
-doas usermod -aG network "$USER"
+sudo usermod -aG network "$USER"
 [ -e /sys/class/power_supply/BAT0 ] && \
-doas cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
+sudo cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" "/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
 
 # /etc/polkit-1/rules.d/99-artix.rules
-doas usermod -aG storage,input,users "$USER"
+sudo usermod -aG storage,input,users "$USER"
 
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
@@ -574,13 +574,13 @@ doas usermod -aG storage,input,users "$USER"
 
 
 # Scripts de elogind
-doas install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
+sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
 
 
 # Añadir entradas a /etc/environment
 echo 'CARGO_HOME="~/.local/share/cargo"
 GNUPGHOME="~/.local/share/gnupg"
-_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | doas tee -a /etc/environment
+_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | sudo tee -a /etc/environment
 
 
 # Install mfc42
@@ -593,17 +593,17 @@ rm "$HOME"/.bash* 2>/dev/null
 rm "$HOME"/.wget-hsts 2>/dev/null
 
 
-# Finalmente configurar doas de forma más segura
-doas chown -c root:root /etc/doas.conf
-doas chmod -c 0400 /etc/doas.conf
+# Finalmente configurar doas
+sudo chown -c root:root /etc/doas.conf
+sudo chmod -c 0400 /etc/doas.conf
 echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' | \
-	doas tee /etc/doas.conf
+	sudo tee /etc/doas.conf
 
 
 # Borrar sudo del sistema
-doas rm /etc/sudoers
+sudo rm /etc/sudoers
 doas pacman -Rcns sudo --noconfirm
-yayinstall doas-sudo-shim
+yayinstall sudo-sudo-shim
 
 
 mkdir -p "$HOME/.local/share/gnupg"

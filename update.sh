@@ -270,3 +270,18 @@ for entry in "${desktopent[@]}"; do
 	sudo cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" && \
 	echo 'NoDisplay=true' | sudo tee -a "/usr/local/share/applications/$entry.desktop"
 done
+
+#############################
+# Añadir diccionarios a vim #
+#############################
+
+[ ! -d "$HOME/.local/share/nvim/site/spell" ] && \
+	mkdir -p "$HOME/.local/share/nvim/site/spell"
+
+[ ! -f "$HOME/.local/share/nvim/site/spell/es.utf-8.spl" ] && \
+wget 'https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl' -q -O \
+	"$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
+
+[ ! -f "$HOME/.local/share/nvim/site/spell/es.utf-8.sug" ] && \
+wget 'https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug' -q -O \
+	"$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
