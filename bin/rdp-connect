@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Obtener la información del user usando yad
+input=$(yad --form --title="Conexión RDP" \
+	--text="Ingrese los detalles de la conexión" \
+	--field="Dirección IP:":TEXT \
+	--field="Usuario:":TEXT \
+	--field="Contraseña:":H \
+	--center) || exit 1
+
+# Extraer los valores proporcionados
+IP=$(echo "$input" | awk -F '|' '{print $1}')
+user=$(echo "$input" | awk -F '|' '{print $2}')
+password=$(echo "$input" | awk -F '|' '{print $3}')
+
+# Si no se rellenaron todos los campos, salir del script
+if [[ -z "$IP" || -z "$user" || -z "$password" ]]; then
+	yad --error --title="Error" \
+		--text="Todos los campos son obligatorios. Por favor, inténtelo de nuevo." \
+		--center
+	exit 1
+fi
+
+# Ejecutar xfreerdp3 con los parámetros proporcionados
+xfreerdp3 /u:"$user" /p:"$password" /v:"$IP" /auth-pkg-list:"!kerberos" \
+	/sound:sys:alsa /size:1920x1080 /smart-sizing:1920x1080 +clipboard

@@ -721,6 +721,47 @@ Una vez que tenemos todo instalado, podemos crear un script `.bat` que monte nue
 "C:\Program Files (x86)\WinFsp\bin\launchctl-x64.exe" start virtiofs videos videos Z:
 \end{lstlisting}
 
+\section{Conexión bridge y RDP}
+
+Adicionalmente, podemos configurar nuestra máquina virtual para, a efectos prácticos, comportarse como un ordenador distinto en la red. En vez de usar un NAT y que nuestro host se encargue del re-direccionamiento al guest, podemos usar una conexión puente y hacer que nuestro router reconozca nuestra máquina virtual como un dipositivo distinto y le asigne su propia IP. Esto es útil para abrir servicios desde nuestro guest y poder alcanzarlos desde el exterior de nuestra red privada.
+
+\subsection{Creación de nuestra red puente}
+
+Para crear nuestra conexión de puente, utilizaremos \emph{NetworkManager}. Podemos configurar nuestras conexiones a través de la terminal usando \texttt{nmtui}. Al ejecutar \texttt{nmtui}, seleccionaremos \emph{Modificar una conexión} y luego \emph{<Añadir>}. En el tipo de red, escogeremos \emph{Puente}.
+
+Una vez que seleccionemos el dispositivo tipo \emph{Puente}, aparecerán las distintas opciones de configuración de nuestra red. Procederemos a configurar el dispositivo que queremos puentear; para ello, en la sección \emph{Puente, ports}, seleccionamos \emph{<Añadir>} y elegimos \emph{<Ethernet>} (Nota: esto solo funciona correctamente para dispositivos conectados mediante Ethernet; no es posible utilizar conexiones puenteadas a través de Wi-Fi). Luego, seleccionamos \emph{<Crear>} y finalmente \emph{<Aceptar>}. Por último, confirmaremos los cambios para agregar nuestra conexión de puente.
+
+Finalmente, debemos eliminar la conexión Ethernet de la lista de conexiones en \emph{NetworkManager} (no te preocupes, tu host seguirá teniendo acceso a internet; tanto la máquina anfitriona como la máquina invitada usarán la conexión de puente para acceder a internet). Para ello, en \texttt{nmtui} seleccionamos \emph{Modificar una conexión} y eliminamos la conexión correspondiente.
+
+\subsection{Invitado con conexión puenteada}
+
+Ahora tenemos que decirle a virt-manager que queremos usar nuestra conexión puenteada para la máquina virtual, podemos incluso borrar la red NAT \emph{`default"} si no tenemos ninguna otra máquina virtual que queramos conectar a internet.
+
+Para usar la conexión puenteada en nuestra máquina virtual; en las propiedades de nuestra máquina virtual, dentro de la configuración del \textbf{NIC} vamos a elegir en la \emph{`Fuente de red"} nuestra conexión puenteada.
+
+Adicionalmente, podemos ajustar la dirección MAC y establecer una IP estática asociada a esa dirección MAC en nuestro router. Lo cual facilitará confiurar servicios y acceder a nuestra máquina invitada desde la red.
+
+\subsection{Configurar Escritorio remoto}
+
+Ahora podemos configurar nuestra máquina invitada para acceder remotamente a ella mediante RDP, para ello en Windows \emph{(Sólo si tenemos Windows 10/11 Pro)} en Ajustes/Escritorio Remoto, activaremos el escritorio remoto.
+
+Es recomendable configurar el firewall de nuestro guest para permitir las conexiones entrantes de RDP y ICMP, para ello ejecutaremos estos comandos en la Consola de Comandos como Administrador:
+
+\begin{lstlisting}[basicstyle=\tiny\ttfamily]
+netsh advfirewall firewall add rule name="Allow ICMPv4-In" protocol=icmpv4:any,any dir=in action=allow
+netsh advfirewall firewall add rule name="Allow ICMPv6-In" protocol=icmpv6:any,any dir=in action=allow
+netsh advfirewall firewall add rule name="Allow RDP" protocol=TCP dir=in localport=3389 action=allow
+\end{lstlisting}
+
+Podemos conectarnos ya a nuestra máquina usando freerdp con el comando
+
+\begin{lstlisting}[basicstyle=\small\ttfamily]
+xfreerdp3 /u:USUARIO /p:'CONTRASEÑA' /v:IP /auth-pkg-list:'!kerberos' \
+	/sound:sys:alsa /size:1920x1080 /smart-sizing:1920x1080 +clipboard
+\end{lstlisting}
+
+O puedes usar el script \texttt{rdp-connect}
+
 \section{SSH}
 
 Si queremos conectarnos a un equipo remoto a través de internet debemos configurar \href{https://es.wikipedia.org/wiki/OpenSSH}{OpenSSH}. Por defecto incluyo un script que configura SSH de forma muy básica, configurando SSH para poder acceder a tu equipo remoto con una contraseña. Para activar SSH simplemente ejecuta:
