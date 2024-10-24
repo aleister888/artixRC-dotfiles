@@ -56,7 +56,6 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - Permitir usar un disco "/home" ya encriptado, proveyendo al script de la llave
     - Arreglar instalación fuera del LiveISO
     - Mostrar que comandos se van a ejecutar sobre que discos antes de confirmar nada
-- Añadir README explicativo a: bin, assets, dwmblocks y xmenu.
 - Añadir copias de seguridad incrementales a crypt-backup
 - Limpiar el código de xmenu
 - Arreglar las entradas MAN y código sobre las flags de uso
