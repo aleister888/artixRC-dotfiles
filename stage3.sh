@@ -413,10 +413,7 @@ virt_conf(){
 # Instalamos xkeyboard-config porque lo necesitamos para poder elegir el layout de teclado
 # Instalamos pipewire antes para evitar conflictos. Instalamos go y sudo para poder instalar yay
 # (makepkg -si necesita sudo)
-pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber go sudo
-echo "root ALL=(ALL:ALL) ALL
-%wheel ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers
-
+pacinstall xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber go
 
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
 tmp_dir="/tmp/yay_install_temp"
