@@ -600,7 +600,7 @@ echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' | \
 # Borrar sudo del sistema
 sudo rm /etc/sudoers
 doas pacman -Rcns sudo --noconfirm
-yayinstall sudo-sudo-shim
+yayinstall doas-sudo-shim
 
 
 mkdir -p "$HOME/.local/share/gnupg"
