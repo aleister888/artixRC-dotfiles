@@ -241,75 +241,6 @@ fontdownload() {
 	sudo aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
 }
 
-
-# Configurar firefox e instalar nuestras extensiones
-# Código extraído de larbs.xyz/larbs.sh
-# https://github.com/LukeSmithxyz/voidrice
-# Créditos para: Luke Smith <luke@lukesmith.xyz>
-get_profile() {
-	# Obtiene el perfil predeterminado del archivo
-	# profiles.ini después de ejecutar Firefox
-	profilesini="$browserdir/profiles.ini"
-	profile=$(grep "Default=.." "$profilesini" | sed 's/Default=//')
-	echo "$profile"
-}
-makeuserjs(){
-	# Añadir al perfil el user.js y user-overrides.js
-	arkenfox="$pdir/arkenfox.js"
-	overrides="$pdir/user-overrides.js"
-	userjs="$pdir/user.js"
-	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
-	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
-	cat "$arkenfox" "$overrides" > "$userjs"
-	chown "$USER:wheel" "$arkenfox" "$userjs"
-	# Instalar el script de actualizado.
-	mkdir -p /usr/local/lib /etc/pacman.d/hooks
-	sudo cp "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/
-	sudo chown root:root /usr/local/lib/arkenfox-auto-update
-	sudo chmod 755 /usr/local/lib/arkenfox-auto-update
-	# Ejecutar la actualización cuando sea necesario mediante un hook de pacman.
-	sudo cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
-}
-installffaddons(){
-	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies violentmonkey darkreader xbs clearurls keepassxc-browser sponsorblock"
-	addontmp="$(mktemp -d)"
-	mkdir -p "$pdir/extensions/"
-	for addon in $addonlist; do
-		if [ "$addon" == "ublock-origin" ]; then
-			addonurl="$(curl -sL https://api.github.com/repos/gorhill/uBlock/releases/latest | \
-				grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4)"
-		else
-			addonurl="$(curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | \
-				grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
-		fi
-		file="${addonurl##*/}"
-		wget -q "$addonurl" -O "$addontmp/$file"
-		id="$(unzip -p "$addontmp/$file" manifest.json | grep "\"id\"" | head -n 1)"
-		id="${id%\"*}"
-		id="${id##*\"}"
-		# Mover el archivo al directorio de extensiones con el nombre correcto
-		[ -n "$id" ] && mv "$addontmp/$file" "$pdir/extensions/$id.xpi"
-	done
-
-	# Cambiar los permisos de las extensiones descargadas
-	chown -R "$USER:$USER" "$pdir/extensions"
-	# Limpiar el directorio temporal
-	rm -rf "$addontmp"
-}
-firefox_configure(){
-	# Ruta base de perfiles de Firefox
-	browserdir="$HOME/.mozilla/firefox"
-	# Ejecutar Firefox en modo headless para generar un perfil predeterminado
-	firefox --headless >/dev/null 2>&1 &
-	sleep 1 # Esperar un momento para que Firefox cree los archivos de perfil
-	pkill firefox
-	# Obtener el perfil predeterminado
-	profile=$(get_profile)
-	pdir="$browserdir/$profile"
-	makeuserjs
-	installffaddons
-}
-
 # Configurar neovim e instalar los plugins
 vim_configure(){
 	# Descargar diccionarios
@@ -528,7 +459,6 @@ if [ "$music" == "true" ]; then
 fi
 
 
-firefox_configure # Configurar firefox
 vim_configure # Configurar neovim
 
 
