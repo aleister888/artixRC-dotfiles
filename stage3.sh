@@ -103,12 +103,12 @@ packages_choose(){
 	local packages_confirm="false"
 	# Definimos todas las variables menos daw y virt como locales
 	local music noprivacy office latex
-	
+
 	while [ "$packages_confirm" == "false" ]; do
 		variables=("virt" "music" "noprivacy" "daw" "office" "latex")
 		# Reiniciamos las variables si no confirmamos la selección
 		for var in "${variables[@]}"; do eval "$var=false"; done
-	
+
 		whip_yes "Virtualizacion" "¿Planeas en usar maquinas virtuales?" && \
 			virt="true"
 		whip_yes "Musica" "¿Deseas instalar software para manejar tu coleccion de musica?" && \
@@ -121,14 +121,14 @@ packages_choose(){
 			latex="true"
 		whip_yes "DAW" "¿Deseas instalar software de produccion de audio?" && \
 			daw="true"
-	
+
 		if packages_show; then
 			packages_confirm=true
 		else
 			whip_msg "Operacion cancelada" "Se te volvera a preguntar que software desea instalar"
 		fi
 	done
-	
+
 	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-chardev-spice qemu-hw-usb-redirect qemu-hw-usb-host qemu-hw-display-virtio-gpu qemu-hw-display-virtio-gpu-gl qemu-hw-display-virtio-gpu-pci qemu-hw-display-virtio-gpu-pci-gl qemu-hw-display-virtio-vga qemu-hw-display-virtio-vga-gl bridge-utils"
 	[ "$music"	== "true" ] && packages+=" easytag picard flacon cuetools lrcget-bin"
 	[ "$noprivacy"	== "true" ] && packages+=" discord telegram-desktop"
@@ -181,11 +181,11 @@ xresources_make(){
 	# Selección de resolución del monitor
 	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
 		"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K")
-	
+
 	# Selección del tamaño del monitor en pulgadas (diagonal)
 	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
 		"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
-	
+
 	# Definimos la resolución elegida
 	case $resolution in
 		"720p")  width=1280; height=720 ;;
@@ -193,25 +193,25 @@ xresources_make(){
 		"1440p") width=2560; height=1440 ;;
 		"2160p") width=3840; height=2160 ;;
 	esac
-	
+
 	# Relación de aspecto (asumimos 16:9)
 	aspect_ratio_width=16
 	aspect_ratio_height=9
-	
+
 	# Cálculo de las dimensiones físicas horizontales y verticales en pulgadas
 	diagonal_ratio=$(echo "scale=6; sqrt($aspect_ratio_width^2 + $aspect_ratio_height^2)" | bc)
 	screen_width_inches=$(echo "scale=6; $size * $aspect_ratio_width / $diagonal_ratio" | bc)
 	screen_height_inches=$(echo "scale=6; $size * $aspect_ratio_height / $diagonal_ratio" | bc)
-	
+
 	# Cálculo del DPI real para ancho y alto
 	dpi_width=$(echo "scale=2; $width / $screen_width_inches" | bc)
 	dpi_height=$(echo "scale=2; $height / $screen_height_inches" | bc)
-	
+
 	# Promediamos el DPI horizontal y vertical
 	display_dpi=$(echo "scale=2; ($dpi_width + $dpi_height) / 2" | bc)
-	
+
 	# Redondeamos el DPI al entero más cercano
-	rounded_dpi=$(printf "%.0f" $display_dpi)
+	rounded_dpi=$(printf "%.0f" "$display_dpi")
 	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 0.75
 	# Añadimos nuestro DPI a el arcivo Xresources
 	echo "Xft.dpi:$rounded_dpi" | tee -a "$XRES_FILE"
@@ -246,11 +246,33 @@ fontdownload() {
 # Código extraído de larbs.xyz/larbs.sh
 # https://github.com/LukeSmithxyz/voidrice
 # Créditos para: Luke Smith <luke@lukesmith.xyz>
+get_profile() {
+	# Obtiene el perfil predeterminado del archivo
+	# profiles.ini después de ejecutar Firefox
+	profilesini="$browserdir/profiles.ini"
+	profile=$(grep "Default=.." "$profilesini" | sed 's/Default=//')
+	echo "$profile"
+}
+makeuserjs(){
+	# Añadir al perfil el user.js y user-overrides.js
+	arkenfox="$pdir/arkenfox.js"
+	overrides="$pdir/user-overrides.js"
+	userjs="$pdir/user.js"
+	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
+	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
+	cat "$arkenfox" "$overrides" > "$userjs"
+	chown "$USER:wheel" "$arkenfox" "$userjs"
+	# Instalar el script de actualizado.
+	mkdir -p /usr/local/lib /etc/pacman.d/hooks
+	sudo cp "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/
+	sudo chown root:root /usr/local/lib/arkenfox-auto-update
+	sudo chmod 755 /usr/local/lib/arkenfox-auto-update
+	# Ejecutar la actualización cuando sea necesario mediante un hook de pacman.
+	sudo cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
+}
 installffaddons(){
-	addonlist="ublock-origin istilldontcareaboutcookies violentmonkey darkreader xbs clearurls decentraleyes"
+	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies violentmonkey darkreader xbs clearurls keepassxc-browser sponsorblock"
 	addontmp="$(mktemp -d)"
-	trap "rm -fr $addontmp" HUP INT QUIT TERM PWR EXIT
-	IFS=' '
 	mkdir -p "$pdir/extensions/"
 	for addon in $addonlist; do
 		if [ "$addon" == "ublock-origin" ]; then
@@ -261,39 +283,31 @@ installffaddons(){
 				grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
 		fi
 		file="${addonurl##*/}"
-		curl -LOs "$addonurl" > "$addontmp/$file"
-		id="$(unzip -p "$file" manifest.json | grep "\"id\"")"
+		wget -q "$addonurl" -O "$addontmp/$file"
+		id="$(unzip -p "$addontmp/$file" manifest.json | grep "\"id\"" | head -n 1)"
 		id="${id%\"*}"
 		id="${id##*\"}"
-		mv "$file" "$pdir/extensions/$id.xpi"
+		# Mover el archivo al directorio de extensiones con el nombre correcto
+		[ -n "$id" ] && mv "$addontmp/$file" "$pdir/extensions/$id.xpi"
 	done
+
+	# Cambiar los permisos de las extensiones descargadas
 	chown -R "$USER:$USER" "$pdir/extensions"
-}
-makeuserjs(){
-	# Get the Arkenfox user.js and prepare it.
-	arkenfox="$pdir/arkenfox.js"
-	overrides="$pdir/user-overrides.js"
-	userjs="$pdir/user.js"
-	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
-	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
-	cat "$arkenfox" "$overrides" | tee "$userjs"
-	sudo chown "$USER" "$arkenfox" "$userjs"
-	# Install the updating script.
-	sudo mkdir -p /usr/local/lib /etc/pacman.d/hooks
-	sudo install -m 755 "$HOME/.dotfiles/bin/arkenfox-auto-update" /usr/local/lib/arkenfox-auto-update
-	# Trigger the update when needed via a pacman hook.
-	sudo cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
+	# Limpiar el directorio temporal
+	rm -rf "$addontmp"
 }
 firefox_configure(){
-	browserdir="/home/$USER/.mozilla/firefox"
-	profilesini="$browserdir/profiles.ini"
+	# Ruta base de perfiles de Firefox
+	browserdir="$HOME/.mozilla/firefox"
+	# Ejecutar Firefox en modo headless para generar un perfil predeterminado
 	firefox --headless >/dev/null 2>&1 &
-	sleep 1
-	profile="$(grep "Default=.." "$profilesini" | sed 's/Default=//')"
+	sleep 1 # Esperar un momento para que Firefox cree los archivos de perfil
+	pkill firefox
+	# Obtener el perfil predeterminado
+	profile=$(get_profile)
 	pdir="$browserdir/$profile"
-	[ -d "$pdir" ] && makeuserjs
-	[ -d "$pdir" ] && installffaddons
-	killall firefox
+	makeuserjs
+	installffaddons
 }
 
 # Configurar neovim e instalar los plugins
