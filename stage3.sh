@@ -426,13 +426,20 @@ service_add tlp
 
 # Configurar y activar xdm
 service_add xdm
-sudo cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-sudo cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+sudo cp "$HOME/.dotfiles/assets/xdm/Xresources"	/etc/X11/xdm/Xresources
+sudo cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"	/etc/X11/xdm/Xsetup_0
 
 
-# Suspender de forma automatica cuando la bateria cae por debajo del 5%
-[ -e /sys/class/power_supply/BAT0 ] && \
-sudo cp "$HOME/.dotfiles/assets/udev/99-lowbat.rules" "/etc/udev/rules.d/99-lowbat.rules"
+# Suspender de forma automatica cuando la bateria cae por debajo del 10%
+if [ -e /sys/class/power_supply/BAT0 ]; then
+	sudo install -m 755 "$HOME/.dotfiles/assets/system/auto-suspend" \
+		/usr/local/bin/auto-suspend
+	sudo install -m 755 "$HOME/.dotfiles/assets/system/auto-suspend-loop" \
+		/usr/local/bin/auto-suspend-loop
+	sudo install -m 755 "$HOME/.dotfiles/assets/system/auto-suspend-service" \
+		/etc/init.d/auto-suspend
+	service_add auto-suspend
+fi
 
 
 # Permitir hacer click tocando el trackpad (X11)

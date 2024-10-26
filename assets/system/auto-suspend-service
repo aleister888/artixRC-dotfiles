@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+
+description="Suspender el sistema cuando la bateria esta baja"
+pidfile="/var/run/auto-suspend.pid"
+
+depend() {
+	need localmount
+	after bootmisc
+}
+
+start() {
+	ebegin "Iniciando monitoreo de batería"
+	start-stop-daemon --start --background --exec /usr/local/bin/auto-suspend-loop \
+	--make-pidfile --pidfile $pidfile
+	eend $?
+}
+
+stop() {
+	ebegin "Deteniendo monitoreo de batería"
+	start-stop-daemon --stop --exec /usr/local/bin/auto-suspend-loop \
+	--pidfile $pidfile
+	eend $?
+}

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+while true; do
+	/usr/local/bin/auto-suspend
+	sleep 60
+done
