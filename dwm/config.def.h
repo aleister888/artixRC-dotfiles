@@ -109,7 +109,7 @@ static const Rule rules[] = {
 	{ "electron-mail",	NULL,	NULL,	1 << 1,	0,	0,	0,	-1,     0},
 	// Espacio 3: Internet
 	// Espacio 4: Oficina
-	{ "Zim",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,     0},
+	{ "xfreerdp",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,     0},
 	{ "Soffice",		NULL,	NULL,	1 << 3,	0,	0,	0,	-1,     0},
 	// Espacio 5: Chats
 	{ "discord",		NULL,	NULL,	1 << 4,	0,	0,	0,	-1,     0},
