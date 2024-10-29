@@ -28,17 +28,13 @@ is_muted () {
 }
 
 get_percentage () {
-	local muted=$(is_muted)
-	if [[ $muted == 'yes' ]]; then
-		echo 0%
-	else
-		echo "$(pamixer --get-volume)%"
-	fi
+	echo "$(pamixer --get-volume)%"
 }
 
 get_icon () {
 	local vol=$(get_percentage)
-	if [[ $vol == "0%" ]]; then
+	local muted=$(is_muted)
+	if [[ $muted == 'yes' ]]; then
 		echo "󰖁"
 	else
 		percentage "$vol" "󰖁" "󰕿" "󰖀" "󰕾"

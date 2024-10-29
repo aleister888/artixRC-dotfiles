@@ -24,6 +24,10 @@ if $USER !=# 'root'
 	" Markdown
 	Plug 'preservim/vim-markdown'
 	let g:vim_markdown_folding_disabled = 1
+	let g:vim_markdown_auto_insert_bullets = 0
+	let g:vim_markdown_new_list_item_indent = 0
+	let g:vim_markdown_syntax = 'on'
+	let g:vim_markdown_math = 1
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " Previews de markdown en local
 	let g:mkdp_auto_start = 0
 	let g:mkdp_preview_options = {
@@ -37,7 +41,7 @@ if $USER !=# 'root'
 		\ 'sequence_diagrams': {},
 		\ 'flowchart_diagrams': {},
 		\ 'content_editable': v:false,
-		\ 'disable_filename': 0,
+		\ 'disable_filename': 1,
 		\ 'toc': {}
 		\ }
 	function OpenMarkdownPreview (url)
@@ -137,14 +141,17 @@ endif
 
 " Ajustes generales
 syntax enable
-set noexpandtab
+" Desactivar formateo especifico del tipo de archivo
+autocmd FileType * setlocal noautoindent nosmartindent nocindent
+autocmd FileType * setlocal noexpandtab copyindent preserveindent
+autocmd FileType * setlocal tabstop=2 shiftwidth=2
 set title encoding=UTF-8
 set mouse=a scrolloff=10
 set list hidden autochdir
 set ttimeoutlen=0 wildmode=longest,list,full
 set number relativenumber cursorline " Opciones del cursor
 set ic | set ignorecase | set incsearch " Ajustes de búsqueda
-set conceallevel=2
+set conceallevel=0
 set clipboard+=unnamedplus " Ajustes de pantalla
 
 
@@ -166,9 +173,6 @@ endif
 
 " Atajos de teclado:
 
-
-" Activar/Desactivar concealing
-nnoremap <leader>c :exec &conceallevel == 0 ? "set conceallevel=2" : "set conceallevel=0"<CR>
 
 " Shift+Enter para añadir una nueva linea sin identado (Markdown)
 function! NoIndentNewline()
