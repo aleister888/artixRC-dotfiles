@@ -37,7 +37,7 @@ ewwspawn(){
 	local monitors
 	local resolution
 	# Contamos el numero de monitores activos
-	monitors=$(xrandr --listmonitors | grep -c " .:")
+	monitors=$(xrandr | awk '/ connected/ { print $1 }' | wc -l)
 	# Definir el archivo al que apunta el enlace simbólico actual
 	current_link=$(readlink -f "$XDG_CONFIG_HOME/eww/dashboard.scss")
 

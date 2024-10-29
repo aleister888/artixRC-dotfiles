@@ -307,6 +307,7 @@ scripts_link(){
 		"tray-toggle"
 		"lock"
 		"xmenu-apps"
+		"rdp-connect"
 	)
 	for file in "${files[@]}"; do
 		sudo ln -sf "$HOME/.dotfiles/bin/$file" "/usr/local/bin/$file"
