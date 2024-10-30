@@ -493,7 +493,8 @@ sudo cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
 	/usr/lib/udev/rules.d/
 
 
-"$HOME/.dotfiles/bin/wordlist" # Descargar wordlist
+# Crear diccionario local de neovim
+"$HOME/.dotfiles/bin/wordlist"
 
 
 # Activar servicios

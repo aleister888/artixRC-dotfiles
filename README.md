@@ -51,6 +51,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
 
 ## Cosas por hacer
 
+- Hacer i3lock mas rapido usando un pre-render con blur del fondo
 - Crear branch para el desarollo y actualizar el readme y los script consecuentemente
 - Mejorar s1-2 para restarurar /home con LUKS y poder instalar desde una instalación existente, etc.
     - Preguntar si hacer `/dev/zero` a la partición, una vez ya encriptada

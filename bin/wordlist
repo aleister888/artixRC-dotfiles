@@ -1,14 +1,103 @@
-#!/bin/sh
+#!/bin/bash
 
-# Script para descargar un wordlist con palabras para generar frases de contraseñas
+nvim_spell_dir="$HOME/.config/nvim/spell"
+nvim_add="$nvim_spell_dir/es.utf-8.add"
 
-location="$HOME/.local/share/wordlist"
-spanish="$location/spanish.wordlist"
+mkdir -p "$nvim_spell_dir"
+[ -e "$nvim_add" ] && rm "$nvim_add"
+[ -e "${nvim_add%.add}.spl" ] && rm "${nvim_add%.add}.spl"
 
-if [ ! -d "$location" ]; then
-	mkdir -p "$location"
-fi
+# Función para extraer títulos de glosario de Wikipedia
+glossary_terms(){
+	# Array con la localización de los glosarios en el servidor
+	glossary=(
+		# https://en.wikipedia.org/wiki/Wikipedia:Contents/Glossaries
+		# Matemáticas
+		"algebraic_topology"
+		"calculus"
+		"commutative_algebra"
+		"linear_algebra"
+		"probability_and_statistics"
+		"ring_theory"
+		"set_theory"
+		# Filosofía
+		"philosophy"
+		"Stoicism_terms"
+		# Informática
+		"computers"
+		"computer_science"
+		"Unified_Modeling_Language_terms"
+	)
+	
+	for name in "${glossary[@]}"; do
+		local output=$(curl -s "https://en.wikipedia.org/wiki/Glossary_of_$name")
 
-# Descargar wordlist en español para generar contraseñas
-wget -O $spanish https://raw.githubusercontent.com/danielmiessler/SecLists/master/Miscellaneous/Moby-Project/Moby-Language-II/spanish.txt
-sed -i 's/a`/á/g; s/e`/é/g; s/i`/í/g; s/o`/ó/g; s/u`/ú/g; s/A`/Á/g; s/E`/É/g; s/I`/Í/g; s/O`/Ó/g; s/U`/Ú/g; s/\\/ñ/g; s/u{/ü/g' $spanish
+		# Elementos de lista con hipervinculo (Sin id)
+		echo "$output" | grep -oP '(<dl>)?<dt><a href=".*" title=".*">\K.*(?=</a></dt>)'
+		# Elementos de lista sin hipervinculo (Sin id)
+		echo "$output" | grep -oP '(<dl>)?<dt>(?!<a href=".*" title=".*">)\K.*(?=</dt>)'
+		# Elementos de lista con hipervinculo (Con id)
+		echo "$output" | grep -oP '<dt id=".*"><dfn><a href=".*" title=".*">\K.*(?=</a></dfn></dt>)'
+		# Elementos de lista con hipervinculo (Con id y clase)
+		echo "$output" | grep -oP '<dt id=".*"><dfn><a href=".*" class=".*" title=".*">\K.*(?=</a></dfn></dt>)'
+		# Elementos de lista con clase y titulo
+		echo "$output" | grep -oP '<dt id=".*"><dfn><a href=".*" class=".*" title=".*">\K.*(?=</a></dfn></dt>)'
+
+		# Elementos de lista (Con sólo id)
+		echo "$output" | grep -oP '<dt id=".*"><dfn>(?!(<i>)?<a href=".*" title=".*">)\K.*(?!</a>(</i>)?)(?=</dfn></dt>)' |\
+		grep -v '</i>\|</sub>\|</span>' |\
+		# Borrar cadenas que no tienen letras
+		grep "[a-zA-Z]" |\
+		# Borrar espacios sobrantes
+		sed 's/^ *//g'
+
+	done
+}
+
+# Función para extraer las abreviaciones de IT
+it_abbreviations(){
+	local URL="https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations"
+	# Extraemos el código html de la página
+	curl -s "$URL" |\
+	# Extraemos las entradas de listas de los glosarios
+	grep -oP '<li><a href=".*" title=".*">\K.{1,14}(?=</a>.+</li>)' | grep -v '</span>'
+}
+
+# Función para crear un wordlist a partir de archivos csv
+csv_to_txt(){
+	# Array con en nombre de los archivos en el servidor
+	urls=(
+		"spanish-word-list-total.csv"
+		"spanish-word-list-nouns.csv"
+		"spanish-word-list-adjectives.csv"
+		"spanish-word-list-verbs.csv"
+		"spanish-word-list-three-letter-words.csv"
+	)
+	
+	# Bucle para descargar y tratar los archivos
+	for csv_file in "${urls[@]}"; do
+		local tmp_file="${csv_file%.csv}.tmp"
+		# Descargamos el archivo .csv
+		wget -q -O "/tmp/$csv_file" \
+		"https://www.sketchengine.co.uk/wp-content/uploads/word-list/spanish/$csv_file"
+		# Convertimos el encoding a UTF-8
+		iconv -f ISO-8859-1 -t UTF-8 "/tmp/$csv_file" -o "/tmp/$tmp_file"
+		# Corregimos caracteres erróneos
+		sed -i -e 's/\r//g' "/tmp/$tmp_file"
+		# Extraemos las palabras del .csv
+		grep -oP '[0-9];\K.*(?=;[0-9[:space:]]*;)(?=[0-9]*)|(?=[0-9]*,[0-9]*)' "/tmp/$csv_file"
+		rm "/tmp/$csv_file" "/tmp/$tmp_file"
+	done
+}
+
+{
+	# Función para extraer títulos de glosario de Wikipedia
+	glossary_terms
+	# Función para extraer las abreviaciones de IT
+	it_abbreviations
+	# Función para crear un wordlist a partir de archivos csv
+	csv_to_txt | sed 's/?/ñ/g'
+} |\
+tr ' ' '\n' | grep -E '.{2,}' | grep -v "/" | sort -u |\
+tee -a "$nvim_add" >/dev/null
+nvim --headless +"mkspell! $nvim_add" +q
