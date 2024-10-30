@@ -97,6 +97,8 @@ csv_to_txt(){
 	it_abbreviations
 	# Función para crear un wordlist a partir de archivos csv
 	csv_to_txt | sed 's/?/ñ/g'
+	# Listar comandos del sistema
+	/usr/bin/ls /usr/bin
 } |\
 tr ' ' '\n' | grep -E '.{2,}' | grep -v "/" | sort -u |\
 tee -a "$nvim_add" >/dev/null
