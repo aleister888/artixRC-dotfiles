@@ -20,7 +20,7 @@ static const Block blocks[] = {
 	// Ram usada
 	{" ^d^^c#98971a^ ^c#b8bb26^" ,"sb-mem",                                 10,  0},
 	// Fecha
-	{" ^d^^c#D65D0E^ ^c#FE8019^" ,"date +'%d/%m'",                         900,  0},
+	{" ^d^^c#D65D0E^ ^c#FE8019^" ,"date +'%d/%m'",                          60,  0},
 	// Hora
 	{" ^d^^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M:%S '",                       1,  0},
 };
