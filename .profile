@@ -1,4 +1,4 @@
-#!/bin/sh
+PIPEWIRE_LATENCY="128/48000"#!/bin/sh
 
 # Abreviaciones
 . "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
@@ -41,9 +41,6 @@ export XDG_CURRENT_DESKTOP=X-Generic
 
 # Apps
 export OPENER="xdg-open"
-
-
-export PIPEWIRE_LATENCY="256/48000"
 
 # Arreglar aplicaciones de java
 export _JAVA_AWT_WM_NONREPARENTING=1

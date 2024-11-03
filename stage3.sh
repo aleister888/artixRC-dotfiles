@@ -4,7 +4,7 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
-# URL con el respositorio
+# URL con el repositorio
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
 # Funciones que invocaremos a menudo
