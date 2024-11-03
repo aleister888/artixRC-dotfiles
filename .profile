@@ -1,4 +1,4 @@
-PIPEWIRE_LATENCY="128/48000"#!/bin/sh
+#!/bin/sh
 
 # Abreviaciones
 . "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliasrc"
