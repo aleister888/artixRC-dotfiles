@@ -30,24 +30,13 @@ if $USER !=# 'root'
 	let g:vim_markdown_math = 1
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " Previews de markdown en local
 	let g:mkdp_auto_start = 0
-	let g:mkdp_preview_options = {
-		\ 'mkit': {},
-		\ 'katex': {},
-		\ 'uml': {},
-		\ 'maid': {},
-		\ 'disable_sync_scroll': 0,
-		\ 'sync_scroll_type': 'middle',
-		\ 'hide_yaml_meta': 1,
-		\ 'sequence_diagrams': {},
-		\ 'flowchart_diagrams': {},
-		\ 'content_editable': v:false,
-		\ 'disable_filename': 1,
-		\ 'toc': {}
-		\ }
+	let g:mkdp_preview_options = { 'disable_filename': 1 }
+	let g:mkdp_port = '8888'
 	function OpenMarkdownPreview (url)
-		execute "silent ! setsid -f surf " . a:url
+		execute "silent ! firefox --new-window " . a:url
 	endfunction
 	let g:mkdp_browserfunc = 'OpenMarkdownPreview'
+	let g:mkdp_page_title = '${name}'
 
 	Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
 	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
