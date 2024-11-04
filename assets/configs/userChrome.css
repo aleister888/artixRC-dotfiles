@@ -1,0 +1,38 @@
+/* Borrar botón para listar todas las pestañas */
+#alltabs-button {
+	display: none !important;
+}
+
+/* Cambiar altura de las pestañas */
+:root {
+	--tab-min-height: 30px !important;
+	--tab-max-height: 45px !important;
+}
+#tabbrowser-tabs, #tabbrowser-tabs > #tabbrowser-arrowscrollbox, .tabbrowser-tabs .tabbrowser-tab {
+	min-height: var(--tab-min-height) !important;
+	max-height: var(--tab-max-height) !important;
+}
+
+/* Desactivar el icono para las carpetas en marcadores */
+#personal-bookmarks .bookmark-item[container="true"] .toolbarbutton-icon {
+	display:none!important;
+}
+
+/* Desactivar el icono de Firefox View y su separador */
+#firefox-view-button {
+	display: none !important;
+}
+
+/* Establecer altura de las pestañas */
+:root {
+	--tab-height: 50px !important;
+}
+#tabbrowser-tabs:hover {
+	height: var(--tab-height) !important;
+}
+
+/* Reducir el paginador de pestañas cuando este no esta enfocado */
+#tabbrowser-tabs {
+	height: 0px !important;
+	transition: height 0.1s ease-in-out;
+}

@@ -7,7 +7,7 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Tamaño de la fuente y los margenes
-static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font:bold:pixelsize=24" };
+static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font:pixelsize=24" };
 static const unsigned int gappx = 24;
 
 // Constantes
@@ -286,12 +286,13 @@ static const Key keys[] = {
 	// Hacer/Deshacer ventana permamente
 	{ MODKEY|ControlMask,           XK_s,      togglesticky,     {0} },
 	// Cambiar la distribución de las ventanas
-	{ MODKEY,                       XK_e,      setlayout,        {.v = &layouts[0]} },
-	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} },
-	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} },
-	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} },
-	{ MODKEY,                       XK_y,      setlayout,        {.v = &layouts[4]} },
-	{ MODKEY|ShiftMask,             XK_y,      setlayout,        {.v = &layouts[5]} },
+	{ MODKEY,                       XK_e,      setlayout,        {.v = &layouts[0]} }, // Por defecto
+	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
+	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} }, // Una ventana
+	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Ventana principal centrada
+	{ MODKEY,                       XK_y,      setlayout,        {.v = &layouts[4]} }, // Columnas
+	{ MODKEY|ShiftMask,             XK_y,      setlayout,        {.v = &layouts[5]} }, // Ventana principal arriba
+	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[8]} }, // Deck
 	// Cambiar espacio entre ventanas
 	{ MODKEY|ControlMask,           XK_period, setgaps,          {.i = -12 } },
 	{ MODKEY|ControlMask,           XK_comma,  setgaps,          {.i = +12 } },

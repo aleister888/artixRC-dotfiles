@@ -18,11 +18,25 @@ if $USER !=# 'root'
 	Plug 'morhetz/gruvbox' " Tema
 	Plug 'akinsho/bufferline.nvim' " Tabs
 
+	Plug 'preservim/nerdtree' " Árbol de directorios
+	let NERDTreeShowHidden=1
+	nnoremap <silent><leader>t :NERDTreeToggle<CR>
+	let g:NERDTreeDirArrowExpandable="+"
+	let g:NERDTreeDirArrowCollapsible="~"
+	set laststatus=3 " Mostar solo una barra de estado a la vez
+	au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
+	au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
+
 	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 	let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
+	" Mejorar el deshacer cambios
+	Plug 'mbbill/undotree'
+	nnoremap <leader>u :UndotreeToggle<CR>
+
 	" Markdown
 	Plug 'preservim/vim-markdown'
+	let g:vim_markdown_toc_autofit = 1
 	let g:vim_markdown_folding_disabled = 1
 	let g:vim_markdown_auto_insert_bullets = 0
 	let g:vim_markdown_new_list_item_indent = 0
@@ -37,18 +51,22 @@ if $USER !=# 'root'
 	let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 	let g:mkdp_page_title = '${name}'
 
-	Plug 'sheerun/vim-polyglot' " Plugin para mejorar el resaltado de sintaxis
 	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
+	let g:vimtex_toc_config = { 'show_help': 0 }
+
 	Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
 	let g:coc_disable_startup_warning = 1
 	let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
 	inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 	let g:coc_preferences = {
-		\ 'suggest.maxCompleteItemCount': 50,
-		\ 'suggest.detailField': 'menu',
-		\ 'suggest.fixIncomplete': 1,
+		\ 'suggest.maxCompleteItemCount': 25,
+		\ 'suggest.detailField': 'abbr',
+		\ 'suggest.fixIncomplete': 0,
 		\ 'coc.preferences.formatOnType': v:false,
-		\ 'coc.preferences.formatOnSaveFiletypes': []
+		\ 'coc.preferences.formatOnSaveFiletypes': [],
+		\ 'diagnostic.enable': v:false,
+		\ 'signature.target': 'echo',
+		\ 'suggest.preview': v:false
 		\ }
 	augroup my_coc_highlights
 		au!
@@ -66,17 +84,6 @@ if $USER !=# 'root'
 		au ColorScheme * highlight CocFloating guibg=#222222
 		au ColorScheme * highlight CocMenuSel guibg=#3C3836
 	augroup END
-
-	Plug 'preservim/nerdtree' " Árbol de directorios
-	let NERDTreeShowHidden=1
-	nnoremap <silent><leader>t :NERDTreeToggle<CR>
-	" Customizar NERDTree con el esquema de colores Gruvbox
-	let g:NERDTreeDirArrowExpandable="+"
-	let g:NERDTreeDirArrowCollapsible="~"
-
-	set laststatus=3 " Mostar solo una barra de estado a la vez
-	au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
-	au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
 
 	Plug 'sirver/ultisnips' " Snippets
 	let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
@@ -141,6 +148,11 @@ set number relativenumber cursorline " Opciones del cursor
 set ic | set ignorecase | set incsearch " Ajustes de búsqueda
 set conceallevel=0
 set clipboard+=unnamedplus " Ajustes de pantalla
+set lazyredraw " No re-dibujar mientras se ejecutan macros
+" Desactivar backups
+set nobackup
+set nowb
+set noswapfile
 
 
 " Tema de colores
@@ -161,6 +173,25 @@ endif
 
 " Atajos de teclado:
 
+
+" Buscar la selección (https://gist.github.com/loganstone/b670837bfcfb6ed8b12a718e7a40911c)
+function! VisualSelection(direction, extra_filter) range
+	let l:saved_reg = @"
+	execute "normal! vgvy"
+
+	let l:pattern = escape(@", "\\/.*'$^~[]")
+	let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+	if a:direction == 'gv'
+		call CmdLine("Ack '" . l:pattern . "' " )
+	elseif a:direction == 'replace'
+		call CmdLine("%s" . '/'. l:pattern . '/')
+	endif
+
+	let @/ = l:pattern
+	let @" = l:saved_reg
+endfunction
+vnoremap <leader>/ :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 
 " Shift+Enter para añadir una nueva linea sin identado (Markdown)
 function! NoIndentNewline()

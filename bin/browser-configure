@@ -54,6 +54,10 @@ installffaddons(){
 	# Limpiar el directorio temporal
 	rm -rf "$addontmp"
 }
+installtheme(){
+	mkdir -p "$pdir/chrome/"
+	ln -s "$HOME/.dotfiles/assets/configs/userChrome.css" "$pdir/chrome/"
+}
 
 # Ruta base de perfiles de Firefox
 browserdir="$HOME/.mozilla/firefox"
@@ -68,3 +72,4 @@ profile=$(get_profile)
 pdir="$browserdir/$profile"
 makeuserjs
 installffaddons
+installtheme
