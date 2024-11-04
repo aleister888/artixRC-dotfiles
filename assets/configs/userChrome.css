@@ -14,35 +14,14 @@
 	border-radius: 0px !important;
 }
 
-/* Reducir el paginador de pestañas cuando este no esta enfocado */
+/* Reducir el tamaño de las pestañas */
 #tabbrowser-tabs {
-	min-height: 32px !important;
-	max-height: 32px !important;
-	.tab-label, .tabbrowser-tab .tab-icon-image {
-		padding-top: 0px !important;
-		padding-bottom: 0px !important;
-	}
-}
-
-/* Reducir los márgenes de la barra de marcadores */
-#PlacesToolbarItems > .bookmark-item {
-	padding-top: 0px !important;
-	padding-bottom: 0px !important;
-}
-
-/* Reduce la altura de la barra de herramientas y de búsqueda/direcciones */
-#nav-bar, #PersonalToolbar, #TabsToolbar, #toolbar-menubar, #urlbar, #searchbar {
-	margin: 0px !important;
-}
-
-/* Ajusta el tamaño de los botones en la barra de herramientas */
-.toolbarbutton-1, .toolkit-telemetry-batch {
-	margin: 0px !important;
+	max-height: 40px !important;
 }
 
 /* Desactivar el icono para las carpetas en marcadores */
 #personal-bookmarks .bookmark-item[container="true"] .toolbarbutton-icon {
-	display:none!important;
+	display: none !important;
 }
 
 /* Ocultar el botón de cerrar en las pestañas */
