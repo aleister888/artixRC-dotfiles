@@ -7,7 +7,7 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Tamaño de la fuente y los margenes
-static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font:pixelsize=24" };
+static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font:pixelsize=24:bold" };
 static const unsigned int gappx = 24;
 
 // Constantes
