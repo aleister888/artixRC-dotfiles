@@ -32,7 +32,7 @@ if $USER !=# 'root'
 	let g:mkdp_auto_start = 0
 	let g:mkdp_preview_options = { 'disable_filename': 1 }
 	function OpenMarkdownPreview (url)
-		execute "silent ! firefox --new-window " . a:url
+		execute "silent ! setsid -f firefox --new-window " . a:url
 	endfunction
 	let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 	let g:mkdp_page_title = '${name}'
