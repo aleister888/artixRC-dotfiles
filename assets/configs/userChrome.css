@@ -36,3 +36,14 @@
 	height: 0px !important;
 	transition: height 0.1s ease-in-out;
 }
+
+/* Ocultar el botón de cerrar en las pestañas */
+.tab-close-button {
+	display: none !important;
+}
+
+/* Usar todo el ancho para el texto de las pestañas */
+.tab-label {
+	display: flex !important;
+	width: 100%;
+}
