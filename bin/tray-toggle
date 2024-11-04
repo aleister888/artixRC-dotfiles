@@ -1,13 +1,21 @@
 #!/bin/sh
 
-GAPPX=$(grep gappx "$HOME/.dotfiles/dwm/config.def.h" 2>/dev/null | head -n1 | tr -d -c 0-9)
-RESOLUTION=$(readlink "$HOME/.config/eww/dashboard.scss" | tr -d -c 0-9)
+RESOLUTION=$(basename $(readlink "$HOME/.config/eww/dashboard.scss"))
 
-if [ "$RESOLUTION" = "2160" ]; then SIZE=64; else SIZE=32; fi
+if [ "$RESOLUTION" = "dashboard2160p.scss" ]; then
+	HEIGHT=64; PADDING=12; ICONSPACING=6; DISTANCE=16
+else
+	HEIGHT=48; PADDING=12; ICONSPACING=6; DISTANCE=8
+fi
 
 if pgrep trayer; then
 	killall trayer
 else
-	trayer --width 10 --height "$SIZE" --distance "$GAPPX" \
-	--edge top --distancefrom top
+	trayer \
+		--height      $HEIGHT \
+		--padding     $PADDING \
+		--iconspacing $ICONSPACING \
+		--distance    $DISTANCE \
+		--edge left --distancefrom left \
+		--widthtype request --heighttype pixel
 fi
