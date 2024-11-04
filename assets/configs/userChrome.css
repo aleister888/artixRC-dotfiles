@@ -3,13 +3,44 @@
 	display: none !important;
 }
 
-/* Reducir el paginador de pestañas cuando este no esta enfocado */
-#tabbrowser-tabs:hover {
-	height: 50px !important;
+/* Reduce el margen de las pestañas */
+.tab-background {
+	padding: 0px !important;
+	margin: 0px !important;
 }
+
+/* Pestañas con bordes cuadrados */
+.tab-background,
+.tab-content {
+	border-radius: 0px !important;
+}
+
+/* Reducir el paginador de pestañas cuando este no esta enfocado */
 #tabbrowser-tabs {
-	height: 30px !important;
-	transition: height 0.1s ease-in-out;
+	min-height: 32px !important;
+	max-height: 32px !important;
+	.tab-label, .tabbrowser-tab .tab-icon-image {
+		padding-top: 0px !important;
+		padding-bottom: 0px !important;
+	}
+}
+
+/* Reducir los márgenes de la barra de marcadores */
+#PlacesToolbarItems > .bookmark-item {
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+/* Reduce la altura de la barra de herramientas y de búsqueda/direcciones */
+#nav-bar, #PersonalToolbar, #TabsToolbar, #toolbar-menubar, #urlbar, #searchbar {
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+/* Ajusta el tamaño de los botones en la barra de herramientas */
+.toolbarbutton-1, .toolkit-telemetry-batch {
+	padding: 0px !important;
+	margin: 0px !important;
 }
 
 /* Desactivar el icono para las carpetas en marcadores */
@@ -17,18 +48,7 @@
 	display:none!important;
 }
 
-/* Desactivar el icono de Firefox View */
-#firefox-view-button {
-	display: none !important;
-}
-
 /* Ocultar el botón de cerrar en las pestañas */
 .tab-close-button {
 	display: none !important;
-}
-
-/* Usar todo el ancho para el texto de las pestañas */
-.tab-label {
-	display: flex !important;
-	width: 100%;
 }

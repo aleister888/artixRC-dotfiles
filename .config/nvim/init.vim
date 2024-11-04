@@ -157,11 +157,10 @@ set noswapfile
 
 " Tema de colores
 set background=dark termguicolors
-set fillchars+=vert:\  " Espacio como separadores
+set fillchars+=vert:+ " Espacio como separadores
 if $USER !=# 'root'
 	colorscheme gruvbox
 endif
-let g:gruvbox_contrast_dark = "hard"
 autocmd VimEnter * highlight Normal ctermbg=none guibg=none
 autocmd VimEnter * highlight NonText ctermbg=none guibg=none
 autocmd VimEnter * highlight LineNr ctermbg=none guibg=none
@@ -174,48 +173,13 @@ endif
 " Atajos de teclado:
 
 
-" Buscar la selección (https://gist.github.com/loganstone/b670837bfcfb6ed8b12a718e7a40911c)
-function! VisualSelection(direction, extra_filter) range
-	let l:saved_reg = @"
-	execute "normal! vgvy"
-
-	let l:pattern = escape(@", "\\/.*'$^~[]")
-	let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-	if a:direction == 'gv'
-		call CmdLine("Ack '" . l:pattern . "' " )
-	elseif a:direction == 'replace'
-		call CmdLine("%s" . '/'. l:pattern . '/')
-	endif
-
-	let @/ = l:pattern
-	let @" = l:saved_reg
-endfunction
-vnoremap <leader>/ :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-
-" Shift+Enter para añadir una nueva linea sin identado (Markdown)
-function! NoIndentNewline()
-	call feedkeys("\<Esc>o\<C-u>", 'n')
-endfunction
-au Filetype markdown inoremap <S-CR> <Esc>:call NoIndentNewline()<CR>
-
-" Presionando ,, vamos al principio de la palabra
-function! MoveCursorLeftIfNeeded()
-	let col = col('.')
-	if col > 1
-		call feedkeys("\<C-Left>")
-	endif
-endfunction
-nnoremap <silent><leader>, :call MoveCursorLeftIfNeeded()<CR>
-
-" Si presionamos: ,"   ,"   ,'   ,(   ,\   ,[   ,{
-nnoremap <silent><leader>" :s/\%#\([^[:space:]]\+\)/"\1"/g<CR>:noh<CR>
-nnoremap <silent><leader>' :s/\%#\([^[:space:]]\+\)/'\1'/g<CR>:noh<CR>
-nnoremap <silent><leader>( :s/\%#\([^[:space:]]\+\)/(\1)/g<CR>:noh<CR>
-nnoremap <silent><leader>\ :s/\%#\([^[:space:]]\+\)/\\(\1\\)/g<CR>:noh<CR>
-nnoremap <silent><leader>[ :s/\%#\([^[:space:]]\+\)/[\1]/g<CR>:noh<CR>
-nnoremap <silent><leader>{ :s/\%#\([^[:space:]]\+\)/{\1}/g<CR>:noh<CR>
-nnoremap <silent><leader>$ :s/\%#\([^[:space:]]\+\)/$\1$/g<CR>:noh<CR>
+" Encapsular texto seleccionado
+vnoremap <leader>" s"<C-r>""
+vnoremap <leader>' s'<C-r>"'
+vnoremap <leader>$ s$<C-r>"$
+vnoremap <leader>( s(<C-r>")
+vnoremap <leader>{ s{<C-r>"}
+vnoremap <leader>[ s[<C-r>"]
 
 " Activar/Desactivar comprobación ortografía
 inoremap <silent><F3> <C-O>:setlocal spell! spelllang=es_es<CR>
@@ -242,7 +206,7 @@ function s:TocToggle()
 endfunction
 command TocToggle call s:TocToggle()
 au FileType markdown nmap <leader>f :TocToggle<CR>
-au Filetype markdown nmap <leader>h :MarkdownPreviewToggle<CR>
+au Filetype markdown nmap <leader>h :MarkdownPreview<CR>
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1
