@@ -1,0 +1,16 @@
+#!/bin/sh
+uptime -s | xargs -I{} date -d {} +%s | awk '{
+	up_seconds = systime() - $1;
+	up_days = int(up_seconds / 86400);
+	up_hours = int((up_seconds % 86400) / 3600);
+	up_minutes = int((up_seconds % 3600) / 60);
+
+	if (up_days > 0) {
+		printf "  %d día(s), %d hora(s), %d minuto(s)\n", up_days, up_hours, up_minutes;
+	} else if (up_hours > 0) {
+		printf "  %d hora(s), %d minuto(s)\n", up_hours, up_minutes;
+	} else {
+		printf "  %d minuto(s)\n", up_minutes;
+	}
+}'
+

@@ -11,7 +11,7 @@
 
 (defpoll mic_value     :interval "0.1s" "pamixer --default-source --get-volume")
 
-(defpoll uptime        :interval "30s" "uptime -p")
+(defpoll uptime        :interval "30s" "awkuptime")
 (defpoll hostname      :interval "10h" "cat /etc/hostname")
 (defpoll user          :interval "30s" "whoami")
 
