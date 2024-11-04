@@ -169,9 +169,6 @@ done &
 # Servidor VNC Local (Solo para equipos que no lleven batería)
 [ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
 
-# Iniciar redshift (Filtro de la luz azul) con localización en Madrid/España
-pgrep redshift || redshift -l 40.42:-3.70 -t 5700:3600 -b 1:0.9 -m randr -v &
-
 # Iniciar hydroxide si está instalado
 # https://github.com/emersion/hydroxide?tab=readme-ov-file#usage
 # IMAP: localhost, 1143, None, Normal password (Servidores Incoming & Outgoing)
