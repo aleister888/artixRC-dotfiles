@@ -31,7 +31,6 @@ if $USER !=# 'root'
 	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " Previews de markdown en local
 	let g:mkdp_auto_start = 0
 	let g:mkdp_preview_options = { 'disable_filename': 1 }
-	let g:mkdp_port = '8888'
 	function OpenMarkdownPreview (url)
 		execute "silent ! firefox --new-window " . a:url
 	endfunction
