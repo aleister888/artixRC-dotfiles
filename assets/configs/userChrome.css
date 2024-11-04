@@ -5,7 +5,6 @@
 
 /* Reduce el margen de las pestañas */
 .tab-background {
-	padding: 0px !important;
 	margin: 0px !important;
 }
 
@@ -33,13 +32,11 @@
 
 /* Reduce la altura de la barra de herramientas y de búsqueda/direcciones */
 #nav-bar, #PersonalToolbar, #TabsToolbar, #toolbar-menubar, #urlbar, #searchbar {
-	padding: 0px !important;
 	margin: 0px !important;
 }
 
 /* Ajusta el tamaño de los botones en la barra de herramientas */
 .toolbarbutton-1, .toolkit-telemetry-batch {
-	padding: 0px !important;
 	margin: 0px !important;
 }
 
