@@ -3,14 +3,13 @@
 	display: none !important;
 }
 
-/* Cambiar altura de las pestañas */
-:root {
-	--tab-min-height: 30px !important;
-	--tab-max-height: 45px !important;
+/* Reducir el paginador de pestañas cuando este no esta enfocado */
+#tabbrowser-tabs:hover {
+	height: 50px !important;
 }
-#tabbrowser-tabs, #tabbrowser-tabs > #tabbrowser-arrowscrollbox, .tabbrowser-tabs .tabbrowser-tab {
-	min-height: var(--tab-min-height) !important;
-	max-height: var(--tab-max-height) !important;
+#tabbrowser-tabs {
+	height: 30px !important;
+	transition: height 0.1s ease-in-out;
 }
 
 /* Desactivar el icono para las carpetas en marcadores */
@@ -18,23 +17,9 @@
 	display:none!important;
 }
 
-/* Desactivar el icono de Firefox View y su separador */
+/* Desactivar el icono de Firefox View */
 #firefox-view-button {
 	display: none !important;
-}
-
-/* Establecer altura de las pestañas */
-:root {
-	--tab-height: 50px !important;
-}
-#tabbrowser-tabs:hover {
-	height: var(--tab-height) !important;
-}
-
-/* Reducir el paginador de pestañas cuando este no esta enfocado */
-#tabbrowser-tabs {
-	height: 0px !important;
-	transition: height 0.1s ease-in-out;
 }
 
 /* Ocultar el botón de cerrar en las pestañas */
