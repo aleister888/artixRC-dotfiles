@@ -30,7 +30,7 @@ static const int resizehints             = 1;         // 1 ¿Respetar pistas de 
 static const int lockfullscreen          = 1;         // 1 Fuerza el foco en las ventanas en pantalla completa
 static const unsigned int colorfultag    = 1;         // 1, Los indicadores de espacio son coloridos
 static const unsigned int ulinepad       = 0;         // Espaciado horizontal entre subrayado y el indicador del espacio de trabajo
-static const unsigned int ulinestroke    = 0;         // Grosor/Altura del subrayado
+static const unsigned int ulinestroke    = 4;         // Grosor/Altura del subrayado
 static const unsigned int ulinevoffset   = 0;         // Espacio entre el subrayado y el borde inferior de la barra
 static const int ulineall                = 0;         // 1 para mostrar el subrayado en todos los espacios, 0 para mostrarlo en los seleccionados
 static const char background[]           = "#1D2021";
@@ -49,11 +49,6 @@ static const char *colors[][3] = {
 	// Colores:             Fuente      Fondo           Borde
 	[SchemeNorm]        = { foreground, background,     col_blue   }, // Color de las ventanas normales
 	[SchemeSel]         = { foreground, background_sel, col_orange }, // Color de las ventanas seleccionadas
-	[SchemeStatus]      = { foreground, background,     "#000000"  }, // Color de los espacios por defecto
-	[SchemeTagsNorm]    = { foreground, background,     "#000000"  }, // Información (Normal)
-	[SchemeTagsSel]     = { foreground, background_sel, "#000000"  }, // Color de los espacios seleccionados
-	[SchemeInfoNorm]    = { foreground, background,     "#000000"  }, // Estado/información
-	[SchemeInfoSel]     = { foreground, background_sel, "#000000"  }, // Información (Seleccionada)
 	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue   }, // Scratchpad (Normal)
 	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple }, // Scratchpad (Seleccionado)
 	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
@@ -88,7 +83,6 @@ typedef struct {
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
 static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c"};
 static const char *alttags[]	= { "", "", "󰈹", "", "", "", "󰋅", "", "󰊗", "A", "B", "C"};
-static const int taglayouts[]	= {   0,   0,   0,   8,   2,   0,   0,   2,   0,   8,   8,   8};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {

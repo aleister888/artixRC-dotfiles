@@ -10,12 +10,9 @@ Puedes consultarlos leyendo el código en [config.def.h](https://github.com/alei
 - Modificaciones a la barra de tareas:
     - Los espacios ocupados tienen iconos en vez de números: [dwm-alttagsdecoration-2020010304-cb3f58a.diff](http://dwm.suckless.org/patches/alttagsdecoration/dwm-alttagsdecoration-2020010304-cb3f58a.diff)
     - El tamaño de la barra se puede configurar: [dwm-bar-height-spacing-6.3.diff](http://dwm.suckless.org/patches/bar_height/dwm-bar-height-spacing-6.3.diff)
-    - La barra se puede separar de los bordes de la pantalla: [dwm-barpadding-20211020-a786211.diff](http://dwm.suckless.org/patches/barpadding/dwm-barpadding-20211020-a786211.diff)
     - Hacer clic derecho abre un menú para elegir el layout: [dwm-layoutmenu-6.2.diff](http://dwm.suckless.org/patches/layoutmenu/dwm-layoutmenu-6.2.diff)
-    - El color de cada parte de la barra se puede [cambiar individualmente](http://dwm.suckless.org/patches/colorbar/dwm-colorbar-6.3.diff)
     - Los espacios seleccionados tienen una barra como indicador: [dwm-underlinetags-6.2.diff](http://dwm.suckless.org/patches/underlinetags/dwm-underlinetags-6.2.diff)
-    - Mostrar la barra de estado en todos los monitores: [dwm-statusallmons-6.2.diff](http://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-6.2.diff)
-    - La barra de estado permite y tiene una barra del sistema incorporada: [dwm-status2d-systray-6.4.diff](http://dwm.suckless.org/patches/status2d/dwm-status2d-systray-6.4.diff)
+    - Se pueden usar colores en la barra de estado: [dwm-status2d-systray-6.4.diff](https://dwm.suckless.org/patches/status2d/dwm-status2d-6.3.diff)
 - Las ventanas flotantes nuevas aparecerán centradas: [dwm-alwayscenter-20200625-f04cac6.diff](http://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff)
 - Las ventanas nuevas aparecerán al final del stack: [dwm-attachbottom-6.3.diff](http://dwm.suckless.org/patches/attachbottom/dwm-attachbottom-6.3.diff)
 
@@ -29,7 +26,6 @@ Puedes consultarlos leyendo el código en [config.def.h](https://github.com/alei
 - Arreglar la opacidad de los bordes de ventanas: [dwm-fixborders-6.2.diff](https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff)
 - Atajos de teclado para organizar el stack: [dwm-stacker-6.2.diff](https://dwm.suckless.org/patches/stacker/dwm-stacker-6.2.diff)
 - Las aplicaciones abiertas por una terminal ocupan el espacio de dicha terminal: [dwm-swallow-6.3.diff](https://dwm.suckless.org/patches/swallow/dwm-swallow-6.3.diff)
-- Cada espacio tiene su plan de distribución definido: [dwm-taglayouts-6.4.diff](http://dwm.suckless.org/patches/taglayouts/dwm-taglayouts-6.4.diff)
 - Atajo de teclado para cambiar entre espacios ocupados fácilmente: [dwm-shiftviewclients-6.2.diff](https://github.com/bakkeby/patches/blob/master/dwm/dwm-shiftviewclients-6.2.diff)
 - Ventanas semi-visibles: [dwm-renamedscratchpads-6.3.diff](https://github.com/bakkeby/patches/blob/master/dwm/dwm-renamedscratchpads-6.3.diff)
 - Ventanas persistentes: [dwm-sticky-6.4.diff](http://dwm.suckless.org/patches/sticky/dwm-sticky-6.4.diff)
