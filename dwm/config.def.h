@@ -19,7 +19,7 @@ static const unsigned int snap           = 0;         // Pixeles de cercanía pa
 static const unsigned int systraypinning = 0;         // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
 static const unsigned int systrayspacing = gappx/2;   // Espaciado de la barra de tareas
 static const int systraypinningfailfirst = 1;         // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
-static const int showsystray             = 1;         // ¿Barra de tareas? (0: Desactivada)
+static const int showsystray             = 0;         // ¿Barra de tareas? (0: Desactivada)
 static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;         // 0 Para desactivar la barra
 static const int topbar                  = 1;         // 0 Para la barra en la parte inferior
@@ -87,7 +87,7 @@ typedef struct {
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
 static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c"};
-static const char *alttags[]	= { "", "", "󰈹", "", "󰙯", "", "󰋅", "", "󰊗", "A", "B", "C"};
+static const char *alttags[]	= { "", "", "󰈹", "", "", "", "󰋅", "", "󰊗", "A", "B", "C"};
 static const int taglayouts[]	= {   0,   0,   0,   8,   2,   0,   0,   2,   0,   8,   8,   8};
 
 // Reglas pre-establecidas para colocar las ventanas

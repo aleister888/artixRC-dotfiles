@@ -91,7 +91,7 @@ virtualmic(){
 # (Aprovechamos el link simbólico que usamos para ajustar eww según la resolución)
 picomstart(){
 	case "$current_link" in
-	"$file_1080") picom --corner-radius 18 ;;
+	"$file_1080") picom --corner-radius 12 ;;
 	*) picom --corner-radius 24 ;;
 	esac
 }
