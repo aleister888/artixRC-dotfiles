@@ -70,18 +70,11 @@ if $USER !=# 'root'
 		\ }
 	augroup my_coc_highlights
 		au!
-		au ColorScheme * highlight CocHighlightText gui=NONE guibg=#3C3836
-		au ColorScheme * highlight CocHighlightRead gui=NONE guibg=#3C3836
-		au ColorScheme * highlight CocHighlightWrite gui=NONE guibg=#3C3836
 		au ColorScheme * highlight CocErrorSign guifg=#B16286
 		au ColorScheme * highlight CocWarningSign guifg=#fabd2f
 		au ColorScheme * highlight CocInfoSign guifg=#83a598
 		au ColorScheme * highlight CocHintSign guifg=#8ec07c
-		au ColorScheme * highlight CocErrorFloat guibg=#222222 guifg=#B16286
-		au ColorScheme * highlight CocWarningFloat guibg=#222222 guifg=#fabd2f
-		au ColorScheme * highlight CocInfoFloat guibg=#222222 guifg=#8ec07c
-		au ColorScheme * highlight CocHintFloat guibg=#222222 guifg=#98971A
-		au ColorScheme * highlight CocFloating guibg=#222222
+		au ColorScheme * highlight CocFloating guibg=#282828
 		au ColorScheme * highlight CocMenuSel guibg=#3C3836
 	augroup END
 
@@ -149,11 +142,12 @@ set ignorecase incsearch " Ajustes de búsqueda
 set conceallevel=0
 set clipboard+=unnamedplus " Ajustes de pantalla
 set lazyredraw " No re-dibujar mientras se ejecutan macros
+
 " Desactivar backups
 set nobackup
 set nowb
 set noswapfile
-
+set pumheight=10
 
 " Tema de colores
 set background=dark termguicolors
