@@ -26,6 +26,7 @@ hb.o
 *.log
 *.out
 qt5ct.conf
+qt6ct.conf
 resolution.h
 st/config.h
 stest

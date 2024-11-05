@@ -84,16 +84,33 @@ file:///home/$USER/Imágenes
 file:///home/$USER/Vídeos
 file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
 # Configuramos QT
+mkdir -p "$HOME/.config/qt5ct" "$HOME/.config/qt6ct"
 echo "[Appearance]
-color_scheme_path=$HOME/.config/qt5ct/colors/Gruvbox.conf
+color_scheme_path=$HOME/.dotfiles/assets/qt-colors/Gruvbox.conf
 custom_palette=true
-icon_theme=gruvbox-dark-icons-gtk
-standard_dialogs=default
+icon_theme=Papirus-Dark
+standard_dialogs=gtk3
 style=Fusion
 
 [Fonts]
 fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
-general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"" > "$HOME/.dotfiles/.config/qt5ct/qt5ct.conf"
+general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"
+
+[Interface]
+activate_item_on_single_click=1
+buttonbox_layout=0
+cursor_flash_time=1000
+dialog_buttons_have_icons=1
+double_click_interval=400
+gui_effects=@Invalid()
+keyboard_scheme=2
+menus_have_icons=true
+show_shortcuts_in_context_menus=true
+stylesheets=@Invalid()
+toolbutton_style=4
+underline_shortcut=1
+wheel_scroll_lines=3" | \
+	tee "$HOME/.config/qt5ct/qt5ct.conf" "$HOME/.config/qt6ct/qt6ct.conf" >/dev/null
 
 # Configurar el tema del cursor
 mkdir -p "$HOME/.local/share/icons/default"
@@ -146,9 +163,9 @@ sudo update-mime-database /usr/share/mime
 	mkdir -p "$HOME/.local/share/applications"
 
 # Creamos el archivo .desktop para lf
-ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop"
+ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop" 2>/dev/null
 # Creamos el archivo .desktop para nvim
-ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop"
+ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop" 2>/dev/null
 
 
 # Creamos el archivo .desktop para el visor de imagenes
@@ -268,7 +285,7 @@ desktopent=(
 # Clonamos cada repositorio
 for entry in "${desktopent[@]}"; do
 	sudo cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" && \
-	echo 'NoDisplay=true' | sudo tee -a "/usr/local/share/applications/$entry.desktop"
+	echo 'NoDisplay=true' | sudo tee -a "/usr/local/share/applications/$entry.desktop" >/dev/null
 done
 
 #############################
