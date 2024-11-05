@@ -5,7 +5,7 @@ RESOLUTION=$(basename $(readlink "$HOME/.config/eww/dashboard.scss"))
 if [ "$RESOLUTION" = "dashboard2160p.scss" ]; then
 	HEIGHT=64; PADDING=12; ICONSPACING=6; DISTANCE=16
 else
-	HEIGHT=32; PADDING=12; ICONSPACING=6; DISTANCE=8
+	HEIGHT=32; PADDING=8; ICONSPACING=6; DISTANCE=8
 fi
 
 if pgrep trayer; then

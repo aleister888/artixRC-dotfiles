@@ -145,7 +145,7 @@ set mouse=a scrolloff=10
 set list hidden autochdir
 set ttimeoutlen=0 wildmode=longest,list,full
 set number relativenumber cursorline " Opciones del cursor
-set ic | set ignorecase | set incsearch " Ajustes de búsqueda
+set ignorecase incsearch " Ajustes de búsqueda
 set conceallevel=0
 set clipboard+=unnamedplus " Ajustes de pantalla
 set lazyredraw " No re-dibujar mientras se ejecutan macros
@@ -161,6 +161,9 @@ set fillchars+=vert:+ " Espacio como separadores
 if $USER !=# 'root'
 	colorscheme gruvbox
 endif
+autocmd VimEnter * highlight Search guifg=#282828 guibg=#D5C4A1
+autocmd VimEnter * highlight IncSearch guifg=#282828 guibg=#D3869B
+autocmd VimEnter * highlight CurSearch guifg=#83A598 guibg=#282828
 autocmd VimEnter * highlight Normal ctermbg=none guibg=none
 autocmd VimEnter * highlight NonText ctermbg=none guibg=none
 autocmd VimEnter * highlight LineNr ctermbg=none guibg=none
@@ -174,12 +177,14 @@ endif
 
 
 " Encapsular texto seleccionado
-vnoremap <leader>" s"<C-r>""
-vnoremap <leader>' s'<C-r>"'
-vnoremap <leader>$ s$<C-r>"$
-vnoremap <leader>( s(<C-r>")
-vnoremap <leader>{ s{<C-r>"}
-vnoremap <leader>[ s[<C-r>"]
+vnoremap " s"<C-r>""
+vnoremap ' s'<C-r>"'
+vnoremap $ s$<C-r>"$
+vnoremap ( s(<C-r>")
+vnoremap { s{<C-r>"}
+vnoremap [ s[<C-r>"]
+vnoremap _ s_<C-r>"_
+vnoremap <leader>_ s__<C-r>"__
 
 " Activar/Desactivar comprobación ortografía
 inoremap <silent><F3> <C-O>:setlocal spell! spelllang=es_es<CR>

@@ -53,4 +53,4 @@ rounded=$(echo "scale=0; (($result + 12.5) / 25) * 25" | bc)
 
 # Notificar el nivel de brillo
 dunstctl close-all
-notify-send -i brightness "Brillo: $rounded%"
+notify-send -i brightness "Brillo: $rounded%" -t 500

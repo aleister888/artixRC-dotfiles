@@ -87,15 +87,6 @@ virtualmic(){
 	exit
 }
 
-# Ejecutar picom, ajustando el radio de las esquinas en función de la resolución
-# (Aprovechamos el link simbólico que usamos para ajustar eww según la resolución)
-picomstart(){
-	case "$current_link" in
-	"$file_1080") picom --corner-radius 12 ;;
-	*) picom --corner-radius 24 ;;
-	esac
-}
-
 ##########
 # Script #
 ##########
@@ -116,7 +107,7 @@ pgrep pipewire || pipewire-start &
 
 # Iniciar el compositor (Solo en hardware real. Desactivar para máquinas virtuales)
 grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
-pgrep picom || picomstart &
+pgrep picom || picom &
 
 # Servicios del sistema
 dbus-update-activation-environment --all

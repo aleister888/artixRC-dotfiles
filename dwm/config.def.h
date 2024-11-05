@@ -86,65 +86,65 @@ static const char *alttags[]	= { "", "", "󰈹", "", "", "", "�
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
-	// Clase      Instancia Título          Espacio Flotante FakeFull Terminal -Tragado Monitor Scratch
+	// Clase, Instancia, Título, Espacio, Flotante? Fullscreen? Terminal? Tragado? Monitor? Scratch?
 	// Terminal
-	{ TERMC,		NULL,	NULL,	0,	0,	0,	1,	0,	-1,	0},
+	{ TERMC,                  NULL,	NULL,	0,	0,	0,	1,	0,	-1,	0},
 	// Ventanas flotantes
-	{ "Yad",		NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Gcolor3",		NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "pavucontrol",	NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Alarm-clock-applet",	NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Galculator",		NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "easyeffects",	NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Yad",                  NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Gcolor3",              NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "pavucontrol",          NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Alarm-clock-applet",   NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Galculator",           NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "easyeffects",          NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	// Espacio 1: Música
-	{ "tauonmb",		NULL,	NULL,	1 << 0,	0,	0,	0,	0,	-1,	0},
+	{ "tauonmb",              NULL,	NULL,	1<<0,	0,	0,	0,	0,	-1,	0},
 	// Espacio 2: Correo
-	{ "thunderbird",	NULL,	NULL,	1 << 1,	0,	0,	0,	0,	-1,	0},
-	{ "electron-mail",	NULL,	NULL,	1 << 1,	0,	0,	0,	0,	-1,	0},
+	{ "thunderbird",          NULL,	NULL,	1<<1,	0,	0,	0,	0,	-1,	0},
+	{ "electron-mail",        NULL,	NULL,	1<<1,	0,	0,	0,	0,	-1,	0},
 	// Espacio 3: Internet
 	// Espacio 4: Oficina
-	{ "xfreerdp",		NULL,	NULL,	1 << 3,	0,	0,	0,	0,	-1,	0},
-	{ "Soffice",		NULL,	NULL,	1 << 3,	0,	0,	0,	0,	-1,	0},
+	{ "xfreerdp",             NULL,	NULL,	1<<3,	0,	0,	0,	0,	-1,	0},
+	{ "Soffice",              NULL,	NULL,	1<<3,	0,	0,	0,	0,	-1,	0},
 	// Espacio 5: Chats
-	{ "discord",		NULL,	NULL,	1 << 4,	0,	1,	0,	0,	-1,	0},
-	{ "TelegramDesktop",	NULL,	NULL,	1 << 4,	0,	0,	0,	0,	-1,	0},
+	{ "discord",              NULL,	NULL,	1<<4,	0,	1,	0,	0,	-1,	0},
+	{ "TelegramDesktop",      NULL,	NULL,	1<<4,	0,	0,	0,	0,	-1,	0},
 	{ "TelegramDesktop","telegram-desktop","Media viewer",1 << 4,1,0,0,	0,	-1,	0},
 	// Espacio 6: Virtualización
-	{ "Virt-manager",	NULL,	NULL,	1 << 5,	0,	0,	0,	0,	-1,	0},
-	{ "looking-glass-client",NULL,	NULL,	1 << 5,	0,	0,	0,	0,	-1,	0},
+	{ "Virt-manager",         NULL,	NULL,	1<<5,	0,	0,	0,	0,	-1,	0},
+	{ "looking-glass-client", NULL,	NULL,	1<<5,	0,	0,	0,	0,	-1,	0},
 	// Espacio 7: Guitarra/Producción Musical || Organizar/Descargar Música
-	{ "TuxGuitar",		NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "Gmetronome",		NULL,	NULL,	1 << 6,	1,	0,	0,	0,	-1,	0},
-	{ "REAPER",		NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "Guitarix",		NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "transmission-gtk",	NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "qBittorrent",	NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "Lrcget",		NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "Easytag",		NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
-	{ "Picard",		NULL,	NULL,	1 << 6,	0,	0,	0,	0,	-1,	0},
+	{ "TuxGuitar",            NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "Gmetronome",           NULL,	NULL,	1<<6,	1,	0,	0,	0,	-1,	0},
+	{ "REAPER",               NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "Guitarix",             NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "transmission-gtk",     NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "qBittorrent",          NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "Lrcget",               NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "Easytag",              NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
+	{ "Picard",               NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
 	// Espacio 8: Gráficos || Utilidades/Configuración
-	{ "krita",		NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "Fr.handbrake.ghb",	NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "Gimp",		NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "KeePassXC",		NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "Timeshift-gtk",	NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "BleachBit",		NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "Gnome-disks",	NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "Nitrogen",		NULL,	NULL,	1 << 7,	1,	0,	0,	0,	-1,	0},
-	{ "Blueman-manager",	NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "Lxappearance",	NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "qt5ct",		NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
-	{ "baobab",		NULL,	NULL,	1 << 7,	0,	0,	0,	0,	-1,	0},
+	{ "krita",                NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "Fr.handbrake.ghb",     NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "Gimp",                 NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "KeePassXC",            NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "Timeshift-gtk",        NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "BleachBit",            NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "Gnome-disks",          NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "Nitrogen",             NULL,	NULL,	1<<7,	1,	0,	0,	0,	-1,	0},
+	{ "Blueman-manager",      NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "Lxappearance",         NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "qt5ct",                NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
+	{ "baobab",               NULL,	NULL,	1<<7,	0,	0,	0,	0,	-1,	0},
 	// Espacio 9: Juegos
-	{ "steam",		NULL,	NULL,	1 << 8,	0,	0,	0,	0,	-1,	0},
-	{ "Lutris",		NULL,	NULL,	1 << 8,	0,	0,	0,	0,	-1,	0},
-	{ "ProtonUp-Qt",	NULL,	NULL,	1 << 8,	0,	0,	0,	0,	-1,	0},
-	{ "heroic",		NULL,	NULL,	1 << 8,	0,	0,	0,	0,	-1,	0},
-	{ "MultiMC",		NULL,	NULL,	1 << 8,	1,	0,	0,	0,	-1,	0},
-	{ "Minecraft* 1.16.5",	NULL,	NULL,	1 << 8,	0,	0,	0,	0,	-1,	0},
-	{ "Minecraft* 1.21",	NULL,	NULL,	1 << 8, 0,	0,	0,	0,	-1,	0},
+	{ "steam",                NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
+	{ "Lutris",               NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
+	{ "ProtonUp-Qt",          NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
+	{ "heroic",               NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
+	{ "MultiMC",              NULL,	NULL,	1<<8,	1,	0,	0,	0,	-1,	0},
+	{ "Minecraft* 1.16.5",    NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
+	{ "Minecraft* 1.21",      NULL,	NULL,	1<<8, 0,	0,	0,	0,	-1,	0},
 	// Scratchpad
-	{ NULL,		NULL,"scratchpad",	0,	1,	0,	1,	1,	-1,	's'},
+	{ NULL,NULL,"scratchpad",		0,	1,	0,	1,	1,	-1,	's'},
 };
 
 #include "layouts.c" // Archivo con los layouts
@@ -162,16 +162,19 @@ static const Layout layouts[] = {
 };
 
 // Definiciones de las Teclas
-#define MODKEY Mod1Mask // Super (Win) como modificador
+#define MODKEY Mod1Mask // Alt como modificador
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,			KEY,	view,		{.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,		KEY,	toggleview,	{.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,		KEY,	tag,		{.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask,	KEY,	toggletag,	{.ui = 1 << TAG} },
+	{ MODKEY,                       KEY, comboview,  {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY, toggleview, {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY, tag,        {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
+
 #define STACKKEYS(MOD,ACTION) \
-/* Poner el foco/Mover a la posición anterior */		{ MOD, XK_comma,  ACTION##stack, {.i = INC(-1) } }, \
-/* Poner el foco/Mover a la posición posterior */		{ MOD, XK_period, ACTION##stack, {.i = INC(+1) } }, \
-/* Poner el foco/Mover a la primera ventana principal */	{ MOD, XK_minus,  ACTION##stack, {.i = 0 } },
+/* Poner el foco/Mover a la posición anterior */         { MOD, XK_comma,  ACTION##stack, {.i = INC(-1) } }, \
+/* Poner el foco/Mover a la posición posterior */        { MOD, XK_period, ACTION##stack, {.i = INC(+1) } }, \
+/* Poner el foco en la primera posición del stack */     { MOD, XK_l,  ACTION##stack, {.i = 1 } }, \
+/* Poner el foco en la segunda posición del stack */     { MOD, XK_ntilde, ACTION##stack, {.i = 2 } }, \
+/* Poner el foco/Mover a la primera ventana principal */ { MOD, XK_minus,  ACTION##stack, {.i = 0 } },
 
 // Invocador de comandos
 #define SHCMD(cmd) { .v = (const char*[]){ "/usr/bin/zsh", "-c", cmd, NULL } }
@@ -179,9 +182,9 @@ static const Layout layouts[] = {
 // Comandos
 static char dmenumon[2] = "0"; // Comando para ejecutar dmenu
 static const char *dmenucmd[] = { "dbus-launch", "dmenu_run",
-"-m",	dmenumon,	"-nb", background,
-"-nf",	foreground,	"-sb", background_sel,
-"-sf",	foreground,	"-c","-l", DLINES, NULL };
+"-m",  dmenumon,   "-nb", background,
+"-nf", foreground, "-sb", background_sel,
+"-sf", foreground, "-c","-l", DLINES, NULL };
 static const char *termcmd[]  = { TERM, NULL };      // Terminal
 static const char *layoutmenu_cmd = "layoutmenu.sh"; // Script para cambiar el layout
 static const char *scratchpadcmd[] = { "s", NULL };  // Tecla para los scratchpads

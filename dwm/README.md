@@ -21,6 +21,7 @@ Puedes consultar los atajos de teclado leyendo el código en [config.def.h](http
 - Layout deck: [dwm-deck-6.2.diff](http://dwm.suckless.org/patches/deck/dwm-deck-6.2.diff)
 		- [dwm-deck-tilegap-6.1.diff](http://dwm.suckless.org/patches/deck/dwm-deck-tilegap-6.1.diff)
 - Pantalla completa falsa: [dwm-selectivefakefullscreen-20201130-97099e7.diff](https://dwm.suckless.org/patches/selectivefakefullscreen/dwm-selectivefakefullscreen-20201130-97099e7.diff)
+- Combinar etiquetas desde el teclado: [dwm-combo-6.1.diff](https://dwm.suckless.org/patches/combo/dwm-combo-6.1.diff)
 - __Modificaciones a la barra de tareas:__
 	- Los espacios ocupados tienen iconos en vez de números: [dwm-alttagsdecoration-2020010304-cb3f58a.diff](http://dwm.suckless.org/patches/alttagsdecoration/dwm-alttagsdecoration-2020010304-cb3f58a.diff)
 	- El tamaño de la barra se puede configurar: [dwm-bar-height-spacing-6.3.diff](http://dwm.suckless.org/patches/bar_height/dwm-bar-height-spacing-6.3.diff)
