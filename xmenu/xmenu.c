@@ -17,43 +17,43 @@
 #include <X11/extensions/Xinerama.h>
 #include <Imlib2.h>
 
-// Macros
-#define MAXPATHS	128 // Número máximo de directorios en los que buscar los iconos
-#define ICONPATH	"ICONPATH" // Nombre de la variable de entorno
-#define CLASS		"XMenu"
-#define LEN(x)		(sizeof (x) / sizeof (x[0]))
-#define BETWEEN(x, a, b)((a) <= (x) && (x) <= (b))
+/* macros */
+#define MAXPATHS 128            /* maximal number of paths to look for icons */
+#define ICONPATH "ICONPATH"     /* environment variable name */
+#define CLASS               "XMenu"
+#define LEN(x)              (sizeof (x) / sizeof (x[0]))
+#define BETWEEN(x, a, b)    ((a) <= (x) && (x) <= (b))
 #define GETNUM(n, s) { \
 	unsigned long __TMP__; \
 	if ((__TMP__ = strtoul((s), NULL, 10)) < INT_MAX) \
 		(n) = __TMP__; \
 	}
 
-// Acciones del bucle principal
+/* Actions for the main loop */
 enum {
 	ACTION_NOP    = 0,
-	ACTION_CLEAR  = 1<<0, // Limpar texto
-	ACTION_SELECT = 1<<1, // Seleccionar item
-	ACTION_MAP    = 1<<2, // Remapear las ventanas de menu
-	ACTION_DRAW   = 1<<3, // Re-dibujar las ventanas del menu
-	ACTION_WARP   = 1<<4, // Deformar el puntero
+	ACTION_CLEAR  = 1<<0,     /* clear text */
+	ACTION_SELECT = 1<<1,     /* select item */
+	ACTION_MAP    = 1<<2,     /* remap menu windows */
+	ACTION_DRAW   = 1<<3,     /* redraw menu windows */
+	ACTION_WARP   = 1<<4,     /* warp the pointer */
 };
 
-// enum para navegación por menús de teclado
+/* enum for keyboard menu navigation */
 enum { ITEMPREV, ITEMNEXT, ITEMFIRST, ITEMLAST };
 
-// enum para la alineación del texto
+/* enum for text alignment */
 enum {LeftAlignment, CenterAlignment, RightAlignment};
 
-// enum para los colores
+/* color enum */
 enum {ColorFG, ColorBG, ColorLast};
 
-// EWMH atoms
+/* EWMH atoms */
 enum {NetWMName, NetWMWindowType, NetWMWindowTypePopupMenu, NetLast};
 
-// Estructura de la configuración
+/* configuration structure */
 struct Config {
-	// Estos valores están definidos en config.h
+	/* the values below are set by config.h */
 	const char *font;
 	const char *background_color;
 	const char *foreground_color;
@@ -73,15 +73,15 @@ struct Config {
 	int horzpadding;
 	int alignment;
 
-	// Estos valores son establecidos por opciones
+	/* the values below are set by options */
 	int monitor;
-	int posx, posy; // Posición del menú principal
+	int posx, posy;         /* rootmenu position */
 
-	// Valor computado por xmenu
+	/* the value below is computed by xmenu */
 	int iconsize;
 };
 
-// Dibujar la estructura del contexto
+/* draw context structure */
 struct DC {
 	XftColor normal[ColorLast];
 	XftColor selected[ColorLast];
@@ -95,44 +95,44 @@ struct DC {
 	size_t nfonts;
 };
 
-// Estructura de los elementos de menú
+/* menu item structure */
 struct Item {
-	char *label; // Cadena que se dibujará en el menú
-	char *output; // Cadena que se mostrará al hacer clic en un elemento
-	char *file; // Nombre de archivo del icono
-	int y; // Ítem y posición relativa al menú
-	int h; // Altura del ítem
-	int textw; // Anchura del ítem
-	struct Item *prev; // Ítem anterior
-	struct Item *next; // Siguiente ítem
-	struct Menu *submenu; // Submenu que se abre al hacer clic
-	Drawable sel, unsel; // Mapa de píxeles para los elementos seleccionados/(no seleccionados)
+	char *label;            /* string to be drawed on menu */
+	char *output;           /* string to be outputed when item is clicked */
+	char *file;             /* filename of the icon */
+	int y;                  /* item y position relative to menu */
+	int h;                  /* item height */
+	int textw;              /* text width */
+	struct Item *prev;      /* previous item */
+	struct Item *next;      /* next item */
+	struct Menu *submenu;   /* submenu spawned by clicking on item */
+	Drawable sel, unsel;    /* pixmap for selected and unselected item */
 	Imlib_Image icon;
 };
 
-// Estructura geométrica
+/* monitor geometry structure */
 struct Monitor {
-	int x, y, w, h; // Geometría del monitor
+	int x, y, w, h;         /* monitor geometry */
 };
 
-// Estructura de los menús
+/* menu structure */
 struct Menu {
-	struct Menu *parent; // Menú principal
-	struct Item *caller; // Ítem que crea el menú
-	struct Item *list; // Lista de los items contenidos por el menu
-	struct Item *first; // Primer ítem mostrado en el menú
-	struct Item *selected; // Ítem seleccionado en el menú
-	int x, y, w, h; // Geometría del menú
-	int hasicon; // ¿Tiene iconos el menú?
-	int drawn; // ¿Ha sido dibujado ya el menú?
-	int maxtextw; // Anchura máxima del texto
-	int level; // Nivel del menú relativo a la raíz
-	int overflow; // ¿Esta el menú está más alto que el monitor?
-	Window win; // Ventana de menú para mapear en la pantalla
-	XIC xic; // Contexto de entrada
+	struct Menu *parent;    /* parent menu */
+	struct Item *caller;    /* item that spawned the menu */
+	struct Item *list;      /* list of items contained by the menu */
+	struct Item *first;     /* first item displayed on the menu */
+	struct Item *selected;  /* item currently selected in the menu */
+	int x, y, w, h;         /* menu geometry */
+	int hasicon;            /* whether the menu has item with icons */
+	int drawn;              /* whether the menu was already drawn */
+	int maxtextw;           /* maximum text width */
+	int level;              /* menu level relative to root */
+	int overflow;           /* whether the menu is higher than the monitor */
+	Window win;             /* menu window to map on the screen */
+	XIC xic;                /* input context */
 };
 
-// X11
+/* X stuff */
 static Display *dpy;
 static Visual *visual;
 static Window rootwin;
@@ -148,19 +148,19 @@ static int screen;
 static int depth;
 static XIM xim;
 
-// Opciones
-static int iflag = 0; // ¿Desactivar iconos?
-static int rflag = 0; // ¿Desactivar clic-derecho?
-static int mflag = 0; // ¿Se ha especificado un monitor con -p?
-static int pflag = 0; // ¿Se ha especificado una posición con -p?
-static int wflag = 0; // ¿Dejar al administrador de ventanas controlar a Xmenu?
-static int rootmodeflag = 0; // ¿Ejecutar en modo root?
-static int passclickflag = 0; // ¿Pasar los clics a la ventana root?
-static int firsttime = 1; // Establecer como 0 despúes de la primer ejecución
+/* flags */
+static int iflag = 0;                   /* whether to disable icons */
+static int rflag = 0;                   /* whether to disable right-click */
+static int mflag = 0;                   /* whether the user specified a monitor with -p */
+static int pflag = 0;                   /* whether the user specified a position with -p */
+static int wflag = 0;                   /* whether to let the window manager control XMenu */
+static int rootmodeflag = 0;            /* wheter to run in root mode */
+static int passclickflag = 0;           /* whether to pass click to root window */
+static int firsttime = 1;               /* set to 0 after first run */
 
-// Argumentos
-static unsigned int button = 0; // Botón para hacer que pmenu vuelva al menú principal
-static unsigned int modifier = 0; // Modificador para activar pmenu
+/* arguments */
+static unsigned int button = 0;         /* button to trigger pmenu in root mode */
+static unsigned int modifier = 0;       /* modifier to trigger pmenu */
 
 /* icons paths */
 static char *iconstring = NULL;         /* string read from getenv */
@@ -174,7 +174,8 @@ static int niconpaths = 0;              /* number of paths to icon directories *
 static void
 usage(void)
 {
-	(void)fprintf(stderr, "usage: xmenu [-irw] [-p position] [title]\n");
+
+	(void)fprintf(stderr, "usage: xmenu [-irw] [-p position] [(-x|-X) [modifier-]button] [title]\n");
 	exit(1);
 }
 
@@ -478,7 +479,7 @@ getmonitor(struct Monitor *mon)
 		if (!mflag || config.monitor < 0 || config.monitor >= nmons) {
 			for (i = 0; i < nmons; i++) {
 				if (BETWEEN(cursx, info[i].x_org, info[i].x_org + info[i].width) &&
-				BETWEEN(cursy, info[i].y_org, info[i].y_org + info[i].height)) {
+				    BETWEEN(cursy, info[i].y_org, info[i].y_org + info[i].height)) {
 					selmon = i;
 					break;
 				}
@@ -593,14 +594,14 @@ allocmenu(struct Menu *parent, struct Item *list, int level)
 	swa.border_pixel = dc.border.pixel;
 	swa.save_under = True;  /* pop-up windows should save_under*/
 	swa.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask
-	| PointerMotionMask | LeaveWindowMask;
+	               | PointerMotionMask | LeaveWindowMask;
 	if (wflag)
 		swa.event_mask |= StructureNotifyMask;
 	menu->win = XCreateWindow(dpy, rootwin, 0, 0, 1, 1, config.border_pixels,
-		CopyFromParent, CopyFromParent, CopyFromParent,
-		CWOverrideRedirect | CWBackPixel |
-		CWBorderPixel | CWEventMask | CWSaveUnder,
-		&swa);
+	                          CopyFromParent, CopyFromParent, CopyFromParent,
+	                          CWOverrideRedirect | CWBackPixel |
+	                          CWBorderPixel | CWEventMask | CWSaveUnder,
+	                          &swa);
 
 	menu->xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 	                      XNClientWindow, menu->win, XNFocusWindow, menu->win, NULL);
@@ -942,12 +943,12 @@ setupmenupos(struct Menu *menu, struct Monitor *mon)
 	width = menu->w + config.border_pixels * 2;
 	height = menu->h + config.border_pixels * 2;
 	if (menu->parent == NULL) { /* if root menu, calculate in respect to cursor */
-		if (pflag || (config.posx >= mon->x && mon->x + mon->w - config.posx >= width))
+		if ((pflag || (config.posx >= mon->x)) && mon->x + mon->w - config.posx >= width)
 			menu->x = config.posx;
 		else if (config.posx > width)
 			menu->x = config.posx - width;
 
-		if (pflag || (config.posy >= mon->y && mon->y + mon->h - config.posy >= height))
+		if ((pflag || (config.posy >= mon->y)) && mon->y + mon->h - config.posy >= height)
 			menu->y = config.posy;
 		else if (mon->y + mon->h > height)
 			menu->y = mon->y + mon->h - height;
@@ -1661,6 +1662,7 @@ enteritem:
 					currmenu = item->submenu;
 				} else {
 					printf("%s\n", item->output);
+					fflush(stdout);
 					goto done;
 				}
 				select = currmenu->list;
@@ -1912,7 +1914,7 @@ main(int argc, char *argv[])
 			XNextEvent(dpy, &ev);
 		if (!rootmodeflag ||
 		    (ev.type == ButtonPress &&
-		     ((modifier != 0 && ev.xbutton.state == modifier) ||
+		     ((modifier != 0 && (ev.xbutton.state & modifier)) ||
 		      (ev.xbutton.subwindow == None)))) {
 			if (rootmodeflag && passclickflag) {
 				XAllowEvents(dpy, ReplayPointer, CurrentTime);

@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,10 +98,10 @@ xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
 
 	if (fontname) {
 		/* Using the pattern found at font->xfont->pattern does not yield the
-		 * same substitution results as using the pattern returned by
-		 * FcNameParse; using the latter results in the desired fallback
-		 * behaviour whereas the former just results in missing-character
-		 * rectangles being drawn, at least with some fonts. */
+		*  same substitution results as using the pattern returned by
+		*  FcNameParse; using the latter results in the desired fallback
+		*  behaviour whereas the former just results in missing-character
+		*  rectangles being drawn, at least with some fonts. */
 		if (!(xfont = XftFontOpenName(drw->dpy, drw->screen, fontname))) {
 			fprintf(stderr, "error, cannot load font from name: '%s'\n", fontname);
 			return NULL;
@@ -173,8 +174,8 @@ drw_clr_create(Drw *drw, Clr *dest, const char *clrname)
 		return;
 
 	if (!XftColorAllocName(drw->dpy, DefaultVisual(drw->dpy, drw->screen),
-	                       DefaultColormap(drw->dpy, drw->screen),
-	                       clrname, dest))
+		DefaultColormap(drw->dpy, drw->screen),
+		clrname, dest))
 		die("error, cannot allocate color '%s'", clrname);
 
 	dest->pixel |= 0xff << 24;
@@ -253,8 +254,8 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 		if (w < lpad)
 			return x + w;
 		d = XftDrawCreate(drw->dpy, drw->drawable,
-		                  DefaultVisual(drw->dpy, drw->screen),
-		                  DefaultColormap(drw->dpy, drw->screen));
+			DefaultVisual(drw->dpy, drw->screen),
+			DefaultColormap(drw->dpy, drw->screen));
 		x += lpad;
 		w -= lpad;
 	}
@@ -284,8 +285,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 					if (ew + tmpw > w) {
 						overflow = 1;
 						/* called from drw_fontset_getwidth_clamp():
-						 * it wants the width AFTER the overflow
-						 */
+						*  it wants the width AFTER the overflow */
 						if (!render)
 							x += tmpw;
 						else
@@ -311,7 +311,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			if (render) {
 				ty = y + (h - usedfont->h) / 2 + usedfont->xfont->ascent;
 				XftDrawStringUtf8(d, &drw->scheme[invert ? ColBg : ColFg],
-				                  usedfont->xfont, x, ty, (XftChar8 *)utf8str, utf8strlen);
+					usedfont->xfont, x, ty, (XftChar8 *)utf8str, utf8strlen);
 			}
 			x += ew;
 			w -= ew;
@@ -332,7 +332,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			usedfont = nextfont;
 		} else {
 			/* Regardless of whether or not a fallback font is found, the
-			 * character must be drawn. */
+			*  character must be drawn. */
 			charexists = 1;
 
 			hash = (unsigned int)utf8codepoint;

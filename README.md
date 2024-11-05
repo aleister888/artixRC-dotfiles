@@ -58,8 +58,7 @@ Si quieres utilizar un disco dedicado para /home, que esta encriptado, simplemen
     - Arreglar instalación fuera del LiveISO
     - Mostrar que comandos se van a ejecutar sobre que discos antes de confirmar nada
 - Añadir copias de seguridad incrementales a crypt-backup
-- Limpiar el código de xmenu
-- Arreglar las entradas MAN y código sobre las flags de uso
+- Arreglar las entradas MAN y código sobre las flags de uso (st, dmenu)
 - Crear un setup equivalente para [OpenBSD](https://github.com/aleister888/openBSD-dotfiles)
 
 ## Recursos/fuentes usadas y Créditos
