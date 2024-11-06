@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Script para mostrar el uso del disco
+
+total=$(df -h /home | awk '/[0-9]/ {print $2}')
+usado=$(df -h /home | awk '/[0-9]/ {print $3}')
+libre=$(df -h /home | awk '/[0-9]/ {print $4}')
+
+notify-send "$usado/$total ($libre)"

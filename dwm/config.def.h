@@ -190,6 +190,17 @@ static const char *layoutmenu_cmd = "layoutmenu.sh"; // Script para cambiar el l
 static const char *scratchpadcmd[] = { "s", NULL };  // Tecla para los scratchpads
 static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; // Comando para invocar un scratchpad
 
+static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
+
+static const StatusCmd statuscmds[] = {
+	{ "playerctl -p tauon play-pause; pkill -54 dwmblocks", 1 },
+	{ "disks", 3 },
+	{ "notify-send $(uname -r)", 4 },
+	{ "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -44 dwmblocks", 5 },
+	{ "ram", 6 },
+	{ "blue-toggle", 9 }
+};
+
 #include <X11/XF86keysym.h> // Incluir teclas especiales
 
 static const Key keys[] = {
@@ -314,7 +325,9 @@ static const Button buttons[] = {
 	// Click                Combinación     Botón           Función         Argumento
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {.v = &layouts[0]} },
 	{ ClkLtSymbol,          0,              Button3,        layoutmenu,     {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button1,        spawn,          {.v = statuscmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = statuscmd } },
+	{ ClkStatusText,        0,              Button3,        spawn,          {.v = statuscmd } },
 	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xmenu-apps") },
 	{ ClkRootWin,           0,              Button2,        spawn,          SHCMD("xdg-xmenu") },
 	{ ClkClientWin,         MODKEY|ControlMask,Button1,     movemouse,      {0} },
