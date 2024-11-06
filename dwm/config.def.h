@@ -181,7 +181,7 @@ static const Layout layouts[] = {
 
 // Comandos
 static char dmenumon[2] = "0"; // Comando para ejecutar dmenu
-static const char *dmenucmd[] = { "dbus-launch", "dmenu_run",
+static const char *dmenucmd[] = { "dmenu_run",
 "-m",  dmenumon,   "-nb", background,
 "-nf", foreground, "-sb", background_sel,
 "-sf", foreground, "-c","-l", DLINES, NULL };
