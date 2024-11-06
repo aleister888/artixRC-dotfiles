@@ -91,11 +91,6 @@ virtualmic(){
 # Script #
 ##########
 
-# Dbus
-if [ "$(pgrep -c dbus)" -lt 5 ]; then
-	export "$(dbus-launch)" && dbus-update-activation-environment --all &
-fi
-
 # Desactivar el atenuado de la pantalla
 xset -dpms && xset s off &
 
@@ -110,7 +105,6 @@ grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
 pgrep picom || picom &
 
 # Servicios del sistema
-dbus-update-activation-environment --all
 pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
 pgrep udiskie		|| udiskie -t -a & # Auto-montador de discos
@@ -194,12 +188,6 @@ done &
 # Borrar archivos
 rm -f "$HOME/.wget-hsts"
 rm -rf "$XDG_DATA_HOME/desktop-directories" "$XDG_DATA_HOME/applications/wine"* "$XDG_CONFIG_HOME/menus"
-
-# Borrar el lockfile de firefox
-while true; do
-	pgrep firefox && find "$HOME/.mozilla" -name "*.parentlock" -delete
-	sleep 1
-done &
 
 # Arreglar bug con Thinkpad T14s (Gen 1)
 if [ "$(< /sys/devices/virtual/dmi/id/board_name)" = "20UJS21R00" ]; then
