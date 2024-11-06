@@ -4,6 +4,6 @@
 
 total=$(free -h | awk '/^Mem:/ {print $2}')
 usado=$(free -h | awk '/^Mem:/ {print $3}')
-libre=$(free -h | awk '/^Mem:/ {print $4}')
+libre=$(free -h | awk '/^Mem:/ {print $7}')
 
 notify-send "$usado/$total ($libre)"
