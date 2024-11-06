@@ -8,7 +8,6 @@ Puedes consultar los atajos de teclado leyendo el código en [config.def.h](http
 - Al iniciar dwm se ejecuta un script que inicia el entorno de escritorio: [dwm-autostart-20210120-cb3f58a.diff](http://dwm.suckless.org/patches/autostart/dwm-autostart-20210120-cb3f58a.diff)
 - Las ventanas se mantienen en su espacio al reiniciar dwm: [dwm-preserveonrestart-6.3.diff](http://dwm.suckless.org/patches/preserveonrestart/dwm-preserveonrestart-6.3.diff)
 - Se pueden ajustar el porcentaje de espacio vertical que ocupan las ventanas: [dwm-cfacts-20200913-61bb8b2.diff](http://dwm.suckless.org/patches/cfacts/dwm-cfacts-20200913-61bb8b2.diff)
-- Las ventanas tienen una separación ajustable entre ellas: [dwm-fullgaps-6.4.diff](http://dwm.suckless.org/patches/fullgaps/dwm-fullgaps-6.4.diff)
 - Los ajustes de ventana son para cada espacio en vez de globales [dwm-pertag-20200914-61bb8b2.diff](http://dwm.suckless.org/patches/pertag/dwm-pertag-20200914-61bb8b2.diff)
 - Las ventanas se pueden re-dimensionar desde cualquiera de sus cuatro esquinas: [dwm-resizecorners-6.3.diff](https://github.com/bakkeby/patches/blob/master/dwm/dwm-resizecorners-6.3.diff)
 - La posición y tamaño de las ventanas flotantes se guardan en memoria: [dwm-savefloats-20181212-b69c870.diff](http://dwm.suckless.org/patches/save_floats/dwm-savefloats-20181212-b69c870.diff)
@@ -19,7 +18,6 @@ Puedes consultar los atajos de teclado leyendo el código en [config.def.h](http
 - Ventanas semi-visibles: [dwm-renamedscratchpads-6.3.diff](https://github.com/bakkeby/patches/blob/master/dwm/dwm-renamedscratchpads-6.3.diff)
 - Ventanas persistentes: [dwm-sticky-6.4.diff](http://dwm.suckless.org/patches/sticky/dwm-sticky-6.4.diff)
 - Layout deck: [dwm-deck-6.2.diff](http://dwm.suckless.org/patches/deck/dwm-deck-6.2.diff)
-		- [dwm-deck-tilegap-6.1.diff](http://dwm.suckless.org/patches/deck/dwm-deck-tilegap-6.1.diff)
 - Pantalla completa falsa: [dwm-selectivefakefullscreen-20201130-97099e7.diff](https://dwm.suckless.org/patches/selectivefakefullscreen/dwm-selectivefakefullscreen-20201130-97099e7.diff)
 - Combinar etiquetas desde el teclado: [dwm-combo-6.1.diff](https://dwm.suckless.org/patches/combo/dwm-combo-6.1.diff)
 - __Modificaciones a la barra de tareas:__

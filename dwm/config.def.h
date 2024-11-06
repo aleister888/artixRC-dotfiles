@@ -8,22 +8,14 @@
 
 // Tamaño de la fuente y los margenes
 static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font Mono:pixelsize=24:bold" };
-static const unsigned int gappx = 24;
 
 // Constantes
-static const unsigned int borderpx       = gappx/5;   // Borde en pixeles de las ventanas
-static const int vertpad                 = gappx;     // Separación vertical de la barra
-static const int sidepad                 = gappx;     // Separación horizontal de la barra
-static const int user_bh                 = gappx/4*3; // Altura barra: 0 por defecto, >= 1 Altura añadida
+static const unsigned int borderpx       = 6;   // Borde en pixeles de las ventanas
+static const int user_bh                 = 18; // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;         // Pixeles de cercanía para pegarse al borde (0 = desactivado)
-static const unsigned int systraypinning = 0;         // Monitor para la barra de tareas (0: Monitor seleccionado, >0 Monitor X)
-static const unsigned int systrayspacing = gappx/2;   // Espaciado de la barra de tareas
-static const int systraypinningfailfirst = 1;         // Monitor barra (Seguro) 1: Barra de tareas en el 1er monitor
-static const int showsystray             = 0;         // ¿Barra de tareas? (0: Desactivada)
 static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;         // 0 Para desactivar la barra
 static const int topbar                  = 1;         // 0 Para la barra en la parte inferior
-static const int allowkill               = 1;         // ¿Permitir cerrar clientes por defecto?
 static const float mfact                 = 0.45;      // Factor de escalado de la zona principal [0.05..0.95]
 static const int nmaster                 = 1;         // Número de clientes en la zona principal
 static const int resizehints             = 1;         // 1 ¿Respetar pistas de dibujado al re-dimensionar ventanas no-flotantes?
@@ -81,8 +73,8 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]	= { "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c"};
-static const char *alttags[]	= { "", "", "󰈹", "", "", "", "󰋅", "", "󰊗", "A", "B", "C"};
+static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c"};
+static const char *alttags[] = { "", "", "󰈹", "", "", "", "󰋅", "", "󰊗", "A", "B", "C"};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -153,11 +145,6 @@ static const Layout layouts[] = {
 	{ "[]=",	tile }, // Layout por defecto
 	{ "><>",	NULL }, // Ningún layout significa comportamiento flotante
 	{ "[M]",	monocle }, // Las ventanas ocupan toda la pantalla
-	{ "|M|",	centeredmaster }, // 3 Columnas (Zona principal centrada)
-	{ "|||",	col }, // Columnas (Zona principal a la izquierda)
-	{ "TTT",	bstack }, // Zona principal en la parte superior
-	{ "[@]",	spiral }, // Layouts fibonacci
-	{ "[\\]",	dwindle },
 	{ "[D]",	deck },
 };
 
@@ -215,7 +202,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
 	// Configurar pantallas
 	{ MODKEY,                       XK_F1,     spawn,            SHCMD("monitor-layout && nitrogen --restore") },
-	{ MODKEY|ShiftMask,             XK_F1,     spawn,            SHCMD("arandr") },
+	{ MODKEY|ShiftMask,             XK_F1,     spawn,            SHCMD("arandr && nitrogen --restore") },
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
 	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } },
@@ -226,7 +213,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F5,     spawn,            SHCMD("android-umount") },
 	// Menu de apagado
 	{ MODKEY,                       XK_F11,    spawn,            SHCMD("powermenu") },
-	// Cerrar dwm
+	// Reiniciar dwm
 	{ MODKEY|ShiftMask,             XK_F11,    spawn,            SHCMD("pkill dwm") },
 	// Ajustes de audio
 	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pavucontrol") },
@@ -297,13 +284,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_e,      setlayout,        {.v = &layouts[0]} }, // Por defecto
 	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
 	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} }, // Una ventana
-	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Ventana principal centrada
-	{ MODKEY,                       XK_y,      setlayout,        {.v = &layouts[4]} }, // Columnas
-	{ MODKEY|ShiftMask,             XK_y,      setlayout,        {.v = &layouts[5]} }, // Ventana principal arriba
-	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[8]} }, // Deck
-	// Cambiar espacio entre ventanas
-	{ MODKEY|ControlMask,           XK_period, setgaps,          {.i = -12 } },
-	{ MODKEY|ControlMask,           XK_comma,  setgaps,          {.i = +12 } },
+	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Deck
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
 	TAGKEYS(                        XK_2,                        1)
