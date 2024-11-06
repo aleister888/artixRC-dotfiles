@@ -7,4 +7,5 @@ if pgrep redshift; then
 else
 	redshift -l 40.42:-3.70 -t 5700:4600 -b 1:1 -m randr -v &
 	notify-send -i screensaver "Filtro activado"
+	pkill -64 dwmblocks
 fi

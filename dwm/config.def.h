@@ -328,6 +328,8 @@ static const Button buttons[] = {
 	{ ClkStatusText,        0,              Button1,        spawn,          {.v = statuscmd } },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = statuscmd } },
 	{ ClkStatusText,        0,              Button3,        spawn,          {.v = statuscmd } },
+	{ ClkStatusText,        0,              Button4,        spawn,          SHCMD("volinc 5; pkill -44 dwmblocks") },
+	{ ClkStatusText,        0,              Button5,        spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -44 dwmblocks") },
 	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xmenu-apps") },
 	{ ClkRootWin,           0,              Button2,        spawn,          SHCMD("xdg-xmenu") },
 	{ ClkClientWin,         MODKEY|ControlMask,Button1,     movemouse,      {0} },

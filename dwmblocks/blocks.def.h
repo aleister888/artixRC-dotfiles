@@ -16,7 +16,7 @@ static const Block blocks[] = {
 	// Icono para el volumen
 	{" \x05^c#B16286^"             ,"sb-vol-icon",                             1, 10},
 	// Nivel de volumen
-	{" ^c#D3869B^"             ,"echo $(pamixer --get-volume)%",           1, 10},
+	{" ^c#D3869B^"                 ,"echo $(pamixer --get-volume)%",           1, 10},
 	// Ram usada
 	{" \x06^c#98971a^ ^c#b8bb26^" ,"sb-mem",                                 10,  0},
 	// Fecha
@@ -24,5 +24,5 @@ static const Block blocks[] = {
 	// Hora
 	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M:%S '",                       1,  0},
 	// Filtro de luz azul
-	{"\x09^d^"                     ,"sb-nighttime",                            1,  0},
+	{"\x09^d^"                     ,"sb-nighttime",                            1, 30},
 };
