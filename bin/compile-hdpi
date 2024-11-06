@@ -13,12 +13,9 @@ for dir in dmenu dwm st; do
 		"$REPO"/config.def.h | tee "$REPO"/config.h >/dev/null
 
 	if [ $dir = "dwm" ]; then # Ajustes solo para dwm
-		# Cambiar el tamañó de los márgenes
-		sed -i 's/gappx = [0-9]*/gappx = 32/g' "$REPO"/config.h
-		# Activar la barra de tareas
-		sed -i 's/showsystray.*=.*;/showsystray = 1;/g' "$REPO"/config.h
+		sed -i 's/user_bh.*=.*;/user_bh = 24;/g' "$REPO"/config.h
 	fi
-	
+
 	# Compilar
 	doas make install --directory "$REPO" >/dev/null 2>&1 && \
 		echo "$dir compilado con éxito"
