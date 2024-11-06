@@ -9,4 +9,3 @@ case $1 in
 		pamixer --default-source --set-volume "$2"
 	;;
 esac
-

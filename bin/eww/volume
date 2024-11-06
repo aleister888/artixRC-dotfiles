@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# @requires: pactl
-
 percentage () {
 	local val=$(echo $1 | tr '%' ' ' | awk '{print $1}')
 	local icon1=$2
@@ -60,4 +58,3 @@ case $1 in
 	"muted") is_muted ;;
 	"set") set_vol "$2" ;;
 esac
-

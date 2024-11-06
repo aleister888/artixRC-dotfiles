@@ -13,4 +13,3 @@ uptime -s | xargs -I{} date -d {} +%s | awk '{
 		printf "  %d minuto(s)\n", up_minutes;
 	}
 }'
-
