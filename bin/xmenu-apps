@@ -78,7 +78,7 @@ IMG:$ICONPATH/apps/screensaver.svg					Redshift		~/.dotfiles/bin/blue-toggle
 IMG:$ICONPATH/apps/system-file-manager.svg				Archivos		$TERMINAL -e lf
 IMG:$ICONPATH/apps/$TERMINAL.svg					$(echo "$TERMINAL" | sed 's/^\(.\)/\U\1/')	$TERMINAL
 IMG:$ICONPATH/apps/virt-manager.svg					Virt-Manager		virt-manager
-IMG:$ICONPATH/apps/remmina.svg						Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes -m 110
+IMG:$ICONPATH/apps/remmina.svg						Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes -m KEY_RIGHTCTRL
 
 IMG:$ICONPATH/apps/system-shutdown.svg					Power			powermenu
 EOF
