@@ -1,3 +1,0 @@
-#!/bin/sh
-# Imprime la memoria usada
-free --mebi | awk 'NR==2 {printf "%.1fGiB\n", $3 / 1024}'

@@ -63,3 +63,9 @@ user_pref("signon.rememberSignons", false);
 
 // Usar el mismo buscador para las ventanas privadas
 user_pref("browser.search.separatePrivateDefault", false);
+
+// Implementar medidas anti-trazado
+user_pref("privacy.resistFingerprinting", true)
+
+// Desactivar LBing
+user_pref("browser.urlbar.suggest.searches", false);
