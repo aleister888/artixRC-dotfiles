@@ -90,23 +90,23 @@ cmd clean ${{
 }}
 
 cmd compress ${{
-	whiptail --title "$(echo $f |sed 's#/[^/]*$##')" \
-	--yesno "Comprimir todos los archivos:\n  Archivos de => $(echo $f |sed 's#/[^/]*$##')\n  En el archivo => /tmp/$(echo $PWD | sed 's/\//\_/g').*" 10 60 && \
+	whiptail --title "$(echo $PWD)" \
+	--yesno "Comprimir:\n  Archivos de => $PWD\n  En el archivo => /tmp/$(basename $(echo $PWD)).*" 10 60 && \
 	formato=$(whiptail --title "Formato" --menu "¿En que formato desea comprimirlos?" \
 	15 60 3 "tar" ".tar.gz" "zip" ".zip" "7z" ".7z" 3>&1 1>&2 2>&3)
 	case "$formato" in
 	tar)
-		tar -zcvf /tmp/$(date +'%H_%M_%S').tar.gz . >/dev/null && \
+		tar -zcvf "/tmp/$(basename $(echo $PWD)).tar.gz" . && \
 		whiptail --title "Operación Completada" \
-		--msgbox "Archivo comprimido en: /tmp/$(date +'%H_%M_%S').tar.gz" 10 60 ;;
+		--msgbox "Archivo comprimido en: /tmp/$(basename $(echo $PWD)).tar.gz" 10 60 ;;
 	zip)
-		zip -r /tmp/$(date +'%H_%M_%S').zip . >/dev/null && \
+		zip -r "/tmp/$(basename $(echo $PWD)).zip" . && \
 		whiptail --title "Operación Completada" \
-		--msgbox "Archivo comprimido en: /tmp/$(date +'%H_%M_%S').zip" 10 60 ;;
+		--msgbox "Archivo comprimido en: /tmp/$(basename $(echo $PWD)).zip" 10 60 ;;
 	7z)
-		7z a /tmp/$(date +'%H_%M_%S').7z . >/dev/null && \
+		7z a "/tmp/$(basename $(echo $PWD)).7z" . && \
 		whiptail --title "Operación Completada" \
-		--msgbox "Archivo comprimido en: /tmp/$(date +'%H_%M_%S').7z" 10 60 ;;
+		--msgbox "Archivo comprimido en: /tmp/$(basename $(echo $PWD)).7z" 10 60 ;;
 	esac
 }}
 
