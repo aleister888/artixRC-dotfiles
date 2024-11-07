@@ -11,26 +11,22 @@ if [ ! -d "$SCRENDIR" ]; then
 fi
 
 all_clip(){
-	dunstctl close-all; \
-	import -window root jpg:- | xclip -selection clipboard -t image/png; \
+	import -window root jpg:- | xclip -selection clipboard -t image/png
 	notify-send -i applets-screenshooter 'Captura copiada al Portapapeles'
 }
 
 selection_clip(){
-	dunstctl close-all; \
-	import png:- | xclip -selection clipboard -t image/png; \
+	import png:- | xclip -selection clipboard -t image/png
 	notify-send -i applets-screenshooter 'Captura copiada al Portapapeles'
 }
 
 all_save(){
-	dunstctl close-all; \
-	import -window root "$FILE"; \
+	import -window root "$FILE"
 	notify-send -i applets-screenshooter "$NAME"
 }
 
 selection_save(){
-	dunstctl close-all; \
-	import "$FILE"; \
+	import "$FILE"
 	notify-send -i applets-screenshooter "$NAME"
 }
 

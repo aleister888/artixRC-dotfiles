@@ -59,7 +59,7 @@ packages+=" qt6ct qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent handbrake handbrake-cli bleachbit"
 # Misc
-packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzugpp libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xdg-xmenu-git eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer-srg-git gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol devour tk extra/j4-dmenu-desktop bash-language-server"
+packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzugpp libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xdg-xmenu-git eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git trayer-srg-git gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pavucontrol devour tk extra/j4-dmenu-desktop bash-language-server acpi"
 # WM
 packages+=" thunderbird-dark-reader timeshift"
 

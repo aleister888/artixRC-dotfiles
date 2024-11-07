@@ -182,10 +182,11 @@ static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
 
 static const StatusCmd statuscmds[] = {
 	{ "playerctl -p tauon play-pause; pkill -39 dwmblocks", 1 },
-	{ "disks; pkill -49 dwmblocks", 3 },
+	{ "sb-bat-info", 2 },
+	{ "sb-disks-info; pkill -49 dwmblocks", 3 },
 	{ "notify-send $(uname -r)", 4 },
 	{ "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks", 5 },
-	{ "ram; pkill -64 dwmblocks", 6 },
+	{ "sb-ram-info; pkill -64 dwmblocks", 6 },
 	{ "blue-toggle", 9 }
 };
 

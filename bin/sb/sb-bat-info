@@ -1,0 +1,21 @@
+#!/bin/bash
+
+info-print(){
+	# Contar el número de baterías disponibles
+	num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l)
+
+	# Extraer e imprimir la información para cada batería
+	for ((i=1; i<=num_baterias; i++)); do
+		estado=""
+		if acpi -b | sed "${i}q;d" | grep Charging >/dev/null; then
+			estado=" "
+		fi
+		porcentaje="$(acpi -b | sed "${i}q;d" | grep -oP '\d+%')"
+		tiempo="$(acpi -b | sed "${i}q;d" | grep -oP ' [0-9]{2}:[0-9]{2}:[0-9]{2}')"
+		echo "${estado}${porcentaje}${tiempo}"
+	done
+}
+
+# Mostrar notificación con la información y actualizar dwmblocks
+notify-send -i xfce4-battery-plugin "$(info-print)"
+pkill -44 dwmblocks

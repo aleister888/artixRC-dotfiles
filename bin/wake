@@ -27,7 +27,6 @@ if [ "$1" = "now" ]; then
 elif [ "$(virsh list | wc -l)" -lt "4" ]; then
 	warning "El sistema se suspenderá en 10min (Desde $(date +%H:%M))"
 	sleep 10m
-	su "$REGULARUSER" -c "dunstctl close-all"
 	tosleep
 else
 	warning "Suspensión cancelada (Máquina virtual activa)"
