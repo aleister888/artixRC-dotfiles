@@ -147,7 +147,6 @@ if $USER !=# 'root'
 	set clipboard+=unnamedplus " Portapapeles
 endif
 set lazyredraw " No re-dibujar mientras se ejecutan macros
-set nowrap
 
 " Desactivar backups
 set nobackup
@@ -179,6 +178,7 @@ endif
 " Encapsular texto seleccionado
 vnoremap " s"<C-r>""
 vnoremap ' s'<C-r>"'
+vnoremap ` s`<C-r>"`
 vnoremap $ s$<C-r>"$
 vnoremap ( s(<C-r>")
 vnoremap { s{<C-r>"}
@@ -250,6 +250,7 @@ nnoremap <F5> :call TabExp()<CR>
 
 " Activar/Desactivar wrapping
 inoremap <F6> <C-O>:set wrap!<CR>
+nnoremap <F6> :set wrap!<CR>
 
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
@@ -263,6 +264,12 @@ au BufWritePost ~/.dotfiles/st/config.def.h
 au BufWritePost ~/.dotfiles/dmenu/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
 au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
+
+" Borrar automaticamente los espacios sobrantes
+	autocmd BufWritePre * let currPos = getpos(".")
+	autocmd BufWritePre * %s/\s\+$//e
+	autocmd BufWritePre * %s/\n\+\%$//e
+	autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
 
 if $USER !=# 'root'
 	so ~/.config/nvim/bufferline.lua

@@ -6,7 +6,7 @@
 RUSER="$(getent passwd 1000 | cut -d: -f1)"
 export DISPLAY=:0
 export XDG_RUNTIME_DIR=/run/user/1000
-su "$RUSER" -c pgrep i3lock-fancy && exit
+pgrep i3lock && exit
 su "$RUSER" -c pkill dvdbounce
 sleep 0.1
 su "$RUSER" -c "i3lock-fancy-rapid 4 4"

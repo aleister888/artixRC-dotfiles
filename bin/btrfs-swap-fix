@@ -7,7 +7,5 @@ fi
 
 doas rm -rf /swap
 doas btrfs subvolume create /swap
-doas btrfs filesystem mkswapfile \
-	--size "$(($(free -g | grep Mem: | awk '{print $2}')+4))g" \
-	--uuid clear /swap/swapfile
+doas btrfs filesystem mkswapfile --size 4g --uuid clear /swap/swapfile
 doas swapon /swap/swapfile
