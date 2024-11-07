@@ -1,11 +1,14 @@
 #!/bin/sh
 
 # Activar/Desactivar redshift (Filtro de la luz azul) con localización en Madrid/España
+
 if pgrep redshift; then
-	pkill redshift
+	kill -9 $(pgrep redshift)
+	redshift -x
+	pkill -35 dwmblocks
 	notify-send -i screensaver "Filtro desactivado"
 else
-	redshift -l 40.42:-3.70 -t 5700:4600 -b 1:1 -m randr -v &
-	notify-send -i screensaver "Filtro activado"
+	redshift -l 40.42:-3.70 -t 5700:4600 -b 1:0.8 -m randr -v &
 	pkill -35 dwmblocks
+	notify-send -i screensaver "Filtro activado"
 fi
