@@ -11,6 +11,8 @@ Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración p
 	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshots/screenshot2.jpg" width="49%" />
 </p>
 
+---
+
 #### Instalación
 
 - Utiliza `su` para ejecutar como root:
