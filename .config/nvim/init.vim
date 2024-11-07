@@ -132,7 +132,7 @@ endif
 " Ajustes generales
 syntax enable
 " Desactivar formateo especifico del tipo de archivo
-autocmd FileType * setlocal noautoindent smartindent nocindent
+autocmd FileType * setlocal noautoindent nosmartindent nocindent
 autocmd FileType * setlocal noexpandtab copyindent preserveindent
 autocmd FileType * setlocal tabstop=2 shiftwidth=2
 set title encoding=UTF-8
@@ -143,7 +143,9 @@ set ttimeoutlen=0 wildmode=longest,list,full
 set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
 set conceallevel=0
-set clipboard+=unnamedplus " Ajustes de pantalla
+if $USER !=# 'root'
+	set clipboard+=unnamedplus " Portapapeles
+endif
 set lazyredraw " No re-dibujar mientras se ejecutan macros
 set nowrap
 
@@ -247,7 +249,7 @@ inoremap <F5> <C-O>:call TabExp()<CR>
 nnoremap <F5> :call TabExp()<CR>
 
 " Activar/Desactivar wrapping
-nnoremap <F6> :set wrap!<CR>
+inoremap <F6> <C-O>:set wrap!<CR>
 
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
