@@ -41,7 +41,7 @@ static const char *colors[][3] = {
 	// Colores:             Fuente      Fondo           Borde
 	[SchemeNorm]        = { foreground, background,     col_blue   }, // Color de las ventanas normales
 	[SchemeSel]         = { foreground, background_sel, col_orange }, // Color de las ventanas seleccionadas
-	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue   }, // Scratchpad (Normal)
+	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue   }, // Scratchpad (Normal)dead_acute
 	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple }, // Scratchpad (Seleccionado)
 	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
 	[SchemeStickySel]   = { "#000000",  "#000000",      col_yellow }, // Scratchpad (Seleccionado)
@@ -161,6 +161,7 @@ static const Layout layouts[] = {
 /* Poner el foco/Mover a la posición posterior */        { MOD, XK_period, ACTION##stack, {.i = INC(+1) } }, \
 /* Poner el foco en la primera posición del stack */     { MOD, XK_l,  ACTION##stack, {.i = 1 } }, \
 /* Poner el foco en la segunda posición del stack */     { MOD, XK_ntilde, ACTION##stack, {.i = 2 } }, \
+/* Poner el foco en la tercera posición del stack */     { MOD, XK_dead_acute, ACTION##stack, {.i = 3 } }, \
 /* Poner el foco/Mover a la primera ventana principal */ { MOD, XK_minus,  ACTION##stack, {.i = 0 } },
 
 // Invocador de comandos
