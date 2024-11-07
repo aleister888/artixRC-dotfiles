@@ -1,11 +1,10 @@
-<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="100px" hspace="30px" vspace="0px">
+<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="90px" hspace="10px" vspace="0px">
 
 ### Artix Linux (OpenRC) - dotfiles
 
 ----
 
 Auto-instalador de Artix Linux (OpenRC) con dmw, st y dmenu.
-
 <p float="center">
 	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshots/screenshot1.jpg" width="49%" />
 	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshots/screenshot2.jpg" width="49%" />
