@@ -16,7 +16,9 @@ if $USER !=# 'root'
 	Plug 'ryanoasis/vim-devicons' " Iconos
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
-	Plug 'akinsho/bufferline.nvim' " Tabs
+	let g:indentLine_enabled = 1
+
+	Plug 'akinsho/bufferline.nvim' " Pestañas
 
 	Plug 'preservim/nerdtree' " Árbol de directorios
 	let NERDTreeShowHidden=1
@@ -130,18 +132,20 @@ endif
 " Ajustes generales
 syntax enable
 " Desactivar formateo especifico del tipo de archivo
-autocmd FileType * setlocal noautoindent nosmartindent nocindent
+autocmd FileType * setlocal noautoindent smartindent nocindent
 autocmd FileType * setlocal noexpandtab copyindent preserveindent
 autocmd FileType * setlocal tabstop=2 shiftwidth=2
 set title encoding=UTF-8
 set mouse=a scrolloff=10
 set list hidden autochdir
+set listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 set ttimeoutlen=0 wildmode=longest,list,full
 set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
 set conceallevel=0
 set clipboard+=unnamedplus " Ajustes de pantalla
 set lazyredraw " No re-dibujar mientras se ejecutan macros
+set nowrap
 
 " Desactivar backups
 set nobackup
@@ -241,6 +245,9 @@ function! TabExp()
 endfunction
 inoremap <F5> <C-O>:call TabExp()<CR>
 nnoremap <F5> :call TabExp()<CR>
+
+" Activar/Desactivar wrapping
+nnoremap <F6> :set wrap!<CR>
 
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
