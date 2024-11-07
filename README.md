@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="100px" hspace="30px" vspace="0px">
+<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="100px" hspace="30px" vspace="30px">
 
 ### Artix Linux (OpenRC) - dotfiles
 
@@ -20,7 +20,7 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 ```
 
 > [!WARNING]
-> El instalador esta pensado para usarse solo desde el LiveISO de Artix Linux OpenRC. No ejecutes este instalador desde tu propia instalación.
+> El instalador esta pensado para usarse solo desde el LiveISO de Artix Linux OpenRC. No ejecutes este programa desde tu propia instalación.
 
 ---
 
