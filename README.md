@@ -37,4 +37,4 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 		- Permitir usar un disco ya encriptado, proveyendo la llave de desbloqueo
 	- Arreglar la lógica de s1-s2 para permitir instalaciones fuera del LiveISO
 - Preguntar si hacer `/dev/zero` a la partición ya encriptada
-		- https://wiki.archlinux.org/title/Data-at-rest_encryption#Preparing_the_disk
+	- https://wiki.archlinux.org/title/Data-at-rest_encryption#Preparing_the_disk
