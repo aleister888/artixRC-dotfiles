@@ -10,7 +10,7 @@ static const Block blocks[] = {
 	// Estado de la batería (Si la hay)
 	{"\x02^d^"                     ,"sb-bat",                                  1, 10},
 	// Espacio libre
-	{" \x03^c#D79921^ ^c#FABD2F^" ,"df -h /home | awk '/[0-9]/ {print $4}'", 30, 15},
+	{" \x03^c#D79921^ ^c#FABD2F^" ,"df -h /home | awk '/[0-9]/ {print $4}'", 60, 15},
 	// Version del kernel
 	{" \x04^c#458588^ ^c#83A598^" ,"uname -r | cut -d '-' -f 1",              0,  0},
 	// Icono para el volumen
@@ -22,7 +22,7 @@ static const Block blocks[] = {
 	// Fecha
 	{" \x07^c#D65D0E^ ^c#FE8019^" ,"date +'%d/%m'",                          60,  0},
 	// Hora
-	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M:%S '",                       1,  0},
+	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          1,  0},
 	// Filtro de luz azul
-	{"\x09^d^"                     ,"sb-nighttime",                             1, 1},
+	{"\x09^d^"                     ,"sb-nighttime",                             0, 1},
 };

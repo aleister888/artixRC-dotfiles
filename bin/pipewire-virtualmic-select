@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Script para vincular microfonos a un microfono virtual para compartir audio
+# Script para vincular micrófonos a un micrófono virtual para compartir audio
 
-# Asociamos los sinks en caso de que no se asociaron correctamente
+# Vinculamos los sinks en caso de que no se vincularan correctamente
 pw-link my-combined-sink:monitor_FL my-virtualmic:input_FL 2>/dev/null
 pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR 2>/dev/null
 
@@ -10,67 +10,78 @@ pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR 2>/dev/null
 sink1=my-combined-sink:playback_FL
 sink2=my-combined-sink:playback_FR
 
-# Dispositivos a elegir (Añadir)
-devices=$(pw-link -o | grep -vE "my-combined-sink|my-virtualmic|PulseAudio|^--" | grep capture)
-# Dispositivos a elegir (Borrar)
-del_devices=$(pw-link -l | grep "my-combined-sink" -A 1 | grep -e '<-' | awk '{print $2}' | grep -v "my-combined-sink" | sort -u)
-
 # Icono para las notificaciones
 ICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
 
-# Vincular dispositivo con el micrófono virtual
-device_add(){
+# Excluir sinks que contengan esto en el nombre
+EXCLUDE_PATTERN="my-combined-sink|my-virtualmic|PulseAudio|Midi|v4l2"
 
-# Elegir dispositivo desde dmenu
-local selected_device
-selected_device=$(echo "$devices" | dmenu -p "Elige el dispositivo:" -l 14 )
+# Dispositivos a elegir (borrar)
+DEL_DEVICES=$(pw-link -l | grep "my-combined-sink" -A 1 | grep -oP '[ ]*<- \K.*' | grep -v 'my-combined-sink' | sort -u)
+# Dispositivos a elegir (añadir)
+DEVICES=$(pw-link -o | grep -vE "$EXCLUDE_PATTERN" | grep capture)
 
-# No se eligió ningún dispositivo
-if [ -z "$selected_device" ]; then
-	exit 1
-# Si el dispositivo elegido es estéreo, añade ambos canales
-elif echo "$devices" | grep "${selected_device%FL}FR"; then
-	pw-link "$selected_device" "$sink1"
-	pw-link "${selected_device%FL}FR" "$sink2"
-elif echo "$devices" | grep "${selected_device%FR}FL"; then
-	pw-link "${selected_device%FR}FL" "$sink1"
-	pw-link "$selected_device" "$sink2"
-# Si es mono, añade el mismo canal dos veces
-else
-	pw-link "$selected_device" "$sink1"
-	pw-link "$selected_device" "$sink2"
-fi
+# Borrar de los dispositivos a añadir los que ya están vinculados
+for ADDED in $DEL_DEVICES; do
+	DEVICES=$(echo "$DEVICES" | grep -v "$ADDED")
+done
 
-# Comprobar que los dispositivos se añadieron correctamente
-if pw-link -l | grep "my-combined-sink" -A 1 | grep "$selected_device"; then
-	notify-send -i "$ICON" "Dispositivo/s añadido/s correctamente"
-else
-	notify-send -i "$ICON" "Hubo un fallo al añadir el/los dispositivo/s"
-fi
-}
+# Función para vincular/desvincular dispositivo
+sink_edit(){
+	local sinks
+	local dmenu_selected
+	local selected
 
-# Desvincular dispositivo con el micrófono virtual
-device_remove(){
+	# Lista con nuestros dispositivos de entrada/salida
+	if [ "$1" = "add" ]; then
+		sinks=$DEVICES
+	else
+		sinks=$DEL_DEVICES
+	fi
 
-# Dispositivos a elegir
-[ -z "$del_devices" ] && notify-send -i $ICON "No hay dispositivos que borrar" && exit 255 # Si no hay dispositivos añadidos, salir del script
+	# Elegir el sink con dmenu mostrando solo la información esencial
+	dmenu_selected=$(echo "$sinks" | sed 's/:.*//g' | sort -u | \
+		dmenu -l 10)
+	if [ -z "$dmenu_selected" ]; then
+		# Salir del script si no se eligió ninguna opción
+		exit
+	else
+		# Elegir la primera coincidencia de nuestra elección con el array
+		selected=$(echo "$sinks" | grep "$dmenu_selected" | sed '1q;d')
+	fi
 
-# Elegir el dispositivo a eliminar con dmenu
-local selected_device
-selected_device=$(echo "$del_devices" | dmenu -p "Elige el dispositivo a eliminar:" -l 4 )
-[ -z "$selected_device" ] && exit 255
-
-# Comprobar si el dispositivo es estéreo para desvincular ambas entradas
-if echo "$del_devices" | grep "${selected_device%FL}FR"; then
-	pw-link -d "$selected_device" "$sink1"
-	pw-link -d "${selected_device%FL}FR" "$sink2"
-elif echo "$del_devices" | grep "${selected_device%FR}FL"; then
-	pw-link -d "${selected_device%FR}FL" "$sink1"
-	pw-link -d "$selected_device" "$sink2"
-else
-	pw-link -d "$selected_device" "$sink1"
-	pw-link -d "$selected_device" "$sink2"
-fi && notify-send -i $ICON "Dispositivo/s borrado/s"
+	if [ -z "$selected" ]; then
+		exit
+	elif [ "$1" = "add" ]; then # Vinuclar dispositivo
+		if echo "$sinks" | grep "${selected%FL}FR" >/dev/null; then
+			pw-link "$selected" "$sink1"
+			pw-link "${selected%FL}FR" "$sink2"
+		elif echo "$sinks" | grep "${selected%FR}FL" >/dev/null; then
+			pw-link "${selected%FR}FL" "$sink1"
+			pw-link "$selected" "$sink2"
+		# Si es mono, añade el mismo canal dos veces
+		else
+			pw-link "$selected" "$sink1"
+			pw-link "$selected" "$sink2"
+		fi
+		# Comprobar que los dispositivos se añadieron correctamente
+		if pw-link -l | grep "my-combined-sink" -A 1 | grep "$selected" >/dev/null; then
+			notify-send -i "$ICON" "Dispositivo/s añadido/s correctamente"
+		else
+			notify-send -i "$ICON" "Hubo un fallo al añadir el/los dispositivo/s"
+		fi
+	elif [ "$1" = "del" ]; then # Desvincular dispositivo
+		if echo "$sinks" | grep "${selected%FL}FR" >/dev/null; then
+			pw-link -d "$selected" "$sink1"
+			pw-link -d "${selected%FL}FR" "$sink2"
+		elif echo "$sinks" | grep "${selected%FR}FL" >/dev/null; then
+			pw-link -d "${selected%FR}FL" "$sink1"
+			pw-link -d "$selected" "$sink2"
+		else
+			pw-link -d "$selected" "$sink1"
+			pw-link -d "$selected" "$sink2"
+		fi && notify-send -i $ICON "Dispositivo/s borrado/s"
+	fi
 }
 
 add="Añadir entrada al micrófono virtual"
@@ -78,9 +89,13 @@ del="Quitar entrada del micrófono virtual"
 
 # Elegir si borrar conexión ya existente o vincular nuevo micrófono
 chosen=$(echo -e "$add\n$del" | dmenu -l 10)
-[ -z "$chosen" ] && exit 255
-if [ "$chosen" = "$add" ]; then
-	device_add
+
+if [ -z "$chosen" ]; then
+	exit
+elif [ "$chosen" = "$add" ]; then
+	[ -z "$DEVICES" ] && notify-send -i $ICON "No hay dispositivos que añadir" && exit
+	sink_edit add
 else
-	device_remove
+	[ -z "$DEL_DEVICES" ] && notify-send -i $ICON "No hay dispositivos que borrar" && exit
+	sink_edit del
 fi

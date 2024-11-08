@@ -2,10 +2,11 @@
 
 info-print(){
 num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l)
+out=$(acpi -b | grep -v "Unknown")
 
 # Extraer e imprimir la información para cada batería
 	for ((i=1; i<=num_baterias; i++)); do
-		battery_level="$(acpi -b | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
+		battery_level="$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
 
 		if [ "$i" == 1 ]; then
 			icon_seq='^f10^^d^^c#689D6A^'
@@ -13,7 +14,7 @@ num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc 
 			icon_seq='^c#689D6A^'
 		fi
 
-		if acpi -b | sed "${i}q;d" | grep Charging >/dev/null; then
+		if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
 			baticon=" "
 		else
 			if [ "$i" == 1 ]; then
