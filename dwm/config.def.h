@@ -187,6 +187,7 @@ static const StatusCmd statuscmds[] = {
 	{ "notify-send $(uname -r)", 4 },
 	{ "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks", 5 },
 	{ "sb-ram-info; pkill -64 dwmblocks", 6 },
+	{ "sb-cal-info", 7 },
 	{ "blue-toggle", 9 }
 };
 

@@ -4,9 +4,8 @@
 [ $(pgrep -c brightchange) -ge 2 ] && exit
 
 # Script para cambiar el brillo directamente usando $brightdev/brightness
-# (Solo funciona en portátiles con procesadores intel)
 
-if grep "GenuineIntel" /proc/cpuinfo; then
+if grep "GenuineIntel" /proc/cpuinfo >/dev/null; then
 	brightdev=/sys/class/backlight/intel_backlight
 else
 	brightdev=/sys/class/backlight/amdgpu_bl1
@@ -31,7 +30,7 @@ calculate_brightness() {
 		new_brightness=$((actual + increment)) # Aumentar el brillo gradualmente
 		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $((max-gradient)) ]; do
 			actual=$((actual + gradient))
-			echo $actual | doas /usr/bin/tee $brightdev/brightness
+			echo $actual | doas /usr/bin/tee $brightdev/brightness >/dev/null
 		done
 	elif [ "$mode" == "dec" ]; then
 		# Salirse del script si el brillo ya está al mínimo
@@ -39,7 +38,7 @@ calculate_brightness() {
 		new_brightness=$((actual - increment)) # Bajar el brillo gradualmente (Mínimo 25%)
 		while [ "$actual" -gt "$new_brightness" ] && [ "$actual" -ge "$increment" ]; do
 			actual=$((actual - gradient))
-			echo $actual | doas /usr/bin/tee $brightdev/brightness
+			echo $actual | doas /usr/bin/tee $brightdev/brightness >/dev/null
 		done
 	fi
 }
