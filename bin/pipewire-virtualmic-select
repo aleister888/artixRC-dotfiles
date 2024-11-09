@@ -84,18 +84,15 @@ sink_edit(){
 	fi
 }
 
+# Elegir si borrar conexión ya existente o vincular nuevo micrófono
 add="Añadir entrada al micrófono virtual"
 del="Quitar entrada del micrófono virtual"
-
-# Elegir si borrar conexión ya existente o vincular nuevo micrófono
 chosen=$(echo -e "$add\n$del" | dmenu -l 10)
 
-if [ -z "$chosen" ]; then
-	exit
-elif [ "$chosen" = "$add" ]; then
+if [ "$chosen" = "$add" ]; then
 	[ -z "$DEVICES" ] && notify-send -i $ICON "No hay dispositivos que añadir" && exit
 	sink_edit add
-else
+elif [ "$chosen" = "$del" ]; then
 	[ -z "$DEL_DEVICES" ] && notify-send -i $ICON "No hay dispositivos que borrar" && exit
 	sink_edit del
 fi

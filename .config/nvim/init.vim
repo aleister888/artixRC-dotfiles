@@ -192,12 +192,13 @@ inoremap <silent><F4> <C-O>:setlocal spell! spelllang=en_us<CR>
 nnoremap <silent><F3> :setlocal spell! spelllang=es_es<CR>
 nnoremap <silent><F4> :setlocal spell! spelllang=en_us<CR>
 
-" Compilar documentos (laTeX)
+" TeX
 au Filetype tex nmap <leader>f <plug>(vimtex-toc-toggle)<CR>
 au Filetype tex nmap <leader>g :!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
 au Filetype tex nmap <leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
 au Filetype tex nmap <leader>j :!xelatex %<CR>
 
+" Markdown
 " https://github.com/preservim/vim-markdown/issues/356#issuecomment-617365622
 function s:TocToggle()
 	if index(["markdown", "qf"], &filetype) == -1
@@ -212,6 +213,9 @@ endfunction
 command TocToggle call s:TocToggle()
 au FileType markdown nmap <leader>f :TocToggle<CR>
 au Filetype markdown nmap <leader>h :MarkdownPreview<CR>
+
+" Shell
+au FileType sh nmap <leader>f :CocList outline<CR>
 
 " Activar/Desactivar sugerencias de entrada
 let g:coc=1
