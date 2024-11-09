@@ -17,7 +17,7 @@ ICON="/usr/share/icons/Papirus-Dark/128x128/devices/audio-input-microphone.svg"
 EXCLUDE_PATTERN="my-combined-sink|my-virtualmic|PulseAudio|Midi|v4l2"
 
 # Dispositivos a elegir (borrar)
-DEL_DEVICES=$(pw-link -l | grep "my-combined-sink" -A 1 | grep -oP '[ ]*<- \K.*' | grep -v 'my-combined-sink' | sort -u)
+DEL_DEVICES=$(pw-link -l | pcre2grep -M ':capture_((FL)|(FR)|(MONO))\n[ ]' | grep -v '^ ' | sort -u)
 # Dispositivos a elegir (añadir)
 DEVICES=$(pw-link -o | grep -vE "$EXCLUDE_PATTERN" | grep capture)
 
@@ -65,7 +65,7 @@ sink_edit(){
 			pw-link "$selected" "$sink2"
 		fi
 		# Comprobar que los dispositivos se añadieron correctamente
-		if pw-link -l | grep "my-combined-sink" -A 1 | grep "$selected" >/dev/null; then
+		if pw-link -l | grep "my-combined-sink" -A 1 | grep "$dmenu_selected" >/dev/null; then
 			notify-send -i "$ICON" "Dispositivo/s añadido/s correctamente"
 		else
 			notify-send -i "$ICON" "Hubo un fallo al añadir el/los dispositivo/s"
