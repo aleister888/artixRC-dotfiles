@@ -84,16 +84,10 @@ static const Rule rules[] = {
 	// Ventanas flotantes
 	{ "Yad",                  NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	{ "Gcolor3",              NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "pavucontrol",          NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Alarm-clock-applet",   NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Galculator",           NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "easyeffects",          NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	// Espacio 1: Música
 	{ "tauonmb",              NULL,	NULL,	1<<0,	0,	0,	0,	0,	-1,	0},
 	// Espacio 2: Correo
 	{ "thunderbird",          NULL,	NULL,	1<<1,	0,	0,	0,	0,	-1,	0},
-	{ "electron-mail",        NULL,	NULL,	1<<1,	0,	0,	0,	0,	-1,	0},
-	// Espacio 3: Internet
 	// Espacio 4: Oficina
 	{ "xfreerdp",             NULL,	NULL,	1<<3,	0,	0,	0,	0,	-1,	0},
 	{ "Soffice",              NULL,	NULL,	1<<3,	0,	0,	0,	0,	-1,	0},
@@ -108,8 +102,6 @@ static const Rule rules[] = {
 	{ "TuxGuitar",            NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
 	{ "Gmetronome",           NULL,	NULL,	1<<6,	1,	0,	0,	0,	-1,	0},
 	{ "REAPER",               NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
-	{ "Guitarix",             NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
-	{ "transmission-gtk",     NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
 	{ "qBittorrent",          NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
 	{ "Lrcget",               NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
 	{ "Easytag",              NULL,	NULL,	1<<6,	0,	0,	0,	0,	-1,	0},
@@ -220,7 +212,7 @@ static const Key keys[] = {
 	// Reiniciar dwm
 	{ MODKEY|ShiftMask,             XK_F11,    spawn,            SHCMD("pkill dwm") },
 	// Ajustes de audio
-	{ MODKEY,                       XK_F12,    spawn,            SHCMD("pavucontrol") },
+	{ MODKEY,                       XK_F12,    spawn,            {.v = (const char*[]){ TERM, TERMT, "scratchpad", "pulsemixer", NULL } } },
 	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 	// Cambiar música
 	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },

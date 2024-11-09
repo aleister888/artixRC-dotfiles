@@ -20,7 +20,7 @@ IMG:$ICONPATH/apps/multimedia.svg					Sonido/Video
 	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		tauon
 	IMG:$ICONPATH/apps/LyricsFinder.svg				LrcGet		lrcget
 	IMG:$ICONPATH/apps/mpv.svg					mpv		mpv --player-operation-mode=pseudo-gui
-	IMG:$ICONPATH/apps/pavucontrol.svg				Pavucontrol	pavucontrol
+	IMG:$ICONPATH/apps/pavucontrol.svg				Pulsemixer	$TERMINAL $TERMTITLE scratchpad pulsemixer
 	IMG:$ICONPATH/apps/fr.handbrake.ghb.svg				HandBrake	ghb
 	IMG:$ICONPATH/apps/easytag.svg					EasyTAG		easytag
 	IMG:$ICONPATH/apps/picard.svg					Picard		picard --stand-alone-instance
