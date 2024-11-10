@@ -22,6 +22,8 @@ require("bufferline").setup{
 				text = "Índice" },
 			{ filetype = "qf",
 				text = "Índice" },
+			{ filetype = "undotree",
+				text = "Árbol de Cambios" },
 		},
 		-- Excluir el TOC de Markdown
 		custom_filter = function(bufnr)

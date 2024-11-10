@@ -3,32 +3,45 @@
 # Script para vincular (dispositivos de entrada)|(aplicaciones) a un micrófono virtual para compartir audio
 
 # TODO
-# - Adaptar el script para vincular también aplicaciones que usan Jack2
-#   - La salida acaba en :out(1|2) en vez de en (capture)|(output)_((FL)|(FR)|(MONO))
 # - En el caso de aplicaciones como Firefox que pueden tener mas de una sink con el
 #   mismo nombre, añadir todos los sinks de dicha aplicación al micrófono virtual
 
 # Sink del micrófono virtual
-sink1=my-combined-sink:playback_FL
-sink2=my-combined-sink:playback_FR
+sinkL=my-combined-sink:playback_FL
+sinkR=my-combined-sink:playback_FR
 # Icono para las notificaciones
 ICON="bridge-constructor"
 # Excluiremos los sinks cuyo nombre contenga alguno de estos patrones
 EXCLUDE_PATTERN="my-combined-sink\|my-virtualmic\|PulseAudio\|Midi\|v4l2\|WEBRTC\|Chromium"
 # Dispositivos/aplicaciones a elegir (borrar)
-DEL_DEVICES=$(pw-link -l | pcre2grep -M ':(capture)|(output)_((FL)|(FR)|(MONO))(\n^ .*)*(\n^ .*my-combined)' | grep -v "$EXCLUDE_PATTERN" | grep -v '^ ' | sort -u)
+DEL_DEVICES=$(pw-link -l | pcre2grep -M ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])(\n^ .*)*(\n^ .*my-combined)' | grep -v "$EXCLUDE_PATTERN" | grep -v '^ ' | sort -u)
 # Dispositivos/aplicaciones a elegir (añadir)
-DEVICES=$(pw-link -o | grep -P ':(capture)|(output)_((FL)|(FR)|(MONO))' | grep -v "$EXCLUDE_PATTERN" | sort -u)
+DEVICES=$(pw-link -o | grep -P ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])' | grep -v "$EXCLUDE_PATTERN" | sort -u)
 # Borrar de las entradas a añadir las que ya están vinculadas
 for ADDED in $DEL_DEVICES; do
 	DEVICES=$(echo "$DEVICES" | grep -v "$ADDED")
 done
 
+sink_match(){
+	local pwflag
+	local cselected
+	[ "$1" = "del" ] && pwflag="-d"
+
+	case "$selected" in
+		*FL) cselected="${selected%FL}FR" ;;
+		*FR) cselected="$selected" selected="${selected%FR}FL" ;;
+		*1)  cselected="${selected%1}2"   ;;
+		*2)  cselected="$selected" selected="${selected%2}1" ;;
+		*)   cselected="$selected"
+	esac
+
+	pw-link $pwflag "$selected" "$sinkL"
+	pw-link $pwflag "$cselected" "$sinkR"
+}
+
 # Función para vincular/desvincular dispositivos/aplicaciones
 sink_edit(){
-	local sinks
 	local dmenu_selected
-	local selected
 
 	# Lista con nuestros dispositivos/aplicaciones
 	if [ "$1" = "add" ]; then
@@ -51,16 +64,7 @@ sink_edit(){
 	if [ -z "$selected" ]; then
 		exit
 	elif [ "$1" = "add" ]; then # Vincular dispositivos/aplicaciones
-		if echo "$sinks" | grep "${selected%FL}FR" >/dev/null; then
-			pw-link "$selected" "$sink1"
-			pw-link "${selected%FL}FR" "$sink2"
-		elif echo "$sinks" | grep "${selected%FR}FL" >/dev/null; then
-			pw-link "${selected%FR}FL" "$sink1"
-			pw-link "$selected" "$sink2"
-		else
-			pw-link "$selected" "$sink1"
-			pw-link "$selected" "$sink2"
-		fi
+		sink_match "$1"
 		# Comprobar que los dispositivos/aplicaciones se añadieron correctamente
 		if pw-link -l | grep "my-combined-sink" -A 1 | grep "$dmenu_selected" >/dev/null; then
 			notify-send -i "$ICON" "Sink vinculado correctamente"
@@ -68,16 +72,7 @@ sink_edit(){
 			notify-send -i "$ICON" "Hubo un fallo al añadir el sink"
 		fi
 	elif [ "$1" = "del" ]; then # Desvincular dispositivos/aplicaciones
-		if echo "$sinks" | grep "${selected%FL}FR" >/dev/null; then
-			pw-link -d "$selected" "$sink1"
-			pw-link -d "${selected%FL}FR" "$sink2"
-		elif echo "$sinks" | grep "${selected%FR}FL" >/dev/null; then
-			pw-link -d "${selected%FR}FL" "$sink1"
-			pw-link -d "$selected" "$sink2"
-		else
-			pw-link -d "$selected" "$sink1"
-			pw-link -d "$selected" "$sink2"
-		fi && notify-send -i $ICON "Sink borrado"
+		sink_match "$1" && notify-send -i $ICON "Sink borrado"
 	fi
 }
 
