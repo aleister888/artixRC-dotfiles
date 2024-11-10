@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Script para crear un micrófono virtual que cogera el
 # sonido de nuestro micrófono real y de las aplicaciones
 # cuyo audio queremos compartir.
@@ -15,7 +16,7 @@ pactl load-module module-null-sink media.class=Audio/Source/Virtual sink_name=my
 # Asociamos nuestro sink virtual a nuestro micrófono virtual
 pw-link my-combined-sink:monitor_FL my-virtualmic:input_FL
 pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR
-# Más tarde asociaremos el audio de las aplicaciones a nuestro
-# sink virtual con "pw-links" y nuestro micrófono con "pipewire-virtualmic-select"
+# Más tarde asociaremos el audio de las aplicaciones/dispositivos a nuestro
+# sink virtual con "pipewire-virtualmic-select"
 
 fi

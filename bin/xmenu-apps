@@ -38,16 +38,6 @@ IMG:$ICONPATH/apps/radiotray.svg					Radio
 	RNE								$TERMINAL $RADIOFLAG "https://rtvelivestream.akamaized.net/rtvesec/rne/rne_r1_main.m3u8"
 	Cadena SER							$TERMINAL $RADIOFLAG "http://21223.live.streamtheworld.com:80/CADENASER.mp3"
 
-IMG:$ICONPATH/apps/bridge-constructor.svg				Compar. audio
-	IMG:$ICONPATH/apps/tauonmb.svg					Tauon		pw-links tauon
-	IMG:$ICONPATH/apps/firefox.svg					Firefox		pw-links firefox
-	IMG:$ICONPATH/apps/mpv.svg					mpv		pw-links mpv
-	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		pw-links reaper
-	IMG:$ICONPATH/apps/tuxguitar.svg				Tuxguitar	pw-links tuxguitar
-	IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg	QEMU		pw-links qemu
-	IMG:$ICONPATH/apps/telegram.svg					Telegram	pw-links telegram
-	IMG:$ICONPATH/apps/spotify.svg					Spotify		pw-links spotify
-
 IMG:$ICONPATH/apps/preferences-desktop-color.svg			Producción
 	IMG:$ICONPATH/apps/tuxguitar.svg				TuxGuitar	tuxguitar-bin
 	IMG:$ICONPATH/apps/cockos-reaper.svg				REAPER		reaper
