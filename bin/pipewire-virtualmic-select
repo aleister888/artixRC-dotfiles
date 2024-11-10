@@ -8,21 +8,17 @@
 # - En el caso de aplicaciones como Firefox que pueden tener mas de una sink con el
 #   mismo nombre, añadir todos los sinks de dicha aplicación al micrófono virtual
 
-# Vinculamos los sinks en caso de que no se vincularan correctamente
-pw-link my-combined-sink:monitor_FL my-virtualmic:input_FL 2>/dev/null
-pw-link my-combined-sink:monitor_FR my-virtualmic:input_FR 2>/dev/null
-
 # Sink del micrófono virtual
 sink1=my-combined-sink:playback_FL
 sink2=my-combined-sink:playback_FR
 # Icono para las notificaciones
 ICON="bridge-constructor"
 # Excluiremos los sinks cuyo nombre contenga alguno de estos patrones
-EXCLUDE_PATTERN="my-combined-sink|my-virtualmic|PulseAudio|Midi|v4l2"
+EXCLUDE_PATTERN="my-combined-sink\|my-virtualmic\|PulseAudio\|Midi\|v4l2\|WEBRTC\|Chromium"
 # Dispositivos/aplicaciones a elegir (borrar)
-DEL_DEVICES=$(pw-link -l | pcre2grep -M ':(capture)|(output)_((FL)|(FR)|(MONO))(\n^ .*)*(\n^ .*my-combined)' | grep -v '^ ')
+DEL_DEVICES=$(pw-link -l | pcre2grep -M ':(capture)|(output)_((FL)|(FR)|(MONO))(\n^ .*)*(\n^ .*my-combined)' | grep -v "$EXCLUDE_PATTERN" | grep -v '^ ' | sort -u)
 # Dispositivos/aplicaciones a elegir (añadir)
-DEVICES=$(pw-link -o | grep -P ':(capture)|(output)_((FL)|(FR)|(MONO))' | grep -vE "$EXCLUDE_PATTERN")
+DEVICES=$(pw-link -o | grep -P ':(capture)|(output)_((FL)|(FR)|(MONO))' | grep -v "$EXCLUDE_PATTERN" | sort -u)
 # Borrar de las entradas a añadir las que ya están vinculadas
 for ADDED in $DEL_DEVICES; do
 	DEVICES=$(echo "$DEVICES" | grep -v "$ADDED")

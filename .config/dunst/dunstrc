@@ -10,6 +10,7 @@ always_run_script = true
 format = "%s"
 word_wrap = yes
 markup = full
+notification_limit = 1
 browser = /usr/bin/firefox
 dmenu = /usr/local/bin/dmenu
 icon_path = /usr/share/icons/Papirus-Dark/128x128/apps/
