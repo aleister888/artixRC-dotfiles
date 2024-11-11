@@ -11,13 +11,13 @@
   padding: 6px;
   .time-container {
     .content {
-      font-family: Iosevka Nerd Font;
+      font-family: Iosevka Fixed SS05;
       font-weight: bolder;
       font-size: 56px;
     }
   }
   .date-container {
-    font-family: Iosevka Nerd Font;
+    font-family: Iosevka Fixed SS05;
     font-weight: normal;
     font-size: 16px;
     margin-bottom: 6px;
@@ -30,7 +30,7 @@
   border-radius: 12px;
   padding: 6px;
   .lastcol {
-    font-family: Iosevka Nerd Font;
+    font-family: Iosevka Fixed SS05;
     margin-left: 6px;
     margin-bottom: 3px;
     .username {
@@ -38,7 +38,7 @@
       font-weight: bolder;
     }
     .uptime, .hostname {
-      font-family: Iosevka Nerd Font;
+      font-family: Iosevka Fixed SS05;
       font-weight: bolder;
     }
     .hostname {
@@ -58,7 +58,7 @@
   border-radius: 12px;
   padding: 6px;
   .header {
-    font-family: Iosevka Nerd Font;
+    font-family: Iosevka Fixed SS05;
     color: $lightblack;
     font-size: 4px;
   }
@@ -66,7 +66,7 @@
     padding: 6px 0px;
     .disk-slider {
       .disk-label {
-        font-family: Iosevka Nerd Font;
+        font-family: Iosevka Fixed SS05;
         font-size: 16px;
         margin-bottom: -6px;
         margin-right: 9px;
@@ -92,7 +92,7 @@
     }
     .vol-slider {
       .vol-label {
-        font-family: Iosevka Nerd Font;
+        font-family: Iosevka Fixed SS05;
         font-size: 18px;
         margin-right: 7px;
         margin-left: -1px;
@@ -117,7 +117,7 @@
       margin-bottom: -5px;
     }
     .mic-label {
-      font-family: Iosevka Nerd Font;
+      font-family: Iosevka Fixed SS05;
       font-size: 16px;
       margin-right: 8px;
       margin-bottom: 4px;
@@ -163,7 +163,7 @@
   .lastcol {
     .title {
       all: unset;
-      font-family: Iosevka Nerd Font;
+      font-family: Iosevka Fixed SS05;
       font-size: 18px;
       font-weight: bolder;
       margin-top: 24px;
@@ -171,7 +171,7 @@
     }
     .artist {
       all: unset;
-      font-family: Iosevka Nerd Font;
+      font-family: Iosevka Fixed SS05;
       font-size: 12px;
       color: $lightblack;
     }
@@ -204,7 +204,7 @@
   background-color: $bgSecondary;
 
   .cal {
-    font-family: Iosevka Nerd Font;
+    font-family: Iosevka Fixed SS05;
     font-size: 18px;
     padding: 0.1rem 0.025rem;
   }

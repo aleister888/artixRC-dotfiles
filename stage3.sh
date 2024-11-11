@@ -41,7 +41,7 @@ packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib nt
 # X11
 packages+=" libx11 libxft libxinerama xorg-xkill xorg-twm xorg xorg-xinit xdotool xclip"
 # Fuentes
-packages+=" ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans ttf-roboto noto-fonts-emoji gnu-free-fonts noto-fonts-cjk"
+packages+=" ttc-iosevka-ss05 ttf-dejavu ttf-liberation ttf-linux-libertine ttf-opensans ttf-roboto noto-fonts-emoji gnu-free-fonts noto-fonts-cjk"
 # Archivos comprimidos
 packages+=" xarchiver atool tar unrar gzip unzip zip p7zip lha lrzip lzip lzop unarj"
 # Servicios

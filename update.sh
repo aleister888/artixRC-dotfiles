@@ -88,7 +88,7 @@ style=Fusion
 
 [Fonts]
 fixed=\"Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,Bold\"
-general=\"Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,SemiBold\"
+general=\"Iosevka Fixed SS05 Semibold,12,0,0,0,0,0,0,0,0,Regular\"
 
 [Interface]
 activate_item_on_single_click=1
@@ -278,7 +278,7 @@ desktopent=(
 # Ruta done para clonar los repositorios
 # Clonamos cada repositorio
 for entry in "${desktopent[@]}"; do
-	sudo cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" && \
+	sudo cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" 2>/dev/null && \
 	echo 'NoDisplay=true' | sudo tee -a "/usr/local/share/applications/$entry.desktop" >/dev/null
 done
 
