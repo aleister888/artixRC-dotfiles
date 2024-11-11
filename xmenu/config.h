@@ -2,7 +2,7 @@
 
 static struct Config config = {
 	// Fuente
-	.font = "Iosevka Nerd Font:bold:pixelsize=22",
+	.font = "Iosevka Fixed SS05:bold:pixelsize=22",
 
 	// Esquema de colores
 	.background_color = "#222222",    // Color del fondo (Normal)

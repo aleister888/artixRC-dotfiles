@@ -37,11 +37,11 @@ sed -i 's/theme-name = ".*"/theme-name = "aleister-gruvbox"/g' "$CONF"
 
 # Cambiar las fuentes usadas
 sed -i 's/use-custom-fonts = false/use-custom-fonts = true/g' "$CONF"
-sed -i 's/font-main-standard = ".*"/font-main-standard = "Iosevka Nerd Font"/g' "$CONF"
-sed -i 's/font-main-medium = ".*"/font-main-medium = "Iosevka Nerd Font Medium"/g' "$CONF"
-sed -i 's/font-main-bold = ".*"/font-main-bold = "Iosevka Nerd Font Bold"/g' "$CONF"
-sed -i 's/font-main-condensed = ".*"/font-main-condensed = "Iosevka Nerd Font"/g' "$CONF"
-sed -i 's/font-main-condensed-bold = ".*"/font-main-condensed-bold = "Iosevka Nerd Font Bold"/g' "$CONF"
+sed -i 's/font-main-standard = ".*"/font-main-standard = "Iosevka SS05"/g' "$CONF"
+sed -i 's/font-main-medium = ".*"/font-main-medium = "Iosevka SS05 Medium"/g' "$CONF"
+sed -i 's/font-main-bold = ".*"/font-main-bold = "Iosevka SS05 Bold"/g' "$CONF"
+sed -i 's/font-main-condensed = ".*"/font-main-condensed = "Iosevka SS05"/g' "$CONF"
+sed -i 's/font-main-condensed-bold = ".*"/font-main-condensed-bold = "Iosevka SS05 Bold"/g' "$CONF"
 
 # Vamos a activar al búsqueda de artista y la búsqueda de letras.
 

@@ -217,30 +217,6 @@ xresources_make(){
 	echo "Xft.dpi:$rounded_dpi" | tee -a "$XRES_FILE"
 }
 
-
-# Descargar e instalar nuestras fuentes
-fontdownload() {
-	# Definir las URLs de descarga y los nombres de archivo
-	AGAVE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Agave.zip"
-	SYMBOLS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip"
-	IOSEVKA_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Iosevka.zip"
-	# Archivos temporales
-	AGAVE_ZIP="/tmp/Agave.zip"
-	SYMBOLS_ZIP="/tmp/Symbols.zip"
-	IOSEVKA_ZIP="/tmp/Iosevka.zip"
-	# Definir directorios de destino
-	AGAVE_DIR="/usr/share/fonts/Agave"
-	SYMBOLS_DIR="/usr/share/fonts/NerdFontsSymbolsOnly"
-	IOSEVKA_DIR="/usr/share/fonts/Iosevka"
-	# Descargar y extraer fuentes
-	sudo wget -q "$AGAVE_URL" -O "$AGAVE_ZIP"
-	sudo wget -q "$SYMBOLS_URL" -O "$SYMBOLS_ZIP"
-	sudo wget -q "$IOSEVKA_URL" -O "$IOSEVKA_ZIP"
-	sudo aunpack -fq $AGAVE_ZIP -X $AGAVE_DIR
-	sudo aunpack -fq $SYMBOLS_ZIP -X $SYMBOLS_DIR
-	sudo aunpack -fq $IOSEVKA_ZIP -X $IOSEVKA_DIR
-}
-
 # Configurar neovim e instalar los plugins
 vim_configure(){
 	# Descargar diccionarios
@@ -399,10 +375,6 @@ suckless_install # Instalamos dwm y otras utilidades
 # Crear directorio para montar dispositivos android
 sudo mkdir /mnt/ANDROID
 sudo chown "$USER" /mnt/ANDROID
-
-
-# Instalar fuentes necesarias
-fontdownload
 
 
 # Calcular el DPI de nuestra pantalla y configurar Xresources

@@ -1,0 +1,9 @@
+- Recompliar:
+	- dwm
+	- dmenu
+	- st
+	- xmenu
+- $ update.sh
+- $ sudo cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
+- # pacman -S ttc-iosevka-ss05
+- # rm -rf /usr/share/fontsAgave /usr/share/fonts/Iosevka

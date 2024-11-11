@@ -84,12 +84,11 @@ echo "[Appearance]
 color_scheme_path=$HOME/.dotfiles/assets/qt-colors/Gruvbox.conf
 custom_palette=true
 icon_theme=Papirus-Dark
-standard_dialogs=gtk3
 style=Fusion
 
 [Fonts]
-fixed=\"Iosevka Nerd Font,12,0,0,0,0,0,0,0,0,Bold\"
-general=\"Iosevka Nerd FontMono,12,0,0,0,0,0,0,0,0,SemiBold\"
+fixed=\"Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,Bold\"
+general=\"Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,SemiBold\"
 
 [Interface]
 activate_item_on_single_click=1

@@ -11,10 +11,10 @@ xlogin*greeting:CLIENTHOST
 xlogin*namePrompt:Username:\040
 xlogin*passwdPrompt:Password:\040
 xlogin*fail:Incorrect password
-xlogin*greetFace:Iosevka\040Nerd\040Font\040Mono-36:style=Bold
-xlogin*promptFace:Iosevka\040Nerd\040Font\040Mono-24:style=Regular
-xlogin*face:Iosevka\040Nerd\040Font\040Mono-24:style=Regular
-xlogin*failFace:Iosevka\040Nerd\040Font\040Mono-24:style=Regular
+xlogin*greetFace:Iosevka\040Fixed\040SS05-36:style=Bold
+xlogin*promptFace:Iosevka\040Fixed\040SS05-24:style=Regular
+xlogin*face:Iosevka\040Fixed\040SS05-24:style=Regular
+xlogin*failFace:Iosevka\040Fixed\040SS05-24:style=Regular
 xlogin*shdColor:#282828
 xlogin*hiColor:#282828
 xlogin*inpColor:#282828
