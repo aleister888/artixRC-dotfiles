@@ -1,12 +1,8 @@
 [Desktop Entry]
-Type=Application
+Name=st
+Comment=st is a simple terminal implementation for X
 Exec=st
-TryExec=st
 Icon=utilities-terminal
 Terminal=false
+Type=Application
 Categories=System;TerminalEmulator;
-
-Name=st
-GenericName=Terminal
-Comment=st is a simple terminal implementation for X
-StartupWMClass=st-256color

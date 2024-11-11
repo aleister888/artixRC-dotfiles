@@ -4,24 +4,24 @@
 
 include config.mk
 
-SRC = st.c x.c
-OBJ = ${SRC:.c=.o}
+SRC = st.c x.c $(LIGATURES_C) $(SIXEL_C)
+OBJ = $(SRC:.c=.o)
 
 all: st
 
-.c.o:
-	${CC} ${STCFLAGS} -c $<
-
 config.h:
-	cp config.def.h $@
+	cp config.def.h config.h
+
+.c.o:
+	$(CC) $(STCFLAGS) -c $<
 
 st.o: config.h st.h win.h
-x.o: arg.h config.h st.h win.h
+x.o: arg.h config.h st.h win.h $(LIGATURES_H)
 
-${OBJ}: config.h config.mk
+$(OBJ): config.h config.mk
 
-st: ${OBJ}
-	${CC} -o $@ ${OBJ} ${STLDFLAGS}
+st: $(OBJ)
+	$(CC) -o $@ $(OBJ) $(STLDFLAGS)
 
 clean:
 	rm -f *.o st config.h
@@ -29,19 +29,16 @@ clean:
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
 	install -Dm 755 st ${DESTDIR}${PREFIX}/bin
-	install -Dm 755 st-urlhandler ${DESTDIR}${PREFIX}/bin
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < st.1 > ${DESTDIR}${MANPREFIX}/man1/st.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/st.1
 	tic -sx st.info
 	@echo Please see the README file regarding the terminfo entry of st.
-	mkdir -p ${DESTDIR}${APPPREFIX}
-	cp -f st.desktop ${DESTDIR}${APPPREFIX}
+	test -f ${DESTDIR}${PREFIX}/share/applications/st.desktop || cp -n st.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/st \
-		${DESTDIR}${PREFIX}/bin/st-urlhandler \
-		${DESTDIR}${APPPREFIX}/st.desktop \
-		${DESTDIR}${MANPREFIX}/man1/st.1
+		${DESTDIR}${MANPREFIX}/man1/st.1 \
+		$(DESTDIR)$(PREFIX)/share/applications/st.desktop
 
-.PHONY: all clean install uninstall
+.PHONY: all clean dist install uninstall

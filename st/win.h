@@ -1,4 +1,4 @@
-// Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
+/* See LICENSE for license details. */
 
 enum win_mode {
 	MODE_VISIBLE     = 1 << 0,
@@ -19,17 +19,18 @@ enum win_mode {
 	MODE_MOUSEMANY   = 1 << 15,
 	MODE_BRCKTPASTE  = 1 << 16,
 	MODE_NUMLOCK     = 1 << 17,
-	MODE_MOUSE       = MODE_MOUSEBTN|MODE_MOUSEMOTION|MODE_MOUSEX10|MODE_MOUSEMANY,
+	MODE_MOUSE       = MODE_MOUSEBTN|MODE_MOUSEMOTION|MODE_MOUSEX10\
+	                  |MODE_MOUSEMANY,
+	MODE_PLACEHOLDER = 1 << 18,
 };
 
 void xbell(void);
 void xclipcopy(void);
-void xdrawcursor(int, int, Glyph, int, int, Glyph);
+void xdrawcursor(int, int, Glyph, int, int, Glyph, Line, int);
 void xdrawline(Line, int, int, int);
 void xfinishdraw(void);
 void xloadcols(void);
 int xsetcolorname(int, const char *);
-int xgetcolor(int, unsigned char *, unsigned char *, unsigned char *);
 void xseticontitle(char *);
 void xfreetitlestack(void);
 void xsettitle(char *, int);
@@ -40,3 +41,4 @@ void xsetpointermotion(int);
 void xsetsel(char *);
 int xstartdraw(void);
 void xximspot(int, int);
+void xclearwin(void);
