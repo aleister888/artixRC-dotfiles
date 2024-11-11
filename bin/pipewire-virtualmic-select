@@ -14,7 +14,7 @@ ICON="bridge-constructor"
 # Excluiremos los sinks cuyo nombre contenga alguno de estos patrones
 EXCLUDE_PATTERN="my-combined-sink\|my-virtualmic\|PulseAudio\|Midi\|v4l2\|WEBRTC\|Chromium"
 # Dispositivos/aplicaciones a elegir (borrar)
-DEL_DEVICES=$(pw-link -l | pcre2grep -M ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])(\n^ .*)*(\n^ .*my-combined)' | grep -v "$EXCLUDE_PATTERN" | grep -v '^ ' | sort -u)
+DEL_DEVICES=$(pw-link -l my-combined-sink | pcre2grep -M 'my-combined-sink:playback_((FL)|(FR))\n((^\s.*\n)*)' | sed 's/ \+|<- //g' | grep -v "$EXCLUDE_PATTERN")
 # Dispositivos/aplicaciones a elegir (añadir)
 DEVICES=$(pw-link -o | grep -P ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])' | grep -v "$EXCLUDE_PATTERN" | sort -u)
 # Borrar de las entradas a añadir las que ya están vinculadas
@@ -34,6 +34,8 @@ sink_match(){
 		*2)  cselected="$selected" selected="${selected%2}1" ;;
 		*)   cselected="$selected"
 	esac
+
+	echo $selected $cselected
 
 	pw-link $pwflag "$selected" "$sinkL"
 	pw-link $pwflag "$cselected" "$sinkR"
