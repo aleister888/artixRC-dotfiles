@@ -141,17 +141,19 @@ while true; do
 		resultado=$((resultado + $?))
 	done
 
+	activewindow="$(xdotool getwindowclassname "$(xdotool getactivewindow)")"
+
 	# Si alguna de estas aplicaciones esta enfocada y reproduciendo vídeo/audio, no mostrar el salvapantallas
 	players=("vlc" "firefox" "mpv")
 	for player in "${players[@]}"; do
 		[ "$(playerctl --player "$player" status)" == "Playing" ] && \
-		[ "$(xdotool getwindowclassname "$(xdotool getactivewindow)")" = "$player" ] && \
+		[ "$activewindow" = "$player" ] && \
 		resultado=1
 	done
 
 	# Si alguna de estas aplicaciones esta enfocada, no mostrar el salvapantallas
 	apps="looking-glass"
-	xdotool getwindowclassname "$(xdotool getactivewindow)" | grep "$apps" && \
+		echo "$activewindow" | grep "$apps" && \
 	resultado=1
 
 	# Reinciar xautolock en función de los resultados

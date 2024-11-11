@@ -88,8 +88,7 @@ if $USER !=# 'root'
 
 	Plug 'vim-airline/vim-airline' " Barra de estado
 	Plug 'vim-airline/vim-airline-themes'
-	let g:airline_theme = 'minimalist'
-	let g:airline_powerline_fonts = 1
+	let g:airline_theme = 'monochrome'
 	let g:airline_symbols = {}
 	let g:airline_symbols.branch = '   '
 	let g:airline_symbols.readonly = '󰌾 '
@@ -117,31 +116,43 @@ if $USER !=# 'root'
 	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
 endif
 
-
-" Ajustes generales
+" Activar resaltado de sintáxis
 syntax enable
-" Desactivar formateo especifico del tipo de archivo
+
+" Desactivar el convenio de indentación especifico del tipo de archivo
 autocmd FileType * setlocal noautoindent nosmartindent nocindent
 autocmd FileType * setlocal noexpandtab copyindent preserveindent
 autocmd FileType * setlocal tabstop=2 shiftwidth=2
+
 set title encoding=UTF-8
 set mouse=a scrolloff=10
 set list hidden autochdir
 set listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 set ttimeoutlen=0 wildmode=longest,list,full
+set pumheight=10 " coc.vim solo podrá mostar 10 sugerencias
+
 set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
-set conceallevel=0
+
+" Desactivar el Portapapeles si ejecutamos nvim como root
 if $USER !=# 'root'
 	set clipboard+=unnamedplus " Portapapeles
 endif
+
 set lazyredraw " No re-dibujar mientras se ejecutan macros
+
+" Expander código en modo insert y contraerlo en modo normal
+set conceallevel=2 concealcursor=n
+augroup vimrc
+	autocmd!
+	autocmd InsertEnter * set conceallevel=0
+	autocmd InsertLeave * set conceallevel=2
+augroup END
 
 " Desactivar backups
 set nobackup
 set nowb
 set noswapfile
-set pumheight=10
 
 " Tema de colores
 set background=dark termguicolors
@@ -163,6 +174,9 @@ endif
 
 " Atajos de teclado:
 
+
+" Cambiar el conceallevel
+nnoremap <leader>c :set conceallevel=!conceallevel<CR>
 
 " Encapsular texto seleccionado
 vnoremap " s"<C-r>""
