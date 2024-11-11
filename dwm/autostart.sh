@@ -48,10 +48,10 @@ ewwspawn(){
 	resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
 
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
-	if [[ $resolution -le 1080 ]]; then
-		[[ "$current_link" != "$file_1080" ]] && ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
-	else
+	if [[ $resolution -ge 2160 ]]; then
 		[[ "$current_link" != "$file_2160" ]] && ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
+	else
+		[[ "$current_link" != "$file_1080" ]] && ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	fi
 
 	# Cerrar el widget si hay mas de un monitor en uso o alguna ventana activa
