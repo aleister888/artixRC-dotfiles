@@ -129,7 +129,6 @@ set mouse=a scrolloff=10
 set list hidden autochdir
 set listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 set ttimeoutlen=0 wildmode=longest,list,full
-set nowrap
 set pumheight=10 " coc.vim solo podrá mostar 10 sugerencias
 
 set number relativenumber cursorline " Opciones del cursor
@@ -146,8 +145,8 @@ set lazyredraw " No re-dibujar mientras se ejecutan macros
 set conceallevel=2
 augroup vimrc
 	autocmd!
-	autocmd InsertEnter * set conceallevel=0
-	autocmd InsertLeave * set conceallevel=2
+	autocmd InsertEnter * set conceallevel=0 wrap
+	autocmd InsertLeave * set conceallevel=2 nowrap
 augroup END
 
 " Desactivar backups
@@ -252,10 +251,6 @@ function! TabExp()
 endfunction
 inoremap <F5> <C-O>:call TabExp()<CR>
 nnoremap <F5> :call TabExp()<CR>
-
-" Activar/Desactivar wrapping
-inoremap <F6> <C-O>:set wrap!<CR>
-nnoremap <F6> :set wrap!<CR>
 
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
