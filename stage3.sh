@@ -280,7 +280,6 @@ scripts_link(){
 		"compressed-backup"
 		"crypt-backup"
 		"pipewire-start"
-		"tray-toggle"
 		"lock"
 		"xmenu-apps"
 		"rdp-connect"
