@@ -7,11 +7,11 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Tamaño de la fuente y los margenes
-static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24","Iosevka Nerd Font Mono:pixelsize=24:bold" };
+static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24:antialias=true:autohint=true","Iosevka Nerd Font Mono:pixelsize=24:bold" };
 
 // Constantes
-static const unsigned int borderpx       = 6;   // Borde en pixeles de las ventanas
-static const int user_bh                 = 18; // Altura barra: 0 por defecto, >= 1 Altura añadida
+static const unsigned int borderpx       = 6;         // Borde en pixeles de las ventanas
+static const int user_bh                 = 18;        // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;         // Pixeles de cercanía para pegarse al borde (0 = desactivado)
 static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;         // 0 Para desactivar la barra

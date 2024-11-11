@@ -51,7 +51,7 @@ packages+=" poppler zathura zathura-pdf-mupdf tesseract-data-spa zathura-cb"
 # Firefox y thunderbird
 packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates-mozilla"
 # Multimedia
-packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mediainfo feh vlc gimp sxiv nsxiv tauon-music-box"
+packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mpv-mpris mediainfo feh vlc gimp sxiv nsxiv tauon-music-box"
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt"
 # Apariencia

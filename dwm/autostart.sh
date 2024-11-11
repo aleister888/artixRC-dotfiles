@@ -1,5 +1,4 @@
 #!/bin/bash
-# shellcheck source=/dev/null
 
 # Auto-instalador para Artix OpenRC
 # (Script Iniciador del entorno de escritorio)
@@ -137,17 +136,30 @@ xautolock -time 5 -locker screensaver &
 
 while true; do
 	resultado=0 # Reinicamos la variable antes de hacer las comprobaciones
-	# Si alguna de estas aplicaciones esta activa, no mostrar el salvapantallas
-	processes=("i3lock" "mpv" "vlc" "looking-glass" "display-lock")
+
+	# Si alguno de estos procesos esta activo, no mostrar el salvapantallas
+	processes=("i3lock" "display-lock")
 	for process in "${processes[@]}"; do
 		! pgrep "$process" > /dev/null
 		resultado=$((resultado + $?))
 	done
-	# Si firefox esta reproduciendo contenido, no mostrar el salvapantallas
-	[ "$(playerctl --player firefox status)" == "Playing" ] && \
+
+	# Si alguna de estas aplicaciones esta enfocada y reproduciendo vídeo/audio, no mostrar el salvapantallas
+	players=("vlc" "firefox" "mpv")
+	for player in "${players[@]}"; do
+		[ "$(playerctl --player "$player" status)" == "Playing" ] && \
+		[ "$(xdotool getwindowclassname "$(xdotool getactivewindow)")" = "$player" ] && \
+		resultado=1
+	done
+
+	# Si alguna de estas aplicaciones esta enfocada, no mostrar el salvapantallas
+	apps="looking-glass"
+	xdotool getwindowclassname "$(xdotool getactivewindow)" | grep "$apps" && \
 	resultado=1
-	# Reinciar el contador de xautolock en función de los resultados
+
+	# Reinciar xautolock en función de los resultados
 	[ "$resultado" -ne 0 ] && xautolock -enable && pkill dvdbounce
+
 	sleep 0.5 # Esperar 0.5s antes de hacer la siguiente comprobación
 done &
 
