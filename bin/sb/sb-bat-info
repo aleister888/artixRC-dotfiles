@@ -18,5 +18,5 @@ info-print(){
 }
 
 # Mostrar notificación con la información y actualizar dwmblocks
-notify-send -i xfce4-battery-plugin "$(info-print)"
+notify-send "$(info-print)"
 pkill -44 dwmblocks

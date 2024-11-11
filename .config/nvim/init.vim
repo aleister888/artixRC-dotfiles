@@ -88,12 +88,8 @@ if $USER !=# 'root'
 
 	Plug 'vim-airline/vim-airline' " Barra de estado
 	Plug 'vim-airline/vim-airline-themes'
-	let g:airline_theme = 'monochrome'
-	let g:airline_powerline_fonts = 0
-	let g:airline_left_sep = ''
-	let g:airline_left_alt_sep = ''
-	let g:airline_right_sep = ''
-	let g:airline_right_alt_sep = ''
+	let g:airline_theme = 'minimalist'
+	let g:airline_powerline_fonts = 1
 	let g:airline_symbols = {}
 	let g:airline_symbols.branch = '   '
 	let g:airline_symbols.readonly = '󰌾 '
@@ -101,13 +97,6 @@ if $USER !=# 'root'
 	let g:airline_symbols.maxlinenr = '   '
 	let g:airline_symbols.dirty = '  '
 	let g:airline_symbols.colnr = ' C:'
-	let g:airline#extensions#whitespace#symbol = '( )'
-	let g:airline#extensions#whitespace#space_symbol = '( )'
-	let g:airline#extensions#whitespace#tab_symbol = '(\t)'
-	let g:airline#extensions#whitespace#trail_symbol = '().'
-	let g:airline#extensions#whitespace#leading_space = 1
-	let g:airline#extensions#whitespace#leading_tab = 1
-	let g:airline#extensions#wordcount#format = '%d w'
 
 	call plug#end()
 endif

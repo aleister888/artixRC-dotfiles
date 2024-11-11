@@ -120,14 +120,14 @@ float alpha = 0.9;
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-	[0]  = "#161616",
+	[0]  = "#282828",
 	[1]  = "#cc241d",
 	[2]  = "#98971a",
 	[3]  = "#d79921",
 	[4]  = "#458588",
 	[5]  = "#b16286",
 	[6]  = "#689d6a",
-	[7]  = "#a89984",
+	[7]  = "#504945",
 
 	/* 8 bright colors */
 	[8]  = "#928374",
@@ -142,7 +142,7 @@ static const char *colorname[] = {
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#a89984", /* 256 -> cursor */
+	"#A89984", /* 256 -> cursor */
 	"#83a598", /* 257 -> rev cursor*/
 	"#161616", /* 258 -> bg */
 	"#ebdbb2", /* 259 -> fg */
@@ -517,4 +517,3 @@ static char ascii_printable[] =
 	" !\"#$%&'()*+,-./0123456789:;<=>?"
 	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
 	"`abcdefghijklmnopqrstuvwxyz{|}~";
-

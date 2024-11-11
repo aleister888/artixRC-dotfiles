@@ -56,21 +56,25 @@ bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
 ASSETDIR="$HOME/.dotfiles/assets/configs"
 
 # Copiar la configuración de GTK
-rm -rf $HOME/.config/gtk-[2-4].0
-cp -r $ASSETDIR/gtk-2.0 $HOME/.config/gtk-2.0
-cp -r $ASSETDIR/gtk-3.0 $HOME/.config/gtk-3.0
-cp -r $ASSETDIR/gtk-4.0 $HOME/.config/gtk-4.0
+rm -rf ~/.config/gtk-[2-4].0
+cp -r "$ASSETDIR/gtk-2.0" ~/.config/gtk-2.0
+cp -r "$ASSETDIR/gtk-3.0" ~/.config/gtk-3.0
+cp -r "$ASSETDIR/gtk-4.0" ~/.config/gtk-4.0
+
+sudo mkdir -p /root/.config
+sudo rm -rf /root/.gtkrc-2.0 /root/.config/gtk-3.0 /root/.config/gtk-4.0
+sudo cp -f  "$ASSETDIR/.gtkrc-2.0" /root/.gtkrc-2.0
+sudo cp -rf "$ASSETDIR/gtk-3.0"    /root/.config/gtk-3.0/
+sudo cp -rf "$ASSETDIR/gtk-4.0"    /root/.config/gtk-4.0/
+
+# Instalamos el tema de GTK4
 if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
 	# Clona el tema de gtk4
 	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
 	# Copia el tema deseado a la carpeta de temas
 	sudo bash /tmp/Gruvbox_Theme/themes/install.sh
 fi
-# Tema GTK para el usuario root (Para aplicaciones como Bleachbit)
-sudo mkdir -p /root/.config
-sudo cp $ASSETDIR/.gtkrc-2.0 /root/.gtkrc-2.0
-sudo cp -r $ASSETDIR/gtk-3.0 /root/.config/gtk-3.0/
-sudo cp -r $ASSETDIR/gtk-4.0 /root/.config/gtk-4.0/
+
 # Definimos nuestros directorios marca-páginas
 echo "file:///home/$USER
 file:///home/$USER/Descargas
@@ -78,6 +82,7 @@ file:///home/$USER/Documentos
 file:///home/$USER/Imágenes
 file:///home/$USER/Vídeos
 file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
+
 # Configuramos QT
 mkdir -p "$HOME/.config/qt5ct" "$HOME/.config/qt6ct"
 echo "[Appearance]
@@ -88,22 +93,7 @@ style=Fusion
 
 [Fonts]
 fixed=\"Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,Bold\"
-general=\"Iosevka Fixed SS05 Semibold,12,0,0,0,0,0,0,0,0,Regular\"
-
-[Interface]
-activate_item_on_single_click=1
-buttonbox_layout=0
-cursor_flash_time=1000
-dialog_buttons_have_icons=1
-double_click_interval=400
-gui_effects=@Invalid()
-keyboard_scheme=2
-menus_have_icons=true
-show_shortcuts_in_context_menus=true
-stylesheets=@Invalid()
-toolbutton_style=4
-underline_shortcut=1
-wheel_scroll_lines=3" | \
+general=\"Iosevka Fixed SS05 Semibold,12,0,0,0,0,0,0,0,0,Regular\"" | \
 	tee "$HOME/.config/qt5ct/qt5ct.conf" "$HOME/.config/qt6ct/qt6ct.conf" >/dev/null
 
 # Configurar el tema del cursor
