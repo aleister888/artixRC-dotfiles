@@ -1,0 +1,22 @@
+#!/bin/sh
+
+RESOLUTION=$(basename "$(readlink ~/.config/eww/dashboard.scss)")
+
+if [ "$RESOLUTION" = "dashboard2160p.scss" ]; then
+	WIDTH=8, HEIGHT=64, PADDING=12; ICONSPACING=6; DISTANCE=48
+else
+	WIDTH=12, HEIGHT=48, PADDING=4; ICONSPACING=2; DISTANCE=32
+fi
+
+if pgrep trayer; then
+	killall trayer
+else
+	trayer \
+		--width       $WIDTH \
+		--height      $HEIGHT \
+		--padding     $PADDING \
+		--iconspacing $ICONSPACING \
+		--distance    $DISTANCE \
+		--heighttype  request \
+		--edge top --distancefrom top
+fi
