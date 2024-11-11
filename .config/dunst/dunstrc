@@ -1,5 +1,5 @@
 [global]
-font = Iosevka Nerd Font
+font = Iosevka Term SS05
 max_icon_size = 128
 icon_position = left
 alignment = right
