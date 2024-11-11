@@ -13,6 +13,10 @@ static const char *fonts[] = { "Symbols Nerd Font:pixelsize=24:antialias=true:au
 static const unsigned int borderpx       = 6;         // Borde en pixeles de las ventanas
 static const int user_bh                 = 18;        // Altura barra: 0 por defecto, >= 1 Altura añadida
 static const unsigned int snap           = 0;         // Pixeles de cercanía para pegarse al borde (0 = desactivado)
+static const unsigned int systraypinning = 0;         // 0: Fijar la bandeja en el monitor activo, >0 para fijarla en el monitor nº X
+static const unsigned int systrayspacing = 0;         // Espaciado de la bandeja del sistema
+static const int systraypinningfailfirst = 1;         // 1: Si la bandeja del sistema no se fija, mostrarla en el primer monitor, 0 para mostrarla en el último
+static const int showsystray             = 1;         // 0 Para desactivar la bandeja del sistema
 static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;         // 0 Para desactivar la barra
 static const int topbar                  = 1;         // 0 Para la barra en la parte inferior

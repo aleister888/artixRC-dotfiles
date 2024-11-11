@@ -142,7 +142,7 @@ endif
 set lazyredraw " No re-dibujar mientras se ejecutan macros
 
 " Expander código en modo insert y contraerlo en modo normal
-set conceallevel=2 concealcursor=n
+set conceallevel=2
 augroup vimrc
 	autocmd!
 	autocmd InsertEnter * set conceallevel=0
