@@ -14,7 +14,7 @@ ICON="bridge-constructor"
 # Excluiremos los sinks cuyo nombre contenga alguno de estos patrones
 EXCLUDE_PATTERN="my-combined-sink\|my-virtualmic\|PulseAudio\|Midi\|v4l2\|WEBRTC\|Chromium"
 # Dispositivos/aplicaciones a elegir (borrar)
-DEL_DEVICES=$(pw-link -l my-combined-sink | pcre2grep -M 'my-combined-sink:playback_((FL)|(FR))\n((^\s.*\n)*)' | sed 's/ \+|<- //g' | grep -v "$EXCLUDE_PATTERN")
+DEL_DEVICES=$(pw-link -l my-combined-sink | pcre2grep -M 'my-combined-sink:playback_F[LR]\n(^ .*\n)*' | grep -oP '\- \K.*')
 # Dispositivos/aplicaciones a elegir (añadir)
 DEVICES=$(pw-link -o | grep -P ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])' | grep -v "$EXCLUDE_PATTERN" | sort -u)
 # Borrar de las entradas a añadir las que ya están vinculadas
