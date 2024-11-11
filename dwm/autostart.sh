@@ -42,7 +42,6 @@ ewwspawn(){
 
 	# Definir los archivos de los que se crearán los enlaces simbólicos
 	file_1080="$HOME/.dotfiles/.config/eww/dashboard/dashboard1080p.scss"
-	file_1440="$HOME/.dotfiles/.config/eww/dashboard/dashboard1440p.scss"
 	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
 
 	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
@@ -51,8 +50,6 @@ ewwspawn(){
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
 	if [[ $resolution -le 1080 ]]; then
 		[[ "$current_link" != "$file_1080" ]] && ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
-	elif [[ $resolution -le 1440 ]]; then
-		[[ "$current_link" != "$file_1440" ]] && ln -sf "$file_1440" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	else
 		[[ "$current_link" != "$file_2160" ]] && ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	fi
