@@ -35,8 +35,6 @@ sink_match(){
 		*)   cselected="$selected"
 	esac
 
-	echo $selected $cselected
-
 	pw-link $pwflag "$selected" "$sinkL"
 	pw-link $pwflag "$cselected" "$sinkR"
 }
