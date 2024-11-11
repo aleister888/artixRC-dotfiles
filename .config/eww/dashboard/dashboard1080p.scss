@@ -1,7 +1,8 @@
 .dashboard {
   background-color: $bg;
   color: $fg;
-  padding: 14px;
+  padding: 12px;
+  border-radius: 12px;
 }
 
 .timebox {
@@ -202,6 +203,7 @@
   padding: 6px;
   color: $fg;
   background-color: $bgSecondary;
+  margin-bottom: -9px;
 
   .cal {
     font-family: Iosevka Fixed SS05;
