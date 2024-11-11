@@ -129,6 +129,7 @@ set mouse=a scrolloff=10
 set list hidden autochdir
 set listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 set ttimeoutlen=0 wildmode=longest,list,full
+set nowrap
 set pumheight=10 " coc.vim solo podrá mostar 10 sugerencias
 
 set number relativenumber cursorline " Opciones del cursor
@@ -174,9 +175,6 @@ endif
 
 " Atajos de teclado:
 
-
-" Cambiar el conceallevel
-nnoremap <leader>c :set conceallevel=!conceallevel<CR>
 
 " Encapsular texto seleccionado
 vnoremap " s"<C-r>""
