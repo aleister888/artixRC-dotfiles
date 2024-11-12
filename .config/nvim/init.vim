@@ -154,13 +154,9 @@ endif
 
 set lazyredraw " No re-dibujar mientras se ejecutan macros
 
-" Expander código en modo insert y contraerlo en modo normal
+" Expander código en modo insert
 set conceallevel=2
-augroup vimrc
-	autocmd!
-	autocmd InsertEnter * set conceallevel=0
-	autocmd InsertLeave * set conceallevel=2
-augroup END
+autocmd InsertEnter * set conceallevel=0
 
 " Desactivar backups
 set nobackup
@@ -181,7 +177,11 @@ autocmd VimEnter * |
 	\ hi Normal ctermbg=none guibg=none |
 	\ hi NonText ctermbg=none guibg=none |
 	\ hi LineNr ctermbg=none guibg=none |
-	\ hi Folded ctermbg=none guibg=none
+	\ hi Folded ctermbg=none guibg=none |
+	\ hi SpellBad guifg=#8EC07C guibg=#282828 |
+	\ hi SpellCap guifg=#8EC07C guibg=#282828 |
+	\ hi SpellLocal guifg=#FABD2F guibg=#282828 |
+	\ hi SpellRare guifg=#FE8019 guibg=#282828
 
 if !has('gui_running')
 	set t_Co=256
@@ -190,6 +190,10 @@ endif
 
 " Atajos de teclado:
 
+
+" Contraer o expandir expresiones/text
+nnoremap <leader>c :let &conceallevel = (&conceallevel == 0 ? 2 : 0)<CR>
+nnoremap <leader>v :set wrap!<CR>
 
 " Desplazarse por el texto
 nnoremap <ScrollWheelUp> kzz<C-G>
