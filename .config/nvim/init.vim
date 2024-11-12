@@ -5,9 +5,7 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-
 let mapleader = "," " Definir la tecla leader
-
 
 " Cargar y configurar plugins
 if $USER !=# 'root'
@@ -16,105 +14,96 @@ if $USER !=# 'root'
 	Plug 'ryanoasis/vim-devicons' " Iconos
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
-
 	Plug 'akinsho/bufferline.nvim' " Pestañas
-
 	Plug 'preservim/nerdtree' " Árbol de directorios
-	let NERDTreeShowHidden=1
-	nnoremap <silent><leader>t :NERDTreeToggle<CR>
-	let g:NERDTreeDirArrowExpandable="+"
-	let g:NERDTreeDirArrowCollapsible="-"
-	set laststatus=3 " Mostar solo una barra de estado a la vez
-	au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
-	au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
-
-	" Pre-visualización de colores
-	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
-	let g:Hexokinase_highlighters = [ 'backgroundfull' ]
-
-	" Mostrar árbol de cambios
-	Plug 'mbbill/undotree'
-	nnoremap <leader>u :UndotreeToggle<CR>
-
-	" Markdown
-	Plug 'preservim/vim-markdown'
-	let g:vim_markdown_toc_autofit = 1
-	let g:vim_markdown_folding_disabled = 1
-	let g:vim_markdown_auto_insert_bullets = 0
-	let g:vim_markdown_new_list_item_indent = 0
-	let g:vim_markdown_syntax = 'on'
-	let g:vim_markdown_math = 1
-	" Previews para Markdown
+	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
+	Plug 'mbbill/undotree' " Mostrar árbol de cambios
+	Plug 'preservim/vim-markdown' " Funciones para markdown
 	Plug 'iamcco/markdown-preview.nvim', {
 		\ 'do': { -> mkdp#util#install() },
-		\ 'for': ['markdown', 'vim-plug'] }
-	let g:mkdp_auto_start = 0
-	let g:mkdp_preview_options = { 'disable_filename': 1 }
-	function OpenMarkdownPreview (url)
-		execute "silent ! setsid -f firefox --new-window " . a:url
-	endfunction
-	let g:mkdp_browserfunc = 'OpenMarkdownPreview'
-	let g:mkdp_page_title = '${name}'
-
+		\ 'for': ['markdown', 'vim-plug'] } " Previews para Markdown
 	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
-	let g:vimtex_toc_config = { 'show_help': 0 }
-
-	" Sugerencias de entrada / autocompletado
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	let g:coc_disable_startup_warning = 1
-	let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
-	inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
-
-	" Ajustes generales para Coc
-	let g:coc_preferences = {
-		\ 'suggest.maxCompleteItemCount': 25,
-		\ 'suggest.detailField': 'abbr',
-		\ 'suggest.fixIncomplete': 0,
-		\ 'coc.preferences.formatOnType': v:false,
-		\ 'coc.preferences.formatOnSaveFiletypes': [],
-		\ 'diagnostic.enable': v:false,
-		\ 'signature.target': 'echo',
-		\ 'suggest.preview': v:false
-		\ }
-
-	" Configurar los colores de Coc
-	augroup colorscheme-overrides
-		au!
-		au ColorScheme * hi CocErrorSign guifg=#B16286
-		au ColorScheme * hi CocWarningSign guifg=#fabd2f
-		au ColorScheme * hi CocInfoSign guifg=#83a598
-		au ColorScheme * hi CocHintSign guifg=#8ec07c
-		au ColorScheme * hi CocFloating guibg=#282828
-		au ColorScheme * hi CocMenuSel guibg=#3C3836
-		au ColorScheme * hi CocErrorHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-		au ColorScheme * hi CocUnusedHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-		au ColorScheme * hi CocWarningHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-		au ColorScheme * hi CocInfoHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-	augroup END
-
+	Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada / autocompletado
 	Plug 'sirver/ultisnips' " Snippets
-	let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
-	let g:UltiSnipsExpandTrigger = '<tab>'
-	let g:UltiSnipsJumpForwardTrigger = '<tab>'
-	let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
-
 	Plug 'vim-airline/vim-airline' " Barra de estado
 	Plug 'vim-airline/vim-airline-themes'
-	let g:airline_theme = 'monochrome'
-	let g:airline_symbols = {}
-	let g:airline_symbols.branch = '   '
-	let g:airline_symbols.readonly = '󰌾 '
-	let g:airline_symbols.linenr = '   '
-	let g:airline_symbols.maxlinenr = '   '
-	let g:airline_symbols.dirty = '  '
-	let g:airline_symbols.colnr = ' C:'
 
 	call plug#end()
 endif
 
+"################################
+"# Configuración de los plugins #
+"################################
 
-" Mostramos en la barra de estado si
-" auto-pairs y coc.nvim estan activos
+" nerdtree
+let NERDTreeShowHidden=1
+let g:NERDTreeDirArrowExpandable="+"
+let g:NERDTreeDirArrowCollapsible="-"
+au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
+au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
+
+
+" vim-hexokinase
+let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+
+
+" vim-markdown
+let g:vim_markdown_toc_autofit = 1
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_syntax = 'on'
+let g:vim_markdown_math = 1
+
+
+" markdown-preview.nvim
+let g:mkdp_auto_start = 0
+let g:mkdp_preview_options = { 'disable_filename': 1 }
+let g:mkdp_browserfunc = 'OpenMarkdownPreview'
+let g:mkdp_page_title = '${name}'
+
+function OpenMarkdownPreview (url)
+	execute "silent ! setsid -f firefox --new-window " . a:url
+endfunction
+
+
+" vimtex
+let g:vimtex_toc_config = { 'show_help': 0 }
+
+
+" coc.nvim
+let g:coc_disable_startup_warning = 1
+let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
+
+let g:coc_preferences = {
+	\ 'suggest.maxCompleteItemCount': 25,
+	\ 'suggest.detailField': 'abbr',
+	\ 'suggest.fixIncomplete': 0,
+	\ 'coc.preferences.formatOnType': v:false,
+	\ 'coc.preferences.formatOnSaveFiletypes': [],
+	\ 'diagnostic.enable': v:false,
+	\ 'signature.target': 'echo',
+	\ 'suggest.preview': v:false
+	\ }
+
+
+" ultisnips
+let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
+
+
+" vim-airline
+let g:airline_theme = 'monochrome'
+let g:airline_symbols = {}
+let g:airline_symbols.branch = '   '
+let g:airline_symbols.readonly = '󰌾 '
+let g:airline_symbols.linenr = '   '
+let g:airline_symbols.maxlinenr = '   '
+let g:airline_symbols.dirty = '  '
+let g:airline_symbols.colnr = ' C:'
+
 function! CocStatus()
 	return g:coc ? 'COC' : ''
 endfunction
@@ -128,72 +117,92 @@ if $USER !=# 'root'
 	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
 endif
 
-" Activar resaltado de sintáxis
-syntax enable
 
-" Desactivar el convenio de indentación especifico del tipo de archivo
-autocmd FileType * setlocal noautoindent nosmartindent nocindent
-autocmd FileType * setlocal noexpandtab copyindent preserveindent
-autocmd FileType * setlocal tabstop=2 shiftwidth=2
+"###########################
+"# Configuración de neovim #
+"###########################
 
-set title encoding=UTF-8
-set mouse=a scrolloff=0 nowrap
-set list hidden autochdir
-set fillchars+=vert:\|
-set listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
-set ttimeoutlen=0 wildmode=longest,list,full
-set pumheight=10 " coc.vim solo podrá mostar 10 sugerencias
-
+syntax enable " Activar resaltado de sintaxis
+set title " Cambiar el título de la ventana al del archivo
+set encoding=UTF-8 " Establecer la codificación de caracteres en UTF-8
+set mouse=a " Permitir el uso del mouse en todos los modos
+set hidden " Cambiar de buffer sin guardar los cambios
+set autochdir " Cambiar el directorio de trabajo al del archivo abierto
+set ttimeoutlen=0 " Tiempo de espera entre teclas
+set wildmode=longest,list,full " Navegación y autocompletado de comandos
+set pumheight=10 " Altura máxima del menú de autocompletado
+set scrolloff=5 " Añadir márgenes en los extremos de la ventana
+set nowrap " Desactiva el ajuste de línea
+set laststatus=3 " Mostar una sola barra de estado para todas las ventanas
+set lazyredraw " No re-dibujar mientras se ejecutan macros
 set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
+set list fillchars+=vert:\| " Líneas de separación vertical y carácteres invisibles
+set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
+set conceallevel=2 " Traducir código sin dejar espacios
+set nobackup nowb noswapfile " Desactivar backups
 
-" Desactivar el Portapapeles si ejecutamos nvim como root
+" No traducir código en el modo insert
+autocmd InsertEnter * set conceallevel=0
+" Indentación y tabulación
+autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
+autocmd FileType * setlocal copyindent preserveindent tabstop=2 shiftwidth=2
+
 if $USER !=# 'root'
-	set clipboard+=unnamedplus " Portapapeles
+	set clipboard+=unnamedplus
+	so ~/.config/nvim/bufferline.lua
 endif
 
-set lazyredraw " No re-dibujar mientras se ejecutan macros
+"###################
+"# Tema de colores #
+"###################
 
-" Expander código en modo insert
-set conceallevel=2
-autocmd InsertEnter * set conceallevel=0
-
-" Desactivar backups
-set nobackup
-set nowb
-set noswapfile
-
-" Tema de colores
-set background=dark termguicolors
+set t_Co=256
 
 if $USER !=# 'root'
 	colorscheme gruvbox
 endif
 
-autocmd VimEnter * |
-	\ hi Search guifg=#282828 guibg=#D5C4A1 |
-	\ hi IncSearch guifg=#282828 guibg=#D3869B |
-	\ hi CurSearch guifg=#83A598 guibg=#282828 |
-	\ hi Normal ctermbg=none guibg=none |
-	\ hi NonText ctermbg=none guibg=none |
-	\ hi LineNr ctermbg=none guibg=none |
-	\ hi Folded ctermbg=none guibg=none |
-	\ hi SpellBad guifg=#8EC07C guibg=#282828 |
-	\ hi SpellCap guifg=#8EC07C guibg=#282828 |
-	\ hi SpellLocal guifg=#FABD2F guibg=#282828 |
-	\ hi SpellRare guifg=#FE8019 guibg=#282828
+set background=dark termguicolors
 
-if !has('gui_running')
-	set t_Co=256
-endif
+hi Normal ctermbg=none guibg=none
+hi NonText ctermbg=none guibg=none
+hi LineNr ctermbg=none guibg=none
+hi Folded ctermbg=none guibg=none
 
+hi Search guifg=#282828 guibg=#D5C4A1
+hi IncSearch guifg=#282828 guibg=#D3869B
+hi CurSearch guifg=#83A598 guibg=#282828
 
-" Atajos de teclado:
+hi SpellBad guifg=#8EC07C guibg=#282828
+hi SpellCap guifg=#8EC07C guibg=#282828
+hi SpellLocal guifg=#FABD2F guibg=#282828
+hi SpellRare guifg=#FE8019 guibg=#282828
 
+hi CocErrorSign guifg=#B16286
+hi CocWarningSign guifg=#fabd2f
+hi CocInfoSign guifg=#83a598
+hi CocHintSign guifg=#8ec07c
+hi CocFloating guibg=#282828
+hi CocMenuSel guibg=#3C3836
 
-" Contraer o expandir expresiones/text
-nnoremap <leader>c :let &conceallevel = (&conceallevel == 0 ? 2 : 0)<CR>
-nnoremap <leader>v :set wrap!<CR>
+hi CocErrorHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+hi CocUnusedHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+hi CocWarningHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+hi CocInfoHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+
+"#####################
+"# Atajos de teclado #
+"#####################
+
+" Plugins
+inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
+nnoremap <silent><leader>t :NERDTreeToggle<CR>
+nnoremap <silent><leader>u :UndotreeToggle<CR>
+nnoremap <leader>c :let &conceallevel = (&conceallevel == 0 ? 2 : 0)<CR>:set conceallevel<CR>
+
+" Activar/desactivar el ajuste de línea
+nnoremap <silent><leader>v :set wrap!<CR>
 
 " Desplazarse por el texto
 nnoremap <ScrollWheelUp> kzz<C-G>
@@ -220,83 +229,85 @@ vnoremap } s{<C-r>"}
 vnoremap [ s[<C-r>"]
 vnoremap ] s[<C-r>"]
 
-" TeX
-au Filetype tex nmap <leader>f <plug>(vimtex-toc-toggle)<CR>
-au Filetype tex nmap <leader>g :!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
-au Filetype tex nmap <leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
-au Filetype tex nmap <leader>j :!xelatex %<CR>
+" Activar/Desactivar comprobación ortografía
+nnoremap <silent><F4> :setlocal spell! spelllang=es_es<CR>
+inoremap <silent><F4> <C-O>:setlocal spell! spelllang=es_es<CR>
+nnoremap <silent><F5> :setlocal spell! spelllang=en_us<CR>
+inoremap <silent><F5> <C-O>:setlocal spell! spelllang=en_us<CR>
 
-" Markdown
-" https://github.com/preservim/vim-markdown/issues/356#issuecomment-617365622
-function s:TocToggle()
-	if index(["markdown", "qf"], &filetype) == -1
-		return
-	endif
-	if get(getloclist(0, {'winid':0}), 'winid', 0)
-		lclose
-	else
-		Tocv
-	endif
-endfunction
-command TocToggle call s:TocToggle()
-au FileType markdown nmap <leader>f :TocToggle<CR>
-au Filetype markdown nmap <leader>h :MarkdownPreview<CR>
+" TeX
+au Filetype tex nmap <silent><leader>f <plug>(vimtex-toc-toggle)<CR>
+au Filetype tex nmap <silent><leader>g :!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
+au Filetype tex nmap <silent><leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
+au Filetype tex nmap <silent><leader>j :!xelatex %<CR>
 
 " Shell
 au FileType sh nmap <leader>f :CocList outline<CR>
 
+" Markdown
+au Filetype markdown nmap <silent><leader>h :MarkdownPreview<CR>
+	function! TocToggle()
+		if get(getloclist(0, {'winid':0}), 'winid', 0)
+			lclose
+		else
+			Tocv
+		endif
+	endfunction
+au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
+
 " Activar/Desactivar sugerencias de entrada
-let g:coc=1
-function! CocToggle()
-	let g:coc = !g:coc
-	execute (g:coc ? 'CocEnable' : 'CocDisable')
-endfunction
-inoremap <F1> <C-O>:call CocToggle()<CR>
-nnoremap <F1> :call CocToggle()<CR>
+	let g:coc=1
+	function! CocToggle()
+		let g:coc = !g:coc
+		silent! execute (g:coc ? 'CocEnable' : 'CocDisable')
+	endfunction
+inoremap <silent><F1> <C-O>:call CocToggle()<CR>
+nnoremap <silent><F1> :call CocToggle()<CR>
 
 " Activar/Desactivar llaves automáticas
-let g:pair = 1
-function! PairToggle()
-	let g:pair = !g:pair
-	AutoPairsToggle
-endfunction
+	let g:pair = 1
+	function! PairToggle()
+		let g:pair = !g:pair
+		silent! AutoPairsToggle
+	endfunction
 inoremap <F2> <C-O>:call PairToggle()<CR>
 nnoremap <F2> :call PairToggle()<CR>
 
-" Activar/Desactivar comprobación ortografía
-inoremap <silent><F3> <C-O>:setlocal spell! spelllang=es_es<CR>
-inoremap <silent><F4> <C-O>:setlocal spell! spelllang=en_us<CR>
-nnoremap <silent><F3> :setlocal spell! spelllang=es_es<CR>
-nnoremap <silent><F4> :setlocal spell! spelllang=en_us<CR>
-
 " Alternar como se visualizan las tabulaciones
-let g:tab = 1
-set tabstop=2
-set shiftwidth=2
-function! TabExp()
-	if &tabstop == 2
-		set tabstop=8
-		set shiftwidth=8
-	else
-		set tabstop=2
-		set shiftwidth=2
-	endif
-	let g:tab = !g:tab
-endfunction
-inoremap <F5> <C-O>:call TabExp()<CR>
-nnoremap <F5> :call TabExp()<CR>
+	let g:tab = 1
+	function! TabExp()
+		if &tabstop == 2
+			set tabstop=8
+			set shiftwidth=8
+		else
+			set tabstop=2
+			set shiftwidth=2
+		endif
+		let g:tab = !g:tab
+	endfunction
+inoremap <F3> <C-O>:call TabExp()<CR>
+nnoremap <F3> :call TabExp()<CR>
+
+"######################
+"# Automatizar tareas #
+"######################
 
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
+
 au BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwmblocks/' .
 	\ '; doas make clean install" && killall dwmblocks; dwmblocks &'
+
 au BufWritePost ~/.dotfiles/dwm/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwm/; doas make clean install"'
+
 au BufWritePost ~/.dotfiles/st/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/st/; doas make clean install"'
+
 au BufWritePost ~/.dotfiles/dmenu/config.def.h
 	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
+
 au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 
 " Borrar automaticamente los espacios sobrantes
@@ -304,7 +315,3 @@ autocmd BufWritePre * let currPos = getpos(".")
 autocmd BufWritePre * %s/\s\+$//e
 autocmd BufWritePre * %s/\n\+\%$//e
 autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
-
-if $USER !=# 'root'
-	so ~/.config/nvim/bufferline.lua
-endif

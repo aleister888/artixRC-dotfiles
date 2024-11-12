@@ -6,4 +6,5 @@ cat <<EOF | xmenu
 [M] Monocle Layout	2
 [D] Deck		3
 ||| Columns		4
+|M| Cmaster		5
 EOF
