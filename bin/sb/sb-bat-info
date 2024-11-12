@@ -3,7 +3,7 @@
 info-print(){
 	# Contar el número de baterías disponibles
 	num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l)
-	out=$(acpi -b | grep -v "Unknown")
+	out=$(acpi -b | grep -v "Unknown\|unavailable")
 
 	# Extraer e imprimir la información para cada batería
 	for ((i=1; i<=num_baterias; i++)); do
