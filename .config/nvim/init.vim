@@ -9,14 +9,13 @@ endif
 let mapleader = "," " Definir la tecla leader
 
 
-" Cargar plugins
+" Cargar y configurar plugins
 if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
 	Plug 'ryanoasis/vim-devicons' " Iconos
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
-	let g:indentLine_enabled = 1
 
 	Plug 'akinsho/bufferline.nvim' " Pestañas
 
@@ -24,15 +23,16 @@ if $USER !=# 'root'
 	let NERDTreeShowHidden=1
 	nnoremap <silent><leader>t :NERDTreeToggle<CR>
 	let g:NERDTreeDirArrowExpandable="+"
-	let g:NERDTreeDirArrowCollapsible="~"
+	let g:NERDTreeDirArrowCollapsible="-"
 	set laststatus=3 " Mostar solo una barra de estado a la vez
 	au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
 	au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
 
-	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
+	" Pre-visualización de colores
+	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 	let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
-	" Mejorar el deshacer cambios
+	" Mostrar árbol de cambios
 	Plug 'mbbill/undotree'
 	nnoremap <leader>u :UndotreeToggle<CR>
 
@@ -44,7 +44,10 @@ if $USER !=# 'root'
 	let g:vim_markdown_new_list_item_indent = 0
 	let g:vim_markdown_syntax = 'on'
 	let g:vim_markdown_math = 1
-	Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " Previews de markdown en local
+	" Previews para Markdown
+	Plug 'iamcco/markdown-preview.nvim', {
+		\ 'do': { -> mkdp#util#install() },
+		\ 'for': ['markdown', 'vim-plug'] }
 	let g:mkdp_auto_start = 0
 	let g:mkdp_preview_options = { 'disable_filename': 1 }
 	function OpenMarkdownPreview (url)
@@ -56,10 +59,13 @@ if $USER !=# 'root'
 	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
 	let g:vimtex_toc_config = { 'show_help': 0 }
 
-	Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada
+	" Sugerencias de entrada / autocompletado
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	let g:coc_disable_startup_warning = 1
 	let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
 	inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
+
+	" Ajustes generales para Coc
 	let g:coc_preferences = {
 		\ 'suggest.maxCompleteItemCount': 25,
 		\ 'suggest.detailField': 'abbr',
@@ -70,14 +76,20 @@ if $USER !=# 'root'
 		\ 'signature.target': 'echo',
 		\ 'suggest.preview': v:false
 		\ }
-	augroup my_coc_highlights
+
+	" Configurar los colores de Coc
+	augroup colorscheme-overrides
 		au!
-		au ColorScheme * highlight CocErrorSign guifg=#B16286
-		au ColorScheme * highlight CocWarningSign guifg=#fabd2f
-		au ColorScheme * highlight CocInfoSign guifg=#83a598
-		au ColorScheme * highlight CocHintSign guifg=#8ec07c
-		au ColorScheme * highlight CocFloating guibg=#282828
-		au ColorScheme * highlight CocMenuSel guibg=#3C3836
+		au ColorScheme * hi CocErrorSign guifg=#B16286
+		au ColorScheme * hi CocWarningSign guifg=#fabd2f
+		au ColorScheme * hi CocInfoSign guifg=#83a598
+		au ColorScheme * hi CocHintSign guifg=#8ec07c
+		au ColorScheme * hi CocFloating guibg=#282828
+		au ColorScheme * hi CocMenuSel guibg=#3C3836
+		au ColorScheme * hi CocErrorHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+		au ColorScheme * hi CocUnusedHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+		au ColorScheme * hi CocWarningHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+		au ColorScheme * hi CocInfoHighlight gui=underline guifg=#D5C4A1 guibg=#282828
 	augroup END
 
 	Plug 'sirver/ultisnips' " Snippets
@@ -125,8 +137,9 @@ autocmd FileType * setlocal noexpandtab copyindent preserveindent
 autocmd FileType * setlocal tabstop=2 shiftwidth=2
 
 set title encoding=UTF-8
-set mouse=a scrolloff=10
+set mouse=a scrolloff=0 nowrap
 set list hidden autochdir
+set fillchars+=vert:\|
 set listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 set ttimeoutlen=0 wildmode=longest,list,full
 set pumheight=10 " coc.vim solo podrá mostar 10 sugerencias
@@ -145,8 +158,8 @@ set lazyredraw " No re-dibujar mientras se ejecutan macros
 set conceallevel=2
 augroup vimrc
 	autocmd!
-	autocmd InsertEnter * set conceallevel=0 wrap
-	autocmd InsertLeave * set conceallevel=2 nowrap
+	autocmd InsertEnter * set conceallevel=0
+	autocmd InsertLeave * set conceallevel=2
 augroup END
 
 " Desactivar backups
@@ -156,17 +169,20 @@ set noswapfile
 
 " Tema de colores
 set background=dark termguicolors
-set fillchars+=vert:+ " Espacio como separadores
+
 if $USER !=# 'root'
 	colorscheme gruvbox
 endif
-autocmd VimEnter * highlight Search guifg=#282828 guibg=#D5C4A1
-autocmd VimEnter * highlight IncSearch guifg=#282828 guibg=#D3869B
-autocmd VimEnter * highlight CurSearch guifg=#83A598 guibg=#282828
-autocmd VimEnter * highlight Normal ctermbg=none guibg=none
-autocmd VimEnter * highlight NonText ctermbg=none guibg=none
-autocmd VimEnter * highlight LineNr ctermbg=none guibg=none
-autocmd VimEnter * highlight Folded ctermbg=none guibg=none
+
+autocmd VimEnter * |
+	\ hi Search guifg=#282828 guibg=#D5C4A1 |
+	\ hi IncSearch guifg=#282828 guibg=#D3869B |
+	\ hi CurSearch guifg=#83A598 guibg=#282828 |
+	\ hi Normal ctermbg=none guibg=none |
+	\ hi NonText ctermbg=none guibg=none |
+	\ hi LineNr ctermbg=none guibg=none |
+	\ hi Folded ctermbg=none guibg=none
+
 if !has('gui_running')
 	set t_Co=256
 endif
@@ -175,22 +191,28 @@ endif
 " Atajos de teclado:
 
 
+" Desplazarse por el texto
+nnoremap <ScrollWheelUp> kzz<C-G>
+nnoremap <ScrollWheelDown> jzz<C-G>
+nnoremap <C-ScrollWheelUp> 5kzz<C-G>
+nnoremap <C-ScrollWheelDown> 5jzz<C-G>
+nnoremap = $<C-G>
+nnoremap G :$<CR><C-G>zz
+nnoremap gg :1<CR><C-G>
+
 " Encapsular texto seleccionado
 vnoremap " s"<C-r>""
 vnoremap ' s'<C-r>"'
 vnoremap ` s`<C-r>"`
 vnoremap $ s$<C-r>"$
-vnoremap ( s(<C-r>")
-vnoremap { s{<C-r>"}
-vnoremap [ s[<C-r>"]
 vnoremap _ s_<C-r>"_
 vnoremap <leader>_ s__<C-r>"__
-
-" Activar/Desactivar comprobación ortografía
-inoremap <silent><F3> <C-O>:setlocal spell! spelllang=es_es<CR>
-inoremap <silent><F4> <C-O>:setlocal spell! spelllang=en_us<CR>
-nnoremap <silent><F3> :setlocal spell! spelllang=es_es<CR>
-nnoremap <silent><F4> :setlocal spell! spelllang=en_us<CR>
+vnoremap ( s(<C-r>")
+vnoremap ) s(<C-r>")
+vnoremap { s{<C-r>"}
+vnoremap } s{<C-r>"}
+vnoremap [ s[<C-r>"]
+vnoremap ] s[<C-r>"]
 
 " TeX
 au Filetype tex nmap <leader>f <plug>(vimtex-toc-toggle)<CR>
@@ -235,6 +257,12 @@ endfunction
 inoremap <F2> <C-O>:call PairToggle()<CR>
 nnoremap <F2> :call PairToggle()<CR>
 
+" Activar/Desactivar comprobación ortografía
+inoremap <silent><F3> <C-O>:setlocal spell! spelllang=es_es<CR>
+inoremap <silent><F4> <C-O>:setlocal spell! spelllang=en_us<CR>
+nnoremap <silent><F3> :setlocal spell! spelllang=es_es<CR>
+nnoremap <silent><F4> :setlocal spell! spelllang=en_us<CR>
+
 " Alternar como se visualizan las tabulaciones
 let g:tab = 1
 set tabstop=2
@@ -266,10 +294,10 @@ au BufWritePost ~/.dotfiles/dmenu/config.def.h
 au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 
 " Borrar automaticamente los espacios sobrantes
-	autocmd BufWritePre * let currPos = getpos(".")
-	autocmd BufWritePre * %s/\s\+$//e
-	autocmd BufWritePre * %s/\n\+\%$//e
-	autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
+autocmd BufWritePre * let currPos = getpos(".")
+autocmd BufWritePre * %s/\s\+$//e
+autocmd BufWritePre * %s/\n\+\%$//e
+autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
 
 if $USER !=# 'root'
 	so ~/.config/nvim/bufferline.lua

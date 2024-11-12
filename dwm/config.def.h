@@ -149,12 +149,12 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
 
 #define STACKKEYS(MOD,ACTION) \
-/* Poner el foco/Mover a la posición anterior */         { MOD, XK_comma,  ACTION##stack, {.i = INC(-1) } }, \
-/* Poner el foco/Mover a la posición posterior */        { MOD, XK_period, ACTION##stack, {.i = INC(+1) } }, \
-/* Poner el foco en la primera posición del stack */     { MOD, XK_l,  ACTION##stack, {.i = 1 } }, \
-/* Poner el foco en la segunda posición del stack */     { MOD, XK_ntilde, ACTION##stack, {.i = 2 } }, \
-/* Poner el foco en la tercera posición del stack */     { MOD, XK_dead_acute, ACTION##stack, {.i = 3 } }, \
-/* Poner el foco/Mover a la primera ventana principal */ { MOD, XK_minus,  ACTION##stack, {.i = 0 } },
+/* Poner el foco/Mover a la posición anterior */         { MOD, XK_comma,      ACTION##stack, {.i = INC(-1) } }, \
+/* Poner el foco/Mover a la posición posterior */        { MOD, XK_period,     ACTION##stack, {.i = INC(+1) } }, \
+/* Poner el foco en la primera posición del stack */     { MOD, XK_ntilde,     ACTION##stack, {.i = 1 } }, \
+/* Poner el foco en la segunda posición del stack */     { MOD, XK_dead_acute, ACTION##stack, {.i = 2 } }, \
+/* Poner el foco en la tercera posición del stack */     { MOD, XK_ccedilla,   ACTION##stack, {.i = 3 } }, \
+/* Poner el foco/Mover a la primera ventana principal */ { MOD, XK_minus,      ACTION##stack, {.i = 0 } },
 
 // Invocador de comandos
 #define SHCMD(cmd) { .v = (const char*[]){ "/usr/bin/zsh", "-c", cmd, NULL } }
@@ -265,11 +265,10 @@ static const Key keys[] = {
 	// Hacer/Deshacer ventana flotante
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating,   {0} },
 	// Cambiar de monitor / Mover las ventanas entre monitores
-	// (Sólo para teclado español, "´" y "ç" son teclas del layout español)
-	{ MODKEY,                       XK_dead_acute, focusmon,     {.i = -1 } },
-	{ MODKEY,                       XK_ccedilla,   focusmon,     {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_dead_acute, tagmon,       {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_ccedilla,   tagmon,       {.i = +1 } },
+	{ MODKEY,                       XK_g,      focusmon,     {.i = -1 } },
+	{ MODKEY,                       XK_h,      focusmon,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_g,      tagmon,       {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_h,      tagmon,       {.i = +1 } },
 	// Scratchpads
 	{ MODKEY,                       XK_s,      togglescratch,    {.v = scratchpadcmd } },
 	{ MODKEY|ShiftMask,             XK_s,      scratchtoggle,    {.v = scratchpadcmd } },
