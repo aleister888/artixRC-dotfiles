@@ -200,6 +200,8 @@ nnoremap <ScrollWheelUp> kzz<C-G>
 nnoremap <ScrollWheelDown> jzz<C-G>
 nnoremap <C-ScrollWheelUp> 5kzz<C-G>
 nnoremap <C-ScrollWheelDown> 5jzz<C-G>
+nnoremap <C-Up> 5kzz<C-G>
+nnoremap <C-Down> 5jzz<C-G>
 nnoremap = $<C-G>
 nnoremap G :$<CR><C-G>zz
 nnoremap gg :1<CR><C-G>

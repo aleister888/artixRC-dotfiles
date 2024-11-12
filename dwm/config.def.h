@@ -138,6 +138,8 @@ static const Layout layouts[] = {
 	{ "><>",	NULL }, // Ningún layout significa comportamiento flotante
 	{ "[M]",	monocle }, // Las ventanas ocupan toda la pantalla
 	{ "[D]",	deck },
+	{ "|||",	col },
+	{ "|M|",	centeredmaster },
 };
 
 // Definiciones de las Teclas
@@ -277,9 +279,11 @@ static const Key keys[] = {
 	{ MODKEY|ControlMask,           XK_s,      togglesticky,     {0} },
 	// Cambiar la distribución de las ventanas
 	{ MODKEY,                       XK_e,      setlayout,        {.v = &layouts[0]} }, // Por defecto
-	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
 	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} }, // Una ventana
+	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Deck
+	{ MODKEY,                       XK_d,      setlayout,        {.v = &layouts[4]} }, // Columns
+	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[5]} }, // Cmaster
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
 	TAGKEYS(                        XK_2,                        1)

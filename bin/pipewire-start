@@ -6,5 +6,5 @@ sleep 0.5; /usr/bin/pipewire-pulse &
 sleep 0.5; /usr/bin/wireplumber &
 
 # Configurar la tasa de reloj y el quantum
-pw-metadata -n settings 0 clock.force-rate 48000
-pw-metadata -n settings 0 clock.force-quantum 256
+pw-metadata -n settings 0 clock.force-rate 44100
+pw-metadata -n settings 0 clock.force-quantum 128

@@ -152,7 +152,7 @@ while true; do
 	done
 
 	# Si alguna de estas aplicaciones esta enfocada, no mostrar el salvapantallas
-	apps="looking-glass"
+	apps="looking-glass\|TuxGuitar"
 		echo "$activewindow" | grep "$apps" && \
 	resultado=1
 
