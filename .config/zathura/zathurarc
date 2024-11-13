@@ -7,7 +7,7 @@ set first-page-column 0:1
 set synctex true
 set synctex-editor-command "nvr --remote-silent +%{line} %{input}"
 
-set font "Iosevka SS05"
+set font "Iosevka SS05 14"
 
 set sandbox none
 set statusbar-h-padding 0
@@ -22,6 +22,9 @@ map [fullscreen] W adjust_window best-fit
 
 map f toggle_fullscreen
 map [fullscreen] f toggle_fullscreen
+
+map b toggle_statusbar
+map [fullscreen] b toggle_statusbar
 
 set adjust-open width
 set recolor true
