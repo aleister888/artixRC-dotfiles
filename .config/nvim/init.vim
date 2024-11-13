@@ -124,6 +124,7 @@ syntax enable " Activar resaltado de sintaxis
 set title " Cambiar el título de la ventana al del archivo
 set encoding=UTF-8 " Establecer la codificación de caracteres en UTF-8
 set mouse=a " Permitir el uso del mouse en todos los modos
+set tags=/dev/null " Desactivar ctags
 set hidden " Cambiar de buffer sin guardar los cambios
 set autochdir " Cambiar el directorio de trabajo al del archivo abierto
 set ttimeoutlen=0 " Tiempo de espera entre teclas
@@ -174,6 +175,8 @@ hi SpellCap guifg=#8EC07C guibg=#282828
 hi SpellLocal guifg=#FABD2F guibg=#282828
 hi SpellRare guifg=#FE8019 guibg=#282828
 
+hi ErrorMsg guifg=#FE8019 guibg=#282828
+
 hi CocErrorSign guifg=#B16286
 hi CocWarningSign guifg=#fabd2f
 hi CocInfoSign guifg=#83a598
@@ -181,10 +184,10 @@ hi CocHintSign guifg=#8ec07c
 hi CocFloating guibg=#282828
 hi CocMenuSel guibg=#3C3836
 
-hi CocErrorHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-hi CocUnusedHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-hi CocWarningHighlight gui=underline guifg=#D5C4A1 guibg=#282828
-hi CocInfoHighlight gui=underline guifg=#D5C4A1 guibg=#282828
+hi CocErrorHighlight guifg=#B16286 guibg=#282828
+hi CocUnusedHighlight guifg=#689D6A guibg=#282828
+hi CocWarningHighlight guifg=#fabd2f guibg=#282828
+hi CocInfoHighlight guifg=#83a598 guibg=#282828
 
 "#####################
 "# Atajos de teclado #
