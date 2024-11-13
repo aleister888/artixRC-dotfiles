@@ -66,8 +66,6 @@ endfunction
 " vimtex
 let g:vimtex_toc_config = { 'show_help': 0 }
 let g:vimtex_mappings_enabled = 0
-let g:vimtex_view_automatic = 0
-let g:vimtex_matchparen_enabled = 0
 let g:vimtex_view_method = 'zathura'
 let g:latex_view_general_viewer = 'zathura'
 let g:vimtex_compiler_progname = 'nvr'
