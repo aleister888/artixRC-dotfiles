@@ -1,10 +1,13 @@
 set window-title-basename "true"
+
 set selection-clipboard "clipboard"
+
 set first-page-column 0:1
+
 set synctex true
 set synctex-editor-command "nvr --remote-silent +%{line} %{input}"
 
-set adjust-open width
+set font "Iosevka SS05"
 
 set sandbox none
 set statusbar-h-padding 0
@@ -12,9 +15,9 @@ set statusbar-v-padding 0
 set page-padding 2
 
 map w adjust_window width
-map W adjust_window best-fit
-
 map [fullscreen] w adjust_window width
+
+map W adjust_window best-fit
 map [fullscreen] W adjust_window best-fit
 
 map f toggle_fullscreen
@@ -42,21 +45,15 @@ set index-fg                    "#ebdbb2"
 set index-active-bg             "#83a598"
 set index-active-fg             "#222222"
 
-set inputbar-bg                 "#222222"
+set inputbar-bg                 "#504945"
 set inputbar-fg                 "#ebdbb2"
-
 set statusbar-bg                "#504945"
 set statusbar-fg                "#ebdbb2"
 
-set highlight-color             "rgba(34, 34, 34, 0.2)"
-set highlight-active-color      "rgba(22, 14, 31, 0.2)"
+set highlight-color             "rgba(69,133,136, 0.2)"
+set highlight-active-color      "rgba(69,133,136, 0.2)"
 
 set default-bg                  "#3C3836"
 set default-fg                  "#ebdbb2"
-set render-loading              "true"
-set render-loading-bg           "#222222"
-set render-loading-fg           "#ebdbb2"
-
 set recolor-lightcolor          "#222222"
 set recolor-darkcolor           "#ebdbb2"
-set recolor                     "true"
