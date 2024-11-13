@@ -66,6 +66,8 @@ endfunction
 " vimtex
 let g:vimtex_toc_config = { 'show_help': 0 }
 let g:vimtex_mappings_enabled = 0
+let g:vimtex_tagbar_enabled = 0
+let g:vimtex_view_automatic = 0
 let g:vimtex_view_method = 'zathura'
 let g:latex_view_general_viewer = 'zathura'
 let g:vimtex_compiler_progname = 'nvr'
@@ -130,18 +132,15 @@ set ttimeoutlen=0 " Tiempo de espera entre teclas
 set wildmode=longest,list,full " Navegación y autocompletado de comandos
 set pumheight=10 " Altura máxima del menú de autocompletado
 set scrolloff=5 " Añadir márgenes en los extremos de la ventana
-set nowrap " Desactiva el ajuste de línea
+set wrap " Desactiva el ajuste de línea
 set laststatus=3 " Mostar una sola barra de estado para todas las ventanas
 set lazyredraw " No re-dibujar mientras se ejecutan macros
 set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
 set list fillchars+=vert:\| " Líneas de separación vertical y carácteres invisibles
 set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
-set conceallevel=2 " Traducir código sin dejar espacios
 set nobackup nowb noswapfile " Desactivar backups
 
-" No traducir código en el modo insert
-autocmd InsertEnter * set conceallevel=0
 " Indentación y tabulación
 autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
 autocmd FileType * setlocal copyindent preserveindent tabstop=2 shiftwidth=2
@@ -197,20 +196,16 @@ hi CocInfoHighlight gui=underline guifg=#D5C4A1 guibg=#282828
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 nnoremap <silent><leader>t :NERDTreeToggle<CR>
 nnoremap <silent><leader>u :UndotreeToggle<CR>
-nnoremap <leader>c :let &conceallevel = (&conceallevel == 0 ? 2 : 0)<CR>:set conceallevel<CR>
-
-" Activar/desactivar el ajuste de línea
-nnoremap <silent><F6> :set wrap!<CR>
 
 " Desplazarse por el texto
-nnoremap <ScrollWheelUp> kzz<C-G>
-nnoremap <ScrollWheelDown> jzz<C-G>
-nnoremap <C-ScrollWheelUp> 5kzz<C-G>
-nnoremap <C-ScrollWheelDown> 5jzz<C-G>
-nnoremap <C-Up> 5kzz<C-G>
-nnoremap <C-Down> 5jzz<C-G>
+nnoremap <ScrollWheelUp> k<C-G>
+nnoremap <ScrollWheelDown> j<C-G>
+nnoremap <C-ScrollWheelUp> 5k<C-G>
+nnoremap <C-ScrollWheelDown> 5j<C-G>
+nnoremap <C-Up> 5k<C-G>
+nnoremap <C-Down> 5j<C-G>
 nnoremap = $<C-G>
-nnoremap G :$<CR><C-G>zz
+nnoremap G :$<CR><C-G>
 nnoremap gg :1<CR><C-G>
 
 " Encapsular texto seleccionado
@@ -236,7 +231,7 @@ inoremap <silent><F5> <C-O>:setlocal spell! spelllang=en_us<CR>
 " TeX
 au Filetype tex nmap <silent><leader>f <plug>(vimtex-toc-toggle)<CR>
 au Filetype tex nmap <leader>g :VimtexCompile<CR>
-au Filetype tex nmap <leader>h :VimtexView<CR>
+au Filetype tex nmap <silent><leader>h :VimtexView<CR>
 	function! ToggleVimtexErrors()
 		if len(filter(getwininfo(), 'v:val.quickfix')) > 0
 			cclose
