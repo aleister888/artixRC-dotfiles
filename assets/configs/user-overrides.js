@@ -73,3 +73,6 @@ user_pref("browser.urlbar.suggest.searches", false);
 // Desactivar OCSP
 user_pref("security.OCSP.enabled", 0);
 user_pref("security.ssl.enable_ocsp_stapling", false);
+
+// Permitir DRM
+user_pref("media.eme.enabled", true);
