@@ -42,10 +42,8 @@ let g:NERDTreeDirArrowCollapsible="-"
 au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
 au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
 
-
 " vim-hexokinase
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
-
 
 " vim-markdown
 let g:vim_markdown_toc_autofit = 1
@@ -54,7 +52,6 @@ let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_syntax = 'on'
 let g:vim_markdown_math = 1
-
 
 " markdown-preview.nvim
 let g:mkdp_auto_start = 0
@@ -66,10 +63,14 @@ function OpenMarkdownPreview (url)
 	execute "silent ! setsid -f firefox --new-window " . a:url
 endfunction
 
-
 " vimtex
 let g:vimtex_toc_config = { 'show_help': 0 }
-
+let g:vimtex_mappings_enabled = 0
+let g:vimtex_view_method = 'zathura'
+let g:latex_view_general_viewer = 'zathura'
+let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_compiler_method = 'arara'
+let g:vimtex_quickfix_mode = 0
 
 " coc.nvim
 let g:coc_disable_startup_warning = 1
@@ -86,13 +87,11 @@ let g:coc_preferences = {
 	\ 'suggest.preview': v:false
 	\ }
 
-
 " ultisnips
 let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<M-tab>'
-
 
 " vim-airline
 let g:airline_theme = 'monochrome'
@@ -116,7 +115,6 @@ endfunction
 if $USER !=# 'root'
 	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
 endif
-
 
 "###########################
 "# Configuración de neovim #
@@ -202,7 +200,7 @@ nnoremap <silent><leader>u :UndotreeToggle<CR>
 nnoremap <leader>c :let &conceallevel = (&conceallevel == 0 ? 2 : 0)<CR>:set conceallevel<CR>
 
 " Activar/desactivar el ajuste de línea
-nnoremap <silent><leader>v :set wrap!<CR>
+nnoremap <silent><F6> :set wrap!<CR>
 
 " Desplazarse por el texto
 nnoremap <ScrollWheelUp> kzz<C-G>
@@ -237,9 +235,16 @@ inoremap <silent><F5> <C-O>:setlocal spell! spelllang=en_us<CR>
 
 " TeX
 au Filetype tex nmap <silent><leader>f <plug>(vimtex-toc-toggle)<CR>
-au Filetype tex nmap <silent><leader>g :!arara % && notify-send -t 1500 "Compliación Exitosa"<CR><CR>
-au Filetype tex nmap <silent><leader>h :!setsid /usr/bin/zathura $(echo % \| sed 's/tex$/pdf/') <CR><CR>
-au Filetype tex nmap <silent><leader>j :!xelatex %<CR>
+au Filetype tex nmap <leader>g :VimtexCompile<CR>
+au Filetype tex nmap <leader>h :VimtexView<CR>
+	function! ToggleVimtexErrors()
+		if len(filter(getwininfo(), 'v:val.quickfix')) > 0
+			cclose
+		else
+			VimtexErrors
+		endif
+	endfunction
+au Filetype tex nmap <silent><leader>j :call ToggleVimtexErrors()<CR>
 
 " Shell
 au FileType sh nmap <leader>f :CocList outline<CR>
