@@ -28,7 +28,10 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 #### Tareas por realizar
 
-- Crear branch para el desarollo y actualizar el readme y los script consecuentemente
+- Crear branch para el desarrollo y actualizar el README y los script consecuentemente
+- No configurar ajustes relacionados con el DPI en s1-s3.
+	- Añadir a autostart.sh una función para detectar si el DPI está configurado
+	- En caso de que no, abrir una terminal con un script de configuración
 - Añadir copias de seguridad incrementales a `crypt-backup`.
 - Arreglar las entradas MAN y código sobre las flags de uso (st, dmenu).
 - Modularizar s3 dividiendo el script de instalación en diferentes scripts.

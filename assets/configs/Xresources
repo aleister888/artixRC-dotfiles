@@ -3,6 +3,15 @@ Xcursor.size: 64
 
 *font: Iosevka SS05:size=14
 
+xmenu.font: Iosevka SS05:bold:size=14
+xmenu.border: #545454
+xmenu.separator: #545454
+xmenu.selbackground: #222222
+xmenu.gap: 4
+xmenu.width: 64
+xmenu.height: 36
+xmenu.borderWidth: 4
+
 *background: #282828
 *foreground: #ebdbb2
 *color0:  #665C54
