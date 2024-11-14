@@ -3,7 +3,7 @@
 # Visualizador de archivos para LF.
 
 # Crear el directorio para la caché
-[ -d $XDG_CACHE_HOME/lf ] || mkdir $XDG_CACHE_HOME/lf
+[ -d "$XDG_CACHE_HOME/lf" ] || mkdir "$XDG_CACHE_HOME/lf"
 
 set -C -f
 IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}"
@@ -14,17 +14,10 @@ image() {
 
 	if [ -f "$1" ] && [ -n "$DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
 
-		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-
-			printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
-			"$X" "$Y" "$MW" "$MH" "$1" > "$FIFO_UEBERZUG"
-
-		elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-
-			ueberzugpp cmd -s "$UB_SOCKET" -a add -i PREVIEW -x "$X" -y "$Y" --max-width "$MW" --max-height "$MH" -f "$1"
-			exit 1
-
-		fi
+	if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+		printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
+		"$X" "$Y" "$MW" "$MH" "$1" > "$FIFO_UEBERZUG"
+	fi
 	else
 		mediainfo "$6"
 	fi
@@ -78,13 +71,14 @@ image/*)
 # Mostrar la carátula y metadatos de los archivos de audio
 audio/flac | audio/mpeg | audio/x-m4a | audio/mp4 )
 	ffmpeg -i "$1" -y -f ffmetadata "${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt"
-	NAME="$(cat ${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt | grep -i ALBUM | rev | cut -d= -f1 | rev | tr -cd '[:alnum:]._-')"
+	NAME="$(grep -i ALBUM "${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt" | rev | cut -d= -f1 | rev | tr -cd '[:alnum:]._-')"
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$NAME"
 	[ ! -f "$CACHE.jpg" ] && ffmpeg -nostdin -i "$1" "$CACHE.jpg"
 	image "$CACHE.jpg" "$2" "$3" "$4" "$5" &
 	{
-		printf '\n%.0s' $(seq $(( $4 / 4 )))
-		cat "${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt" | grep -ivwE "(comment|encoder|ffmetadata1)"
+		printf '\n%.0s' $(seq $(( $4 / 5 )))
+		printf '\n'
+		grep -ivwE "(comment|encoder|ffmetadata1)" "${XDG_CACHE_HOME:-$HOME/.cache}/lf/metadata.txt"
 	}
 	exit 1 ;;
 
@@ -115,7 +109,7 @@ video/* )
 	FIRST="$(unzip -l "$1" | head -5 | tail -1 | awk '{$1=""; $2=""; $3=""; sub("   ", " "); print}' | cut -c 2-)"
 	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$NAME"
 	[ ! -d "$CACHE" ] && 7z e "$1" -o"$CACHE" "$FIRST" >/dev/null
-	IMG="$(find $CACHE | grep "jpg\|png" | sort | head -n 1)"
+	IMG="$(find "$CACHE" | grep "jpg\|png" | sort | head -n 1)"
 	image "$IMG" "$2" "$3" "$4" "$5"
 	exit 1 ;;
 
@@ -157,14 +151,10 @@ video/* )
 # Convertir documentos a texto
 *opendocument*) odt2txt "$1" | fold -w $(($(($4-2))/5+2)) ;;
 
-# Mostar información sobre las claves públicas con gpg
-# file --dereference --brief --mime-type
-# application/pgp-keys
-
 # Mostar información sobre las claves con pgp
 */pgp-encrypted) gpg --list-packets "$1" ;;
 
 # Si no es ninguno de estos tipos, usar medianfo
-*/*) mediainfo "$1" | tr -s " " || exit 1;;
+*) mediainfo "$1" | tr -s " " || exit 1;;
 
 esac
