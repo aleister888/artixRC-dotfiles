@@ -55,6 +55,7 @@ let g:vim_markdown_math = 1
 
 " markdown-preview.nvim
 let g:mkdp_auto_start = 0
+let g:mkdp_refresh_slow = 1
 let g:mkdp_preview_options = { 'disable_filename': 1 }
 let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 let g:mkdp_page_title = '${name}'

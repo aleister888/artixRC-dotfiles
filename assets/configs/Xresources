@@ -1,6 +1,8 @@
 Xcursor.theme: capitaine-cursors
 Xcursor.size: 64
 
+*font: Iosevka SS05:size=14
+
 *background: #282828
 *foreground: #ebdbb2
 *color0:  #665C54
