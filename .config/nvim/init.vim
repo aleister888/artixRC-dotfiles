@@ -138,7 +138,6 @@ set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
 set list fillchars+=vert:\| " Líneas de separación vertical y carácteres invisibles
 set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
-set nobackup nowb noswapfile " Desactivar backups
 
 " Indentación y tabulación
 autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
@@ -241,6 +240,7 @@ au Filetype tex nmap <silent><leader>h :VimtexView<CR>
 		endif
 	endfunction
 au Filetype tex nmap <silent><leader>j :call ToggleVimtexErrors()<CR>
+au Filetype tex nmap <silent><leader>k <plug>(vimtex-clean)<CR>
 
 " Shell
 au FileType sh nmap <leader>f :CocList outline<CR>
