@@ -91,7 +91,7 @@ video/* )
 	[ ! -f "$CACHE" ] && ffmpegthumbnailer -i "$1" -o "$CACHE" -s 0
 	image "$CACHE" "$2" "$3" "$4" "$5" &
 	{
-		printf '\n%.0s' $(seq $(( $4 / 5)))
+		printf '\n%.0s' $(seq $(( $4 / 5 )))
 		mediainfo "$1" | grep -E "File size|Duration|FPS|Movie name" | grep -v "SPF)" | tr '\t' ' '| tr -s " " | sort | uniq
 	}
 	exit 1 ;;

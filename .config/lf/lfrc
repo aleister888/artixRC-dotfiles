@@ -5,11 +5,7 @@
 # \__,_|_|\___|_|___/\__\___|_|    |_|_|    \___\___/|_| |_|_| |_|\__, |
 #                                                                 |___/
 
-# Si se usa un adminstrador de ventanas, perl-file-mimeinfo
-# debe estar instalado y la variable XDG_CURRENT_DESKTOP debe
-# estar establecida como XDG_CURRENT_DESKTOP=X-Generic para que
-# xdg-utils funcione de forma correcta
-
+# Opciones de lf
 set shell zsh
 set shellopts '-euy'
 set ifs "\n"
@@ -18,67 +14,68 @@ set scrolloff 10
 set icons
 set period 1
 set relativenumber
+set info size:time
 set cursorpreviewfmt "\033[7;90m"
-
 set cleaner '~/.config/lf/cleaner'
 set previewer '~/.config/lf/scope'
-
-set info size:time
-# Relación entre columnas
 set ratios 3:5:4
-# Definir Archivos Ocultos
 set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log"
 
 # Recargar configuración
 map C &lf -remote "send $id source ~/.config/lf/lfrc"
-# Renombrar/Copiar/Mover Archivos
+# Pegar archivos
 map p paste
+# Renombrar archivos
 map r rename
 map <c-r> bulk-rename
-# Buscar Archivos
+# Gestionar papelera
+map s trash
+map d clean-trash
+map f restore-trash
+# Cambiar de directorio
+map <esc> home
+map z home
+map t cd /tmp
+# Seleccionar archivos
 map / :fzf_jump
 map <c-_> :fzf_search
-# Borrar Archivos
-map S trash
-map D clean-trash
-map F restore-trash
-# volver a $HOME
-map <esc> home
-map Z home
-map T cd /tmp
-# Extraer y comprimir Archivos
+# Extraer/comprimir archivos
 map E extract
 map <c-e> compress
-# Abrir Archivos
+# Abrir archivos
 cmd open-with %export ; "$@" "$fx"
 map <enter> push :open-with<space>
 map o &mimeopen "$f"
 map O $mimeopen --ask $f
-# Mostrar/Ocultar Archivos Ocultos
+# Mostrar/ocultar los archivos ocultos
 map h set hidden!
-# Editar Archivo
-map V push :!nvim<space>$f
-# Copiar al porta-papeles la ruta del archivo
-map Y $printf "%s" "$fx" | xclip -selection clipboard
-# Poder arrastar archivo gráficamente
+# Abrir/crear archivo con vim
+map v push :!nvim<space>$f
+# Permitir arrastrar archivos hacia otra ventana
 map <c-z> $setsid -f dragon-drop -a -x $fx
-# Imprimr tamaño de la Carpeta/s o archivo(s)
+# Notificar del tamaño de los ítemes actuales
 map P size
-# Crear carpetas
+# Crear directorio
 map m push %mkdir<space>
 # Ejecutar comandos
-map s shell
+map S shell
+# Copiar el nombre y ruta del archivo actual
+map y ${{
+	printf "%s" "$fx" | xclip -selection clipboard
+	notify-send -i gpaste "Ruta copiada al portapapeles"
+}}
+# Salir del programa
 map q ${{
 	# Restaurar el título original de la ventana
 	printf '\033]0;\007'
 	/usr/bin/lf -remote "send $id quit"
 }}
 
+# Muestra información sobre el directorio actual
 cmd on-cd &{{
 	clear
-	printf '\033]0;%s\007' "${PWD/#$HOME/\~}" > /dev/tty
 	# Mostrar el directorio en el nombre de la ventana
-	printf "\033]0;$(pwd | sed "s|$HOME|~|")\007" >/dev/tty
+	printf '\033]0;%s\007' "${PWD/#$HOME/\~}" > /dev/tty
 	# Mostrar información sobre los repositorios
 	if [ -d .git ] || [ -f .git ]; then
 		branch="$(git branch --show-current 2>/dev/null)" || true
@@ -97,18 +94,15 @@ cmd on-cd &{{
 	lf -remote "send $id set promptfmt \"$fmt\""
 }}
 
-# Imprimir como título de ventana nuestro CWD
 on-cd
 
+# Muestra información del archivo seleccionado con eza
 cmd on-select &{{
 	clear
 	lf -remote "send $id set statfmt \"$(eza -ld --color=always "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
 }}
 
-cmd clean ${{
-	clear
-}}
-
+# Comprimir archivos dentro de un directorio en el formato seleccionado
 cmd compress ${{
 	if whiptail --title "$(echo $PWD)" \
 	--yesno "Comprimir:\n  Archivos de => $PWD\n  En el archivo => /tmp/$(basename $(echo $PWD)).*" 10 60; then
@@ -129,8 +123,10 @@ cmd compress ${{
 			--msgbox "Archivo comprimido en: /tmp/$(basename $(echo $PWD)).7z" 10 60 ;;
 		esac
 	fi
+	clear
 }}
 
+# Enviar una notificación con el tamaño del ítem seleccionado
 cmd size &{{
 	dunstctl close-all
 	notify-send -i system-file-manager \
@@ -139,6 +135,7 @@ cmd size &{{
 
 cmd home :cd ~/
 
+# Renombrar el contenido de un directorio con nvim
 cmd bulk-rename ${{
 	old="$(mktemp)"
 	new="$(mktemp)"
@@ -163,6 +160,7 @@ cmd bulk-rename ${{
 	/usr/bin/lf -remote "send $id unselect"
 }}
 
+# Cambiar de directorio con fzf
 cmd fzf_search ${{
 	RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
 	res="$(
@@ -172,8 +170,10 @@ cmd fzf_search ${{
 		| cut -d':' -f1 | sed 's/\\/\\\\/g;s/"/\\"/g'
 	)"
 	[ -n "$res" ] && /usr/bin/lf -remote "send $id select \"$res\""
+	clear
 }}
 
+# Buscar con fzf cadenas entre los archivos
 cmd fzf_jump ${{
 	res="$(find . -maxdepth 1 | fzf --reverse --header='Ir a la localización')"
 	if [ -n "$res" ]; then
@@ -185,8 +185,10 @@ cmd fzf_jump ${{
 		res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
 		/usr/bin/lf -remote "send $id $cmd \"$res\""
 	fi
+	clear
 }}
 
+# Abrir archivos en función del tipo
 cmd open ${{
 	case $(xdg-mime query filetype "$(readlink -f $f)") in
 		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
@@ -236,6 +238,7 @@ cmd open ${{
 
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
+# Extraer archive
 cmd extract ${{
 	whiptail --title "¿Extraer archivo(s)?" \
 	--yesno "¿Quieres extraer el archivo $f?" 10 60 && \
@@ -244,6 +247,7 @@ cmd extract ${{
 	--msgbox "Los archivos se extrajeron correctamente" 10 60
 }}
 
+# Pegar archivos copiados/cortados
 cmd paste &{{
 	set -- $(cat ~/.local/share/lf/files)
 	mode="$1"
@@ -263,6 +267,7 @@ cmd paste &{{
 	/usr/bin/lf -remote "send clear"
 }}
 
+# Mover a la papelera
 cmd trash ${{
 	clear; tput bold
 	set -f
@@ -273,8 +278,10 @@ cmd trash ${{
 	notify-send -i \
 	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
 	"Archivo(s) movido(s) a la papelera"
+	clear
 }}
 
+# Vaciar la papelera
 cmd clean-trash ${{
 	clear; tput bold
 	set -f
@@ -286,8 +293,10 @@ cmd clean-trash ${{
 	notify-send -i \
 	/usr/share/icons/Papirus-Dark/128x128/places/user-trash.svg \
 	"Archivo(s) borrados"
+	clear
 }}
 
+# Restaurar archivos de la papelera
 cmd restore-trash ${{
 	clear; tput bold
 	set -f
@@ -296,4 +305,5 @@ cmd restore-trash ${{
 	printf "¿Restaurar papelera? [s/N] "
 	read ans
 	[ $ans = "s" ] && trash-restore && printf "done"
+	clear
 }}
