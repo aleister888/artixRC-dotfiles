@@ -73,7 +73,7 @@ driver_choose(){
 	${driver_options[@]})
 	case $graphic_driver in
 	amd)
-		packages+=" xf86-video-amdgpu libva-mesa-driver lib32-libva-mesa-driver vulkan-radeon lib32-vulkan-radeon" ;;
+		packages+=" xf86-video-amdgpu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon" ;;
 	nvidia)
 		packages+=" dkms nvidia-dkms nvidia-utils libva-vdpau-driver libva-mesa-driver nvidia-prime lib32-nvidia-utils nvidia-utils-openrc opencl-nvidia" ;;
 	intel)
