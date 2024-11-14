@@ -187,8 +187,8 @@ cmd open ${{
 			$EDITOR "$fx" ;;
 
 		image/*)
-			filelist="$(ls "$PWD" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|avif\|tif\|ico\)\(_large\)*$" )"
-			index=$(echo "$filelist" | tr ' ' '\n' | grep -n -i $(basename "$f") | cut -d: -f1)
+			filelist="$(find "$PWD" -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" -o -name "*.avif" -o -name "*.tif" -o -name "*.ico")"
+			index="$(echo "$filelist" | grep -n -i "$f" | cut -d: -f1)"
 			setsid -f nsxiv -n $index $filelist &
 		;;
 
