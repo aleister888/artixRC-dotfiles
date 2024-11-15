@@ -57,9 +57,9 @@ ASSETDIR="$HOME/.dotfiles/assets/configs"
 
 # Copiar la configuración de GTK
 rm -rf ~/.config/gtk-[2-4].0
-cp -r "$ASSETDIR/gtk-2.0" ~/.config/gtk-2.0
-cp -r "$ASSETDIR/gtk-3.0" ~/.config/gtk-3.0
-cp -r "$ASSETDIR/gtk-4.0" ~/.config/gtk-4.0
+cp -rf "$ASSETDIR/gtk-2.0" ~/.config/gtk-2.0
+cp -rf "$ASSETDIR/gtk-3.0" ~/.config/gtk-3.0
+cp -rf "$ASSETDIR/gtk-4.0" ~/.config/gtk-4.0
 
 sudo mkdir -p /root/.config
 sudo rm -rf /root/.gtkrc-2.0 /root/.config/gtk-3.0 /root/.config/gtk-4.0

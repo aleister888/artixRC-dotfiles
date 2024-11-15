@@ -36,7 +36,5 @@ st.o
 st/st
 *.toc
 util.o
-xmenu.o
-xmenu/xmenu
 x.o
 .zcompdump

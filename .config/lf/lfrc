@@ -15,7 +15,6 @@ set icons
 set period 1
 set relativenumber
 set info size:time
-set cursorpreviewfmt "\033[7;90m"
 set cleaner '~/.config/lf/cleaner'
 set previewer '~/.config/lf/scope'
 set ratios 3:5:4
@@ -99,7 +98,7 @@ on-cd
 # Muestra información del archivo seleccionado con eza
 cmd on-select &{{
 	clear
-	lf -remote "send $id set statfmt \"$(eza -ld --color=always "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+	lf -remote "send $id set statfmt \"$(eza -ldHF --color=always "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
 }}
 
 # Comprimir archivos dentro de un directorio en el formato seleccionado
