@@ -2,7 +2,7 @@
   background-color: $bg;
   color: $fg;
   padding: 24px;
-  border-radius: 24px;
+  border-radius: 28px;
 }
 
 .timebox {
@@ -67,17 +67,18 @@
     padding: 12px 0px;
     .disk-slider {
       .disk-label {
-        font-family: Symbols Nerd Font;
-        font-size: 32px;
+        font-family: Symbols Nerd Font Mono;
+        font-size: 28px;
         margin-right: 12px;
-        margin-left: 4px;
-        margin-bottom: -4px;
+        margin-left: 8px;
+        margin-bottom: -12px;
         color: $fg;
       }
       & progressbar trough {
         all: unset;
         border-radius: 8px;
         background-color: $black;
+        margin-right: 12px;
         margin-left: 8px;
         margin-bottom: 10px;
         min-height: 22px;
@@ -93,17 +94,18 @@
     }
     .vol-slider {
       .vol-label {
-        font-family: Symbols Nerd Font;
-        font-size: 36px;
-        margin-right: 16px;
-        margin-left: 8px;
-        margin-bottom: 10px;
+        font-family: Symbols Nerd Font Mono;
+        font-size: 28px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 8px;
         color: $fg;
       }
       & scale trough {
         all: unset;
         border-radius: 8px;
         background-color: $black;
+        margin-right: 12px;
         margin-left: 8px;
         margin-bottom: 6px;
         min-height: 22px;
@@ -118,11 +120,11 @@
       margin-bottom: -10px;
     }
     .mic-label {
-      font-family: Symbols Nerd Font;
-      font-size: 32px;
+      font-family: Symbols Nerd Font Mono;
+      font-size: 38px;
       margin-top: 8px;
-      margin-right: 16px;
-      margin-left: 8px;
+      margin-right: 6px;
+      margin-left: 4px;
       margin-bottom: 8px;
       color: $fg;
     }
@@ -131,8 +133,9 @@
         all: unset;
         border-radius: 8px;
         background-color: $black;
+        margin-top: -4px;
+        margin-right: 12px;
         margin-left: 8px;
-        margin-bottom: 0px;
         min-height: 22px;
         min-width: 460px;
         & highlight {
@@ -182,7 +185,7 @@
       all: unset;
       transition: all ease .3s;
       button {
-        font-family: Symbols Nerd Font;
+        font-family: Symbols Nerd Font Mono;
         font-size: 32px;
         padding: 12px;
         border-radius: 24px;
@@ -190,7 +193,7 @@
         &:active { background-color: $bg; }
       }
       .pause {
-        font-family: Symbols Nerd Font;
+        font-family: Symbols Nerd Font Mono;
         font-size: 48px;
       }
       margin-bottom: 8px;
@@ -205,7 +208,6 @@
   padding: 12px;
   color: $fg;
   background-color: $bgSecondary;
-  margin-bottom: -18px;
 
   .cal {
     font-family: Iosevka Fixed SS05;
