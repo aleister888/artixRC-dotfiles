@@ -8,7 +8,7 @@
 static char *font = "Iosevka Term SS05:pixelsize=20";
 /* Spare fonts */
 static char *font2[] = {
-	"Symbols Nerd Font:style=Regular:pixelsize=20",
+	"Symbols Nerd Font Mono:style=Regular:pixelsize=20",
 };
 
 static int borderpx = 2;
