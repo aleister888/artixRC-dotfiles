@@ -79,18 +79,11 @@ sink_edit(){
 # Elegir si vincular o desvincular sinks
 add="Añadir sink al micrófono virtual"
 del="Quitar sink del micrófono virtual"
-restart="Reiniciar pipewire"
-chosen=$(echo -e "$add\n$del\n$restart" | dmenu -l 10)
+chosen=$(echo -e "$add\n$del" | dmenu -l 10)
 if [ "$chosen" = "$add" ]; then
 	[ -z "$DEVICES" ] && notify-send -i $ICON "No hay sinks que añadir" && exit
 	sink_edit add
 elif [ "$chosen" = "$del" ]; then
 	[ -z "$DEL_DEVICES" ] && notify-send -i $ICON "No hay sinks que borrar" && exit
 	sink_edit del
-elif [ "$chosen" = "$restart" ]; then
-	pkill -x pipewire
-	pipewire-start &
-	sleep 2
-	pipewire-virtualmic &
-	notify-send -i "$ICON" "Pipewire reiniciado"
 fi
