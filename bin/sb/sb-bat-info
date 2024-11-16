@@ -9,7 +9,7 @@ info-print(){
 	for ((i=1; i<=num_baterias; i++)); do
 		estado=""
 		if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
-			estado=" "
+			estado="C "
 		fi
 		porcentaje="$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%')"
 		tiempo="$(echo "$out" | sed "${i}q;d" | grep -oP ' [0-9]{2}:[0-9]{2}:[0-9]{2}')"

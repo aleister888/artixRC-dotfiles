@@ -12,12 +12,14 @@ if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
 
-	Plug 'alisdair/vim-armasm' " Syntaxis para ARM Assembly
+	Plug 'alisdair/vim-armasm' " Sintaxis para ARM Assembly
+	Plug 'cakebaker/scss-syntax.vim'
 	Plug 'ryanoasis/vim-devicons' " Iconos
+	Plug 'nvim-tree/nvim-web-devicons' " Iconos
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
 	Plug 'akinsho/bufferline.nvim' " Pestañas
-	Plug 'preservim/nerdtree' " Árbol de directorios
+	Plug 'nvim-tree/nvim-tree.lua' " Árbol de directorios
 	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
 	Plug 'mbbill/undotree' " Mostrar árbol de cambios
 	Plug 'preservim/vim-markdown' " Funciones para markdown
@@ -40,13 +42,6 @@ endif
 " vim-armasm
 let asmsyntax='armasm'
 let filetype_inc='armasm'
-
-" nerdtree
-let NERDTreeShowHidden=1
-let g:NERDTreeDirArrowExpandable="+"
-let g:NERDTreeDirArrowCollapsible="-"
-au BufWinEnter * if &filetype == 'nerdtree' | setlocal winhighlight=StatusLineNC | endif
-au BufWinLeave * if &filetype == 'nerdtree' | setlocal winhighlight= | endif
 
 " vim-hexokinase
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
@@ -152,7 +147,7 @@ autocmd FileType * setlocal copyindent preserveindent tabstop=2 shiftwidth=2
 
 if $USER !=# 'root'
 	set clipboard+=unnamedplus
-	so ~/.config/nvim/bufferline.lua
+	so ~/.config/nvim/config.lua
 endif
 
 "###################
@@ -201,8 +196,8 @@ hi CocInfoHighlight guifg=#83a598 guibg=#282828
 
 " Plugins
 inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
-nnoremap <silent><leader>t :NERDTreeToggle<CR>
-nnoremap <silent><leader>u :UndotreeToggle<CR>
+nnoremap <silent><leader>t :NvimTreeToggle<CR>
+nnoremap <silent><leader>u :NvimTreeToggle<CR>
 
 " Desplazarse por el texto
 nnoremap <ScrollWheelUp> k<C-G>

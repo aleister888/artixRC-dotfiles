@@ -1,235 +1,194 @@
 .dashboard {
-  background-color: $bg;
-  color: $fg;
-  padding: 12px;
-  border-radius: 12px;
+	background-color: $bg;
+	color: $fg;
+	padding: 12px;
+	border-radius: 14px;
 }
 
 .timebox {
-  all: unset;
-  background-color: $bgSecondary;
-  border-radius: 12px;
-  padding: 6px;
-  .time-container {
-    .content {
-      font-family: Iosevka Fixed SS05;
-      font-weight: bolder;
-      font-size: 56px;
-    }
-  }
-  .date-container {
-    font-family: Iosevka Fixed SS05;
-    font-weight: normal;
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
+	background-color: $bgSecondary;
+	padding: 4px;
+	border-radius: 12px;
+	.time-container {
+		.content {
+			font-family: Iosevka Fixed SS05;
+			font-weight: bold;
+			font-size: 56px;
+		}
+	}
+	.date-container {
+		font-family: Iosevka Fixed SS05;
+		font-weight: normal;
+		font-size: 16px;
+		margin-bottom: 8px;
+	}
 }
 
 .profile {
-  all: unset;
-  background-color: $bgSecondary;
-  border-radius: 12px;
-  padding: 6px;
-  .lastcol {
-    font-family: Iosevka Fixed SS05;
-    margin-left: 6px;
-    margin-bottom: 3px;
-    .username {
-      font-size: 24px;
-      font-weight: bolder;
-    }
-    .uptime, .hostname {
-      font-family: Iosevka Fixed SS05;
-      font-weight: bolder;
-    }
-    .hostname {
-      color: $blue;
-      font-size: 16px;
-    }
-    .uptime {
-      color: $lightblack;
-      font-size: 12px;
-    }
-  }
-}
-
-.controls {
-  all: unset;
-  background-color: $bgSecondary;
-  border-radius: 12px;
-  padding: 6px;
-  .header {
-    font-family: Iosevka Fixed SS05;
-    color: $lightblack;
-    font-size: 4px;
-  }
-  .content {
-    padding: 6px 0px;
-    .disk-slider {
-      .disk-label {
-        font-family: Iosevka Fixed SS05;
-        font-size: 16px;
-        margin-bottom: -6px;
-        margin-right: 9px;
-        margin-left: -2px;
-        color: $fg;
-      }
-      & progressbar trough {
-        all: unset;
-        border-radius: 4px;
-        background-color: $black;
-        margin-left: 4px;
-        margin-bottom: 6px;
-        min-height: 11px;
-        min-width: 230px;
-        & progress {
-          all: unset;
-          min-height: 11px;
-          background-color: $red;
-          color: #000000;
-          border-radius: 4px;
-        }
-      }
-    }
-    .vol-slider {
-      .vol-label {
-        font-family: Iosevka Fixed SS05;
-        font-size: 18px;
-        margin-right: 7px;
-        margin-left: -1px;
-        margin-bottom: 5px;
-        color: $fg;
-      }
-      & scale trough {
-        all: unset;
-        border-radius: 4px;
-        background-color: $black;
-        margin-left: 4px;
-        margin-bottom: 6px;
-        min-height: 11px;
-        min-width: 230px;
-        & highlight {
-          all: unset;
-          background-color: $cyan;
-          color: #000000;
-          border-radius: 4px;
-        }
-      }
-      margin-bottom: -5px;
-    }
-    .mic-label {
-      font-family: Iosevka Fixed SS05;
-      font-size: 16px;
-      margin-right: 8px;
-      margin-bottom: 4px;
-      color: $fg;
-    }
-    .mic-slider {
-      & scale trough {
-        all: unset;
-        border-radius: 4px;
-        background-color: $black;
-        margin-left: 4px;
-        margin-bottom: 6px;
-        min-height: 11px;
-        min-width: 230px;
-        & highlight {
-          all: unset;
-          background-color: $yellow;
-          color: #000000;
-          border-radius: 4px;
-        }
-      }
-    }
-  }
+	background-color: $bgSecondary;
+	padding: 6px;
+	border-radius: 12px;
+	.lastcol {
+		font-family: Iosevka Fixed SS05;
+		font-weight: bold;
+		font-size: 24px;
+		margin-left: 8px;
+		.hostname {
+			color: $blue;
+			font-size: 16px;
+		}
+		.uptime {
+			color: $lightblack;
+			font-size: 12px;
+			margin-bottom: 4px;
+		}
+	}
 }
 
 .music-box {
-  all: unset;
-  background-color: $bgSecondary;
-  border-radius: 12px;
-  padding: 6px;
-  .firstcol {
-    .picture {
-      all: unset;
-      margin: 4px;
-      min-height: 128px;
-      min-width: 128px;
-      border-radius: 12px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-  }
-  .lastcol {
-    .title {
-      all: unset;
-      font-family: Iosevka Fixed SS05;
-      font-size: 18px;
-      font-weight: bolder;
-      margin-top: 24px;
-      margin-right: 6px;
-    }
-    .artist {
-      all: unset;
-      font-family: Iosevka Fixed SS05;
-      font-size: 12px;
-      color: $lightblack;
-    }
-    .music-controls {
-      all: unset;
-      transition: all ease .3s;
-      button {
-        font-family: Symbols Nerd Font;
-        font-size: 16px;
-        padding: 6px;
-        border-radius: 12px;
-        &:hover { background-color: $black; }
-        &:active { background-color: $bg; }
-      }
-      .pause {
-        font-family: Symbols Nerd Font;
-        font-size: 24px;
-      }
-      margin-bottom: 4px;
-    }
-  }
+	background-color: $bgSecondary;
+	padding: 6px;
+	border-radius: 12px;
+	.firstcol {
+		.picture {
+			margin-top: 6px;
+			margin-bottom: 6px;
+			margin-left: 6px;
+			min-height: 128px;
+			min-width: 128px;
+			border-radius: 8px;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	}
+	.lastcol {
+		font-family: Iosevka Fixed SS05;
+		margin-top: 32px;
+		margin-right: 12px;
+		.title {
+			font-weight: bold;
+			font-size: 18px;
+		}
+		.artist {
+			color: $lightblack;
+			font-size: 12px;
+		}
+		.music-controls {
+			transition: all ease .3s;
+			font-family: Symbols Nerd Font Mono;
+			button {
+				font-size: 16px;
+				padding: 6px;
+				border-radius: 12px;
+				&:hover { background-color: $black; }
+				&:active { background-color: $bg; }
+			}
+			.pause {
+				font-size: 24px;
+			}
+		}
+	}
+}
+
+.controls {
+	background-color: $bgSecondary;
+	font-family: Symbols Nerd Font Mono;
+	font-size: 16px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	border-radius: 12px;
+	.header {
+		color: $lightblack;
+	}
+	.content {
+		.disk-slider {
+			.disk-label {
+				color: $fg;
+				margin-left: 0px;
+			}
+			& progressbar trough {
+				background-color: $black;
+				margin-bottom: 6px;
+				margin-left: 10px;
+				min-height: 10px;
+				min-width: 235px;
+				border-radius: 4px;
+				& progress {
+					background-color: $red;
+					min-height: 10px;
+					border-radius: 4px;
+				}
+			}
+		}
+		.vol-slider {
+			.vol-label {
+				color: $fg;
+				margin-left: 0px;
+			}
+			& scale trough {
+				background-color: $black;
+				margin-left: 10px;
+				min-height: 10px;
+				min-width: 235px;
+				border-radius: 4px;
+				& highlight {
+					background-color: $cyan;
+					border-radius: 4px;
+				}
+			}
+		}
+		.mic-label {
+			color: $fg;
+			font-size: 20px;
+			margin-left: -2px;
+			margin-right: 2px;
+		}
+		.mic-slider {
+			& scale trough {
+				background-color: $black;
+				margin-left: 6px;
+				min-height: 10px;
+				min-width: 235px;
+				border-radius: 4px;
+				& highlight {
+					background-color: $yellow;
+					border-radius: 4px;
+				}
+			}
+		}
+	}
 }
 
 .cal-box {
-  all: unset;
-  border-radius: 12px;
-  background-color: $bgSecondary;
-  padding: 6px;
-  color: $fg;
-  background-color: $bgSecondary;
-  margin-bottom: -9px;
+	background-color: $bgSecondary;
+	color: $fg;
+	font-family: Iosevka Fixed SS05;
+	padding-top: 6px;
+	padding-bottom: 0px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-bottom: 2px;
+	border-radius: 12px;
 
-  .cal {
-    font-family: Iosevka Fixed SS05;
-    font-size: 18px;
-    padding: 0.1rem 0.025rem;
-  }
-}
-
-calendar:selected {
-  color: $cyan;
+	.cal {
+		font-size: 18px;
+		padding: 0.1rem 0.025rem;
+	}
 }
 
 calendar.header {
-  color: $cyan;
-  font-weight: bold;
+	color: $cyan;
 }
 
 calendar.button {
-  color: $cyan;
+	color: $cyan;
 }
 
 calendar.highlight {
-  color: $green;
-  font-weight: bold;
+	color: $green;
 }
 
 calendar:indeterminate {
-  color: $lightblack;
+	color: $lightblack;
 }

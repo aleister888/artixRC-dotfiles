@@ -3,8 +3,8 @@ require("bufferline").setup{
 		show_buffer_icons = true,
 		show_buffer_close_icons = true,
 		show_close_icon = true,
-		buffer_close_icon = "",
-		close_icon = "",
+		buffer_close_icon = "",
+		close_icon = "",
 		tab_size = 10,
 		diagnostics = "coc",
 		diagnostics_indicator = function(count, level, diagnostics_dict, context)
@@ -16,8 +16,6 @@ require("bufferline").setup{
 			return s
 		end,
 		offsets = {
-			{ filetype = "nerdtree",
-				text = "Explorador de Archivos" },
 			{ filetype = "vimtex-toc",
 				text = "Índice" },
 			{ filetype = "qf",
@@ -37,3 +35,9 @@ require("bufferline").setup{
 		end,
 	},
 }
+
+require'nvim-web-devicons'.setup {
+ default = true;
+}
+
+require("nvim-tree").setup()

@@ -8,9 +8,9 @@ title=$(playerctl metadata --player=tauon title)
 stat=$(playerctl status --player=tauon)
 
 if [ "$stat" == "Playing" ]; then
-	icon="奈"
+	icon=""
 else
-	icon=""
+	icon=""
 fi
 
 if [ "${#title}" -gt "$FACT" ]; then
