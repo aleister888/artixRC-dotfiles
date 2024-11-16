@@ -11,6 +11,8 @@ let mapleader = "," " Definir la tecla leader
 if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
+
+	Plug 'alisdair/vim-armasm' " Syntaxis para ARM Assembly
 	Plug 'ryanoasis/vim-devicons' " Iconos
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
@@ -34,6 +36,10 @@ endif
 "################################
 "# Configuración de los plugins #
 "################################
+
+" vim-armasm
+let asmsyntax='armasm'
+let filetype_inc='armasm'
 
 " nerdtree
 let NERDTreeShowHidden=1

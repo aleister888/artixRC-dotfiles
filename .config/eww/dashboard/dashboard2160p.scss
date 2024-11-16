@@ -67,11 +67,11 @@
     padding: 12px 0px;
     .disk-slider {
       .disk-label {
-        font-family: Iosevka Fixed SS05;
+        font-family: Symbols Nerd Font;
         font-size: 32px;
-        margin-bottom: -12px;
-        margin-right: 18px;
-        margin-left: -4px;
+        margin-right: 12px;
+        margin-left: 4px;
+        margin-bottom: -4px;
         color: $fg;
       }
       & progressbar trough {
@@ -79,7 +79,7 @@
         border-radius: 8px;
         background-color: $black;
         margin-left: 8px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         min-height: 22px;
         min-width: 460px;
         & progress {
@@ -93,10 +93,10 @@
     }
     .vol-slider {
       .vol-label {
-        font-family: Iosevka Fixed SS05;
+        font-family: Symbols Nerd Font;
         font-size: 36px;
-        margin-right: 14px;
-        margin-left: -2px;
+        margin-right: 16px;
+        margin-left: 8px;
         margin-bottom: 10px;
         color: $fg;
       }
@@ -105,7 +105,7 @@
         border-radius: 8px;
         background-color: $black;
         margin-left: 8px;
-        margin-bottom: 12px;
+        margin-bottom: 6px;
         min-height: 22px;
         min-width: 460px;
         & highlight {
@@ -118,9 +118,11 @@
       margin-bottom: -10px;
     }
     .mic-label {
-      font-family: Iosevka Fixed SS05;
+      font-family: Symbols Nerd Font;
       font-size: 32px;
+      margin-top: 8px;
       margin-right: 16px;
+      margin-left: 8px;
       margin-bottom: 8px;
       color: $fg;
     }
@@ -130,7 +132,7 @@
         border-radius: 8px;
         background-color: $black;
         margin-left: 8px;
-        margin-bottom: 12px;
+        margin-bottom: 0px;
         min-height: 22px;
         min-width: 460px;
         & highlight {
