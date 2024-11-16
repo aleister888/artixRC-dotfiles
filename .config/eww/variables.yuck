@@ -1,23 +1,23 @@
-(defpoll music_title   :interval "0.1s" "music title")
-(defpoll music_artist  :interval "0.1s" "music artist")
-(defpoll music_art_url :interval "0.1s" "songart")
-(defpoll music_status  :interval "0.1s" "playerctl -p tauon status")
+(defpoll music_title    :interval "0.1s" "music title")
+(defpoll music_artist   :interval "0.1s" "music artist")
+(defpoll music_art_url  :interval "0.1s" "songart")
+(defpoll music_status   :interval "0.1s" "playerctl -p tauon status")
 
-(defpoll disk          :interval "10s" "df --output=pcent / | tail -n 1 | tr -d '%' | xargs")
+(defpoll disk           :interval "10s" "df --output=pcent / | tail -n 1 | tr -d '%' | xargs")
 
-(defpoll volume_icon   :interval "0.1s" "volume icon")
-(defpoll volume_value  :interval "0.1s" "volume vol")
-(defpoll is_muted      :interval "0.1s" "volume muted")
+(defpoll volume_icon    :interval "0.1s" "volume icon")
+(defpoll volume_value   :interval "0.1s" "volume vol")
+(defpoll is_muted       :interval "0.1s" "volume muted")
 
-(defpoll mic_value     :interval "0.1s" "pamixer --default-source --get-volume")
+(defpoll mic_value      :interval "0.1s" "pamixer --default-source --get-volume")
 
-(defpoll uptime        :interval "30s" "awkuptime")
-(defpoll hostname      :interval "10h" "cat /etc/hostname")
-(defpoll user          :interval "30s" "whoami")
+(defpoll uptime         :interval "30s" "awkuptime")
+(defpoll hostname       :interval "10h" "cat /etc/hostname")
+(defpoll user           :interval "30s" "whoami")
 
 (defpoll calendar_day   :interval "10h" "date '+%d'")
 (defpoll calendar_month :interval "10h" "date '+%m")
 (defpoll calendar_year  :interval "10h" "date '+%Y'")
 
-(defpoll time        :interval "1s" "date +'%I:%M:%S'")
-(defpoll completeday :interval "1h" "date '+%A, %d %B'")
+(defpoll time           :interval "1s" "date +'%I:%M:%S'")
+(defpoll completeday    :interval "1h" "date '+%A, %d %B'")

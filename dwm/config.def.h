@@ -7,7 +7,7 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Tamaño de la fuente y los margenes
-static const char *fonts[] = { "Symbols Nerd Font Mono:pixelsize=22:antialias=true:autohint=true","Iosevka Term SS05:pixelsize=24:bold" };
+static const char *fonts[] = { "Symbols Nerd Font Mono:pixelsize=24:antialias=true:autohint=true","Iosevka Term SS05:pixelsize=24:bold" };
 
 // Constantes
 static const unsigned int borderpx       = 6;         // Borde en pixeles de las ventanas
