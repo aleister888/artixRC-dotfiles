@@ -55,7 +55,7 @@ ewwspawn(){
 	fi
 
 	# Cerrar el widget si hay mas de un monitor en uso o alguna ventana activa
-	if [ "$monitors" -gt 1 ] || xdotool getactivewindow >/dev/null; then
+	if [ "$monitors" -gt 1 ] || xdotool getactivewindow &>/dev/null || pgrep i3lock &>/dev/null; then
 		pkill eww
 	# Invocar nuestro widget si hay un solo monitor activo y eww no esta ya en ejecución
 	elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
