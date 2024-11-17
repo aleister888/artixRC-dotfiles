@@ -24,5 +24,5 @@ static const Block blocks[] = {
 	// Hora
 	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          1,  0},
 	// Filtro de luz azul
-	{"\x09^d^"                     ,"sb-nighttime",                             0, 1},
+	{"\x09^d^"                     ,"sb-nighttime",                           60,  1},
 };

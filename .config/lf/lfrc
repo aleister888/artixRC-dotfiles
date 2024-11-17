@@ -74,7 +74,7 @@ map q ${{
 cmd on-cd &{{
 	clear
 	# Mostrar el directorio en el nombre de la ventana
-	printf '\033]0;%s\007' "${PWD/#$HOME/\~}" > /dev/tty
+	printf '\033]0;%s\007' "${PWD/#$HOME/~}" > /dev/tty
 	# Mostrar información sobre los repositorios
 	if [ -d .git ] || [ -f .git ]; then
 		branch="$(git branch --show-current 2>/dev/null)" || true
