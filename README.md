@@ -29,6 +29,7 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 #### Tareas por realizar
 
 - Crear branch para el desarrollo y actualizar el README y los script consecuentemente
+- Actualizar PDF
 - No configurar ajustes relacionados con el DPI en s1-s3.
 	- Añadir a autostart.sh una función para detectar si el DPI está configurado
 	- En caso de que no, abrir una terminal con un script de configuración
