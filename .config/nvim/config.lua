@@ -16,12 +16,10 @@ require("bufferline").setup{
 			return s
 		end,
 		offsets = {
-			{ filetype = "vimtex-toc",
-				text = "Índice" },
-			{ filetype = "qf",
-				text = "Índice" },
-			{ filetype = "undotree",
-				text = "Árbol de Cambios" },
+			{ filetype = "qf",         text = "Índice",   separator = true },
+			{ filetype = "vimtex-toc", text = "Índice",   separator = true },
+			{ filetype = "undotree",   text = "Cambios",  separator = true },
+			{ filetype = "NvimTree",   text = "Archivos", separator = true, highlight = "Directory" },
 		},
 		-- Excluir el TOC de Markdown
 		custom_filter = function(bufnr)

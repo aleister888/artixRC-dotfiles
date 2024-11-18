@@ -4,3 +4,6 @@
 /usr/bin/pipewire &
 sleep 0.5; /usr/bin/pipewire-pulse &
 sleep 0.5; /usr/bin/wireplumber &
+
+pw-metadata -n settings 0 clock.force-rate 44100
+pw-metadata -n settings 0 clock.force-quantum 256

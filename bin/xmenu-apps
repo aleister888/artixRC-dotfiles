@@ -63,6 +63,6 @@ IMG:$ICONPATH/apps/applications-utilities.svg				Ajustes/Sistema
 	IMG:$ICONPATH/apps/grandr.svg					Ajustes de pantalla	arandr && nitrogen --restore
 
 IMG:$ICONPATH/apps/virt-manager.svg					Virt-Manager		virt-manager
-IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg		Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes -m KEY_RIGHTCTRL
+IMG:$ICONPATH/apps/preferences-desktop-remote-desktop.svg		Looking Glass		looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes -m KEY_RIGHTSHIFT
 IMG:$ICONPATH/apps/system-shutdown.svg					Power			powermenu
 EOF
