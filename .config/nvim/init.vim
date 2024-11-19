@@ -12,6 +12,7 @@ if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
 
+	Plug 'andis-sprinkis/lf-vim' " Resaltado para la configuración de lf
 	Plug 'alisdair/vim-armasm' " Sintaxis para ARM Assembly
 	Plug 'cakebaker/scss-syntax.vim'
 	Plug 'ryanoasis/vim-devicons' " Iconos

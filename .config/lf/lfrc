@@ -74,7 +74,7 @@ map q ${{
 cmd on-cd &{{
 	clear
 	# Mostrar el directorio en el nombre de la ventana
-	printf '\033]0;%s\007' "${PWD/#$HOME/~}" > /dev/tty
+	printf '\033]0;%s\007' "$(pwd | sed "s|^$HOME|~|")" > /dev/tty
 	# Mostrar información sobre los repositorios
 	if [ -d .git ] || [ -f .git ]; then
 		branch="$(git branch --show-current 2>/dev/null)" || true
@@ -155,15 +155,12 @@ cmd bulk-rename ${{
 
 # Cambiar de directorio con fzf
 cmd fzf_search ${{
-	RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
-	res="$(
-		FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
-		fzf --bind "change:reload:$RG_PREFIX {q} || true" \
-		--ansi --layout=reverse --header 'Buscar en los archivos' \
-		| cut -d':' -f1 | sed 's/\\/\\\\/g;s/"/\\"/g'
-	)"
-	[ -n "$res" ] && /usr/bin/lf -remote "send $id select \"$res\""
-	clear
+	cmd="rg --column --line-number --no-heading --color=always --smart-case"
+	fzf --ansi --disabled --layout=reverse --header="Search in files" --delimiter=: \
+		--bind="start:reload([ -n {q} ] && $cmd -- {q} || true)" \
+		--bind="change:reload([ -n {q} ] && $cmd -- {q} || true)" \
+		--bind='enter:become(lf -remote "send $id select \"$(printf "%s" {1} | sed '\''s/\\/\\\\/g;s/"/\\"/g'\'')\"")' \
+		--preview='bat --color=always --highlight-line={2} -- {1}'
 }}
 
 # Buscar con fzf cadenas entre los archivos
@@ -179,54 +176,6 @@ cmd fzf_jump ${{
 		/usr/bin/lf -remote "send $id $cmd \"$res\""
 	fi
 	clear
-}}
-
-# Abrir archivos en función del tipo
-cmd open ${{
-	case $(xdg-mime query filetype "$(readlink -f $f)") in
-		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
-			xarchiver "$fx" ;;
-
-		*/zip | */vnd.comicbook+zip)
-			if [[ "$(readlink -f $f)" == *.cbz ]]; then
-				zathura "$f"
-			else
-				xarchiver "$fx"
-			fi ;;
-
-		*/vnd.*document*)
-			setsid -f libreoffice "$fx" ;;
-
-		*/pdf | */epub*)
-			zathura "$f" ;;
-
-		text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop )
-			$EDITOR "$fx" ;;
-
-		image/*)
-			filelist="$(find "$PWD" -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" -o -name "*.avif" -o -name "*.tif" -o -name "*.ico")"
-			index="$(echo "$filelist" | grep -n -i "$f" | cut -d: -f1)"
-			setsid -f nsxiv -n $index $filelist &
-		;;
-
-		audio/*)
-			/usr/bin/mpv --audio-display=no "$f" ;;
-
-		video/*)
-			/usr/bin/mpv "$f" ;;
-
-		*/x-keepass2)
-			keepassxc "$f" ;;
-
-		*/x-reaper-*)
-			reaper "$f" ;;
-
-		*/x-tuxguitar | application/gpx+xml | application/x-gnuplot | application/x-gtp)
-			tuxguitar-bin "$fx" ;;
-
-		*)
-			for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done ;;
-	esac
 }}
 
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
@@ -299,4 +248,51 @@ cmd restore-trash ${{
 	read ans
 	[ $ans = "s" ] && trash-restore && printf "done"
 	clear
+}}
+
+# Abrir archivos en función del tipo
+cmd open ${{
+	case $(xdg-mime query filetype "$(readlink -f $f)") in
+		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
+			xarchiver "$fx" ;;
+
+		*/zip | */vnd.comicbook+zip)
+			if [[ "$(readlink -f $f)" == *.cbz ]]; then
+				zathura "$f"
+			else
+				xarchiver "$fx"
+			fi ;;
+
+		*/vnd.*document*)
+			setsid -f libreoffice "$fx" ;;
+
+		*/pdf | */epub*)
+			zathura "$f" ;;
+
+		text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop )
+			$EDITOR "$fx" ;;
+
+		image/*)
+			filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|svg\)$')
+			index=$(printf "%s\n" $filelist | nl | grep "$(basename "$fx")" | awk '{print $1}')
+			setsid -f nsxiv -n $index $filelist & ;;
+
+		audio/*)
+			/usr/bin/mpv --audio-display=no "$f" ;;
+
+		video/*)
+			/usr/bin/mpv "$f" ;;
+
+		*/x-keepass2)
+			keepassxc "$f" ;;
+
+		*/x-reaper-*)
+			reaper "$f" ;;
+
+		*/x-tuxguitar | application/gpx+xml | application/x-gnuplot | application/x-gtp)
+			tuxguitar-bin "$fx" ;;
+
+		*)
+			for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done ;;
+	esac
 }}
