@@ -6,6 +6,13 @@
 
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
+# Configurar el servidor de claves y limpiar la cache
+grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
+	echo 'keyserver hkp://keyserver.ubuntu.com' | \
+	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
+pacman -Sc --noconfirm
+pacman-key --populate && pacman-key --refresh-keys
+
 # Instalar whiptail y parted
 pacman -Sy --noconfirm --needed parted libnewt xfsprogs
 

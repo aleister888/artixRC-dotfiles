@@ -230,6 +230,13 @@ key=$keyfile
 # SCRIPT #
 ##########
 
+# Configurar el servidor de claves y limpiar la cache
+grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
+	echo 'keyserver hkp://keyserver.ubuntu.com' | \
+	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
+pacman -Sc --noconfirm
+pacman-key --populate && pacman-key --refresh-keys
+
 # Establecer zona horaria
 timezoneset
 
