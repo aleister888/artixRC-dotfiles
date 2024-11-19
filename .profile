@@ -21,6 +21,10 @@ fi
 if [ -d "$HOME/.local/bin/sb" ]; then
 	PATH="$HOME/.local/bin/sb:$PATH"
 fi
+# Añadir scripts a $PATH
+if [ -d "$HOME/.local/bin/utils" ]; then
+	PATH="$HOME/.local/bin/utils:$PATH"
+fi
 
 # Definir cursor usado por X11
 export XCURSOR_PATH=/usr/share/icons:${XDG_DATA_HOME}/icons

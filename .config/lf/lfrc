@@ -58,9 +58,9 @@ map P size
 map m push %mkdir<space>
 # Ejecutar comandos
 map s shell
-# Copiar el nombre y ruta del archivo actual
+# Copiar el directorio del archivo actual al portapapeles
 map Y ${{
-	printf "%s" "$fx" | xclip -selection clipboard
+	printf '"%s"' "$(dirname "$fx")" | xclip -selection clipboard
 	notify-send -i gpaste "Ruta copiada al portapapeles"
 }}
 # Salir del programa

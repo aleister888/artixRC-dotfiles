@@ -23,6 +23,8 @@ static const Block blocks[] = {
 	{" \x07^c#D65D0E^ ^c#FE8019^" ,"date +'%d/%m'",                          60,  0},
 	// Hora
 	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          1,  0},
+	// Indicador Bloq Mayus
+	{"\x10^c#504945^"              ,"sb-bloq",                                 5,  2},
 	// Filtro de luz azul
 	{"\x09^d^"                     ,"sb-nighttime",                           60,  1},
 };

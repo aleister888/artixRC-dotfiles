@@ -271,14 +271,8 @@ keepass_configure(){
 # Crear enlaces simbólicos a /usr/local/bin para ciertos scripts
 scripts_link(){
 	files=(
-		"convert-2m4a"
-		"convert-2mp3"
-		"corruption-check"
-		"exif-remove"
 		"wake"
 		"wakeme"
-		"compressed-backup"
-		"crypt-backup"
 		"pipewire-start"
 		"tray-toggle"
 		"lock"

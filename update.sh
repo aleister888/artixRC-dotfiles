@@ -23,8 +23,8 @@ sh -c "cd $HOME/.dotfiles && git pull" >/dev/null
 # Instalar archivos de configuración y scripts
 sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.local/bin/ bin/" >/dev/null
 sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
-ln -s $HOME/.dotfiles/.profile $HOME/.profile 2>/dev/null
-ln -s $HOME/.dotfiles/.profile $HOME/.config/zsh/.zprofile 2>/dev/null
+ln -s "$HOME/.dotfiles/.profile" "$HOME/.profile" 2>/dev/null
+ln -s "$HOME/.dotfiles/.profile" "$HOME/.config/zsh/.zprofile" 2>/dev/null
 
 # Borrar enlaces rotos
 find "$HOME/.local/bin"	-type l ! -exec test -e {} \; -delete
@@ -105,20 +105,20 @@ cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/defaul
 # Plugins ZSH #
 ###############
 
-
-plugin_install(){
-	git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
+plugin_manage(){
+	if [ ! -e "$HOME/.config/zsh/$(basename "$1")" ]; then
+		git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
+	else
+		sh -c "cd $HOME/.config/zsh/$(basename "$1") && git pull" >/dev/null
+	fi
 }
 
 # Instalar los plugins de zsh que no estén ya instalados
-[ ! -e "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
-	plugin_install zsh-users/zsh-autosuggestions
-[ ! -e "$HOME/.config/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh" ] && \
-	plugin_install zsh-users/zsh-history-substring-search
-[ ! -e "$HOME/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
-	plugin_install zsh-users/zsh-syntax-highlighting
-[ ! -e "$HOME/.config/zsh/zsh-you-should-use/you-should-use.plugin.zsh" ] && \
-	plugin_install MichaelAquilina/zsh-you-should-use
+plugin_manage zsh-users/zsh-autosuggestions
+plugin_manage zsh-users/zsh-history-substring-search
+plugin_manage zsh-users/zsh-syntax-highlighting
+plugin_manage MichaelAquilina/zsh-you-should-use
+
 [ ! -d "$HOME/.config/zsh/ohmyzsh" ] && mkdir -p "$HOME/.config/zsh/ohmyzsh"
 	wget -q "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/dirhistory/dirhistory.plugin.zsh" \
 	-O "$HOME/.config/zsh/ohmyzsh/dirhistory.plugin.zsh"
@@ -146,16 +146,12 @@ sudo update-mime-database /usr/share/mime
 [ ! -d "$HOME/.local/share/applications" ] && \
 	mkdir -p "$HOME/.local/share/applications"
 
-# Creamos el archivo .desktop para lf
+# Enlazamos el archivo .desktop para lf
 ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop" 2>/dev/null
-# Creamos el archivo .desktop para nvim
+# Enlazamos el archivo .desktop para nvim
 ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop" 2>/dev/null
-
-
-# Creamos el archivo .desktop para el visor de imagenes
-cp -f "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop"
-# Creamos el archivo .desktop para el visor de imagenes
-cp -f "$HOME/.dotfiles/assets/desktop/looking-glass.desktop" "$HOME/.local/share/applications/looking-glass.desktop"
+# Enlazamos el archivo .desktop para el visor de imagenes
+ln -s "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop" 2>/dev/null
 
 # Nuestra función para establecer nuestro visor de imagenes, video, audio y editor de texto
 set_default_mime_types(){
@@ -167,17 +163,15 @@ set_default_mime_types(){
 }
 
 set_default_mime_types "^image" "image.desktop"
-
 set_default_mime_types "^*/pdf" "org.pwmt.zathura.desktop"
 set_default_mime_types "^video" "mpv.desktop"
 set_default_mime_types "^audio" "mpv.desktop"
-set_default_mime_types "^text" "text.desktop"
+set_default_mime_types "^text"  "text.desktop"
 
 # Establecemos el administrador de archivos predetermiando
 xdg-mime default file.desktop inode/directory
 xdg-mime default file.desktop x-directory/normal
 update-desktop-database "$HOME/.local/share/applications"
-
 
 mkdir -p "$HOME/.local/share/dbus-1/services/" # Usar xdg-open para firefox
 echo "Exec=/bin/false" > "$HOME/.local/share/dbus-1/services/org.freedesktop.FileManager1.service"

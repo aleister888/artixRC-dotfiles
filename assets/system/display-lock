@@ -1,4 +1,8 @@
 #!/bin/sh
+# Este archivo no se linkea, se instala con install -m 755
+# Al hacer cambios no olvides volverlo a instalar con:
+# sudo install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock
+
 case "${1-}" in
 	'pre')
 		/usr/local/bin/lock &

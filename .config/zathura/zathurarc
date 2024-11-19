@@ -22,6 +22,8 @@ map [fullscreen] W adjust_window best-fit
 
 map f toggle_fullscreen
 map [fullscreen] f toggle_fullscreen
+map F toggle_fullscreen
+map [fullscreen] F toggle_fullscreen
 
 map b toggle_statusbar
 map [fullscreen] b toggle_statusbar

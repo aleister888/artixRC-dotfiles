@@ -73,8 +73,8 @@ typedef struct {
 } Sp;
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c"};
-static const char *alttags[] = { "", "", "󰈹", "", "", "", "󰋅", "", "󰊗", "A", "B", "C"};
+static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b"};
+static const char *alttags[] = { "󰥠", "", "", "", "", "", "󰋅", "", "󰖺", "", "A", "C"};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -194,7 +194,7 @@ static const Key keys[] = {
 	{ MODKEY|ControlMask,           XK_h,      spawn,            SHCMD("zathura ~/.dotfiles/assets/pdf/help.pdf") },
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 12'") },
-	{ MODKEY|ControlMask,           XK_p,      spawn,            SHCMD("dmenu -C -l 1 | tr -d '\n' | xclip -selection clipboard") },
+	{ MODKEY|ControlMask,           XK_p,      spawn,            SHCMD("dmenu -C -l 1 -H ~/.cache/dmenu_qalc | tr -d '\n' | xclip -selection clipboard") },
 	{ MODKEY,                       XK_t,      spawn,            SHCMD("tray-toggle") },
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
@@ -239,6 +239,7 @@ static const Key keys[] = {
 	{ 0,             XF86XK_AudioMicMute,      spawn,            SHCMD("amixer sset Capture toggle") },
 	// Forzar cerrar ventana
 	{ MODKEY|ShiftMask,             XK_c,      spawn,            SHCMD("xkill") },
+	{ 0,                    XK_Caps_Lock,      spawn,            SHCMD("sleep 0.2; pkill -36 dwmblocks")},
 	// Tomar capturas de pantalla
 	{ 0,                            XK_Print,  spawn,            SHCMD("screenshot all_clip") },
 	{ ShiftMask,                    XK_Print,  spawn,            SHCMD("screenshot selection_clip") },

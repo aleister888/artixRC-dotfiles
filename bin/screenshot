@@ -2,6 +2,8 @@
 
 # Script para tomar capturas de pantalla
 
+dunstctl close-all
+
 NAME="$(date +"%d%m%Y_%H%M%S").jpg"
 SCRENDIR="$HOME/Imágenes/Screenshots"
 FILE="$SCRENDIR/$NAME"
