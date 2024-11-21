@@ -35,7 +35,6 @@ service_add(){ # Activar servicio
 
 # Paquetes
 
-
 # Sistema
 packages="zsh dash dashbinsh dosfstools lostfiles simple-mtpfs pacman-contrib ntfs-3g rsync mailcap gawk xdg-user-dirs nodejs perl-image-exiftool stow mesa lib32-mesa mesa-utils gnupg trash-cli net-tools xdg-desktop-portal-gtk man-db java-environment-common jdk-openjdk jre17-openjdk jdk-openjdk realtime-privileges lib32-gnutls perl-file-mimeinfo grub-hook grub-btrfs glow kernel-modules-hook python-pynvim parallel glyr python-eyed3 sassc atomicparsley npm zenity libappimage squashfuse earlyoom-openrc"
 # X11
@@ -51,7 +50,7 @@ packages+=" poppler zathura zathura-pdf-mupdf tesseract-data-spa zathura-cb"
 # Firefox y thunderbird
 packages+=" arkenfox-user.js firefox thunderbird ca-certificates ca-certificates-mozilla"
 # Multimedia
-packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mpv-mpris mediainfo feh vlc gimp sxiv nsxiv tauon-music-box"
+packages+=" alsa-plugins alsa-tools alsa-utils alsa-utils python-pypresence mpv mpv-mpris mediainfo feh vlc gimp sxiv nsxiv tauon-music-box yt-dlp"
 # Herramientas de terminal
 packages+=" eza jq pfetch-rs-bin htop shellcheck-bin fzf ripgrep bat cdrtools ffmpegthumbnailer odt2txt"
 # Apariencia
@@ -59,7 +58,7 @@ packages+=" qt6ct qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent handbrake handbrake-cli bleachbit"
 # Misc
-packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzug libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xmenu xdg-xmenu-git eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git stalonetray gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pulsemixer devour tk extra/j4-dmenu-desktop bash-language-server acpi neovim-remote ventoy-bin androi-tools"
+packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzug libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xmenu xdg-xmenu-git eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git stalonetray gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pulsemixer devour tk extra/j4-dmenu-desktop bash-language-server acpi neovim-remote ventoy-bin android-tools"
 # WM
 packages+=" thunderbird-dark-reader timeshift"
 

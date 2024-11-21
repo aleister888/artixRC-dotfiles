@@ -74,7 +74,7 @@ typedef struct {
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
 static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b"};
-static const char *alttags[] = { "󰥠", "", "", "", "", "", "󰋅", "", "󰖺", "", "A", "C"};
+static const char *alttags[] = { "󰥠", "", "", "", "", "", "󰋅", "", "󰖺", "", "", ""};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -126,7 +126,12 @@ static const Rule rules[] = {
 	{ "heroic",               NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
 	{ "MultiMC",              NULL,	NULL,	1<<8,	1,	0,	0,	0,	-1,	0},
 	{ "Minecraft* 1.16.5",    NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
-	{ "Minecraft* 1.21",      NULL,	NULL,	1<<8, 0,	0,	0,	0,	-1,	0},
+	{ "Minecraft* 1.21",      NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
+	// Espacio 11: Vscodium
+	{ "VSCodium",             NULL,	NULL,	1<<10,	0,	0,	0,	0,	-1,	0},
+	// Espacio 12: Eclipse
+	{ "Java",                 NULL,	NULL,	1<<11,	0,	0,	0,	0,	-1,	0},
+	{ "Eclipse",              NULL,	NULL,	1<<11,	0,	0,	0,	0,	-1,	0},
 	// Scratchpad
 	{ NULL,NULL,"scratchpad",		0,	1,	0,	1,	1,	-1,	's'},
 };
@@ -196,6 +201,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 12'") },
 	{ MODKEY|ControlMask,           XK_p,      spawn,            SHCMD("dmenu -C -l 1 | tr -d '\n' | xclip -selection clipboard") },
 	{ MODKEY,                       XK_t,      spawn,            SHCMD("tray-toggle") },
+	// Menú para copiar al portapapeles iconos/símbolos
+	{ MODKEY|ControlMask,           XK_e,      spawn,            SHCMD("dmenuunicode") },
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
 	// Configurar pantallas
