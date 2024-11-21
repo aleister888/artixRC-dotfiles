@@ -7,7 +7,7 @@
 #define BROWSER "firefox" // Navegador Web
 
 // Tamaño de la fuente y los margenes
-static const char *fonts[] = { "Symbols Nerd Font Mono:pixelsize=24:antialias=true:autohint=true","Iosevka Term SS05:pixelsize=24:bold" };
+static const char *fonts[] = { "Symbols Nerd Font Mono:pixelsize=24:antialias=true:autohint=true","Iosevka Term SS05:pixelsize=24:bold","Noto Color Emoji:pixelsize=24:regular" };
 
 // Constantes
 static const unsigned int borderpx       = 6;         // Borde en pixeles de las ventanas
@@ -54,9 +54,9 @@ static const char *colors[][3] = {
 	[SchemeTag7]        = { col_green,  background_sel, "#000000"  },
 	[SchemeTag8]        = { col_yellow, background_sel, "#000000"  },
 	[SchemeTag9]        = { col_purple, background_sel, "#000000"  },
-	[SchemeTag10]       = { col_orange, background_sel, "#000000"  },
+	[SchemeTag10]       = { col_green,  background_sel, "#000000"  },
 	[SchemeTag11]       = { col_orange, background_sel, "#000000"  },
-	[SchemeTag12]       = { col_orange, background_sel, "#000000"  },
+	[SchemeTag12]       = { col_blue,   background_sel, "#000000"  },
 	// Los valores con "#000000" no son usados pero no pueden estar vacios
 };
 
@@ -74,7 +74,7 @@ typedef struct {
 
 // Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
 static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b"};
-static const char *alttags[] = { "󰥠", "", "", "", "", "", "󰋅", "", "󰖺", "", "", ""};
+static const char *alttags[] = { "󰥠", "", "", "", "", "", "󰋅", "", "󰖺", "", "󰿈", ""};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -127,8 +127,6 @@ static const Rule rules[] = {
 	{ "MultiMC",              NULL,	NULL,	1<<8,	1,	0,	0,	0,	-1,	0},
 	{ "Minecraft* 1.16.5",    NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
 	{ "Minecraft* 1.21",      NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
-	// Espacio 11: Vscodium
-	{ "VSCodium",             NULL,	NULL,	1<<10,	0,	0,	0,	0,	-1,	0},
 	// Espacio 12: Eclipse
 	{ "Java",                 NULL,	NULL,	1<<11,	0,	0,	0,	0,	-1,	0},
 	{ "Eclipse",              NULL,	NULL,	1<<11,	0,	0,	0,	0,	-1,	0},
