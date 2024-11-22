@@ -20,6 +20,8 @@ set previewer '~/.config/lf/scope'
 set ratios 3:5:4
 set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log"
 
+# Recargar pantalla
+map R clear
 # Recargar configuración
 map C &lf -remote "send $id source ~/.config/lf/lfrc"
 # Pegar archivos
@@ -273,9 +275,9 @@ cmd open ${{
 			$EDITOR "$fx" ;;
 
 		image/*)
-			filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|svg\)$')
+			filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|ppm\|svg\)$')
 			index=$(printf "%s\n" $filelist | nl | grep "$(basename "$fx")" | awk '{print $1}')
-			setsid -f nsxiv -n $index $filelist & ;;
+			nsxiv -n $index $filelist & ;;
 
 		audio/*)
 			/usr/bin/mpv --audio-display=no "$f" ;;

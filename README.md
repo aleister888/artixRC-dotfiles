@@ -28,6 +28,7 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 #### Tareas por realizar
 
+- Arreglar bug (instalaciones sin encriptar no funcionan)
 - Crear branch para el desarrollo y actualizar el README y los script consecuentemente
 - Actualizar PDF
 - No configurar ajustes relacionados con el DPI en s1-s3.

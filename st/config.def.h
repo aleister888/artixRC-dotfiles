@@ -9,7 +9,7 @@ static char *font = "Iosevka Term SS05:pixelsize=20:antialias=true:autohint=true
 /* Spare fonts */
 static char *font2[] = {
 	"Symbols Nerd Font Mono:style=Regular:pixelsize=16:antialias=true:autohint=true",
-	"Noto Color Emoji:pixelsize=24:regular",
+	"Noto Color Emoji:pixelsize=16:regular",
 };
 
 static int borderpx = 2;
