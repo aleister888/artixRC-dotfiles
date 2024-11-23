@@ -289,7 +289,7 @@ ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
-	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+	su "$username" -c "git clone --branch dev --single-branch https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
 else
 	su "$username" -c "cd /home/$username/.dotfiles && git pull"
 fi
