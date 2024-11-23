@@ -16,7 +16,7 @@ static const unsigned int snap           = 0;         // Pixeles de cercanía pa
 static const int swallowfloating         = 0;         // 1 Significa tragarse nuevas ventanas por defecto
 static const int showbar                 = 1;         // 0 Para desactivar la barra
 static const int topbar                  = 1;         // 0 Para la barra en la parte inferior
-static const float mfact                 = 0.45;      // Factor de escalado de la zona principal [0.05..0.95]
+static const float mfact                 = 0.525;      // Factor de escalado de la zona principal [0.05..0.95]
 static const int nmaster                 = 1;         // Número de clientes en la zona principal
 static const int resizehints             = 1;         // 1 ¿Respetar pistas de dibujado al re-dimensionar ventanas no-flotantes?
 static const int lockfullscreen          = 1;         // 1 Fuerza el foco en las ventanas en pantalla completa
@@ -36,6 +36,9 @@ static const char col_purple[]           = "#D3869B";
 static const char col_aqua[]             = "#8EC07C" ;
 static const char col_orange[]           = "#FE8019";
 
+// Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
+static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b"};
+static const char *alttags[] = { "󰥠", "", "󰈹", "󰈙", "", "", "󰋅", "", "󰖺", "", "", ""};
 
 static const char *colors[][3] = {
 	// Colores:             Fuente      Fondo           Borde
@@ -46,10 +49,10 @@ static const char *colors[][3] = {
 	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
 	[SchemeStickySel]   = { "#000000",  "#000000",      col_yellow }, // Scratchpad (Seleccionado)
 	[SchemeTag1]        = { col_purple, background_sel, "#000000"  }, // Colores de los espacios 1-12
-	[SchemeTag2]        = { col_aqua,   background_sel, "#000000"  },
+	[SchemeTag2]        = { col_blue,   background_sel, "#000000"  },
 	[SchemeTag3]        = { col_orange, background_sel, "#000000"  },
 	[SchemeTag4]        = { col_red,    background_sel, "#000000"  },
-	[SchemeTag5]        = { col_aqua,   background_sel, "#000000"  },
+	[SchemeTag5]        = { col_blue,   background_sel, "#000000"  },
 	[SchemeTag6]        = { col_blue,   background_sel, "#000000"  },
 	[SchemeTag7]        = { col_green,  background_sel, "#000000"  },
 	[SchemeTag8]        = { col_yellow, background_sel, "#000000"  },
@@ -71,10 +74,6 @@ typedef struct {
 	const char *name;
 	const void *cmd;
 } Sp;
-
-// Nombre de los espacios cuando estan vacios y cuando tienen ventanas. Layout por defecto
-static const char *tags[]    = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b"};
-static const char *alttags[] = { "󰥠", "", "", "", "", "", "󰋅", "", "󰖺", "", "󰿈", ""};
 
 // Reglas pre-establecidas para colocar las ventanas
 static const Rule rules[] = {
@@ -128,7 +127,7 @@ static const Rule rules[] = {
 	{ "Minecraft* 1.16.5",    NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
 	{ "Minecraft* 1.21",      NULL,	NULL,	1<<8,	0,	0,	0,	0,	-1,	0},
 	// Espacio 12: Eclipse
-	{ "Java",                 NULL,	NULL,	1<<11,	0,	0,	0,	0,	-1,	0},
+	{ "Java",                 NULL,	NULL,	1<<11,	1,	0,	0,	0,	-1,	0},
 	{ "Eclipse",              NULL,	NULL,	1<<11,	0,	0,	0,	0,	-1,	0},
 	// Scratchpad
 	{ NULL,NULL,"scratchpad",		0,	1,	0,	1,	1,	-1,	's'},
@@ -223,7 +222,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 	// Cambiar música
 	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },
+	{ 0,                XF86XK_AudioPrev,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },
 	{ MODKEY,                       XK_x,      spawn,            SHCMD("playerctl -p tauon next; pkill -39 dwmblocks") },
+	{ 0,                XF86XK_AudioNext,      spawn,            SHCMD("playerctl -p tauon next; pkill -39 dwmblocks") },
 	{ MODKEY|ShiftMask,             XK_z,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
 	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
 	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
@@ -245,6 +246,7 @@ static const Key keys[] = {
 	// Forzar cerrar ventana
 	{ MODKEY|ShiftMask,             XK_c,      spawn,            SHCMD("xkill") },
 	{ 0,                    XK_Caps_Lock,      spawn,            SHCMD("sleep 0.2; pkill -36 dwmblocks")},
+	{ 0,                     XK_Num_Lock,      spawn,            SHCMD("sleep 0.2; pkill -36 dwmblocks")},
 	// Tomar capturas de pantalla
 	{ 0,                            XK_Print,  spawn,            SHCMD("screenshot all_clip") },
 	{ ShiftMask,                    XK_Print,  spawn,            SHCMD("screenshot selection_clip") },

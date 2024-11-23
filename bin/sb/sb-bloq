@@ -1,5 +1,9 @@
 #!/bin/sh
 
 if [ "$(xset q | grep -oP 'Caps Lock:\ *\K[a-z]*')" = "on" ]; then
-	printf " "
+	printf "󰬈 "
+fi
+
+if [ "$(xset q | grep -oP 'Num Lock:\ *\K[a-z]*')" = "on" ]; then
+	printf "󰎼 "
 fi
