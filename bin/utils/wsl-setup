@@ -1,25 +1,53 @@
 #!/bin/bash
 
-# Iosevka: https://github.com/be5invis/Iosevka/releases/latest
-# Symbols: https://github.com/ryanoasis/nerd-fonts/releases/latest
+# Funcion para configurar neovim en Arch Linux WSL
+# https://github.com/yuk7/ArchWSL
+nvim_setup(){
+	# Iosevka: https://github.com/be5invis/Iosevka/releases/latest
+	# Symbols: https://github.com/ryanoasis/nerd-fonts/releases/latest
 
-sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
+	sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
 
-tmp_dir="/tmp/yay_install_temp"
-mkdir -p "$tmp_dir"
-git clone https://aur.archlinux.org/yay.git "$tmp_dir"
-sh -c "cd $tmp_dir && makepkg -si --noconfirm"
+	tmp_dir="/tmp/yay_install_temp"
+	mkdir -p "$tmp_dir"
+	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
+	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 
-yay -Sy --noconfirm --disable-download-timeout --needed \
-	texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex \
-	nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
+	yay -Sy --noconfirm --disable-download-timeout --needed \
+		texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex \
+		nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
 
-mkdir -p ~/.local/share ~/.config/nvim
-git clone --branch dev --single-branch \
-	https://github.com/aleister888/artixRC-dotfiles.git ~/.local/share/dots
+	mkdir -p ~/.local/share ~/.config/nvim
+	git clone --branch dev --single-branch \
+		https://github.com/aleister888/artixRC-dotfiles.git ~/.local/share/dots
 
-ln -s ~/.local/share/dots/assets/wsl/init.vim ~/.config/nvim/init.vim
+	ln -s ~/.local/share/dots/assets/wsl/init.vim ~/.config/nvim/init.vim
 
-yay -Rcns --noconfirm vim
+	yay -Rcns --noconfirm vim
 
-sudo ln -s /usr/bin/nvim /usr/local/bin/vim
+	sudo ln -s /usr/bin/nvim /usr/local/bin/vim
+}
+
+# Configurar zathura para Ubuntu WSL
+# https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71
+zathura_setup(){
+	exit
+}
+
+show_help(){
+echo -e "Opciones:
+	-v Configura neovim (Arch WSL)
+	-z Configura zathura (Ubuntu WSL2)"
+}
+
+# Procesa las opciones
+while getopts "vz" opcion; do
+	case $opcion in
+		v)
+			nvim_setup ;;
+		z)
+			zathura_setup ;;
+		*)
+			show_help ;;
+	esac
+done
