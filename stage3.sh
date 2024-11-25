@@ -424,8 +424,9 @@ sudo archlinux-java set java-17-openjdk
 
 # Instalamos lrcput si elegimos instalar herramientas para gestionar nuestra música
 if [ "$music" == "true" ]; then
+	yayinstall python-tqdm
 	mkdir -p ~/.local/bin
-	wget -q "https://raw.githubusercontent.com/TonyCollett/lrcput/refs/heads/main/lrcput.py" \
+	wget -q "https://raw.githubusercontent.com/JustOptimize/lrcput/refs/heads/main/lrcput.py" \
 		-O ~/.local/bin/lrcput.py
 	sed -i '1i #!/usr/bin/python' ~/.local/bin/lrcput.py
 	chmod +x ~/.local/bin/lrcput.py

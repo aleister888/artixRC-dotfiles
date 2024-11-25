@@ -709,7 +709,12 @@ También necesitamos instalar los controladores de VirtIO en el host. Si todaví
 
 \vspace{5pt}
 
-Después de instalar los controladores, debemos instalar \href{https://github.com/winfsp/winfsp}{WinFSP} para poder montar sistemas de archivos VirtioFS.
+Después de instalar los controladores, debemos instalar \href{https://github.com/winfsp/winfsp}{WinFSP} para poder montar sistemas de archivos VirtioFS. Y seguidamente ejecutar en el cmd de windows:
+
+\begin{verbatim}
+"C:\Program Files (x86)\WinFsp\bin\fsreg.bat" virtiofs \
+"C:\Program Files\Virtio-Win\VioFS\virtiofs.exe" "-t %1 -m %2"
+\end{verbatim}
 
 \vspace{5pt}
 
