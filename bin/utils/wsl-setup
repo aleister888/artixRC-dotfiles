@@ -1,11 +1,8 @@
 #!/bin/bash
-
-# Funcion para configurar neovim en Arch Linux WSL
 # https://github.com/yuk7/ArchWSL
-nvim_setup(){
-	# Iosevka: https://github.com/be5invis/Iosevka/releases/latest
-	# Symbols: https://github.com/ryanoasis/nerd-fonts/releases/latest
 
+# Funcion para configurar neovim con vimtex
+nvim_setup(){
 	sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
 
 	tmp_dir="/tmp/yay_install_temp"
@@ -14,8 +11,12 @@ nvim_setup(){
 	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 
 	yay -Sy --noconfirm --disable-download-timeout --needed \
-		texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex \
-		nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
+		texlive-core texlive-bin texlive-latex texlive-latexrecommended \
+		texlive-bibtexextra texlive-binextra texlive-langspanish \
+		texlive-fontsextra texlive-fontsrecommended texlive-fontutils \
+		texlive-pictures texlive-pstricks texlive-mathscience texlive-music \
+		texlive-context texlive-plaingeneric texlive-formatsextra texlive-publishers \
+		texlive-xetex nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
 
 	mkdir -p ~/.local/share ~/.config/nvim
 	git clone --branch dev --single-branch \
@@ -28,25 +29,16 @@ nvim_setup(){
 	sudo ln -s /usr/bin/nvim /usr/local/bin/vim
 }
 
-# Configurar zathura para Ubuntu WSL
-# https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71
-zathura_setup(){
-	exit
-}
-
 show_help(){
 echo -e "Opciones:
-	-v Configura neovim (Arch WSL)
-	-z Configura zathura (Ubuntu WSL2)"
+	-v Configura neovim (Arch WSL)"
 }
 
 # Procesa las opciones
-while getopts "vz" opcion; do
+while getopts "n" opcion; do
 	case $opcion in
-		v)
+		n)
 			nvim_setup ;;
-		z)
-			zathura_setup ;;
 		*)
 			show_help ;;
 	esac
