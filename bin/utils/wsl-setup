@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Iosevka: https://github.com/be5invis/Iosevka/releases/latest
+# Symbols: https://github.com/ryanoasis/nerd-fonts/releases/latest
+
 sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
 
 tmp_dir="/tmp/yay_install_temp"
@@ -9,10 +12,14 @@ sh -c "cd $tmp_dir && makepkg -si --noconfirm"
 
 yay -Sy --noconfirm --disable-download-timeout --needed \
 	texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex \
-	nodejs jdk-openjdk git
+	nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
 
 mkdir -p ~/.local/share ~/.config
 git clone --branch dev --single-branch \
 	https://github.com/aleister888/artixRC-dotfiles.git ~/.local/share/dots
 
 ln -s ~/.local/share/dots/.config/nvim ~/.config/nvim
+
+yay -Rcns --noconfirm vim
+
+sudo ln -s /usr/bin/nvim /usr/local/bin/vim
