@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Iosevka: https://github.com/be5invis/Iosevka/releases/latest
 # Symbols: https://github.com/ryanoasis/nerd-fonts/releases/latest
@@ -14,11 +14,11 @@ yay -Sy --noconfirm --disable-download-timeout --needed \
 	texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex \
 	nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
 
-mkdir -p ~/.local/share ~/.config
+mkdir -p ~/.local/share ~/.config/nvim
 git clone --branch dev --single-branch \
 	https://github.com/aleister888/artixRC-dotfiles.git ~/.local/share/dots
 
-ln -s ~/.local/share/dots/.config/nvim ~/.config/nvim
+ln -s ~/.local/share/dots/assets/wsl/init.vim ~/.config/nvim/init.vim
 
 yay -Rcns --noconfirm vim
 
