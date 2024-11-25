@@ -31,7 +31,7 @@ nvim_setup(){
 
 show_help(){
 echo -e "Opciones:
-	-v Configura neovim (Arch WSL)"
+	-n	Configurar neovim"
 }
 
 # Procesa las opciones
