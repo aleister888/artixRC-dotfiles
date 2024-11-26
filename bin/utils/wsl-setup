@@ -17,13 +17,15 @@ get_repo(){
 		git clone --branch dev --single-branch \
 			https://github.com/aleister888/artixRC-dotfiles.git \
 			"$HOME/.local/share/dots"
+	else
+		sh -c "cd $HOME/.local/share/dots && git pull"
 	fi
 }
 
 # Funcion para configurar neovim
 nvim_setup(){
 	yay -Sy --noconfirm --disable-download-timeout --needed \
-		jdk-openjdk npm neovim python-pynvim
+		neovim python-pynvim
 
 	if [ ! -d "$HOMR/.config/nvim" ]; then
 		mkdir -p ~/.config/nvim
