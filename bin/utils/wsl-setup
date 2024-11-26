@@ -2,7 +2,7 @@
 # https://github.com/yuk7/ArchWSL
 
 yay_install(){
-	if ! pacman -Q yay 2>/dev/null; then
+	if ! pacman -Q yay >/dev/null 2>&1; then
 		sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
 		local tmp_dir="/tmp/yay_install_temp"
 		mkdir -p "$tmp_dir"
@@ -25,18 +25,19 @@ get_repo(){
 # Funcion para configurar neovim
 nvim_setup(){
 	yay -Sy --noconfirm --disable-download-timeout --needed \
-		neovim python-pynvim
+		neovim python-pynvim nodejs
 
-	if [ ! -d "$HOMR/.config/nvim" ]; then
+	if [ ! -d "$HOME/.config/nvim" ]; then
 		mkdir -p ~/.config/nvim
 		ln -s \
 			"$HOME/.local/share/dots/assets/wsl/init.vim" \
 			"$HOME/.config/nvim/init.vim"
 	fi
 
-	yay -Rcns --noconfirm vim
-	[ ! -e /usr/local/bin/vim ] && \
-		sudo ln -s /usr/bin/nvim /usr/local/bin/vim
+	pacman -Q vim >/dev/null 2>&1 && \
+		sudo pacman -Rcns --noconfirm vim
+
+	sudo ln -sf /usr/bin/nvim /usr/local/bin/vim
 }
 
 yay_install
