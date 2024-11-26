@@ -5,40 +5,39 @@ num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc 
 out=$(acpi -b | grep -v "Unknown\|unavailable")
 
 # Extraer e imprimir la información para cada batería
-	for ((i=1; i<=num_baterias; i++)); do
-		battery_level="$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
+for ((i=1; i<=num_baterias; i++)); do
+	battery_level="$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
 
+	if [ "$i" == 1 ]; then
+		icon_seq='^f10^^d^^c#689D6A^'
+	else
+		icon_seq='^c#689D6A^'
+	fi
+
+	if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
+		baticon="󰂄 "
+	else
 		if [ "$i" == 1 ]; then
-			icon_seq='^f10^^d^^c#689D6A^'
+			case $battery_level in
+				 [0-9])	baticon="󰁺 " ;;
+				1[0-9])	baticon="󰁺 " ;;
+				2[0-9])	baticon="󰁻 " ;;
+				3[0-9])	baticon="󰁼 " ;;
+				4[0-9])	baticon="󰁽 " ;;
+				5[0-9])	baticon="󰁾 " ;;
+				6[0-9])	baticon="󰁿 " ;;
+				7[0-9])	baticon="󰂀 " ;;
+				8[0-9])	baticon="󰂁 " ;;
+				9[0-9])	baticon="󰂂 " ;;
+				     *)	baticon="󰁹 " ;;
+			esac
 		else
-			icon_seq='^c#689D6A^'
+			baticon=""
 		fi
+	fi
 
-		if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
-			baticon=" "
-		else
-			if [ "$i" == 1 ]; then
-				case $battery_level in
-					[0-9])
-						baticon=" " ;;
-					[0-1][0-9])
-						baticon=" " ;;
-					[2-3][0-9])
-						baticon=" " ;;
-					[4-5][0-9])
-						baticon=" " ;;
-					[6-7][0-9])
-						baticon=" " ;;
-					*)
-						baticon=" " ;;
-				esac
-			else
-				baticon=""
-			fi
-		fi
-
-		echo " $icon_seq$baticon$battery_level%"
-	done
+	echo "$icon_seq$baticon$battery_level%"
+done
 }
 
-echo $(info-print)
+info-print
