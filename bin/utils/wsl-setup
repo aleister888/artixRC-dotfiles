@@ -1,45 +1,35 @@
 #!/bin/bash
 # https://github.com/yuk7/ArchWSL
 
-# Funcion para configurar neovim con vimtex
-nvim_setup(){
+yay_install(){
 	sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
 
 	tmp_dir="/tmp/yay_install_temp"
 	mkdir -p "$tmp_dir"
 	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
 	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
+}
 
-	yay -Sy --noconfirm --disable-download-timeout --needed \
-		texlive-core texlive-bin texlive-latex texlive-latexrecommended \
-		texlive-bibtexextra texlive-binextra texlive-langspanish \
-		texlive-fontsextra texlive-fontsrecommended texlive-fontutils \
-		texlive-pictures texlive-pstricks texlive-mathscience texlive-music \
-		texlive-context texlive-plaingeneric texlive-formatsextra texlive-publishers \
-		texlive-xetex nodejs jdk-openjdk shellcheck-bin npm neovim python-pynvim
-
-	mkdir -p ~/.local/share ~/.config/nvim
+get_repo(){
+	mkdir -p ~/.local/share
 	git clone --branch dev --single-branch \
 		https://github.com/aleister888/artixRC-dotfiles.git ~/.local/share/dots
+}
 
+# Funcion para configurar neovim
+nvim_setup(){
+	yay -Sy --noconfirm --disable-download-timeout --needed \
+		jdk-openjdk npm neovim python-pynvim
+
+	mkdir -p ~/.config/nvim
 	ln -s ~/.local/share/dots/assets/wsl/init.vim ~/.config/nvim/init.vim
 
 	yay -Rcns --noconfirm vim
-
 	sudo ln -s /usr/bin/nvim /usr/local/bin/vim
 }
 
-show_help(){
-echo -e "Opciones:
-	-n	Configurar neovim"
-}
+yay_install
 
-# Procesa las opciones
-while getopts "n" opcion; do
-	case $opcion in
-		n)
-			nvim_setup ;;
-		*)
-			show_help ;;
-	esac
-done
+get_repo
+
+nvim_setup

@@ -14,9 +14,7 @@ if $USER !=# 'root'
 	Plug 'alisdair/vim-armasm' " Sintaxis para ARM Assembly
 	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
-	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
 	Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada / autocompletado
-	Plug 'sirver/ultisnips' " Snippets
 
 	call plug#end()
 endif
@@ -28,17 +26,6 @@ endif
 " vim-armasm
 let asmsyntax='armasm'
 let filetype_inc='armasm'
-
-" vimtex
-let g:vimtex_toc_config = { 'show_help': 0 }
-let g:vimtex_mappings_enabled = 0
-let g:vimtex_compiler_method = 'arara'
-let g:vimtex_quickfix_mode = 0
-let g:vimtex_view_enabled = 0
-
-" coc.nvim
-let g:coc_disable_startup_warning = 1
-let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
 
 let g:coc_preferences = {
 	\ 'suggest.maxCompleteItemCount': 25,
@@ -157,17 +144,6 @@ nnoremap <silent><F5> :setlocal spell! spelllang=en_us<CR>
 inoremap <silent><F5> <C-O>:setlocal spell! spelllang=en_us<CR>
 
 " TeX
-au Filetype tex nmap <silent><leader>f <plug>(vimtex-toc-toggle)<CR>
-au Filetype tex nmap <leader>g :VimtexCompile<CR>
-	function! ToggleVimtexErrors()
-		if len(filter(getwininfo(), 'v:val.quickfix')) > 0
-			cclose
-		else
-			VimtexErrors
-		endif
-	endfunction
-au Filetype tex nmap <silent><leader>j :call ToggleVimtexErrors()<CR>
-au Filetype tex nmap <silent><leader>k <plug>(vimtex-clean)<CR>
 au Filetype tex vnoremap e s\emph{<C-r>"}
 au Filetype tex vnoremap b s\textbf{<C-r>"}
 au Filetype tex vnoremap i s\textit{<C-r>"}
