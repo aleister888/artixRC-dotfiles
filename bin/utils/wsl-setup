@@ -2,18 +2,22 @@
 # https://github.com/yuk7/ArchWSL
 
 yay_install(){
-	sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
-
-	tmp_dir="/tmp/yay_install_temp"
-	mkdir -p "$tmp_dir"
-	git clone https://aur.archlinux.org/yay.git "$tmp_dir"
-	sh -c "cd $tmp_dir && makepkg -si --noconfirm"
+	if ! pacman -Q yay 2>/dev/null; then
+		sudo pacman -Sy --noconfirm --disable-download-timeout --needed git base-devel
+		local tmp_dir="/tmp/yay_install_temp"
+		mkdir -p "$tmp_dir"
+		git clone https://aur.archlinux.org/yay.git "$tmp_dir"
+		sh -c "cd $tmp_dir && makepkg -si --noconfirm"
+	fi
 }
 
 get_repo(){
-	mkdir -p ~/.local/share
-	git clone --branch dev --single-branch \
-		https://github.com/aleister888/artixRC-dotfiles.git ~/.local/share/dots
+	if [ ! -d "$HOME/.local/share/dots" ]; then
+		mkdir -p "$HOME/.local/share"
+		git clone --branch dev --single-branch \
+			https://github.com/aleister888/artixRC-dotfiles.git \
+			"$HOME/.local/share/dots"
+	fi
 }
 
 # Funcion para configurar neovim
@@ -21,15 +25,18 @@ nvim_setup(){
 	yay -Sy --noconfirm --disable-download-timeout --needed \
 		jdk-openjdk npm neovim python-pynvim
 
-	mkdir -p ~/.config/nvim
-	ln -s ~/.local/share/dots/assets/wsl/init.vim ~/.config/nvim/init.vim
+	if [ ! -d "$HOMR/.config/nvim" ]; then
+		mkdir -p ~/.config/nvim
+		ln -s \
+			"$HOME/.local/share/dots/assets/wsl/init.vim" \
+			"$HOME/.config/nvim/init.vim"
+	fi
 
 	yay -Rcns --noconfirm vim
-	sudo ln -s /usr/bin/nvim /usr/local/bin/vim
+	[ ! -e /usr/local/bin/vim ] && \
+		sudo ln -s /usr/bin/nvim /usr/local/bin/vim
 }
 
 yay_install
-
 get_repo
-
 nvim_setup
