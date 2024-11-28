@@ -200,6 +200,7 @@ basestrap_install(){
 	#   (Por ejemplo que se instale jack2 como dependencia en vez de pipewire-jack).
 	# - Instalamos go y sudo para poder instalar compilar yay más adelante en stage3.sh
 	#   ("makepkg -si" necesita sudo, porque utiliza flags que opendoas no soporta)
+	basestrap_packages+=" xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber go"
 	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
 
 	# Añadimos a los paquetes del sistema base el microcódigo de CPU correspodiente

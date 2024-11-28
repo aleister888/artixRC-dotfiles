@@ -120,8 +120,18 @@ packages_choose(){
 	done
 
 	[ "$virt"	== "true" ] && packages+=" looking-glass libvirt-openrc virt-manager qemu-base edk2-ovmf dnsmasq qemu-audio-spice qemu-hw-display-qxl qemu-chardev-spice qemu-hw-usb-redirect qemu-hw-usb-host qemu-hw-display-virtio-gpu qemu-hw-display-virtio-gpu-gl qemu-hw-display-virtio-gpu-pci qemu-hw-display-virtio-gpu-pci-gl qemu-hw-display-virtio-vga qemu-hw-display-virtio-vga-gl bridge-utils"
-	[ "$music" == "true" ] && \
-		packages+=" easytag picard flacon cuetools lrcget-bin"
+
+	if [ "$music" == "true" ]; then
+		# Instalamos python-tqdm porque es una dependencia de lrcput
+		packages+=" easytag picard flacon cuetools lrcget-bin python-tqdm"
+
+		lrcput_location="$HOME/.local/bin/lrcput"
+		mkdir -p "$HOME/.local/bin"
+		wget -q "https://raw.githubusercontent.com/JustOptimize/lrcput/refs/heads/main/lrcput.py" -O "$lrcput_location"
+		sed -i '1i #!/usr/bin/python' "$lrcput_location"
+		chmod +x "$lrcput_location"
+	fi
+
 	[ "$noprivacy" == "true" ] && \
 		packages+=" discord telegram-desktop"
 	[ "$office" == "true" ] && \
@@ -437,16 +447,6 @@ sudo usermod -aG storage,input,users "$USER"
 
 # Si se eligió instalar virt-manager configurarlo adecuadamente
 [ "$virt" == "true" ] && virt_conf
-
-# Instalamos lrcput si elegimos instalar herramientas para gestionar nuestra música
-if [ "$music" == "true" ]; then
-	yayinstall python-tqdm
-	mkdir -p ~/.local/bin
-	wget -q "https://raw.githubusercontent.com/JustOptimize/lrcput/refs/heads/main/lrcput.py" \
-		-O ~/.local/bin/lrcput.py
-	sed -i '1i #!/usr/bin/python' ~/.local/bin/lrcput.py
-	chmod +x ~/.local/bin/lrcput.py
-fi
 
 # Scripts de elogind
 sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
