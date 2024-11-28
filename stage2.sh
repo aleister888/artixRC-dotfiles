@@ -4,6 +4,11 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+# TODO
+# Ahora mismo la forma en la que se detecta el UUID de la partición
+# LUKS es poco fiable. Lo correcto sería pasarle el UUID directamene
+# desde s1.
+
 # Esta parte del script se ejecuta ya dentro del sistema base mediante
 # chroot. Se encarga de:
 # - Establecer la zona horaria del sistema
@@ -268,5 +273,4 @@ fi
 echo "root ALL=(ALL:ALL) ALL
 %wheel ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers
 
-exit
 su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"
