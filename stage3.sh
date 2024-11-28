@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Auto-instalador para Artix OpenRC (Parte 3)
 # por aleister888 <pacoe1000@gmail.com>
