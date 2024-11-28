@@ -193,14 +193,16 @@ basestrap_install(){
 	local basestrap_packages="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs"
 
 	# Vamos a instalar los paquetes del grupo base-devel manualmente para luego poder borrar sudo
-	# (Si en su lugar instalamos el grupo, luego será más complicado desinstalar sudo)
+	#  (Si en su lugar instalamos el grupo, luego será más complicado desinstalar sudo)
 	basestrap_packages+=" autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-	# - Instalamos xkeyboard-config para poder elegir el layout de teclado en stage3.sh
-	# - Instalamos pipewire antes de stage3.sh para evitar conflictos
-	#   (Por ejemplo que se instale jack2 como dependencia en vez de pipewire-jack).
-	# - Instalamos go y sudo para poder instalar compilar yay más adelante en stage3.sh
-	#   ("makepkg -si" necesita sudo, porque utiliza flags que opendoas no soporta)
-	basestrap_packages+=" xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse lib32-pipewire-jack lib32-pipewire lib32-libpipewire wireplumber go"
+	# Instalamos xkeyboard-config para poder elegir el layout de teclado en (s3)
+	# Instalamos pipewire antes para evitar conflictos
+	#  (Por ejemplo que se instale jack2 como dependencia en vez de pipewire-jack).
+	# Los paquetes para aplicaciones de 32 bits se instalarán una vez activados los repositorios
+	# de Arch Linux (s3)
+	# Instalamos go y sudo para poder instalar compilar yay más adelante (s3)
+	#  ("makepkg -si" necesita sudo, porque utiliza flags que opendoas no soporta)
+	basestrap_packages+=" xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber go"
 	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
 
 	# Añadimos a los paquetes del sistema base el microcódigo de CPU correspodiente

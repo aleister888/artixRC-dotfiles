@@ -66,6 +66,9 @@ packages+=" qt6ct qt5ct qt5-tools papirus-icon-theme"
 packages+=" keepassxc qbittorrent handbrake handbrake-cli bleachbit"
 # Misc
 packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzug libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor2 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xmenu xdg-xmenu-git eww-git tigervnc gnome-firmware i3lock-fancy-git i3lock-fancy-rapid-git stalonetray gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pulsemixer tk extra/j4-dmenu-desktop bash-language-server acpi neovim-remote ventoy-bin android-tools xdg-ninja"
+# Pipewire
+# (Ya instalamos en stage1.sh pipewire, pero no los paquetes para 32 bits, que vienen de los repositorios de Arch Linux)
+packgaes+=" lib32-pipewire-jack lib32-pipewire lib32-libpipewire"
 # WM
 packages+=" thunderbird-dark-reader timeshift"
 
