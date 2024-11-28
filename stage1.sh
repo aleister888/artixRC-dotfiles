@@ -217,8 +217,9 @@ basestrap_install(){
 	fi
 
 	# Si el dispositivo tiene bluetooth, instalaremos blueman
-	{ lspci; lsusb } | grep -i bluetooth && \
+	if echo "$(lspci;lsusb)" | grep -i bluetooth; then
 		basestrap_packages+=" blueman"
+	fi
 
 	while [ "$basestrap_status" == "false" ]; do
 		basestrap /mnt $basestrap_packages && \

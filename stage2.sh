@@ -33,7 +33,7 @@ service_add(){
 }
 
 echo_msg(){
-	clear; echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"; sleep 1
+	echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"
 }
 
 # Establecer zona horaria
