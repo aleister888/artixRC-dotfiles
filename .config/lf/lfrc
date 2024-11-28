@@ -94,7 +94,7 @@ on-cd
 # Muestra información del archivo seleccionado con eza
 cmd on-select &{{
 	clear
-	lf -remote "send $id set statfmt \"$(eza -ldHF --color=always "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+	lf -remote "send $id set statfmt \"$(eza -ldHF --color=always --time-style iso "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
 }}
 
 # Comprimir archivos dentro de un directorio en el formato seleccionado
@@ -245,7 +245,7 @@ cmd restore-trash ${{
 	clear; tput bold
 	set -f
 	printf "Contenidos de la papelera:\n"
-	trash-list
+	trash-list | sed "s|$HOME|~|"
 	printf "¿Restaurar papelera? [s/N] "
 	read ans
 	[ $ans = "s" ] && trash-restore && printf "done"

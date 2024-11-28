@@ -179,13 +179,13 @@ npm_xdg(){
 	local configdir
 	configdir="$(dirname "$NPM_CONFIG_USERCONFIG")"
 	mkdir -p "$configdir"
-cat <<-'EOF' | tee "$NPM_CONFIG_USERCONFIG"
-	prefix=${XDG_DATA_HOME}/npm
-	cache=${XDG_CACHE_HOME}/npm
-	init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
-	tmp=${XDG_RUNTIME_DIR}/npm
-	logfile=${XDG_CACHE_HOME}/npm/logs/npm.log
-EOF
+	cat <<-'EOF' | tee "$NPM_CONFIG_USERCONFIG"
+		prefix=${XDG_DATA_HOME}/npm
+		cache=${XDG_CACHE_HOME}/npm
+		init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
+		tmp=${XDG_RUNTIME_DIR}/npm
+		logfile=${XDG_CACHE_HOME}/npm/logs/npm.log
+	EOF
 
 	mv "$HOME/.npm/_cacache" "$XDG_CACHE_HOME/npm" 2>/dev/null
 	mv "$HOME/.npm/_logs" "$XDG_CACHE_HOME/npm/logs" 2>/dev/null
@@ -213,7 +213,7 @@ moveto_xdg(){
 move_hardcoded_dir(){
 	local og xdg
 	og="$1"; xdg="$2"
-	if [ -d "$og" ] && [ ! -L "$og" ]; then
+	if [ ! -L "$og" ] && [ -d "$og" ]; then
 		merge_delete "$og" "$xdg"
 		ln -s "$xdg" "$og"
 	fi
@@ -231,9 +231,13 @@ merge_delete "$HOME/go"     "$XDG_DATA_HOME/go"
 moveto_xdg "$HOME/.pulse-cookie" "$XDG_CONFIG_HOME/pulse/cookie"
 moveto_xdg "$HOME/.gitconfig"    "$XDG_CONFIG_HOME/git/config"
 
-move_hardcoded_dir "$HOME/.java"         "$XDG_CONFIG_HOME/java"
-move_hardcoded_dir "$HOME/.codetogether" "$HOME/.config/codetogether"
-move_hardcoded_dir "$HOME/.webclipse"    "$HOME/.config/webclipse"
+move_hardcoded_dir "$HOME/.java"             "$XDG_CONFIG_HOME/java"
+move_hardcoded_dir "$HOME/.eclipse"          "$XDG_CONFIG_HOME/eclipse"
+move_hardcoded_dir "$HOME/eclipse-workspace" "$XDG_DATA_HOME/eclipse-workspace"
+move_hardcoded_dir "$HOME/.codetogether"     "$HOME/.config/codetogether"
+move_hardcoded_dir "$HOME/.webclipse"        "$HOME/.config/webclipse"
+
+sleep 10; rm "$HOME/.xsession-errors"
 
 # Borrar archivos
 rm -f "$HOME/.wget-hsts"
