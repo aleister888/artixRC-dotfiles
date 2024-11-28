@@ -1,8 +1,20 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Auto-instalador para Artix OpenRC (Parte 2)
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
+
+# Esta parte del script se ejecuta ya dentro del sistema base mediante
+# chroot. Se encarga de:
+# - Establecer la zona horaria del sistema
+# - Crear nuestro usuario y establecer la contraseña de root
+# - Instalar GRUB
+# - Crear el archivo swap
+# - Crear un archivo hosts
+# - Activar los repositorios de Arch Linux y elegir los más rápidos
+#   - Actualizar el mirrorlist periódicamente con reflector y cron
+# - Generar el locale
+# - Activar los servicios
 
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
@@ -23,10 +35,6 @@ service_add(){
 echo_msg(){
 	clear; echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"; sleep 1
 }
-
-# Instalamos base-devel manualmente para usar doas en vez de sudo
-devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
 
 # Establecer zona horaria
 timezoneset(){
@@ -86,18 +94,6 @@ user_create(){
 	set_password "$username"
 }
 
-# Detectamos el fabricante del procesador para instalar el microcódigo correspondiente
-microcode_detect(){
-	manufacturer=$(grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1)
-	if [ "$manufacturer" == "GenuineIntel" ]; then
-		echo_msg "Detectado procesador Intel."
-		packages+=" intel-ucode"
-	elif [ "$manufacturer" == "AuthenticAMD" ]; then
-		echo_msg "Detectado procesador AMD."
-		packages+=" amd-ucode"
-	fi
-}
-
 # Instalamos GRUB
 install_grub(){
 	local cryptdisk cryptid decryptid boot_drive
@@ -131,7 +127,7 @@ install_grub(){
 	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-# Creamos nuestro swap
+# Creamos el archivo swap
 swap_create(){
 	# Detectamos el tipo de partición que tenemos
 	local rootype
@@ -212,31 +208,6 @@ genlocale(){
 	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 }
 
-home_keyfile(){
-	local crypthome_parent
-	local crypthome_parent_UUID
-	local keyfile
-	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1 | grep -oE "[a-z].*")
-	crypthome_parent_UUID=$(lsblk -nd -o UUID "/dev/$crypthome_parent")
-	keyfile="/etc/keys/home.key"
-	mkdir /etc/keys
-	dd bs=512 count=4 if=/dev/urandom of=$keyfile
-	while true; do
-		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuacion se te pedirá la contraseña del disco /home"
-		cryptsetup -v luksAddKey "/dev/$crypthome_parent" $keyfile && break
-		whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
-	done
-	chmod 000 $keyfile
-	chmod g-rwx,o-rwx /etc/keys
-
-	cat <<-'EOF' > /etc/conf.d/dmcrypt
-		target=home
-		source=UUID=\"$crypthome_parent_UUID\"
-		key=$keyfile
-
-	EOF
-}
-
 ##########
 # SCRIPT #
 ##########
@@ -254,20 +225,6 @@ timezoneset
 # Crear usuario y establecer la contraseña para el usuario root
 set_password "root"
 user_create
-
-# Detectamos el fabricante del procesador
-microcode_detect
-
-# Si el sistema es UEFI, instalar efibootmgr
-if [ -d /sys/firmware/efi ]; then
-	packages+=" efibootmgr"
-	echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
-fi
-
-# Instalamos los paquetes necesarios
-pacinstall $packages
-
-#lsblk -nl -o NAME | grep crypthome && home_keyfile
 
 # Si se utiliza encriptación, añadir el módulo encrypt a la imagen del kernel
 if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
@@ -309,8 +266,6 @@ ln -s /usr/bin/nvim /usr/local/bin/vi
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
 	su "$username" -c "git clone --branch dev --single-branch https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-else
-	su "$username" -c "cd /home/$username/.dotfiles && git pull"
 fi
 
 # Configuramos sudo para stage3.sh

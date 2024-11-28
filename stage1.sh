@@ -4,6 +4,13 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+# Esta parte del script se encarga de formatear y particionar el disco duro e
+# instalar los paquetes del sistema base. El esquema de particiones puede ser:
+# - ext4  (con o sin encriptación LUKS)
+# - btrfs (con o sin encriptación LUKS)
+#   - un subvolumen para la partición /     (@)
+#   - un subvolumen para la partición /home (@home)
+
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
 whip_msg(){
@@ -104,7 +111,6 @@ while [ "$scheme_confirm" == "false" ]; do
 done
 }
 
-
 part_encrypt(){
 	while true; do
 		whip_msg "LUKS" "Se va a encriptar el disco $1. A continuacion se te pedira la contraseña del disco"
@@ -178,15 +184,44 @@ mount_partitions(){
 	[ "$PART_TYPE" == "gpt" ] && mkdir /mnt/boot/efi
 }
 
-
 # Instalar paquetes con basestrap
 # Ejecutamos el comando en un bucle hasta que se ejecuta correctamente
 # porque basestrap no tiene la opción --disable-download-timeout.
 # Lo que hace que para conexiones muy lentas la operación pueda fallar.
-basestrap_packages(){
-	basestrap_status=false
+basestrap_install(){
+	local basestrap_status=false
+	local basestrap_packages="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs"
+
+	# Vamos a instalar los paquetes del grupo base-devel manualmente para luego poder borrar sudo
+	# (Si en su lugar instalamos el grupo, luego será más complicado desinstalar sudo)
+	basestrap_packages+=" autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
+	# - Instalamos xkeyboard-config para poder elegir el layout de teclado en stage3.sh
+	# - Instalamos pipewire antes de stage3.sh para evitar conflictos
+	#   (Por ejemplo que se instale jack2 como dependencia en vez de pipewire-jack).
+	# - Instalamos go y sudo para poder instalar compilar yay más adelante en stage3.sh
+	#   ("makepkg -si" necesita sudo, porque utiliza flags que opendoas no soporta)
+	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
+
+	# Añadimos a los paquetes del sistema base el microcódigo de CPU correspodiente
+	local manufacturer
+	manufacturer=$(grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1)
+	if [ "$manufacturer" == "GenuineIntel" ]; then
+		basestrap_packages+=" intel-ucode"
+	elif [ "$manufacturer" == "AuthenticAMD" ]; then
+		basestrap_packages+=" amd-ucode"
+	fi
+
+	# Si el sistema es UEFI, instalaremos también efibootmgr
+	if [ -d /sys/firmware/efi ]; then
+		basestrap_packages+=" efibootmgr"
+	fi
+
+	# Si el dispositivo tiene bluetooth, instalaremos blueman
+	{ lspci; lsusb } | grep -i bluetooth && \
+		basestrap_packages+=" blueman"
+
 	while [ "$basestrap_status" == "false" ]; do
-		basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs && \
+		basestrap /mnt $basestrap_packages && \
 		basestrap_status=true
 	done
 }
@@ -220,10 +255,9 @@ format_disks
 # Montamos nuestras particiones
 mount_partitions
 # Instalamos paquetes en la nueva instalación
-basestrap_packages
+basestrap_install
 
 mkdir -p /mnt/etc
-echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
 
 # Creamos el fstab
 fstabgen -U /mnt >> /mnt/etc/fstab
@@ -234,6 +268,6 @@ for dir in dev proc sys run; do
 done
 
 # Hacer chroot y ejecutar la 2a parte del script
-nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/dev/stage2.sh"
+nexturl="https://raw.githubusercon/tent.com/aleister888/artixRC-dotfiles/dev/stage2.sh"
 next="/tmp/stage2.sh"
 artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""
