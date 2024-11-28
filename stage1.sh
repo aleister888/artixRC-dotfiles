@@ -1,28 +1,10 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Auto-instalador para Artix OpenRC (Parte 1)
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
-
-# Configuramos el servidor de claves y actualizamos las claves
-grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
-	echo 'keyserver hkp://keyserver.ubuntu.com' | \
-	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
-pacman -Sc --noconfirm
-pacman-key --populate && pacman-key --refresh-keys
-
-# Instalamos whiptail para la interfaz TUI
-# y parted para formatear nuestros discos
-pacman -Sy --noconfirm --needed parted libnewt
-
-# Detectamos si el sitema es UEFI o BIOS.
-if [ ! -d /sys/firmware/efi ]; then
-	PART_TYPE="msdos" # MBR para BIOS
-else
-	PART_TYPE="gpt" # GPT para UEFI
-fi
 
 whip_msg(){
 	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60
@@ -86,9 +68,10 @@ scheme_show(){
 	fi
 
 	# Mostramos el esquema para confirmar los cambios
-	whiptail --backtitle "$REPO_URL" --title "Confirmar particionado" --yesno "$scheme" 15 60 || \
-	whip_yes "Salir" "¿Desea cancelar la instalacion? En caso contrario, volvera a elegir su esquema de particiones" &&
-	exit 1
+	if ! whiptail --backtitle "$REPO_URL" --title "Confirmar particionado" --yesno "$scheme" 15 60; then
+		whip_yes "Salir" "¿Desea cancelar la instalacion? En caso contrario, volvera a elegir su esquema de particiones" && \
+		exit 1
+	fi
 }
 
 # Función para elegir como se formatearán nuestros discos
@@ -102,7 +85,7 @@ while [ "$scheme_confirm" == "false" ]; do
 
 	while [ "$root_selected" == "false" ]; do
 		ROOT_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalacion:" \
-		"$(lsblk -dn -o name,size | tr '\n' ' ')" ) && \
+		"$(lsblk -dn -o name,size | tr '\n' ' ')") && \
 		root_selected=true
 	done
 
@@ -195,9 +178,40 @@ mount_partitions(){
 	[ "$PART_TYPE" == "gpt" ] && mkdir /mnt/boot/efi
 }
 
+
+# Instalar paquetes con basestrap
+# Ejecutamos el comando en un bucle hasta que se ejecuta correctamente
+# porque basestrap no tiene la opción --disable-download-timeout.
+# Lo que hace que para conexiones muy lentas la operación pueda fallar.
+basestrap_packages(){
+	basestrap_status=false
+	while [ "$basestrap_status" == "false" ]; do
+		basestrap /mnt base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs && \
+		basestrap_status=true
+	done
+}
+
 ##########
 # SCRIPT #
 ##########
+
+# Configuramos el servidor de claves y actualizamos las claves
+grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
+	echo 'keyserver hkp://keyserver.ubuntu.com' | \
+	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
+pacman -Sc --noconfirm
+pacman-key --populate && pacman-key --refresh-keys
+
+# Instalamos whiptail para la interfaz TUI
+# y parted para formatear nuestros discos
+pacman -Sy --noconfirm --needed parted libnewt
+
+# Detectamos si el sitema es UEFI o BIOS.
+if [ ! -d /sys/firmware/efi ]; then
+	PART_TYPE="msdos" # MBR para BIOS
+else
+	PART_TYPE="gpt" # GPT para UEFI
+fi
 
 # Elegimos como se formatearán nuestros discos
 scheme_setup
@@ -205,10 +219,8 @@ scheme_setup
 format_disks
 # Montamos nuestras particiones
 mount_partitions
-
-# Instalar paquetes con basestrap
-basestrap /mnt \
-base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs
+# Instalamos paquetes en la nueva instalación
+basestrap_packages
 
 mkdir -p /mnt/etc
 echo "permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel" > /mnt/etc/doas.conf
