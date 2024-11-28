@@ -1,8 +1,25 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Auto-instalador para Artix OpenRC (Parte 2)
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
+
+# TODO
+# Ahora mismo la forma en la que se detecta el UUID de la partición
+# LUKS es poco fiable. Lo correcto sería pasarle el UUID directamene
+# desde s1.
+
+# Esta parte del script se ejecuta ya dentro del sistema base mediante
+# chroot. Se encarga de:
+# - Establecer la zona horaria del sistema
+# - Crear nuestro usuario y establecer la contraseña de root
+# - Instalar GRUB
+# - Crear el archivo swap
+# - Crear un archivo hosts
+# - Activar los repositorios de Arch Linux y elegir los más rápidos
+#   - Actualizar el mirrorlist periódicamente con reflector y cron
+# - Generar el locale
+# - Activar los servicios
 
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
@@ -21,12 +38,8 @@ service_add(){
 }
 
 echo_msg(){
-	clear; echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"; sleep 1
+	echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"
 }
-
-# Instalamos base-devel manualmente para usar doas en vez de sudo
-devel_packages="autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-packages="$devel_packages cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
 
 # Establecer zona horaria
 timezoneset(){
@@ -43,7 +56,8 @@ timezoneset(){
 		done
 
 		# Utilizar Whiptail para presentar las opciones de región al usuario
-		region=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una region" --menu "Por favor, elige una region:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
+		region=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una region" \
+		--menu "Por favor, elige una region:" 20 70 10 ${regions_array[@]} 3>&1 1>&2 2>&3)
 
 		# Obtener la lista de zonas horarias disponibles para la región seleccionada
 		timezones=$( find "/usr/share/zoneinfo/$region" -mindepth 1 -type f -printf "%f\n" | sort -u )
@@ -67,7 +81,8 @@ timezoneset(){
 		hwclock --systohc
 }
 
-# Crear usuario y establecer la contraseña para el usuario root
+# Función para establecer la contraseña del usuario,
+# usamos passwd directamente porque es más seguro.
 set_password() {
 	local user="$1"
 	while true; do
@@ -77,22 +92,11 @@ set_password() {
 	done
 }
 
+# Funcion para crear un usuario y establecer su contraseña
 user_create(){
 	username="$(whiptail --backtitle "$REPO_URL" --inputbox "Por favor, ingresa el nombre del usuario:" 10 60 3>&1 1>&2 2>&3)"
 	useradd -m -G wheel,lp "$username"
 	set_password "$username"
-}
-
-# Detectamos el fabricante del procesador
-microcode_detect(){
-manufacturer=$(grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1)
-if [ "$manufacturer" == "GenuineIntel" ]; then
-	echo_msg "Detectado procesador Intel."
-	packages+=" intel-ucode"
-elif [ "$manufacturer" == "AuthenticAMD" ]; then
-	echo_msg "Detectado procesador AMD."
-	packages+=" amd-ucode"
-fi
 }
 
 # Instalamos GRUB
@@ -113,14 +117,10 @@ install_grub(){
 	if [ ! -d /sys/firmware/efi ]; then
 		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix "$boot_drive" --recheck
 	else
-		if lsblk -f | grep crypt; then
-			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable "$boot_drive"
-		else
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck --removable "$boot_drive"
-		fi
+		grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable "$boot_drive"
 	fi
 
-	# Configurar grub si este esta en una instalación encriptada
+	# Si se usa encriptación, le decimos a GRUB el UUID de la partición encriptada y desencriptada.
 	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
 	lsblk -f | grep crypt && sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
 
@@ -128,14 +128,14 @@ install_grub(){
 	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-# Creamos nuestro swap
+# Creamos el archivo swap
 swap_create(){
 	# Detectamos el tipo de partición que tenemos
 	local rootype
 	rootype=$( lsblk -nlf -o FSTYPE "$( df / | awk 'NR==2 {print $1}' )" )
 
 	# Btrfs necesita un volumen solo para el swapfile, porque no puede hacer snapshots
-	# de volúmenes con swapfiles
+	# de volúmenes con swapfiles. Creamos para este el subvolumen swap
 	if [ "$rootype" == "btrfs" ]; then
 		btrfs subvolume create /swap
 		btrfs filesystem mkswapfile --size 4g --uuid clear /swap/swapfile
@@ -152,8 +152,10 @@ swap_create(){
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config(){
-	hostname=$(whiptail --backtitle "$REPO_URL" --title "Configuracion de Hostname" --inputbox "Por favor, introduce el nombre que deseas darle a tu ordenador:" 10 60 3>&1 1>&2 2>&3)
+	hostname=$(whiptail --backtitle "$REPO_URL" --title "Configuracion de Hostname" \
+	--inputbox "Por favor, introduce el nombre que deseas darle a tu ordenador:" 10 60 3>&1 1>&2 2>&3)
 	echo "$hostname" > /etc/hostname
+	# Este archivo hosts bloquea el acceso a sitios maliciosos
 	curl -o /etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
 	echo "127.0.0.1 localhost"                       | tee -a /etc/hosts && \
 	echo "127.0.0.1 $hostname.localdomain $hostname" | tee -a /etc/hosts && \
@@ -172,11 +174,13 @@ arch_support(){
 
 	# Activar repositorios de Arch
 	grep -q "^\[extra\]" /etc/pacman.conf || \
-echo '[extra]
-Include = /etc/pacman.d/mirrorlist-arch
+	cat <<-'EOF' >>/etc/pacman.conf
+		[extra]
+		Include = /etc/pacman.d/mirrorlist-arch
 
-[multilib]
-Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
+		[multilib]
+		Include = /etc/pacman.d/mirrorlist-arch
+	EOF
 
 	# Actualizar cambios
 	pacman -Sy --noconfirm && \
@@ -188,42 +192,21 @@ Include = /etc/pacman.d/mirrorlist-arch' >>/etc/pacman.conf
 
 	# Configurar cronie para actualizar automáticamente los mirrors de Arch
 	grep "reflector" /etc/crontab || \
-echo "SHELL=/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+	cat <<-'EOF' > /etc/crontab
+		SHELL=/bin/bash
+		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-# Escoger los mejores repositorios para Arch Linux
-@hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch" > /etc/crontab
+		# Escoger los mejores repositorios para Arch Linux
+		@hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+	EOF
 }
 
-# Configurar la codificación del sistema
+# Cambiar la codificación del sistema a español
 genlocale(){
 	sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
 	sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
 	locale-gen
 	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
-}
-
-home_keyfile(){
-	local crypthome_parent
-	local crypthome_parent_UUID
-	local keyfile
-	crypthome_parent=$(lsblk -fn -o NAME | grep crypthome -B 1 | head -n1 | grep -oE "[a-z].*")
-	crypthome_parent_UUID=$(lsblk -nd -o UUID "/dev/$crypthome_parent")
-	keyfile="/etc/keys/home.key"
-	mkdir /etc/keys
-	dd bs=512 count=4 if=/dev/urandom of=$keyfile
-	while true; do
-		whip_msg "LUKS" "Se va a crear un keyfile para /home. A continuacion se te pedirá la contraseña del disco /home"
-		cryptsetup -v luksAddKey "/dev/$crypthome_parent" $keyfile && break
-		whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
-	done
-	chmod 000 $keyfile
-	chmod g-rwx,o-rwx /etc/keys
-
-echo "target=home
-source=UUID=\"$crypthome_parent_UUID\"
-key=$keyfile
-" | tee /etc/conf.d/dmcrypt
 }
 
 ##########
@@ -244,18 +227,6 @@ timezoneset
 set_password "root"
 user_create
 
-# Detectamos el fabricante del procesador
-microcode_detect
-
-# Si el sistema es UEFI, instalar efibootmgr
-[ -d /sys/firmware/efi ] && \
-packages+=" efibootmgr" && echo_msg "Sistema EFI detectado. Se instalará efibootmgr."
-
-# Instalamos los paquetes necesarios
-pacinstall $packages
-
-lsblk -nl -o NAME | grep crypthome && home_keyfile
-
 # Si se utiliza encriptación, añadir el módulo encrypt a la imagen del kernel
 if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
 	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
@@ -267,12 +238,18 @@ if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null;
 	echo_msg "Bluetooth detectado. Se instaló bluez."
 fi
 
-install_grub # Instalamos grub
-swap_create # Creamos nuestro swap
-mkinitcpio -P # Regenerar el initramfs
-hostname_config # Definimos el nombre de nuestra máquina y creamos el archivo hosts
-arch_support # Activar repositorios de Arch Linux
-genlocale # Configurar la codificación del sistema
+# Instalamos grub
+install_grub
+# Creamos el archivo swap
+swap_create
+# Regeneramos el initramfs
+mkinitcpio -P
+# Definimos el nombre de nuestra máquina y creamos el archivo hosts
+hostname_config
+# Activar repositorios de Arch Linux
+arch_support
+# Configurar la codificación del sistema
+genlocale
 
 # Activamos servicios
 service_add NetworkManager
@@ -290,8 +267,6 @@ ln -s /usr/bin/nvim /usr/local/bin/vi
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
 	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
-else
-	su "$username" -c "cd /home/$username/.dotfiles && git pull"
 fi
 
 # Configuramos sudo para stage3.sh
