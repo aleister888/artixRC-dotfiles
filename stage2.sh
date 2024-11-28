@@ -6,20 +6,19 @@
 
 # TODO
 # Ahora mismo la forma en la que se detecta el UUID de la partición
-# LUKS es poco fiable. Lo correcto sería pasarle el UUID directamene
-# desde s1.
+# LUKS es poco fiable. Lo correcto sería pasarle el UUID (o de que
+# dispositivo obtenerlo) directamente desde s1 (p.e. mediante un archivo
+# de texto que contenga información sobre el esquema de particionado).
 
-# Esta parte del script se ejecuta ya dentro del sistema base mediante
-# chroot. Se encarga de:
+# Esta parte del script se ejecuta ya dentro de la instalación (chroot).
+# Resumidamente, se encarga de:
 # - Establecer la zona horaria del sistema
-# - Crear nuestro usuario y establecer la contraseña de root
-# - Instalar GRUB
+# - Crear al usuario no-privilegiado y establecer las contraseñas
+# - Instalar y configurar GRUB y los servicios del sistema
 # - Crear el archivo swap
 # - Crear un archivo hosts
 # - Activar los repositorios de Arch Linux y elegir los más rápidos
 #   - Actualizar el mirrorlist periódicamente con reflector y cron
-# - Generar el locale
-# - Activar los servicios
 
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 

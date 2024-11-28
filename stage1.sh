@@ -36,29 +36,29 @@ echo_msg(){
 # Función que nos muestra como quedarían las particiones de nuestra instalación para
 # confirmar los cambios. También prepara las variables para formatear los discos
 scheme_show(){
-	# Inicializamos nuestras variables
-	local scheme # Variable con el esquema de particiones completo
-	bootmount= # Punto de montaje con la partición de arranque
-	bootpart= # Partición de arranque
-	rootpart= # Partición con el sistema
-	local roottype # Tipo de / ( Encriptado o sin encriptación)
+	local scheme   # Variable con el esquema de particiones completo
+	local roottype # Tipo de partición/ (LUKS o normal)
+	bootmount=     # Punto de montaje con la partición de arranque
+	bootpart=      # Partición de arranque
+	rootpart=      # Partición con el sistema
+
 	# Establecemos la partición de arranque en función del tipo de sistema
 	if [ "$PART_TYPE" == "msdos" ]; then
 		bootmount="/boot"
 	else
 		bootmount="/boot/efi"
 	fi
-	# Definimos el nombre de las particiones
-	# de nuestro disco principal*
+	# Definimos el nombre de las particiones de nuestro disco principal
+	# (Los NVME tienen un sistema de nombrado distinto)
 	case "$ROOT_DISK" in
 	*"nvme"*)
 		bootpart="$ROOT_DISK"p1
 		rootpart="$ROOT_DISK"p2 ;;
-	*) # *Los NVME tienen un esquema de ordenación diferente
+	*)
 		bootpart="$ROOT_DISK"1
 		rootpart="$ROOT_DISK"2 ;;
 	esac
-	# Mostraremos si el disco duro esta encriptado o no
+	# Mostrar si la partición esta encriptada
 	if [ "$crypt_root" == "true" ]; then
 		roottype="LUKS"
 	else
@@ -185,23 +185,20 @@ mount_partitions(){
 }
 
 # Instalar paquetes con basestrap
-# Ejecutamos el comando en un bucle hasta que se ejecuta correctamente
-# porque basestrap no tiene la opción --disable-download-timeout.
-# Lo que hace que para conexiones muy lentas la operación pueda fallar.
+# Ejecutamos basestrap en un bucle hasta que se ejecuta correctamente
+# porque el comando no tiene la opción --disable-download-timeout.
+# Lo que podría hacer que la operación falle con conexiones muy lentas.
 basestrap_install(){
 	local basestrap_status=false
 	local basestrap_packages="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs"
 
 	# Vamos a instalar los paquetes del grupo base-devel manualmente para luego poder borrar sudo
-	#  (Si en su lugar instalamos el grupo, luego será más complicado desinstalar sudo)
+	# (Si en su lugar instalamos el grupo, luego será más complicado desinstalar sudo)
 	basestrap_packages+=" autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
-	# Instalamos xkeyboard-config para poder elegir el layout de teclado en (s3)
-	# Instalamos pipewire antes para evitar conflictos
-	#  (Por ejemplo que se instale jack2 como dependencia en vez de pipewire-jack).
-	# Los paquetes para aplicaciones de 32 bits se instalarán una vez activados los repositorios
-	# de Arch Linux (s3)
-	# Instalamos go y sudo para poder instalar compilar yay más adelante (s3)
-	#  ("makepkg -si" necesita sudo, porque utiliza flags que opendoas no soporta)
+	# Instalamos xkeyboard-config aquí para poder elegir el layout de teclado más adelante (s3)
+	# Instalamos pipewire aquí para evitar conflictos (p.e. se isntala jack2 y no pipewire-jack).
+	# Los paquetes para 32 bits se instalarán una vez activados los repos. de Arch Linux (s3)
+	# Instalamos go y sudo para poder instalar compilar yay más adelante (makepkg:s3)
 	basestrap_packages+=" xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber go"
 	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
 
