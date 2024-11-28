@@ -112,14 +112,10 @@ install_grub(){
 	if [ ! -d /sys/firmware/efi ]; then
 		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix "$boot_drive" --recheck
 	else
-		if lsblk -f | grep crypt; then
-			grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable "$boot_drive"
-		else
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck --removable "$boot_drive"
-		fi
+		grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable "$boot_drive"
 	fi
 
-	# Configurar grub si este esta en una instalación encriptada
+	# Si se usa encriptación, le decimos a GRUB el UUID de la partición encriptada y desencriptada.
 	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
 	lsblk -f | grep crypt && sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
 
@@ -272,4 +268,5 @@ fi
 echo "root ALL=(ALL:ALL) ALL
 %wheel ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers
 
+exit
 su "$username" -c "cd /home/$username/.dotfiles && ./stage3.sh"

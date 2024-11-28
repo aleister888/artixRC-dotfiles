@@ -82,7 +82,7 @@ static const Rule rules[] = {
 	{ TERMC,                  NULL,	NULL,	0,	0,	0,	1,	0,	-1,	0},
 	// Ventanas flotantes
 	{ "Yad",                  NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Gcolor3",              NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Nl.hjdskes.gcolor3",   NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	// Espacio 1: Música
 	{ "tauonmb",              NULL,	NULL,	1<<0,	0,	0,	0,	0,	-1,	0},
 	// Espacio 2: Correo
