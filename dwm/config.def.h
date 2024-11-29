@@ -82,7 +82,7 @@ static const Rule rules[] = {
 	{ TERMC,                  NULL,	NULL,	0,	0,	0,	1,	0,	-1,	0},
 	// Ventanas flotantes
 	{ "Yad",                  NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
-	{ "Gcolor3",              NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Nl.hjdskes.gcolor3",   NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	// Espacio 1: Música
 	{ "tauonmb",              NULL,	NULL,	1<<0,	0,	0,	0,	0,	-1,	0},
 	// Espacio 2: Correo
@@ -197,13 +197,17 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,            {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,            SHCMD("j4-dmenu-desktop --dmenu 'dmenu -c -l 12'") },
 	{ MODKEY|ControlMask,           XK_p,      spawn,            SHCMD("dmenu -C -l 1 | tr -d '\n' | xclip -selection clipboard") },
+	{ 0,               XF86XK_Calculator,      spawn,            SHCMD("dmenu -C -l 1 | tr -d '\n' | xclip -selection clipboard") },
 	{ MODKEY,                       XK_t,      spawn,            SHCMD("tray-toggle") },
 	// Menú para copiar al portapapeles iconos/símbolos
 	{ MODKEY|ControlMask,           XK_e,      spawn,            SHCMD("dmenuunicode") },
 	// Abrir terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,            {.v = termcmd } },
+	// Bloquear pantalla
+	{ Mod4Mask,                     XK_l,      spawn,            SHCMD("sleep 0.17; i3lock-fancy-rapid 4 4") },
 	// Configurar pantallas
 	{ MODKEY,                       XK_F1,     spawn,            SHCMD("monitor-layout && nitrogen --restore") },
+	{ Mod4Mask,                     XK_p,      spawn,            SHCMD("monitor-layout && nitrogen --restore") },
 	{ MODKEY|ShiftMask,             XK_F1,     spawn,            SHCMD("arandr && nitrogen --restore") },
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },

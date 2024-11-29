@@ -18,7 +18,7 @@ set info size:time
 set cleaner '~/.config/lf/cleaner'
 set previewer '~/.config/lf/scope'
 set ratios 3:5:4
-set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log"
+set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log:System Volume Information"
 
 # Recargar pantalla
 map R clear
@@ -94,7 +94,7 @@ on-cd
 # Muestra información del archivo seleccionado con eza
 cmd on-select &{{
 	clear
-	lf -remote "send $id set statfmt \"$(eza -ldHF --color=always "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+	lf -remote "send $id set statfmt \"$(eza -ldHF --color=always --time-style iso "$(basename "$f")" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
 }}
 
 # Comprimir archivos dentro de un directorio en el formato seleccionado
@@ -245,7 +245,7 @@ cmd restore-trash ${{
 	clear; tput bold
 	set -f
 	printf "Contenidos de la papelera:\n"
-	trash-list
+	trash-list | sed "s|$HOME|~|"
 	printf "¿Restaurar papelera? [s/N] "
 	read ans
 	[ $ans = "s" ] && trash-restore && printf "done"
@@ -255,7 +255,7 @@ cmd restore-trash ${{
 # Abrir archivos en función del tipo
 cmd open ${{
 	case $(xdg-mime query filetype "$(readlink -f $f)") in
-		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
+		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar | */gzip)
 			xarchiver "$fx" ;;
 
 		*/zip | */vnd.comicbook+zip)

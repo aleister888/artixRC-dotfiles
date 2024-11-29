@@ -252,8 +252,6 @@ dotfiles_install(){
 	sudo chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
 }
 
-# Configurar el entorno de trabajo
-
 # Instalamos dwm y otras aplicaciones suckless
 suckless_install(){
 	# Instalar software suckless
@@ -361,6 +359,7 @@ sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalamos todos los paquetes a la vez
 yayinstall $packages
+
 # Instalamos dwm y otras utilidades
 suckless_install
 
@@ -401,16 +400,16 @@ sudo archlinux-java set java-17-openjdk
 
 # Descargar los diccionarios para vim
 vim_spell_download
-
 # Instalar los archivos de configuración e instalar plugins de zsh
 dotfiles_install
-
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir
+
 # Configurar syncthing para que se inicie con el ordenador
 echo "@reboot $USER syncthing --no-browser --no-default-folder" | sudo tee -a /etc/crontab
+
 # Configurar el audio de baja latencia
 audio_setup
 

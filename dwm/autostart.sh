@@ -174,34 +174,75 @@ done &
 # Limpiar directorio $HOME #
 ############################
 
+# Hacer que npm user la especificación de directorios XDG
+npm_xdg(){
+	local configdir
+	configdir="$(dirname "$NPM_CONFIG_USERCONFIG")"
+	mkdir -p "$configdir"
+	cat <<-'EOF' | tee "$NPM_CONFIG_USERCONFIG"
+		prefix=${XDG_DATA_HOME}/npm
+		cache=${XDG_CACHE_HOME}/npm
+		init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
+		tmp=${XDG_RUNTIME_DIR}/npm
+		logfile=${XDG_CACHE_HOME}/npm/logs/npm.log
+	EOF
+
+	mv "$HOME/.npm/_cacache" "$XDG_CACHE_HOME/npm" 2>/dev/null
+	mv "$HOME/.npm/_logs" "$XDG_CACHE_HOME/npm/logs" 2>/dev/null
+	rm -rf "$HOME/.npm"
+}
+
+merge_delete(){
+	local og xdg
+	og="$1"; xdg="$2"
+	if [ -d "$og" ]; then
+		cp -r "$og" "$xdg"
+		rm -rf "$og"
+	fi
+}
+
+moveto_xdg(){
+	local og xdg
+	og="$1"; xdg="$2"
+	if [ -f "$og" ]; then
+		mkdir "$(dirname "$xdg")"
+		mv -f "$og" "$xdg"
+	fi
+}
+
+move_hardcoded_dir(){
+	local og xdg
+	og="$1"; xdg="$2"
+	if [ ! -L "$og" ] && [ -d "$og" ]; then
+		merge_delete "$og" "$xdg"
+		ln -s "$xdg" "$og"
+	fi
+}
+
 # Mover archivos según la especificación XDG
 
-[ -d "$HOME/.pki" ] && {
-	rsync -a --delete "$HOME/.pki/" "$XDG_DATA_HOME/pki/"
-	rm -rf "$HOME/.pki"
-}
+[ -d "$HOME/.npm" ] && npm_xdg
 
-[ -f "$HOME/.pulse-cookie" ] && {
-	mkdir -p "$XDG_CONFIG_HOME/pulse"
-	mv -f "$HOME/.pulse-cookie" "$XDG_CONFIG_HOME/pulse/cookie"
-}
+merge_delete "$HOME/.pki"   "$XDG_DATA_HOME/pki/"
+merge_delete "$HOME/.gnupg" "$XDG_DATA_HOME/gnupg"
+merge_delete "$HOME/.cargo" "$XDG_DATA_HOME/cargo"
+merge_delete "$HOME/go"     "$XDG_DATA_HOME/go"
 
-[ -f "$HOME/.gitconfig" ] && {
-	mkdir -p "$XDG_CONFIG_HOME/git"
-	mv -f "$HOME/.gitconfig" "$XDG_CONFIG_HOME/git/config"
-}
+moveto_xdg "$HOME/.pulse-cookie" "$XDG_CONFIG_HOME/pulse/cookie"
+moveto_xdg "$HOME/.gitconfig"    "$XDG_CONFIG_HOME/git/config"
 
-[ -d "$HOME/.gnupg" ]	&& mv -f "$HOME/.gnupg" "$XDG_DATA_HOME/gnupg"
-[ -d "$HOME/.java" ]	&& mv -f "$HOME/.java" "$XDG_CONFIG_HOME/java"
-[ -d "$HOME/.cargo" ]	&& mv -f "$HOME/.cargo" "$XDG_DATA_HOME/cargo"
-[ -d "$HOME/go" ]	&& mv -f "$HOME/go" "$XDG_DATA_HOME/go"
+move_hardcoded_dir "$HOME/.java"             "$XDG_CONFIG_HOME/java"
+move_hardcoded_dir "$HOME/.eclipse"          "$XDG_CONFIG_HOME/eclipse"
+move_hardcoded_dir "$HOME/eclipse-workspace" "$XDG_DATA_HOME/eclipse-workspace"
+move_hardcoded_dir "$HOME/.codetogether"     "$HOME/.config/codetogether"
+move_hardcoded_dir "$HOME/.webclipse"        "$HOME/.config/webclipse"
+
+sleep 10; rm "$HOME/.xsession-errors"
 
 # Borrar archivos
 rm -f "$HOME/.wget-hsts"
-rm -rf "$XDG_DATA_HOME/desktop-directories" "$XDG_DATA_HOME/applications/wine"* "$XDG_CONFIG_HOME/menus"
-
-# Arreglar bug con Thinkpad T14s (Gen 1)
-if [ "$(< /sys/devices/virtual/dmi/id/board_name)" = "20UJS21R00" ]; then
-	pactl set-sink-mute @DEFAULT_SINK@ toggle
-	pactl set-sink-mute @DEFAULT_SINK@ toggle
-fi
+rm -rf \
+	"$HOME/Escritorio" \
+	"$XDG_CONFIG_HOME/menus" \
+	"$XDG_DATA_HOME/desktop-directories" \
+	"$XDG_DATA_HOME/applications/wine"*

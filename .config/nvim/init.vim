@@ -200,6 +200,10 @@ inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab
 nnoremap <silent><leader>t :NvimTreeToggle<CR>
 nnoremap <silent><leader>u :UndotreeToggle<CR>
 
+" Abrir el mismo buffer en vertical/horizontal
+nnoremap <leader>v :vsplit %<CR>
+nnoremap <leader>h :split %<CR>
+
 " Cambiar de pestaña
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
 nnoremap <silent><leader>2 <Cmd>BufferLineGoToBuffer 2<CR>
@@ -257,6 +261,8 @@ au Filetype tex nmap <silent><leader>j :call ToggleVimtexErrors()<CR>
 au Filetype tex nmap <silent><leader>k <plug>(vimtex-clean)<CR>
 au Filetype tex vnoremap e s\emph{<C-r>"}
 au Filetype tex vnoremap b s\textbf{<C-r>"}
+au Filetype tex vnoremap i s\textit{<C-r>"}
+au Filetype tex vnoremap h s\hl{<C-r>"}
 
 
 " Shell

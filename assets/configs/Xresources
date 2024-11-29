@@ -1,8 +1,6 @@
 Xcursor.theme: capitaine-cursors
 Xcursor.size: 64
 
-*font: Iosevka SS05:size=14
-
 xmenu.font: Iosevka SS05:bold:size=14
 xmenu.border: #545454
 xmenu.separator: #545454

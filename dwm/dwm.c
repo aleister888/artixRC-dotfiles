@@ -52,22 +52,22 @@
 #include "util.h"
 
 /* macros */
-#define BUTTONMASK		(ButtonPressMask|ButtonReleaseMask)
-#define CLEANMASK(mask)		(mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-#define GETINC(X)		((X) - 2000)
-#define INC(X)			((X) + 2000)
-#define INTERSECT(x,y,w,h,m)	(MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
-				* MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
-#define ISINC(X)		((X) > 1000 && (X) < 3000)
-#define ISVISIBLE(C)		((C->tags & C->mon->tagset[C->mon->seltags]) || C->issticky)
-#define PREVSEL			3000
-#define MOD(N,M)		((N)%(M) < 0 ? (N)%(M) + (M) : (N)%(M))
-#define MOUSEMASK		(BUTTONMASK|PointerMotionMask)
-#define WIDTH(X)		((X)->w + 2 * (X)->bw)
-#define HEIGHT(X)		((X)->h + 2 * (X)->bw)
-#define TAGMASK			((1 << LENGTH(tags)) - 1)
-#define TEXTW(X)		(drw_fontset_getwidth(drw, (X)) + lrpad)
-#define TRUNC(X,A,B)		(MAX((A), MIN((X), (B))))
+#define BUTTONMASK           (ButtonPressMask|ButtonReleaseMask)
+#define CLEANMASK(mask)      (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
+#define GETINC(X)            ((X) - 2000)
+#define INC(X)               ((X) + 2000)
+#define INTERSECT(x,y,w,h,m) (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
+                             * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+#define ISINC(X)             ((X) > 1000 && (X) < 3000)
+#define ISVISIBLE(C)         ((C->tags & C->mon->tagset[C->mon->seltags]) || C->issticky)
+#define PREVSEL              3000
+#define MOD(N,M)             ((N)%(M) < 0 ? (N)%(M) + (M) : (N)%(M))
+#define MOUSEMASK            (BUTTONMASK|PointerMotionMask)
+#define WIDTH(X)             ((X)->w + 2 * (X)->bw)
+#define HEIGHT(X)            ((X)->h + 2 * (X)->bw)
+#define TAGMASK              ((1 << LENGTH(tags)) - 1)
+#define TEXTW(X)             (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define TRUNC(X,A,B)         (MAX((A), MIN((X), (B))))
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
@@ -1822,8 +1822,8 @@ runautostart(void)
 		return;
 
 	/* if $XDG_DATA_HOME is set and not empty, use $XDG_DATA_HOME/dwm,
-	*  otherwise use ~/.local/share/dwm as autostart script directory
-	*/
+	 * otherwise use ~/.local/share/dwm as autostart script directory
+	 */
 	xdgdatahome = getenv("XDG_DATA_HOME");
 	if (xdgdatahome != NULL && *xdgdatahome != '\0') {
 		/* space for path segments, separators and nul */
@@ -1847,8 +1847,8 @@ runautostart(void)
 	/* check if the autostart script directory exists */
 	if (! (stat(pathpfx, &sb) == 0 && S_ISDIR(sb.st_mode))) {
 		/* the XDG conformant path does not exist or is no directory
-		*  so we try ~/.dwm instead
-		*/
+		 * so we try ~/.dwm instead
+		 */
 		char *pathpfx_new = realloc(pathpfx, strlen(home) + strlen(dwmdir) + 3);
 		if(pathpfx_new == NULL) {
 			free(pathpfx);
@@ -2379,7 +2379,7 @@ togglescratch(const Arg *arg)
 	int numscratchpads = 0; // count of scratchpads
 
 	/* Looping through monitors and client's twice, the first time to work out whether we need
-	*  to move clients across from one monitor to another or not */
+	 * to move clients across from one monitor to another or not */
 	for (mon = mons; mon; mon = mon->next)
 		for (c = mon->clients; c; c = c->next) {
 			if (c->scratchkey != ((char**)arg->v)[0][0])
@@ -2393,11 +2393,11 @@ togglescratch(const Arg *arg)
 		}
 
 	/* Now for the real deal. The logic should go like:
-	*  - hidden scratchpads will be shown
-	*  - shown scratchpads will be hidden, unless they are being moved to the current monitor
-	*  - the scratchpads will be moved to the current monitor if they all reside on the same monitor
-	*  - multiple scratchpads residing on separate monitors will be left in place
-	*/
+	 * - hidden scratchpads will be shown
+	 * - shown scratchpads will be hidden, unless they are being moved to the current monitor
+	 * - the scratchpads will be moved to the current monitor if they all reside on the same monitor
+	 * - multiple scratchpads residing on separate monitors will be left in place
+	 */
 	for (mon = mons; mon; mon = mon->next) {
 		for (c = mon->stack; c; c = next) {
 			next = c->snext;
@@ -2405,28 +2405,28 @@ togglescratch(const Arg *arg)
 				continue;
 
 			/* awesomebar / wintitleactions compatibility, unhide scratchpad if hidden
-			if (HIDDEN(c)) {
-				XMapWindow(dpy, c->win);
-				setclientstate(c, NormalState);
-			}
-			*/
+			 * if (HIDDEN(c)) {
+			 * 	XMapWindow(dpy, c->win);
+			 * 	setclientstate(c, NormalState);
+			 * }
+			 */
 
 			/* Record the first found scratchpad client for focus purposes, but prioritise the
-			*  scratchpad on the current monitor if one exists */
+			 *  scratchpad on the current monitor if one exists */
 			if (!found || (mon == selmon && found->mon != selmon))
 				found = c;
 
 			/* If scratchpad clients reside on another monitor and we are moving them across then
-			*  as we are looping through monitors we could be moving a client to a monitor that has
-			*  not been processed yet, hence we could be processing a scratchpad twice. To avoid
-			*  this we detach them and add them to a temporary list (monclients) which is to be
-			*  processed later. */
+			 * as we are looping through monitors we could be moving a client to a monitor that has
+			 * not been processed yet, hence we could be processing a scratchpad twice. To avoid
+			 * this we detach them and add them to a temporary list (monclients) which is to be
+			 * processed later. */
 			if (!multimonscratch && c->mon != selmon) {
 				detach(c);
 				detachstack(c);
 				c->next = NULL;
 				/* Note that we are adding clients at the end of the list, this is to preserve the
-				*  order of clients as they were on the adjacent monitor (relevant when tiled) */
+				 * order of clients as they were on the adjacent monitor (relevant when tiled) */
 				if (last)
 					last = last->next = c;
 				else
