@@ -18,7 +18,7 @@ Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración p
 - Utiliza `su` para ejecutar como root:
 
 ```
-curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage1.sh && chmod +x stage1.sh && ./stage1.sh
+curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/dev/stage1.sh && chmod +x stage1.sh && ./stage1.sh
 ```
 
 > [!WARNING]
