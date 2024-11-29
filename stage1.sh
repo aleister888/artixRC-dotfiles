@@ -86,14 +86,9 @@ scheme_setup(){
 local scheme_confirm="false"
 
 while [ "$scheme_confirm" == "false" ]; do
-
-	# Elegimos el disco para /
-	local root_selected="false"
-
-	while [ "$root_selected" == "false" ]; do
+	while true; do
 		ROOT_DISK=$(whip_menu "Discos disponibles" "Selecciona un disco para la instalacion:" \
-		"$(lsblk -dn -o name,size | tr '\n' ' ')") && \
-		root_selected=true
+		"$(lsblk -dn -o name,size | tr '\n' ' ')") && break
 	done
 
 	if whip_yes "LUKS" "¿Desea encriptar el disco duro?"; then
@@ -189,7 +184,6 @@ mount_partitions(){
 # porque el comando no tiene la opción --disable-download-timeout.
 # Lo que podría hacer que la operación falle con conexiones muy lentas.
 basestrap_install(){
-	local basestrap_status=false
 	local basestrap_packages="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs"
 
 	# Vamos a instalar los paquetes del grupo base-devel manualmente para luego poder borrar sudo
@@ -221,9 +215,8 @@ basestrap_install(){
 		basestrap_packages+=" blueman"
 	fi
 
-	while [ "$basestrap_status" == "false" ]; do
-		basestrap /mnt $basestrap_packages && \
-		basestrap_status=true
+	while true; do
+		basestrap /mnt $basestrap_packages && break
 	done
 }
 

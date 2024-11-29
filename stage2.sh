@@ -101,7 +101,7 @@ user_create(){
 # Instalamos GRUB
 install_grub(){
 	local cryptdisk cryptid decryptid boot_drive
-	cryptdisk=$(lsblk -fn -o NAME | grep cryptroot -B 1 | grep -oE "[a-z].*" | head -n1)
+	cryptdisk=$(lsblk -fni -o NAME | grep cryptroot -B 1 | grep -oP '`-\K[[:alnum:]]*[0-9]$')
 	cryptid=$(lsblk -nd -o UUID /dev/"$cryptdisk")
 	decryptid=$(lsblk -n -o UUID /dev/mapper/cryptroot)
 	boot_drive=$(df /boot | awk 'NR==2 {print $1}')

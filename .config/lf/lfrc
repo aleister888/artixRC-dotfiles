@@ -255,7 +255,7 @@ cmd restore-trash ${{
 # Abrir archivos en función del tipo
 cmd open ${{
 	case $(xdg-mime query filetype "$(readlink -f $f)") in
-		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar )
+		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar | */gzip)
 			xarchiver "$fx" ;;
 
 		*/zip | */vnd.comicbook+zip)
