@@ -116,7 +116,7 @@ install_grub(){
 	if [ ! -d /sys/firmware/efi ]; then
 		grub-install --target=i386-pc --boot-directory=/boot --bootloader-id=Artix "$boot_drive" --recheck
 	else
-		grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Artix --recheck --removable "$boot_drive"
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Artix --recheck --removable
 	fi
 
 	# Si se usa encriptación, le decimos a GRUB el UUID de la partición encriptada y desencriptada.
