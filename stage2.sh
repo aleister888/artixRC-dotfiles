@@ -10,6 +10,10 @@
 # dispositivo obtenerlo) directamente desde s1 (p.e. mediante un archivo
 # de texto que contenga información sobre el esquema de particionado).
 
+# En install_grub tendríamos que hacer que solo se añada la cadena con el
+# UUID al archivo /etc/default/grub si las dos variables no estan vacías
+# y son discos válidos.
+
 # Esta parte del script se ejecuta ya dentro de la instalación (chroot).
 # Resumidamente, se encarga de:
 # - Establecer la zona horaria del sistema
@@ -120,8 +124,8 @@ install_grub(){
 	fi
 
 	# Si se usa encriptación, le decimos a GRUB el UUID de la partición encriptada y desencriptada.
-	lsblk -f | grep crypt && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
-	lsblk -f | grep crypt && sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
+	lsblk -fni -o NAME | grep cryptroot && echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
+	lsblk -fni -o NAME | grep cryptroot && sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
 
 	# Crear el archivo de configuración
 	grub-mkconfig -o /boot/grub/grub.cfg
