@@ -82,6 +82,7 @@ static const Rule rules[] = {
 	{ TERMC,                  NULL,	NULL,	0,	0,	0,	1,	0,	-1,	0},
 	// Ventanas flotantes
 	{ "Yad",                  NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
+	{ "Arandr",               NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	{ "Nl.hjdskes.gcolor3",   NULL,	NULL,	0,	1,	0,	0,	0,	-1,	0},
 	// Espacio 1: Música
 	{ "tauonmb",              NULL,	NULL,	1<<0,	0,	0,	0,	0,	-1,	0},
@@ -206,9 +207,8 @@ static const Key keys[] = {
 	// Bloquear pantalla
 	{ Mod4Mask,                     XK_l,      spawn,            SHCMD("sleep 0.17; i3lock-fancy-rapid 4 4") },
 	// Configurar pantallas
-	{ MODKEY,                       XK_F1,     spawn,            SHCMD("monitor-layout && nitrogen --restore") },
-	{ Mod4Mask,                     XK_p,      spawn,            SHCMD("monitor-layout && nitrogen --restore") },
-	{ MODKEY|ShiftMask,             XK_F1,     spawn,            SHCMD("arandr && nitrogen --restore") },
+	{ MODKEY,                       XK_F1,     spawn,            SHCMD("arandr && nitrogen --restore") },
+	{ Mod4Mask,                     XK_p,      spawn,            SHCMD("arandr && nitrogen --restore") },
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
 	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } },
