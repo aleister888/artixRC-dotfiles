@@ -3,7 +3,7 @@ Xcursor.size: 64
 
 xmenu.font: Iosevka SS05:bold:size=14
 xmenu.border: #545454
-xmenu.separator: #545454
+xmenu.separator: #282828
 xmenu.selbackground: #222222
 xmenu.gap: 4
 xmenu.width: 64

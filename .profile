@@ -124,7 +124,6 @@ export LF_ICONS="di=:fi=:tw=󱝏:ow=:ex=:ln=:or=󱫅:\
 *.epub=:\
 *.kdbx=:\
 *.mask=:\
-*.gpg=:\
 *.css=󰸌:\
 *.mid=󰡂:\
 *.bib=:\

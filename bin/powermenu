@@ -2,14 +2,14 @@
 
 # Define las opciones con iconos
 options=(
-	"  Bloquear"
-	"  Suspender"
-	"  Suspender hasta las 7:00"
-	"  Cerrar sesión"
-	"  Reinciar"
-	"  Apagar"
-	"  BIOS"
-	"  Reinciar dwm"
+	" Bloquear"
+	" Suspender"
+	" Suspender hasta las 7:00"
+	" Cerrar sesión"
+	" Reinciar"
+	" Apagar"
+	" BIOS"
+	" Reinciar dwm"
 )
 
 # Presenta las opciones usando dmenu
