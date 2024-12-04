@@ -231,7 +231,7 @@ set_password "root"
 user_create
 
 # Si se utiliza encriptación, añadir el módulo encrypt a la imagen del kernel
-if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -f | grep crypt; then
+if ! grep -q "^HOOKS=.*encrypt.*" /etc/mkinitcpio.conf && lsblk -fni -o NAME | grep cryptroot; then
 	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi
 
