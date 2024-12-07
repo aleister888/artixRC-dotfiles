@@ -275,7 +275,7 @@ cmd open ${{
 			$EDITOR "$fx" ;;
 
 		image/*)
-			filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|ppm\|svg\)$')
+			filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|ppm\|svg\|webp\)$')
 			index=$(printf "%s\n" $filelist | nl | grep "$(basename "$fx")" | awk '{print $1}')
 			nsxiv -n $index $filelist & ;;
 
