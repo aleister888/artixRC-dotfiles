@@ -194,7 +194,7 @@ basestrap_install(){
 	# Los paquetes para 32 bits se instalarán una vez activados los repos. de Arch Linux (s3)
 	# Instalamos go y sudo para poder instalar compilar yay más adelante (makepkg:s3)
 	basestrap_packages+=" xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber go"
-	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
+	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc sudo"
 
 	# Añadimos a los paquetes del sistema base el microcódigo de CPU correspodiente
 	local manufacturer

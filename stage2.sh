@@ -259,7 +259,6 @@ service_add NetworkManager
 service_add cupsd
 service_add cronie
 service_add acpid
-service_add ntpd
 rc-update add device-mapper boot
 rc-update add dmcrypt boot
 rc-update add dmeventd boot

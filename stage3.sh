@@ -466,6 +466,13 @@ _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | sudo tee -a /etc/en
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 #WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q dotnet45
 
+# Ejecutamos los módulos que necesitan permisos de administrador
+for script in "$HOME/.dotfiles/modules/root/"*; do
+	if [[ -x "$script" && -f "$script" ]]; then
+		sudo "$script"
+	fi
+done
+
 # Borrar archivos innecesarios
 rm "$HOME"/.bash* 2>/dev/null
 rm "$HOME"/.wget-hsts 2>/dev/null
