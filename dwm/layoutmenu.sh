@@ -7,4 +7,5 @@ cat <<EOF | xmenu
 [D] Deck		3
 ||| Columns		4
 |M| Cmaster		5
+[S] Stairs		6
 EOF

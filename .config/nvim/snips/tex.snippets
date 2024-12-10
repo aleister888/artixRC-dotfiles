@@ -1,5 +1,116 @@
+# Insertar entorno
 snippet beg "begin{} / end{}" bA
 \begin{$1}
 	$0
 \end{$1}
+endsnippet
+
+snippet minipage "Mini-Página" bi
+\begin{minipage}[${1:
+	t (Alineación superior)
+	c (Alineación centrada)
+	b (Alineación inferior)
+}]{${2:.45}\textwidth}
+	$3
+\end{minipage}
+endsnippet
+
+snippet im "Ítem" i
+\item $0
+endsnippet
+
+# Fuente negrita
+snippet bf "textbf" i
+\textbf{${1:texto}}${2}
+endsnippet
+# Fuente cursiva
+snippet it "textit" i
+\textit{${1:texto}}${2}
+endsnippet
+# Fuente monoespaciada
+snippet tt "texttt" i
+\texttt{${1:texto}}${2}
+endsnippet
+# Texto con énfasis
+snippet emph "emph" i
+\emph{${1:texto}}${2}
+endsnippet
+
+# Insertar figura
+snippet fig "Figura" bi
+\begin{figure}[${1:htpb}]
+	\centering
+	${2:\includegraphics[width=${3:0.8}\textwidth]{$4}}
+	\caption{${5:$4}}
+	\label{fig:${6:${4/\W+/-/g}}}
+\end{figure}
+endsnippet
+
+snippet ejem "Ejemplo" bi
+\begin{example}
+	${0:${VISUAL}}
+\end{example}
+endsnippet
+
+###############
+# Matemáticas #
+###############
+
+snippet teor "Teorema" bi
+\begin{theorem}
+	${0:${VISUAL}}
+\end{theorem}
+endsnippet
+
+snippet lema "Lema" bi
+\begin{lemma}
+	${0:${VISUAL}}
+\end{lemma}
+endsnippet
+
+snippet prop "Proposición" bi
+\begin{proposition}
+	${0:${VISUAL}}
+\end{proposition}
+endsnippet
+
+snippet coro "Corolario" bi
+\begin{corollary}
+	${0:${VISUAL}}
+\end{corollary}
+endsnippet
+
+snippet defi "Definición" bi
+\begin{definition}
+	${0:${VISUAL}}
+\end{definition}
+endsnippet
+
+# Sumatorio
+snippet sum "sum" w
+\sum_{n=${1:1}}^{${2:\infty}} ${3:a_n z^n}
+endsnippet
+
+snippet · "Multiplicación" w
+\cdot
+endsnippet
+
+snippet ... "Puntos supensivos" w
+\cdots
+endsnippet
+
+snippet to "Hacia" w
+\to
+endsnippet
+
+snippet => "Implica" w
+\implies
+endsnippet
+
+snippet =< "Implicado por" w
+\impliedby
+endsnippet
+
+snippet frac "Fracción" w
+\frac{$1}{$2}$0
 endsnippet

@@ -65,7 +65,7 @@ packages+=" qt6ct qt5ct qt5-tools papirus-icon-theme"
 # Aplicaciones GUI
 packages+=" keepassxc qbittorrent handbrake handbrake-cli bleachbit"
 # Misc
-packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzug libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor3 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xmenu eww-git tigervnc gnome-firmware i3lock-fancy-rapid-git stalonetray gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pulsemixer tk extra/j4-dmenu-desktop bash-language-server acpi neovim-remote android-tools"
+packages+=" dragon-drop syncthing fluidsynth extra/github-cli pamixer playerctl lf imagemagick inkscape go yad downgrade pv wine wine-mono wine-gecko winetricks remmina freerdp gtk-vnc libvncserver ueberzug libjpeg6-turbo lib32-libjpeg-turbo lib32-libjpeg6-turbo extra-cmake-modules gcolor3 gnome-disk-utility xautolock libqalculate redshift udiskie nitrogen picom-ftlabs-git polkit-gnome gnome-keyring dunst xmenu eww-git tigervnc gnome-firmware i3lock-fancy-rapid-git stalonetray gruvbox-dark-gtk capitaine-cursors xorg-xdm xdm-openrc network-manager-applet desktop-file-utils tlp-openrc tlp arandr pulsemixer tk extra/j4-dmenu-desktop bash-language-server acpi neovim-remote android-tools unclutter"
 # Pipewire
 # (Ya instalamos en stage1.sh pipewire, pero no los paquetes para 32 bits, que vienen de los repositorios de Arch Linux)
 packgaes+=" lib32-pipewire-jack lib32-pipewire lib32-libpipewire"
@@ -138,7 +138,7 @@ packages_choose(){
 	[ "$noprivacy" == "true" ] && \
 		packages+=" discord telegram-desktop"
 	[ "$office" == "true" ] && \
-		packages+=" libreoffice"
+		packages+=" libreoffice libreoffice-fresh-es"
 	[ "$latex" == "true" ] && \
 		packages+=" texlive-core texlive-bin texlive-langspanish texlive-bibtexextra texlive-binextra texlive-context texlive-fontsextra texlive-fontsrecommended texlive-fontutils texlive-formatsextra texlive-latex texlive-latexextra texlive-latexrecommended texlive-mathscience texlive-music texlive-pictures texlive-plaingeneric texlive-pstricks texlive-publishers texlive-xetex"
 

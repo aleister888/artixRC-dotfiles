@@ -93,6 +93,9 @@ xset -dpms && xset s off &
 # Leer la configuración Xresources
 [ -f "$XDG_CONFIG_HOME/Xresources" ] && xrdb -merge "$XDG_CONFIG_HOME/Xresources"
 
+# Ocultar el cursor si no se está usando
+pgrep unclutter || unclutter --start-hidden --timeout 2 &
+
 # Pipewire
 pgrep pipewire || pipewire-start &
 
