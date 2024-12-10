@@ -28,54 +28,52 @@ static const int lockfullscreen        = 1;   // 1 == Fuerza el foco en las vent
 static const unsigned int colorfultag  = 1;   // 1 == Los indicadores de etiqueta coloridos
 static const unsigned int ulinepad     = 0;   // Margen horizontal subrayado
 static const unsigned int ulinevoffset = 0;   // Margen vertical subrayado
-static const unsigned int ulinestroke  = 2;   // Grosor/Altura del subrayado
+static const unsigned int ulinestroke  = 4;   // Grosor/Altura del subrayado
 static const int ulineall              = 0;   // 1 == Subrayado en todos los espacios
 
 static const char background[]         = "#1D2021";
 static const char background_sel[]     = "#282828";
 static const char foreground[]         = "#EBDBB2";
-static const char col_red[]            = "#FB4934";
 static const char col_green[]          = "#B8BB26";
-static const char col_yellow[]         = "#FABD2F";
+static const char col_aqua[]           = "#8EC07C";
 static const char col_blue[]           = "#83A598";
 static const char col_purple[]         = "#D3869B";
-static const char col_aqua[]           = "#8EC07C";
-static const char col_orange[]         = "#FE8019";
 
 // Nombre de los espacios cuando están vacíos y cuando tienen ventanas:
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "a", "b", "c", "d"};
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "a", "b", "c", "d", "e", "f"};
 
 static const char *colors[][3] = {
 	// Colores:             Fuente      Fondo           Borde
 	[SchemeNorm]        = { foreground, background,     background_sel }, // Color de las ventanas normales
-	[SchemeSel]         = { foreground, background_sel, col_orange     }, // Color de las ventanas seleccionadas
-	[SchemeScratchNorm] = { "#000000",  "#000000",      col_blue       }, // Scratchpad (Normal)
-	[SchemeScratchSel]  = { "#000000",  "#000000",      col_purple     }, // Scratchpad (Seleccionado)
-	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
-	[SchemeStickySel]   = { "#000000",  "#000000",      col_yellow     }, // Scratchpad (Seleccionado)
-	[SchemeTag1]        = { col_purple, background_sel, "#000000"      }, // Colores de los espacios
-	[SchemeTag2]        = { col_blue,   background_sel, "#000000"      },
-	[SchemeTag3]        = { col_orange, background_sel, "#000000"      },
-	[SchemeTag4]        = { col_red,    background_sel, "#000000"      },
-	[SchemeTag5]        = { col_blue,   background_sel, "#000000"      },
-	[SchemeTag6]        = { col_blue,   background_sel, "#000000"      },
-	[SchemeTag7]        = { col_green,  background_sel, "#000000"      },
-	[SchemeTag8]        = { col_yellow, background_sel, "#000000"      },
-	[SchemeTag9]        = { col_purple, background_sel, "#000000"      },
-	[SchemeTag10]       = { col_green,  background_sel, "#000000"      },
-	[SchemeTag11]       = { col_orange, background_sel, "#000000"      },
-	[SchemeTag12]       = { col_blue,   background_sel, "#000000"      },
-	[SchemeTag13]       = { foreground, background_sel, "#000000"      },
-	[SchemeTag14]       = { foreground, background_sel, "#000000"      },
-	[SchemeTag15]       = { foreground, background_sel, "#000000"      },
-	[SchemeTag16]       = { foreground, background_sel, "#000000"      },
+	[SchemeSel]         = { foreground, background_sel, col_green      }, // Color de las ventanas seleccionadas
+	[SchemeStickyNorm]  = { "#000000",  "#000000",      background_sel }, // Sticky (Normal)
+	[SchemeStickySel]   = { "#000000",  "#000000",      col_purple     }, // Sticky (Seleccionada)
+	[SchemeScratchNorm] = { "#000000",  "#000000",      background_sel }, // Scratchpad (Normal)
+	[SchemeScratchSel]  = { "#000000",  "#000000",      col_aqua       }, // Scratchpad (Seleccionada)
+	[SchemeTag1]        = { col_green,  background_sel, "#000000"      }, // Colores de los espacios
+	[SchemeTag2]        = { col_aqua,   background_sel, "#000000"      },
+	[SchemeTag3]        = { col_blue,   background_sel, "#000000"      },
+	[SchemeTag4]        = { col_purple, background_sel, "#000000"      },
+	[SchemeTag5]        = { col_green,  background_sel, "#000000"      },
+	[SchemeTag6]        = { col_aqua,   background_sel, "#000000"      },
+	[SchemeTag7]        = { col_blue,   background_sel, "#000000"      },
+	[SchemeTag8]        = { col_purple, background_sel, "#000000"      },
+	[SchemeTag9]        = { col_green,  background_sel, "#000000"      },
+	[SchemeTag10]       = { col_aqua,   background_sel, "#000000"      },
+	[SchemeTag11]       = { col_blue,   background_sel, "#000000"      },
+	[SchemeTag12]       = { col_purple, background_sel, "#000000"      },
+	[SchemeTag13]       = { col_green,  background_sel, "#000000"      },
+	[SchemeTag14]       = { col_aqua,   background_sel, "#000000"      },
+	[SchemeTag15]       = { col_blue,   background_sel, "#000000"      },
+	[SchemeTag16]       = { col_purple, background_sel, "#000000"      },
+	[SchemeTag17]       = { col_green,  background_sel, "#000000"      },
+	[SchemeTag18]       = { col_aqua,   background_sel, "#000000"      },
 };
 
 static const int tagschemes[] = {
-	SchemeTag1,  SchemeTag2,  SchemeTag3,  SchemeTag4,
-	SchemeTag5,  SchemeTag6,  SchemeTag7,  SchemeTag8,
-	SchemeTag9,  SchemeTag10, SchemeTag11, SchemeTag12,
-	SchemeTag13, SchemeTag14, SchemeTag15, SchemeTag16,
+	SchemeTag1,  SchemeTag2,  SchemeTag3,  SchemeTag4, SchemeTag5,   SchemeTag6,
+	SchemeTag7,  SchemeTag8,  SchemeTag9,  SchemeTag10, SchemeTag11, SchemeTag12,
+	SchemeTag13, SchemeTag14, SchemeTag15, SchemeTag16, SchemeTag17, SchemeTag18
 };
 
 typedef struct {
@@ -106,7 +104,6 @@ static const Rule rules[] = {
 	{ "krita",                 NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
 	{ "Fr.handbrake.ghb",      NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
 	{ "Gimp",                  NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
-	{ "KeePassXC",             NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
 	{ "Timeshift-gtk",         NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
 	{ "BleachBit",             NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
 	{ "Gnome-disks",           NULL,  NULL,  1<<7,   0,  0,  0,  0,  -1,    0 },
@@ -124,6 +121,7 @@ static const Rule rules[] = {
 	{ "Minecraft* 1.21",       NULL,  NULL,  1<<8,   0,  0,  0,  0,  -1,    0 },
 	{ "Java",                  NULL,  NULL,  1<<11,  1,  0,  0,  0,  -1,    0 },
 	{ "Eclipse",               NULL,  NULL,  1<<11,  0,  0,  0,  0,  -1,    0 },
+	{ "KeePassXC",             NULL,  NULL,  1<<12,  0,  0,  0,  0,  -1,    0 },
 	{ TERMC,                   NULL,  NULL,     0,   0,  0,  1,  0,  -1,    0 },
 	{ NULL,  NULL,    "scratchpad",             0,   1,  0,  0,  0,  -1,  's' },
 	{ NULL,  NULL,  "Media viewer",             0,   1,  0,  0,  0,  -1,    0 },
@@ -336,6 +334,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_KP_Page_Down,            14)
 	TAGKEYS(                        XK_KP_Left,                 15)
 	TAGKEYS(                        XK_KP_Begin,                16)
+	TAGKEYS(                        XK_KP_Right,                17)
 };
 
 static const Button buttons[] = {

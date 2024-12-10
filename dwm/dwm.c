@@ -73,10 +73,9 @@
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel, SchemeScratchNorm, SchemeScratchSel,
 	SchemeStickyNorm, SchemeStickySel, /* color schemes */
-	SchemeTag1,  SchemeTag2,  SchemeTag3,  SchemeTag4,
-	SchemeTag5,  SchemeTag6,  SchemeTag7,  SchemeTag8,
-	SchemeTag9,  SchemeTag10, SchemeTag11, SchemeTag12,
-	SchemeTag13, SchemeTag14, SchemeTag15, SchemeTag16};
+	SchemeTag1,  SchemeTag2,  SchemeTag3,  SchemeTag4, SchemeTag5,   SchemeTag6,
+	SchemeTag7,  SchemeTag8,  SchemeTag9,  SchemeTag10, SchemeTag11, SchemeTag12,
+	SchemeTag13, SchemeTag14, SchemeTag15, SchemeTag16, SchemeTag17, SchemeTag18};
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 	NetWMFullscreen, NetWMSticky, NetActiveWindow, NetWMWindowType,
 	NetWMWindowTypeDialog, NetClientList, NetClientInfo, NetLast }; /* EWMH atoms */
@@ -1163,6 +1162,8 @@ focus(Client *c)
 			/* Raise floating scartchpads on mouse focus */
 			if (c->isfloating)
 				XRaiseWindow(dpy, c->win);
+		} else if (c->issticky) {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeStickySel][ColBorder].pixel);
 		} else {
 			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
 		}
