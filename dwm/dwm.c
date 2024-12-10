@@ -1160,8 +1160,9 @@ focus(Client *c)
 		grabbuttons(c, 1);
 		if (c->scratchkey != 0) {
 			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
-			/* Raise scartchpads on mouse focus */
-			XRaiseWindow(dpy, c->win);
+			/* Raise floating scartchpads on mouse focus */
+			if (c->isfloating)
+				XRaiseWindow(dpy, c->win);
 		} else {
 			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
 		}

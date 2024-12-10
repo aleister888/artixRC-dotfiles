@@ -18,9 +18,9 @@ static const unsigned int snap         = 0;   // Proximidad necesaria para pegar
 static const int swallowfloating       = 0;   // 1 == Tragarse nuevas ventanas por defecto
 static const int showbar               = 1;   // 0 == Barra desactivada
 static const int topbar                = 1;   // 0 == Barra en la parte inferior
-static const unsigned int stairpx      = 20;  // depth of the stairs layout
-static const int stairdirection        = 1;   // 0: left-aligned, 1: right-aligned
-static const int stairsamesize         = 0;   // 1 means shrink all the staired windows to the same size
+static const unsigned int stairpx      = 20;  // Stairs: Profundidad del layout
+static const int stairdirection        = 1;   // Stairs: 0 == Alineación izquierda
+static const int stairsamesize         = 0;   // Strairs 1 == Reducir las ventanas en escalera al mismo tamaño
 static const float mfact               = 0.5; // Factor de escalado master [0.05..0.95]
 static const int nmaster               = 1;   // Número de clientes en master
 static const int resizehints           = 1;   // ¿Respetar pistas de dibujado?
@@ -316,8 +316,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Deck
 	{ MODKEY,                       XK_d,      setlayout,        {.v = &layouts[4]} }, // Columns
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[5]} }, // Cmaster
-	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[5]} }, // Cmaster
-	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[6]} }, // Stair
+	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[6]} }, // Stairs
 
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
