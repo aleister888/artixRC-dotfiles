@@ -40,4 +40,4 @@ for ((i=1; i<=num_baterias; i++)); do
 done
 }
 
-info-print
+echo $(info-print)
