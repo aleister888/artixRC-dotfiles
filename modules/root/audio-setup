@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Configurar el audio de baja latencia
+
+RUSER="$(getent passwd 1000 | cut -d: -f1)"
+
+usermod -aG realtime,audio,video,optical,uucp "$RUSER"
+
+cat <<-EOF | tee -a /etc/security/limits.conf
+	@audio - rtprio 95
+	@audio - memlock unlimited
+	$RUSER hard nofile 524288
+EOF

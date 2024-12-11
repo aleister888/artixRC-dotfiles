@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Módulo para instalar lrcput, un script en Python que
+# adjunta las letras de las canciones a archivos de música.
+
+lrcput_location="$HOME/.local/bin/lrcput"
+
+mkdir -p "$HOME/.local/bin"
+wget -q "https://raw.githubusercontent.com/JustOptimize/lrcput/refs/heads/main/lrcput.py" -O "$lrcput_location"
+sed -i '1i #!/usr/bin/python' "$lrcput_location"
+chmod +x "$lrcput_location"

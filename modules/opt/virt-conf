@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Módulo para configurar libvirt de forma que nuestro usuario pueda usar
+# virt-manager sin tener que introducir la contraseña cada vez
+
+RUSER="$(getent passwd 1000 | cut -d: -f1)"
+
+# Configurar QEMU para usar el usuario actual
+sed -i "s/^#user = .*/user = \"$RUSER\"/"   /etc/libvirt/qemu.conf
+sed -i "s/^#group = .*/group = \"$RUSER\"/" /etc/libvirt/qemu.conf
+
+# Configurar libvirt
+sed -i "s/^#unix_sock_group = .*/unix_sock_group = \"$RUSER\"/"     /etc/libvirt/libvirtd.conf
+sed -i "s/^#unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
+
+# Agregar el usuario a los grupos necesarios para la virtualización
+usermod -aG libvirt,libvirt-qemu,kvm "$RUSER"
+
+# Activar sericios necesarios
+rc-update add libvirtd default
+rc-update add virtlogd default

@@ -1,24 +1,27 @@
 #!/bin/sh
 
 if [ "$(id -u)" -ne 0 ]; then
-	echo "Error: Este script debe ejecutarse como root." >&2
-	exit 1
+   echo "Error: Este script debe ejecutarse como root." >&2
+   exit 1
 fi
 
 TIMEZONE="$(readlink /etc/localtime | sed 's|.*/zoneinfo/||')"
 
 # Ejecutamos curl en un bucle hasta que la variable este definida
 # porque aveces no se se recibe correctamente la fecha.
+
 while true; do
-	if [ -z "$CURRENT_TIME" ]; then
-		CURRENT_TIME=$(
-		curl -s "http://worldtimeapi.org/api/timezone/$TIMEZONE" |\
-			jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /'
-		)
-	else
-		# Si la variable esta establecida, salimos del bucle
-		break
-	fi
+
+   if [ -z "$CURRENT_TIME" ]; then
+      CURRENT_TIME=$(
+         curl -s "http://worldtimeapi.org/api/timezone/$TIMEZONE" |\
+         jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /'
+      )
+   else
+      # Si la variable esta establecida, salimos del bucle
+      break
+   fi
+
 done
 
 hwclock --set --date="$CURRENT_TIME" && \
