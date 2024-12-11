@@ -18,7 +18,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Actualizar el sistema
-alias update='yay -Syuu --answerclean --answerdiff --removemake --ignore i3lock-fancy-git --ignore eww-git --ignore xdg-xmenu-git --ignore trayer-srg-git'
+alias update='yay -Syuu --answerclean --answerdiff --removemake --ignore i3lock-fancy-git --ignore eww-git --ignore xdg-xmenu-git --ignore trayer-srg-git --ignore eclipse-java-bin'
 
 # Customizar firefox
 fffix(){
