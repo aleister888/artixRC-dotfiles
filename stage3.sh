@@ -265,7 +265,7 @@ trash_dir(){
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
 yay-install
 # Reemplazar sudo por doas
-sudo2doas
+sudo sudo2doas
 
 # Crear directorios
 for dir in Documentos Descargas Música Imágenes Público Vídeos
