@@ -29,12 +29,7 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 #### Tareas por realizar
 
 - Mejorar la forma en la que se detecta el UUID al instalar grub (s2)
-- Actualizar PDF
-- Si se detecta una resolución 2160p o más grande hacer un script TUI para configurar las aplicaciones acordemente
-- Añadir copias de seguridad incrementales a `crypt-backup` y corregir el script
 - Corregir los comentarios de mis builds suckless
 - Modularizar s3 dividiendo el script de instalación en diferentes scripts.
 	- De esta forma se podran instalar funcionalidades incluso despúes de haber instalado el sistema p.e. configurar libvirt.
 - Arreglar la lógica de s1-s2 para permitir instalaciones fuera del LiveISO
-- Preguntar si hacer `/dev/zero` a la partición ya encriptada
-	- https://wiki.archlinux.org/title/Data-at-rest_encryption#Preparing_the_disk
