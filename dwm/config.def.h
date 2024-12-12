@@ -134,9 +134,9 @@ static const Layout layouts[] = {
 	{ "><>", NULL },
 	{ "[M]", monocle },
 	{ "[D]", deck },
+	{ "[S]", stairs },
 	{ "|||", col },
 	{ "|M|", centeredmaster },
-	{ "[S]", stairs },
 };
 
 #define MODKEY Mod1Mask // Alt como modificador
@@ -312,9 +312,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} }, // Una ventana
 	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Deck
-	{ MODKEY,                       XK_d,      setlayout,        {.v = &layouts[4]} }, // Columns
-	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[5]} }, // Cmaster
-	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[6]} }, // Stairs
+	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[4]} }, // Stairs
+	{ MODKEY,                   XK_KP_Up,      setlayout,        {.v = &layouts[5]} }, // Columns
+	{ MODKEY,                XK_KP_Prior,      setlayout,        {.v = &layouts[6]} }, // Cmaster
 
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
