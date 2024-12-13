@@ -48,21 +48,22 @@ service_add(){ # Activar servicio
 # Guardamos nuestros paquetes en un array con mapfile desde los
 # diferentes archivos
 mapfile -t packages < <(cat \
-	"$HOME"/.dotfiles/assets/packages/system \
-	"$HOME"/.dotfiles/assets/packages/x11 \
-	"$HOME"/.dotfiles/assets/packages/compress \
-	"$HOME"/.dotfiles/assets/packages/services \
-	"$HOME"/.dotfiles/assets/packages/documents \
-	"$HOME"/.dotfiles/assets/packages/mozilla \
-	"$HOME"/.dotfiles/assets/packages/multimedia \
-	"$HOME"/.dotfiles/assets/packages/cli-tools \
 	"$HOME"/.dotfiles/assets/packages/appearance \
+	"$HOME"/.dotfiles/assets/packages/cli-tools \
+	"$HOME"/.dotfiles/assets/packages/compress \
+	"$HOME"/.dotfiles/assets/packages/documents \
+	"$HOME"/.dotfiles/assets/packages/fonts \
 	"$HOME"/.dotfiles/assets/packages/gui-apps \
 	"$HOME"/.dotfiles/assets/packages/misc \
-	# Ya instalamos pipewire en stage1.sh, pero no los paquetes para
-	# 32 bits, que vienen de los repositorios de Arch Linux
+	"$HOME"/.dotfiles/assets/packages/mozilla \
+	"$HOME"/.dotfiles/assets/packages/multimedia \
 	"$HOME"/.dotfiles/assets/packages/pipewire \
+	"$HOME"/.dotfiles/assets/packages/services \
+	"$HOME"/.dotfiles/assets/packages/system \
+	"$HOME"/.dotfiles/assets/packages/x11
 )
+# Ya instalamos pipewire en stage1.sh, pero no los paquetes para
+# 32 bits, que vienen de los repositorios de Arch Linux
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 driver_choose(){

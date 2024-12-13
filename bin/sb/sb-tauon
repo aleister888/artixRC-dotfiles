@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Constante para el número de caracteres a mostrar
-FACT=24
+FACT=36
 
 # Obtener el título del track desde el servidor y mostrar solo los últimos FACT-3 caracteres
 title=$(playerctl metadata --player=tauon title)
