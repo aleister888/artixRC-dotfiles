@@ -8,7 +8,8 @@ PLAYER="$(music-priority)"
 
 makesafe(){
 	if [ "${#1}" -gt "$FACT" ]; then
-		echo "${1:0:$((FACT-1))}…"
+		local cropped="${1:0:$((FACT-3))}"
+		echo "${cropped% }…"
 	else
 		[ -z "$1" ] || echo "$1"
 	fi
@@ -32,10 +33,12 @@ metaprint(){
 	local out
 
 	case "$1" in
-		title)  out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
-		        alt="Cannot detect artist" ;;
-		artist) out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
-		        alt="Player Stopped" ;;
+		title)
+			out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
+			alt="Cannot detect artist" ;;
+		artist)
+			out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
+			alt="Player Stopped" ;;
 	esac
 
 	[ -z "$out" ] && out="$alt"
