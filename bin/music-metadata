@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Número máximo de caracteres del output
+FACT=38
+
+# Guardamos el orden de prioridad de los reproductores en un array
+priority=("firefox" "tauon")
+
+# Establecemos el reproductor y salimos del loop
+for app in "${priority[@]}"; do {
+
+PLAYER=$app
+
+case "$app" in
+	# Si es firefox, comprobamos que se esta escuchando música
+	firefox)
+		playerctl -p firefox metadata xesam:url 2>/dev/null |\
+			grep "music.youtube.com\|open.spotify.com" >/dev/null && \
+		break
+		;;
+	*)
+		if playerctl -p "$app" status >/dev/null 2>&1; then
+			PLAYER=$app
+			break
+		fi
+		;;
+esac
+
+} done
+
+makesafe(){
+	if [ "${#1}" -gt "$FACT" ]; then
+		echo "${1:0:$((FACT-1))}…"
+	else
+		[ -z "$1" ] || echo "$1"
+	fi
+}
+
+statusbar(){
+	# Obtener el título de la canción y estado de la reproducción
+	local title;  title="$(playerctl metadata --player="$PLAYER" title)"
+	local status; status="$(playerctl status --player="$PLAYER")"
+
+	if [ "$status" == "Playing" ]; then
+		icon="  "
+	elif [ -n "$status" ]; then
+		icon="  "
+	fi
+
+	echo "$icon$(makesafe "$title")"
+}
+
+metaprint(){
+	local out
+
+	case "$1" in
+		title)  out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
+		        alt="Cannot detect artist" ;;
+		artist) out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
+		        alt="Player Stopped" ;;
+	esac
+
+	[ -z "$out" ] && out="$alt"
+
+	if [ "$withsafe" == "true" ]; then
+		makesafe "$out"
+	else
+		echo "$out"
+	fi
+}
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-S) withsafe=true ;;
+		-d) statusbar
+			exit ;;
+		-t) FACT=14; metaprint title
+			exit ;;
+		-a) FACT=14; metaprint artist
+			exit ;;
+		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl 2>/dev/null)
+			if [ -z "$COVER" ]; then
+				echo "$XDG_CONFIG_HOME/eww/placeholder.png"
+			else
+				echo "${COVER#file://}"
+			fi
+			exit ;;
+		-s) playerctl status --player="$PLAYER"
+			exit ;;
+		 *) ;;
+	esac
+	shift
+done

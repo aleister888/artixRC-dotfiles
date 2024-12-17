@@ -6,7 +6,7 @@ static unsigned int delimLen = 0;
 static const Block blocks[] = {
 	// Título                  Comando Tiempo de actualización Señal de actualización
 	// ¿Que canción esta sonando?
-	{"\x01^d^"                     ,"sb-tauon",                                1,  5},
+	{"\x01^d^"                     ,"music-metadata -d",                       1,  5},
 	// Estado de la batería (Si la hay)
 	{"\x02^d^"                     ,"sb-bat",                                  1, 10},
 	// Espacio libre

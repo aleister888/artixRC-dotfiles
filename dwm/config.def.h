@@ -226,7 +226,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_F12,    spawn,            {.v = (const char*[]){ TERM, TERMT, "scratchpad", "pulsemixer", NULL } } },
 	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 
-	// Cambiar música
+	// Controlar reproducción
 	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },
 	{ 0,                XF86XK_AudioPrev,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },
 	{ MODKEY,                       XK_x,      spawn,            SHCMD("playerctl -p tauon next; pkill -39 dwmblocks") },
@@ -234,6 +234,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_z,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
 	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
 	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
+
+	{ 0|ShiftMask,      XF86XK_AudioPrev,      spawn,            SHCMD("playerctl -p firefox previous; pkill -39 dwmblocks") },
+	{ 0|ShiftMask,      XF86XK_AudioNext,      spawn,            SHCMD("playerctl -p firefox next; pkill -39 dwmblocks") },
+	{ 0|ShiftMask,      XF86XK_AudioPlay,      spawn,            SHCMD("playerctl -p firefox play-pause; pkill -39 dwmblocks") },
 
 	// Cambiar volumen
 	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -59 dwmblocks") },
