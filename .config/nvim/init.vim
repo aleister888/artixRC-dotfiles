@@ -12,7 +12,8 @@ if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
 
-	Plug 'andis-sprinkis/lf-vim' " Resaltado para la configuración de lf
+	Plug 'elkowar/yuck.vim' " Soporte para el lenguaje yuck
+	Plug 'andis-sprinkis/lf-vim' " Soporte para el archivo de configuración de lf
 	Plug 'alisdair/vim-armasm' " Sintaxis para ARM Assembly
 	Plug 'cakebaker/scss-syntax.vim'
 	Plug 'ryanoasis/vim-devicons' " Iconos

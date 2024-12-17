@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Script para controlar la reproducción de la música
+
+# Establecemos el reproductor
+PLAYER="$(music-priority)"
+
+playerctl --player="$PLAYER" "$1"
+
+[ "$PLAYER" = "firefox" ] && [ "$1" != "play-pause" ] && \
+	sleep 1
+
+notify-send -i "$(music-metadata -c)" "$(music-metadata -t)"

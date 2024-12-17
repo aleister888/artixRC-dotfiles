@@ -3,30 +3,8 @@
 # Número máximo de caracteres del output
 FACT=38
 
-# Guardamos el orden de prioridad de los reproductores en un array
-priority=("firefox" "tauon")
-
-# Establecemos el reproductor y salimos del loop
-for app in "${priority[@]}"; do {
-
-PLAYER=$app
-
-case "$app" in
-	# Si es firefox, comprobamos que se esta escuchando música
-	firefox)
-		playerctl -p firefox metadata xesam:url 2>/dev/null |\
-			grep "music.youtube.com\|open.spotify.com" >/dev/null && \
-		break
-		;;
-	*)
-		if playerctl -p "$app" status >/dev/null 2>&1; then
-			PLAYER=$app
-			break
-		fi
-		;;
-esac
-
-} done
+# Establecemos el reproductor
+PLAYER="$(music-priority)"
 
 makesafe(){
 	if [ "${#1}" -gt "$FACT" ]; then

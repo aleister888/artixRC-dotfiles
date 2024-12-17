@@ -171,7 +171,7 @@ static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; /
 static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
 
 static const StatusCmd statuscmds[] = {
-	{ "playerctl -p tauon play-pause; pkill -39 dwmblocks", 1 },
+	{ "music-control play-pause; pkill -39 dwmblocks", 1 },
 	{ "sb-bat-info", 2 },
 	{ "sb-disks-info; pkill -49 dwmblocks", 3 },
 	{ "notify-send $(uname -r)", 4 },
@@ -227,17 +227,13 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 
 	// Controlar reproducción
-	{ MODKEY,                       XK_z,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },
-	{ 0,                XF86XK_AudioPrev,      spawn,            SHCMD("playerctl -p tauon previous; pkill -39 dwmblocks") },
-	{ MODKEY,                       XK_x,      spawn,            SHCMD("playerctl -p tauon next; pkill -39 dwmblocks") },
-	{ 0,                XF86XK_AudioNext,      spawn,            SHCMD("playerctl -p tauon next; pkill -39 dwmblocks") },
-	{ MODKEY|ShiftMask,             XK_z,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
-	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
-	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("playerctl -p tauon play-pause; pkill -39 dwmblocks") },
-
-	{ 0|ShiftMask,      XF86XK_AudioPrev,      spawn,            SHCMD("playerctl -p firefox previous; pkill -39 dwmblocks") },
-	{ 0|ShiftMask,      XF86XK_AudioNext,      spawn,            SHCMD("playerctl -p firefox next; pkill -39 dwmblocks") },
-	{ 0|ShiftMask,      XF86XK_AudioPlay,      spawn,            SHCMD("playerctl -p firefox play-pause; pkill -39 dwmblocks") },
+	{ MODKEY,                       XK_z,      spawn,            SHCMD("music-control previous; pkill -39 dwmblocks") },
+	{ 0,                XF86XK_AudioPrev,      spawn,            SHCMD("music-control previous; pkill -39 dwmblocks") },
+	{ MODKEY,                       XK_x,      spawn,            SHCMD("music-control next; pkill -39 dwmblocks") },
+	{ 0,                XF86XK_AudioNext,      spawn,            SHCMD("music-control next; pkill -39 dwmblocks") },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
+	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
+	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
 
 	// Cambiar volumen
 	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -59 dwmblocks") },
