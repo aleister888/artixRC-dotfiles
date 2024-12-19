@@ -50,6 +50,28 @@ metaprint(){
 	fi
 }
 
+help_msg(){
+echo "Uso:
+  music-metadata [opciones]
+
+OPCIONES:
+  -S	Habilitar máximo de caracteres ($FACT)
+  -d	Imprimir información para la barra de estado (-S activado)
+  -t	Imprime el titulo y termina la ejecución
+  -a	Imprime el artista y termina la ejecución
+  -c	Imprime la localización en cache de la caráctula o un placeholder si no encuentra ninguno y termina la ejecución
+  -s	Imprime el estado de la reproducción y sale
+  -h	Muestra este mensaje y termina le ejecución
+"
+}
+
+if echo "$@" | grep "\-h" >/dev/null; then
+	help_msg
+	exit
+else
+	[ -z "$PLAYER" ] && exit
+fi
+
 while [[ "$#" -gt 0 ]]; do
 	case "$1" in
 		-S) withsafe=true ;;
@@ -68,7 +90,7 @@ while [[ "$#" -gt 0 ]]; do
 			exit ;;
 		-s) playerctl status --player="$PLAYER"
 			exit ;;
-		 *) ;;
+		*) ;;
 	esac
 	shift
 done

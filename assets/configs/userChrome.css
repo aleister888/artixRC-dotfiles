@@ -3,22 +3,6 @@
 	display: none !important;
 }
 
-/* Reduce el margen de las pestañas */
-.tab-background {
-	margin: 0px !important;
-}
-
-/* Pestañas con bordes cuadrados */
-.tab-background,
-.tab-content {
-	border-radius: 0px !important;
-}
-
-/* Reducir el tamaño de las pestañas */
-#tabbrowser-tabs {
-	max-height: 40px !important;
-}
-
 /* Desactivar el icono para las carpetas en marcadores */
 #personal-bookmarks .bookmark-item[container="true"] .toolbarbutton-icon {
 	display: none !important;

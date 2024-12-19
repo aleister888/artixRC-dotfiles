@@ -104,11 +104,11 @@ grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
 pgrep picom || picom &
 
 # Servicios del sistema
-pgrep polkit-gnome	|| /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-pgrep gnome-keyring	|| gnome-keyring-daemon -r -d &
-pgrep udiskie		|| udiskie -t -a & # Auto-montador de discos
-pgrep dwmblocks		|| dwmblocks & # Barra de estado
-pgrep nm-applet		|| nm-applet & # Applet de red
+pgrep polkit-gnome  || /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+pgrep gnome-keyring || gnome-keyring-daemon -r -d &
+pgrep udiskie       || udiskie -t -a & # Auto-montador de discos
+pgrep dwmblocks     || dwmblocks & # Barra de estado
+pgrep nm-applet     || nm-applet & # Applet de red
 
 # Si se detecta una tarjeta bluetooth, iniciar blueman-applet
 if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
@@ -149,18 +149,22 @@ while true; do
 	# Si alguna de estas aplicaciones esta enfocada y reproduciendo vídeo/audio, no mostrar el salvapantallas
 	players=("vlc" "firefox" "mpv")
 	for player in "${players[@]}"; do
-		[ "$(playerctl --player "$player" status)" == "Playing" ] && \
-		[ "$activewindow" = "$player" ] && \
-		resultado=1
+		if [ "$(playerctl --player "$player" status)" == "Playing" ] && \
+		   [ "$activewindow" = "$player" ]; then
+			resultado=1
+			break
+		fi
 	done
 
 	# Si alguna de estas aplicaciones esta enfocada, no mostrar el salvapantallas
 	apps="looking-glass\|TuxGuitar"
-		echo "$activewindow" | grep "$apps" && \
-	resultado=1
+	echo "$activewindow" | grep "$apps" && resultado=1
 
 	# Reinciar xautolock en función de los resultados
-	[ "$resultado" -ne 0 ] && xautolock -enable && pkill dvdbounce
+	if [ "$resultado" -ne 0 ]; then
+		xautolock -enable
+		pkill dvdbounce
+	fi
 
 	sleep 0.5 # Esperar 0.5s antes de hacer la siguiente comprobación
 done &
