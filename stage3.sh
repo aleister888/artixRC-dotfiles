@@ -321,7 +321,7 @@ keepass_configure
 sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Bloquear la pantalla al suspender el portátil
-sudo install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock
+# sudo install -m 755 "$HOME/.dotfiles/assets/system/display-lock" /lib/elogind/system-sleep/display-lock
 
 # Establecemos la versión de java por defecto
 sudo archlinux-java set java-17-openjdk
