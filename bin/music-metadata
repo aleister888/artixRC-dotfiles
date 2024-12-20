@@ -16,9 +16,12 @@ makesafe(){
 }
 
 statusbar(){
+	[ -z "$PLAYER" ] && exit
+
 	# Obtener el título de la canción y estado de la reproducción
 	local title;  title="$(playerctl metadata --player="$PLAYER" title)"
 	local status; status="$(playerctl status --player="$PLAYER")"
+	local icon
 
 	if [ "$status" == "Playing" ]; then
 		icon="  "
@@ -34,14 +37,18 @@ metaprint(){
 
 	case "$1" in
 		title)
-			out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
-			alt="Cannot detect artist" ;;
+			if [ -z "$PLAYER" ]; then
+				out="Cannot detect artist"
+			else
+				out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
+			fi ;;
 		artist)
-			out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
-			alt="Player Stopped" ;;
+			if [ -z "$PLAYER" ]; then
+				out="Player Stopped"
+			else
+				out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
+			fi ;;
 	esac
-
-	[ -z "$out" ] && out="$alt"
 
 	if [ "$withsafe" == "true" ]; then
 		makesafe "$out"
@@ -68,8 +75,6 @@ OPCIONES:
 if echo "$@" | grep "\-h" >/dev/null; then
 	help_msg
 	exit
-else
-	[ -z "$PLAYER" ] && exit
 fi
 
 while [[ "$#" -gt 0 ]]; do
@@ -82,13 +87,13 @@ while [[ "$#" -gt 0 ]]; do
 		-a) FACT=14; metaprint artist
 			exit ;;
 		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl 2>/dev/null)
-			if [ -z "$COVER" ]; then
+			if [ -z "$PLAYER" ] || [ -z "$COVER" ]; then
 				echo "$XDG_CONFIG_HOME/eww/placeholder.png"
 			else
 				echo "${COVER#file://}"
 			fi
 			exit ;;
-		-s) playerctl status --player="$PLAYER"
+		-s) [ -n "$PLAYER" ] && playerctl status --player="$PLAYER"
 			exit ;;
 		*) help_msg
 			exit ;;
