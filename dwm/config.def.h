@@ -312,9 +312,12 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} }, // Una ventana
 	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Deck
-	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[4]} }, // Stairs
-	{ MODKEY,                   XK_KP_Up,      setlayout,        {.v = &layouts[5]} }, // Columns
-	{ MODKEY,                XK_KP_Prior,      setlayout,        {.v = &layouts[6]} }, // Cmaster
+	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[4]} }, // Stairs  (Teclado numérico)
+	{ MODKEY,                   XK_KP_Up,      setlayout,        {.v = &layouts[5]} }, // Columns (Teclado numérico)
+	{ MODKEY,                XK_KP_Prior,      setlayout,        {.v = &layouts[6]} }, // Cmaster (Teclado numérico)
+	{ MODKEY,                      XK_l,       setlayout,        {.v = &layouts[4]} }, // Stairs  (Thinkpad)
+	{ MODKEY,                      XK_Home,    setlayout,        {.v = &layouts[5]} }, // Columns (Thinkpad)
+	{ MODKEY,                      XK_End,     setlayout,        {.v = &layouts[6]} }, // Cmaster (Thinkpad)
 
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)
@@ -329,9 +332,15 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_0,                        9)
 	TAGKEYS(                        XK_apostrophe,              10)
 	TAGKEYS(                        XK_exclamdown,              11)
-	TAGKEYS(                        XK_Home,                    12)
+	// Thinkpad
+	TAGKEYS(                        XK_Left,                    12)
+	TAGKEYS(                        XK_Down,                    13)
+	TAGKEYS(                        XK_Right,                   14)
+	TAGKEYS(                        XK_Prior,                   15)
+	TAGKEYS(                        XK_Up,                      16)
+	TAGKEYS(                        XK_Next,                    17)
+	// Teclado numérico
 	TAGKEYS(                        XK_KP_End,                  12)
-	TAGKEYS(                        XK_End,                     13)
 	TAGKEYS(                        XK_KP_Down,                 13)
 	TAGKEYS(                        XK_KP_Page_Down,            14)
 	TAGKEYS(                        XK_KP_Left,                 15)
