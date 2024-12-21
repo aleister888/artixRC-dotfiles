@@ -2,13 +2,14 @@
 
 # Número máximo de caracteres del output
 FACT=38
+ALTFACT=14
 
 # Establecemos el reproductor
 PLAYER="$(music-priority)"
 
 makesafe(){
 	if [ "${#1}" -gt "$FACT" ]; then
-		local cropped="${1:0:$((FACT-3))}"
+		local cropped="${1:0:$((FACT-1))}"
 		echo "${cropped% }…"
 	else
 		[ -z "$1" ] || echo "$1"
@@ -22,6 +23,8 @@ statusbar(){
 	local title;  title="$(playerctl metadata --player="$PLAYER" title)"
 	local status; status="$(playerctl status --player="$PLAYER")"
 	local icon
+
+	[ -z "$title" ] && exit
 
 	if [ "$status" == "Playing" ]; then
 		icon="  "
@@ -62,14 +65,16 @@ echo "Uso:
   music-metadata [-Sdtacsh]
 
 OPCIONES:
-  -S	Habilitar máximo de caracteres ($FACT)
+  -S	Habilitar máximo de caracteres ($FACT para -d, $ALTFACT para -t/-a)
   -d	Imprimir información para la barra de estado (-S activado)
   -t	Imprime el titulo y termina la ejecución
   -a	Imprime el artista y termina la ejecución
   -c	Imprime la localización en cache de la caratula o un placeholder si no encuentra ninguno y termina la ejecución
   -s	Imprime el estado de la reproducción y sale
   -h	Muestra este mensaje y termina le ejecución
-" >&2
+
+NOTA:
+  Puedes cambiar el máximo de caracteres para -d con la variable \$FACT y el máximo para -t/-a con la variable \$ALTFACT" >&2
 }
 
 if echo "$@" | grep "\-h" >/dev/null; then
@@ -82,9 +87,9 @@ while [[ "$#" -gt 0 ]]; do
 		-S) withsafe=true ;;
 		-d) statusbar
 			exit ;;
-		-t) FACT=14; metaprint title
+		-t) FACT=$ALTFACT; metaprint title
 			exit ;;
-		-a) FACT=14; metaprint artist
+		-a) FACT=$ALTFACT; metaprint artist
 			exit ;;
 		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl 2>/dev/null)
 			if [ -z "$PLAYER" ] || [ -z "$COVER" ]; then

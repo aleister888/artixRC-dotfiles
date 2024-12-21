@@ -5,9 +5,11 @@
 # Establecemos el reproductor
 PLAYER="$(music-priority)"
 
+[ -z "$PLAYER" ] && exit
+
 playerctl --player="$PLAYER" "$1"
 
-[ "$PLAYER" = "firefox" ] && [ "$1" != "play-pause" ] && \
-	sleep 1
-
-notify-send -i "$(music-metadata -c)" "$(music-metadata -t)"
+if [ "$1" != "play-pause" ]; then
+	[ "$PLAYER" = "firefox" ] && sleep 1
+	notify-send -i "$(music-metadata -c)" "$(music-metadata -S -t)"
+fi

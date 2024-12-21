@@ -1,9 +1,9 @@
 #!/bin/sh
 # Script para montar dispositivos android
 
-mountandroid() {
 # Obtener una lista de dispositivos Android conectados
 anddrives=$(simple-mtpfs -l 2>/dev/null)
+
 # Salir si no se detecta ningún dispositivo Android
 [ -z "$anddrives" ] && exit 1
 
@@ -17,7 +17,3 @@ if simple-mtpfs --device "$chosen" "$mp"; then
 else
 	notify-send "🤖 Hubo un error al montar $chosen"
 fi
-}
-
-# Llamar a la función mountandroid
-mountandroid
