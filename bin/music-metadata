@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Número máximo de caracteres del output
-FACT=38
-ALTFACT=14
+[ -z "$FACT" ] && FACT=38
+[ -z "$ALTFACT" ] && ALTFACT=14
 
 # Establecemos el reproductor
 PLAYER="$(music-priority)"
