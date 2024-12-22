@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Script para cambiar la zona horaria
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Error: Este script debe ejecutarse como root." >&2
+	exit
+fi
+
+if ! ping -c 1 gnu.org >/dev/null 2>&1; then
+	echo "Error: Este script necesita conexión a internet." >&2
+	exit
+fi
+
+# URL con el repositorio
+REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+
+valid_timezone=false
+
+# Elegir la zona en función del nombre de la ciudad
+timezone_select(){
+	# Obtener la lista de regiones disponibles
+	regions=$( find /usr/share/zoneinfo -mindepth 1 -type d -printf "%f\n" | sort -u )
+	# Crear un array con las regiones
+	for region in $regions; do
+		regions_array+=("$region" "$region")
+	done
+
+	# Utilizar Whiptail para presentar las opciones de región al usuario
+	region=""
+	region=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una region" \
+	--menu "Por favor, elige una region:" 20 70 10 "${regions_array[@]}" 3>&1 1>&2 2>&3)
+
+	# Obtener la lista de zonas horarias disponibles para la región seleccionada
+	[ -n "$region" ] && \
+		timezones=$( find "/usr/share/zoneinfo/$region" -mindepth 1 -type f -printf "%f\n" | sort -u )
+
+	# Crear un array con las zonas horarias
+	for timezone in $timezones; do
+		time_hint=""
+		# Solo añadir la entrada al array si es válida
+		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+			# Obtener la hora actualizada
+			time_hint=$(zdump "/usr/share/zoneinfo/$region/$timezone" |\
+			grep -oP " \K[0-9][0-9]:[0-9][0-9]")
+			# Guardar el nombre y la hora en el array
+			timezones_array+=("$timezone" "$time_hint")
+		fi
+	done
+
+	# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
+	timezone=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una zona horaria en $region" \
+	--menu "Por favor, elige una zona horaria en $region:" 20 70 10 "${timezones_array[@]}" 3>&1 1>&2 2>&3)
+}
+
+while [ "$valid_timezone" == "false" ]; do
+	timezone_select
+
+	# Verificar si la zona horaria seleccionada es válida
+	if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+		valid_timezone=true
+	else
+		whiptail --backtitle "$REPO_URL" \
+		--title "Zona horaria no valida" \
+		--yesno "Zona horaria no valida. ¿Desea volvera elegir?" \
+		10 60 || exit
+	fi
+done
+
+ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
+
+# Actualizar reloj
+while true; do
+	if [ -z "$CURRENT_TIME" ]; then
+		CURRENT_TIME=$( curl -s "http://worldtimeapi.org/api/timezone/$region/$timezone" |\
+			jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /' )
+	else
+		break
+	fi
+done
+
+hwclock --set --date="$CURRENT_TIME" && \
+hwclock --hctosys
