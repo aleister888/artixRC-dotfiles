@@ -382,7 +382,10 @@ sudo set-clock
 # Scripts de elogind
 sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
 
-# Añadir entradas a /etc/environment
+# Script para redes con autenticación vía navegador
+sudo install -m 755 "$HOME/.dotfiles/assets/system/90-open_captive_portal" /etc/NetworkManager/dispatcher.d/90-open_captive_portal
+
+# Añadir entradas a /etc/environmentv
 echo 'CARGO_HOME="~/.local/share/cargo"
 GNUPGHOME="~/.local/share/gnupg"
 _JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | sudo tee -a /etc/environment

@@ -67,11 +67,11 @@ echo "Uso:
 OPCIONES:
   -S	Habilitar máximo de caracteres ($FACT para -d, $ALTFACT para -t/-a)
   -d	Imprimir información para la barra de estado (-S activado)
-  -t	Imprime el titulo y termina la ejecución
-  -a	Imprime el artista y termina la ejecución
-  -c	Imprime la localización en cache de la caratula o un placeholder si no encuentra ninguno y termina la ejecución
-  -s	Imprime el estado de la reproducción y sale
-  -h	Muestra este mensaje y termina le ejecución
+  -t	Imprime el titulo
+  -a	Imprime el artista
+  -c	Imprime la localización en cache de la caratula o un placeholder si no encuentra ninguno
+  -s	Imprime el estado de la reproducción
+  -h	Muestra este mensaje
 
 NOTA:
   Puedes cambiar el máximo de caracteres para -d con la variable \$FACT y el máximo para -t/-a con la variable \$ALTFACT" >&2

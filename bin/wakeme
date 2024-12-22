@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Script de alarma
 
 export LC_TIME=en_US.UTF-8
@@ -43,12 +44,12 @@ SPEAKERS="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
 OG_SINK="$(pactl get-default-sink)"
 
 # Si el dispositivo de audio no son los altavoces, cambiar a estos antes de reproducir la alarma
-if [ "$(pactl get-default-sink)" != $SPEAKERS ]; then
+if [ "$(pactl get-default-sink)" != "$SPEAKERS" ]; then
 	# Cambiamos a altavoces
-	pactl set-default-sink $SPEAKERS
+	pactl set-default-sink "$SPEAKERS"
 	# Hacer sonar la alarma
 	wakeme
-	pactl set-default-sink $OG_SINK
+	pactl set-default-sink "$OG_SINK"
 else
 	wakeme
 fi

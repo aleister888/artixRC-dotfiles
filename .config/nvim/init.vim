@@ -113,11 +113,8 @@ endfunction
 function! AutoPairsStatus()
 	return g:pair ? '  {}' : ''
 endfunction
-function! TabStatus()
-	return g:tab ? '  \t' : ''
-endfunction
 if $USER !=# 'root'
-	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
+	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}'])
 endif
 
 "###########################
@@ -145,7 +142,7 @@ set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 
 " Indentación y tabulación
 autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
-autocmd FileType * setlocal copyindent preserveindent tabstop=2 shiftwidth=2
+autocmd FileType * setlocal copyindent preserveindent tabstop=8 shiftwidth=8
 
 if $USER !=# 'root'
 	set clipboard+=unnamedplus
@@ -298,21 +295,6 @@ nnoremap <silent><F1> :call CocToggle()<CR>
 	endfunction
 inoremap <F2> <C-O>:call PairToggle()<CR>
 nnoremap <F2> :call PairToggle()<CR>
-
-" Alternar como se visualizan las tabulaciones
-	let g:tab = 1
-	function! TabExp()
-		if &tabstop == 2
-			set tabstop=8
-			set shiftwidth=8
-		else
-			set tabstop=2
-			set shiftwidth=2
-		endif
-		let g:tab = !g:tab
-	endfunction
-inoremap <F3> <C-O>:call TabExp()<CR>
-nnoremap <F3> :call TabExp()<CR>
 
 "######################
 "# Automatizar tareas #

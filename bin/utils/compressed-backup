@@ -1,30 +1,45 @@
 #!/bin/sh
 
-# Script para crear copias de seguridad comprimidas
+# Script para crear copias de seguridad como archivos comprimidos
 
-# Verificar que se hayan proporcionado dos argumentos
-if [ "$#" -ne 2 ]; then
-	echo "Uso: $0 <directorio_original> <directorio_destino>"
-	exit 1
-fi
+# Detener el script si cualquier comando falla
+set -e
 
+help_msg(){
+echo "Uso:
+  $(basename "$0") [-hd] [<directorio_original> <directorio_destino>]
+
+OPCIONES:
+  -d	Borra las copias en el destino con mas de 30 dias de antigüedad
+  -h	Muestra este mensaje" >&2
+exit
+}
+
+delete_old=false
 og_dir="$1"
 bak_dir="$2"
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-d) delete_old="true" ;;
+		-h) help_msg ;;
+	esac
+	shift
+done
+
 # Verificar que los directorios proporcionados existan y sean válidos
-if [ ! -d "$og_dir" ]; then
-	echo "El directorio de origen '$og_dir' no existe o no es válido."
-	exit 1
-elif [ ! -d "$bak_dir" ]; then
-	echo "El directorio de destino '$bak_dir' no existe o no es válido."
-	exit 1
-fi
+[ ! -d "$og_dir" ] || [ ! -d "$bak_dir" ] && help_msg
 
+extension="tar.gz"
+bak_name="$(date +'%Y-%m-%d_%H:%M:%S').$extension"
+
+# Crear el archivo tar.gz
 cd "$og_dir"
-bak_name="$(date +'%Y-%m-%d_%H:%M:%S').tar.gz"
-
-# Crear un archivo tar.gz
 tar -czf "${bak_dir}/${bak_name}" .
 
-# Eliminar las copias de seguridad con mas de 1 mes de antigüedad
-find "$bak_dir" -type f -mtime +30 -exec rm {} \;
 echo "Copia de seguridad creada en ${bak_dir}/${bak_name}"
+
+# Eliminar las copias de seguridad con mas de 1 mes de antigüedad
+if [ "$delete_old" = true ]; then
+	find "$bak_dir" -type f -name "*.$extension" -mtime +30 -exec rm {} \;
+fi

@@ -1,51 +1,73 @@
 #!/bin/bash
 
 # Script para instalar y configurar SSH en sistema Arch/Artix Linux
-# https://www.ssh-audit.com/hardening_guides.html
+# https://www.ssh-audit.com/hard ening_guide.html
 
-# Install OpenSSH
-doas pacman -S --noconfirm openssh openssh-openrc
-# Activate OpenSSH service
-doas rc-update add sshd default
-# Generate RSA and ED25519 keys
-doas ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
-doas ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
-# Remove small Diffie-Hellman moduli
-awk '$5 >= 3071' /etc/ssh/moduli | doas tee /etc/ssh/moduli.safe
-doas mv -f /etc/ssh/moduli.safe /etc/ssh/moduli
-# Restrict supported key exchange, cipher, and MAC algorithms
-echo -e "# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256\nCiphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\nMACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com\nHostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com" | doas tee /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
+# Salir si algún comando falla
+set -e
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Error: Este script debe ejecutarse como root." >&2
+	exit 1
+fi
+
+# Instalar OpenSSH y habilitar el servicio
+pacman -S --noconfirm openssh openssh-openrc
+rc-update add sshd default
+
+# Generar las claves RSA y ED25519
+ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
+ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+
+# Usar residuos mayores o iguales a 3071 bits
+awk '$5 >= 3071' /etc/ssh/moduli | tee /etc/ssh/moduli.safe
+mv -f /etc/ssh/moduli.safe /etc/ssh/moduli
+
+# Restringir los algoritmos soportados de intercambio de claves, cifrado y MAC
+echo -e "# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com hardening guide.
+KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
+HostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com" | tee /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
+
 # Deshabilitar el inicio de sesión como root
-doas sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin no|' /etc/ssh/sshd_config
+sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin no|' \
+	/etc/ssh/sshd_config
 # Numero de intentos 6->4
-doas sed -i 's|#MaxAuthTries 6|MaxAuthTries 4|' /etc/ssh/sshd_config
+sed -i 's|#MaxAuthTries 6|MaxAuthTries 4|' /etc/ssh/sshd_config
 # Máximo 5 minutos de inactividad
-doas sed -i 's|#ClientAliveInterval 0|ClientAliveInterval 300|' /etc/ssh/sshd_config
+sed -i 's|#ClientAliveInterval 0|ClientAliveInterval 300|' /etc/ssh/sshd_config
 
-# Instalar y configurar UFW
-doas pacman -Sy --noconfirm ufw-openrc
-doas rc-update add ufw default
-doas ufw enable
-doas ufw allow 80/tcp
-doas ufw allow 443/tcp
-doas ufw limit ssh
-doas ufw allow syncthing
-doas ufw default deny incoming
-doas ufw default allow outgoing
+# Instalar (si no lo está ya) y activar UFW
+if [ ! -x /usr/bin/ufw ]; then
+	pacman -Sy --noconfirm ufw-openrc
+	rc-update add ufw default
+	ufw enable
+fi
 
-# Install fail2ban
-doas pacman -S fail2ban-openrc
-# Activate fail2ban service
-doas rc-update add fail2ban default
-# Use ufw as backend
+# Configurar UFW
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw limit ssh
+ufw default deny incoming
+ufw default allow outgoing
+
+# Instalar (si no lo está ya) y activar fail2ban
+if [ ! -x /usr/bin/fail2ban-server ]; then
+	pacman -Sy --noconfirm fail2ban-openrc
+	rc-update add fail2ban default
+fi
+
+# Usar fail2ban con UFW
 echo "[Definition]
 actionstart =
 actionstop =
 actioncheck =
 actionban = ufw insert 1 deny from <ip> to any
-actionunban = ufw delete deny from <ip> to any" | doas tee /etc/fail2ban/action.d/ufw.conf
-# Enable SSH banning
-sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/jail.local
+actionunban = ufw delete deny from <ip> to any" | tee /etc/fail2ban/action.d/ufw.conf
+
+# Activar el banneo para SSH
+cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/jail.local
 echo '[sshd]
 backend = polling
 enabled = true
@@ -53,4 +75,4 @@ port = ssh
 filter = sshd
 logpath = /var/log/auth.log
 maxretry = 2
-action = ufw' | doas tee -a /etc/fail2ban/jail.local
+action = ufw' | tee -a /etc/fail2ban/jail.local

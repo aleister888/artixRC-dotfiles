@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Imprime el tiempo que lleva encendido el dispositivo
+
 up_seconds=$(($(date +%s) - $(uptime -s | xargs -I{} date -d {} +%s)))
 up_days=$((up_seconds / 86400))
 up_hours=$(((up_seconds % 86400) / 3600))

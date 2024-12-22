@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Script para montar dispositivos android
 
 # Obtener una lista de dispositivos Android conectados
@@ -10,7 +11,7 @@ anddrives=$(simple-mtpfs -l 2>/dev/null)
 # Seleccionar un dispositivo Android para montar
 chosen="$(echo "$anddrives" | dmenu -p "Que dispositivo montar?")"
 
-# Intentar montar el dispositivo Android en /mnt/ANDROID
+# Intentar montar el dispositivo Android
 mp="/mnt/ANDROID"
 if simple-mtpfs --device "$chosen" "$mp"; then
 	notify-send "🤖 Android montado en $mp."
