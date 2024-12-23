@@ -1,0 +1,79 @@
+#!/bin/bash
+
+help_msg(){
+echo "Uso:
+  $(basename "$0") [-td] <directorio>"
+exit
+}
+
+filetype_test(){
+	local mimeType fileToCheck
+	mimeType="$1"
+	fileToCheck="$2"
+	xdg-mime query filetype "$fileToCheck" | grep "$mimeType"
+}
+
+# Función para renombrar archivos
+renombrar_archivo() {
+	local archivo nombre_archivo extension nuevo_nombre nuevo_archivo
+	archivo="$1"
+	nombre_archivo="$(basename "$archivo")"
+	extension="${archivo##*.}" # Extraer la extensión del archivo
+
+	# Procesar fotos hechas en Android
+	if [[ $nombre_archivo =~ IMG_([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2})_.* ]]; then
+		local year="${BASH_REMATCH[1]}"
+		local month="${BASH_REMATCH[2]}"
+		local day="${BASH_REMATCH[3]}"
+		local hour="${BASH_REMATCH[4]}"
+		local minute="${BASH_REMATCH[5]}"
+		local second="${BASH_REMATCH[6]}"
+		[ "$test_for_type" == "true" ] && filetype_test "$archivo" image || exit
+	# Procesar capturas de pantalla de Android
+	elif [[ $nombre_archivo =~ Screenshot_([0-9]{4})([0-9]{2})([0-9]{2})-([0-9]{2})([0-9]{2})([0-9]{2})_.* ]]; then
+		local year="${BASH_REMATCH[1]}"
+		local month="${BASH_REMATCH[2]}"
+		local day="${BASH_REMATCH[3]}"
+		local hour="${BASH_REMATCH[4]}"
+		local minute="${BASH_REMATCH[5]}"
+		local second="${BASH_REMATCH[6]}"
+		[ "$test_for_type" == "true" ] && filetype_test "$archivo" image || exit
+	# Procesar videos descargados en Android
+	elif [[ $nombre_archivo =~ VID_([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2})_.* ]]; then
+		local year="${BASH_REMATCH[1]}"
+		local month="${BASH_REMATCH[2]}"
+		local day="${BASH_REMATCH[3]}"
+		local hour="${BASH_REMATCH[4]}"
+		local minute="${BASH_REMATCH[5]}"
+		local second="${BASH_REMATCH[6]}"
+		[ "$test_for_type" == "true" ] && filetype_test "$archivo" video || exit
+	else
+		return
+	fi
+
+	# Crear el nuevo nombre preservando la extensión
+	nuevo_nombre="${year}-${month}-${day}_${hour}-${minute}-${second}.${extension}"
+	nuevo_archivo="$(dirname "$archivo")/$nuevo_nombre"
+
+	# Renombrar el archivo
+	mv "$archivo" "$nuevo_archivo"
+	echo "Renombrado: $archivo -> $nuevo_archivo"
+}
+
+DIRECTORIO="$1"
+
+[ -d "$DIRECTORIO" ] || help_msg
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-t) test_for_type="true" ;;
+		-h) help_msg ;;
+	esac
+	shift
+done
+
+# Buscar y procesar archivos
+find "$DIRECTORIO" -type f | while read -r archivo; do
+	# Ignorar archivos que comiencen con ".syncthing"
+	echo "$archivo" | grep "syncthing.*\.tmp" || renombrar_archivo "$archivo"
+done

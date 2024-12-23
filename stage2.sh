@@ -203,7 +203,7 @@ arch_support(){
 		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 		# Escoger los mejores repositorios para Arch Linux
-		@hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+		@hourly root ping gnu.org -c 1 && reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
 	EOF
 }
 
