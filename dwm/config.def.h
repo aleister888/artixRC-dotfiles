@@ -131,12 +131,12 @@ static const Rule rules[] = {
 
 static const Layout layouts[] = {
 	{ "[]=", tile },
-	{ "><>", NULL },
 	{ "[M]", monocle },
-	{ "[D]", deck },
+	{ "><>", NULL },
 	{ "[S]", stairs },
-	{ "|||", col },
+	{ "[D]", deck },
 	{ "|M|", centeredmaster },
+	{ "|||", col },
 };
 
 #define MODKEY Mod1Mask // Alt como modificador
@@ -309,15 +309,16 @@ static const Key keys[] = {
 
 	// Cambiar la distribución de las ventanas
 	{ MODKEY,                       XK_e,      setlayout,        {.v = &layouts[0]} }, // Por defecto
-	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[2]} }, // Una ventana
-	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[1]} }, // Ventanas flotantes
-	{ MODKEY|ShiftMask,             XK_r,      setlayout,        {.v = &layouts[3]} }, // Deck
-	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[4]} }, // Stairs  (Teclado numérico)
-	{ MODKEY,                   XK_KP_Up,      setlayout,        {.v = &layouts[5]} }, // Columns (Teclado numérico)
-	{ MODKEY,                XK_KP_Prior,      setlayout,        {.v = &layouts[6]} }, // Cmaster (Teclado numérico)
-	{ MODKEY,                      XK_l,       setlayout,        {.v = &layouts[4]} }, // Stairs  (Thinkpad)
-	{ MODKEY,                      XK_Home,    setlayout,        {.v = &layouts[5]} }, // Columns (Thinkpad)
-	{ MODKEY,                      XK_End,     setlayout,        {.v = &layouts[6]} }, // Cmaster (Thinkpad)
+	{ MODKEY|ShiftMask,             XK_e,      setlayout,        {.v = &layouts[1]} }, // Una ventana
+	{ MODKEY,                       XK_r,      setlayout,        {.v = &layouts[2]} }, // Ventanas flotantes
+	{ MODKEY,                 XK_KP_Home,      setlayout,        {.v = &layouts[3]} }, // Stairs  (Teclado numérico)
+	{ MODKEY|ShiftMask,       XK_KP_Home,      setlayout,        {.v = &layouts[4]} }, // Deck    (Thinkpad)
+	{ MODKEY,                   XK_KP_Up,      setlayout,        {.v = &layouts[5]} }, // Cmaster (Teclado numérico)
+	{ MODKEY|ShiftMask,         XK_KP_Up,      setlayout,        {.v = &layouts[6]} }, // Columns (Teclado numérico)
+	{ MODKEY,                    XK_Home,      setlayout,        {.v = &layouts[3]} }, // Stairs  (Thinkpad)
+	{ MODKEY|ShiftMask,          XK_Home,      setlayout,        {.v = &layouts[4]} }, // Deck    (Thinkpad)
+	{ MODKEY,                     XK_End,      setlayout,        {.v = &layouts[5]} }, // Cmaster (Thinkpad)
+	{ MODKEY|ShiftMask,           XK_End,      setlayout,        {.v = &layouts[6]} }, // Columns (Thinkpad)
 
 	// Teclas para cada espacio
 	TAGKEYS(                        XK_1,                        0)

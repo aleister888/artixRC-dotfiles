@@ -32,14 +32,11 @@ selection_save(){
 	notify-send -i applets-screenshooter "$NAME"
 }
 
-if [ "$1" = all_clip ]; then
-	all_clip;
-elif [ "$1" = selection_clip ]; then
-	selection_clip;
-elif [ "$1" = all_save ]; then
-	all_save;
-elif [ "$1" = selection_save ]; then
-	selection_save;
-else
-	exit 0
-fi
+
+case "$1" in
+	all_clip) all_clip ;;
+	selection_clip) selection_clip ;;
+	all_save) all_save ;;
+	selection_save) selection_save ;;
+	*) exit ;;
+esac

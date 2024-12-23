@@ -2,10 +2,10 @@
 
 cat <<EOF | xmenu
 []= Tiled Layout	0
-><> Floating Layout	1
-[M] Monocle Layout	2
-[D] Deck		3
-[S] Stairs		4
-||| Columns		5
-|M| Cmaster		6
+[M] Monocle Layout	1
+><> Floating Layout	2
+[S] Stairs		3
+[D] Deck		4
+|M| Cmaster		5
+||| Columns		6
 EOF
