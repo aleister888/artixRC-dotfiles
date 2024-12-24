@@ -283,7 +283,9 @@ static const Key keys[] = {
 
 	// Incrementar/Decrementar el tamaño de la zona principal y las ventanas
 	{ MODKEY,                       XK_u,      setmfact,         {.f = -0.025} },
+	{ MODKEY|ControlMask,           XK_u,      setmfact,         {.f = -0.075} },
 	{ MODKEY,                       XK_i,      setmfact,         {.f = +0.025} },
+	{ MODKEY|ControlMask,           XK_i,      setmfact,         {.f = +0.075} },
 	{ MODKEY|ShiftMask,             XK_u,      setcfact,         {.f = -0.25} },
 	{ MODKEY|ShiftMask,             XK_i,      setcfact,         {.f = +0.25} },
 

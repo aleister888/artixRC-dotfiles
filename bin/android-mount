@@ -1,6 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script para montar dispositivos android
+
+# Función para escapar el nombre de teléfonos móviles.
+escape(){
+	echo "$@" |\
+	iconv -cf UTF-8 -t ASCII//TRANSLIT |\
+	tr -d '[:punct:]' |\
+	tr '[:upper:]' '[:lower:]' |\
+	tr ' ' '-' |\
+	sed "s/-\+/-/g;s/\(^-\|-\$\)//g"
+}
+
+# Directorio donde montar el dispositivo
+mp="/mnt/ANDROID"
 
 # Obtener una lista de dispositivos Android conectados
 anddrives=$(simple-mtpfs -l 2>/dev/null)
@@ -11,9 +24,10 @@ anddrives=$(simple-mtpfs -l 2>/dev/null)
 # Seleccionar un dispositivo Android para montar
 chosen="$(echo "$anddrives" | dmenu -p "Que dispositivo montar?")"
 
+number="${chosen%%:*}"
+
 # Intentar montar el dispositivo Android
-mp="/mnt/ANDROID"
-if simple-mtpfs --device "$chosen" "$mp"; then
+if doas simple-mtpfs -o allow_other -o fsname="simple-mtpfs-$(escape "$chosen")" --device "$number" "$mp"; then
 	notify-send "🤖 Android montado en $mp."
 else
 	notify-send "🤖 Hubo un error al montar $chosen"

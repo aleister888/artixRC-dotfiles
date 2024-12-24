@@ -9,7 +9,7 @@ chosen="$(awk '/simple-mtpfs/ {print $2}' /etc/mtab | dmenu -p "Que dispositivo 
 [ -z "$chosen" ] && exit
 
 # Intentar desmontar el dispositivo seleccionado
-if umount -l "$chosen"; then
+if doas umount -l "$chosen"; then
 	notify-send "🤖 Dispositivo Android $chosen desmontado"
 else
 	notify-send "🤖 Hubo un error al desmontar $chosen"
