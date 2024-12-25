@@ -31,6 +31,7 @@ perl-image-exiftool
 python-eyed3
 python-pynvim
 realtime-privileges
+rebuild-detector
 rsync
 sassc
 simple-mtpfs
