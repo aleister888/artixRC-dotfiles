@@ -10,29 +10,9 @@ snippet beg "" w
 \end{$1}$0
 endsnippet
 
-snippet $ "" i
-$$1$$0
-endsnippet
-snippet { "" i
-{$1}$0
-endsnippet
-snippet ( "" i
-($1)$0
-endsnippet
-
-snippet \[ "" A
-\[
-	$1
-\]$0
-endsnippet
-
 # Mini-página
 snippet mini "" bi
-\begin{minipage}[${1:
-	t (Alineación superior)
-	c (Alineación centrada)
-	b (Alineación inferior)
-}]{${2:.45}\textwidth}
+\begin{minipage}[${1:tcb}]{${2:.45}\textwidth}
 	$3
 \end{minipage}
 endsnippet
@@ -46,14 +26,17 @@ endsnippet
 snippet bf "textbf" i
 \textbf{${1:texto}}${2}
 endsnippet
+
 # Fuente cursiva
 snippet it "textit" i
 \textit{${1:texto}}${2}
 endsnippet
+
 # Fuente monoespaciada
 snippet tt "texttt" i
 \texttt{${1:texto}}${2}
 endsnippet
+
 # Texto con énfasis
 snippet emph "emph" i
 \emph{${1:texto}}${2}

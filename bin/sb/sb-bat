@@ -14,26 +14,26 @@ for ((i=1; i<=num_baterias; i++)); do
 		icon_seq='^c#689D6A^'
 	fi
 
-	if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
-		baticon="󰂄 "
-	else
-		if [ "$i" == 1 ]; then
-			case $battery_level in
-				 [0-9])	baticon="󰁺 " ;;
-				1[0-9])	baticon="󰁺 " ;;
-				2[0-9])	baticon="󰁻 " ;;
-				3[0-9])	baticon="󰁼 " ;;
-				4[0-9])	baticon="󰁽 " ;;
-				5[0-9])	baticon="󰁾 " ;;
-				6[0-9])	baticon="󰁿 " ;;
-				7[0-9])	baticon="󰂀 " ;;
-				8[0-9])	baticon="󰂁 " ;;
-				9[0-9])	baticon="󰂂 " ;;
-				     *)	baticon="󰁹 " ;;
-			esac
+	if [ "$i" == 1 ]; then
+		if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
+			baticon="󰂄 "
 		else
-			baticon=""
+			case $battery_level in
+				[0-9]) baticon="󰁺 " ;;
+				1[0-9]) baticon="󰁺 " ;;
+				2[0-9]) baticon="󰁻 " ;;
+				3[0-9]) baticon="󰁼 " ;;
+				4[0-9]) baticon="󰁽 " ;;
+				5[0-9]) baticon="󰁾 " ;;
+				6[0-9]) baticon="󰁿 " ;;
+				7[0-9]) baticon="󰂀 " ;;
+				8[0-9]) baticon="󰂁 " ;;
+				9[0-9]) baticon="󰂂 " ;;
+				     *) baticon="󰁹 " ;;
+			esac
 		fi
+	else
+		baticon=""
 	fi
 
 	echo "$icon_seq$baticon$battery_level%"
