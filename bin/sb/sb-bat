@@ -2,12 +2,12 @@
 
 # Contamos cuantas baterias hay
 num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l)
-
+# Guardamos el output de acpi
 out=$(acpi -b | grep -v "Unknown\|unavailable")
+
 charging=false
 battery_level=()
 sum=0
-pre="^f10^^d^^c#689D6A^"
 
 # Guardamos el nivel de carga de todas la baterias y calculamos la suma de los valores
 for ((i=1; i<=num_baterias; i++)); do
@@ -16,8 +16,11 @@ for ((i=1; i<=num_baterias; i++)); do
 	echo "$out" | sed "${i}q;d" | grep Charging >/dev/null && charging=true
 done
 
+pre=" ^d^^c#689D6A^"
+
+# Definimos el icono en función del estado de la batería
 if $charging; then
-	pre+=" "
+	pre+="󰂄 "
 else
 	# Calculamos la media
 	average=$((sum/num_baterias))
@@ -39,4 +42,5 @@ fi
 
 pre+="^c#689D6A^"
 
+# Imprimos el icono, las secuencias de colores y el % de cada batería
 echo "$pre${battery_level[@]}"

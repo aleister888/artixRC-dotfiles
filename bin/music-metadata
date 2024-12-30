@@ -2,15 +2,15 @@
 
 # Número máximo de caracteres del output
 [ -z "$FACT" ] && FACT=38
-[ -z "$ALTFACT" ] && ALTFACT=14
+[ -z "$ALTFACT" ] && ALTFACT=12
 
 # Establecemos el reproductor
 PLAYER="$(music-priority)"
 
 makesafe(){
 	if [ "${#1}" -gt "$FACT" ]; then
-		local cropped="${1:0:$((FACT-1))}"
-		echo "${cropped% }…"
+		local cropped="${1:0:$((FACT-3))}"
+		echo "${cropped% }..."
 	else
 		[ -z "$1" ] || echo "$1"
 	fi
