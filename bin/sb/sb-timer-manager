@@ -30,8 +30,8 @@ create_timer(){
 	fi
 
 	# Guardamos los tiempos en el archivo
-	echo "W $((timerwork))" | tee "$pomodorofile"
-	echo "B $((timerbreak))" | tee -a "$pomodorofile"
+	echo "W $((timerwork * 60))" | tee "$pomodorofile"
+	echo "B $((timerbreak * 60))" | tee -a "$pomodorofile"
 }
 
 # Cerrar instancias previas del script
