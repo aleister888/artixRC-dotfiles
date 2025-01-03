@@ -271,7 +271,14 @@ ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
-	su "$username" -c "git clone --branch dev --single-branch https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+	# Nos aseguramos con el bucle que se clona el repositorio bien
+	while true; do
+		su "$username" -c \
+		"git clone --branch dev --single-branch \
+		https://github.com/aleister888/artixRC-dotfiles.git \
+		/home/$username/.dotfiles" && \
+		break
+	done
 fi
 
 # Configuramos sudo para stage3.sh
