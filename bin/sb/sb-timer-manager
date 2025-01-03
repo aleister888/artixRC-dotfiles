@@ -11,6 +11,8 @@ my_id=$BASHPID
 # Archivo donde guardaremos si ya se ha completado el tiempo de trabajo
 breakfile=/tmp/pomodoro_status
 
+sound="/usr/share/sounds/freedesktop/stereo/complete.oga"
+
 # Crear nuevo temporizador
 create_timer(){
 	local timerwork
@@ -61,7 +63,7 @@ timer_count(){
 		else
 			if [ "$work_completed" = "false" ]; then
 				echo "true" > $breakfile
-				pw-play /usr/share/sounds/freedesktop/stereo/complete.oga
+				pw-play $sound
 				notify-send "Hora del descanso"
 			fi
 			sed -i "s/^B [0-9]*/B $((breaktime - 1))/" "$pomodorofile"
@@ -71,7 +73,7 @@ timer_count(){
 	done
 
 	rm "$pomodorofile"
-	pw-play /usr/share/sounds/freedesktop/stereo/complete.oga
+	pw-play $sound
 	notify-send "Temporizador completado"
 
 	rm "$processlist"

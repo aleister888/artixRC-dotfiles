@@ -7,5 +7,3 @@ vol=$(($(pamixer --get-volume) + $1))
 
 # Establecer el nuevo volumen
 pactl set-sink-volume @DEFAULT_SINK@ "${vol}%"
-
-pw-play /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga

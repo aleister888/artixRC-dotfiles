@@ -28,6 +28,7 @@ curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles
 
 #### Tareas por realizar
 
+- Agregar a sb-timer-manager la funcionalidad de saltarse el primer contador
 - Mejorar brightchange cambiando los incrementos a 10% y renovando la algoritmia
 - Modularizar s3 dividiendo el script de instalación en diferentes scripts.
 	- De esta forma se podran instalar funcionalidades incluso despúes de haber instalado el sistema p.e. configurar libvirt.

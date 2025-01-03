@@ -63,5 +63,3 @@ rounded=$(echo "scale=0; (($result + 12.5) / 25) * 25" | bc)
 
 # Notificar el nivel de brillo
 notify-send -i brightness "Brillo: $rounded%" -t 500
-
-pw-play /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
