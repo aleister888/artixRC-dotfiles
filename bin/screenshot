@@ -7,49 +7,37 @@ dunstctl close-all
 NAME="$(date +"%Y-%m-%d_%H-%M-%S").jpg"
 SCRENDIR="$HOME/Imágenes/Screenshots"
 FILE="$SCRENDIR/$NAME"
+TMP="/tmp/screenshot.jpg"
 SOUND="/usr/share/sounds/freedesktop/stereo/camera-shutter.oga"
 
-if [ ! -d "$SCRENDIR" ]; then
-	mkdir -p "$SCRENDIR"
-fi
+mkdir -p "$SCRENDIR"
 
-all_clip(){
-	import -window root jpg:- | xclip -selection clipboard -t image/png
-	notify-send -i applets-screenshooter 'Captura copiada al Portapapeles'
+capture() {
+	local mode=$1
+	local destination=$2
+
+	# Captura de pantalla
+	if [ "$mode" = "all" ]; then
+		import -window root "$destination"
+	else
+		import "$destination"
+	fi
+
+	# Si se copia al portapapeles
+	if [ "$destination" = "$TMP" ]; then
+		xclip -selection clipboard -t image/png -i "$TMP"
+		notify-send -i "$TMP" 'Captura copiada al Portapapeles'
+	else
+		notify-send -i "$FILE" "$NAME"
+	fi
+
+	# Reproducir sonido
+	pw-play "$SOUND"
 }
-
-selection_clip(){
-	import png:- | xclip -selection clipboard -t image/png
-	notify-send -i applets-screenshooter 'Captura copiada al Portapapeles'
-}
-
-all_save(){
-	import -window root "$FILE"
-	notify-send -i applets-screenshooter "$NAME"
-}
-
-selection_save(){
-	import "$FILE"
-	notify-send -i applets-screenshooter "$NAME"
-}
-
 
 case "$1" in
-	all_clip)
-		all_clip
-		pw-play "$SOUND"
-		;;
-	selection_clip)
-		selection_clip
-		pw-play "$SOUND"
-		;;
-	all_save)
-		all_save
-		pw-play "$SOUND"
-		;;
-	selection_save)
-		selection_save
-		pw-play "$SOUND"
-		;;
-	*) exit ;;
+	all_clip) capture all "$TMP" ;;
+	selection_clip) capture selection "$TMP" ;;
+	all_save) capture all "$FILE" ;;
+	selection_save) capture selection "$FILE" ;;
 esac
