@@ -191,8 +191,8 @@ static const StatusCmd statuscmds[] = {
 	{ "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks", 5 },
 	{ "sb-ram-info; pkill -64 dwmblocks", 6 },
 	{ "sb-cal-info", 7 },
-	{ "sb-time-info", 8 },
-	{ "blue-toggle", 9 }
+	{ "sb-timer-manager", 8 },
+	{ "blue-toggle", 11 },
 };
 
 #include <X11/XF86keysym.h> // Incluir teclas especiales

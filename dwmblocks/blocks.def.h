@@ -24,7 +24,9 @@ static const Block blocks[] = {
 	// Hora
 	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          1,  0},
 	// Indicador Bloq Mayus
-	{"\x10^c#504945^"              ,"sb-bloq",                                 5,  2},
+	{"\x09^c#504945^"              ,"sb-bloq",                                 5,  2},
 	// Filtro de luz azul
-	{"\x09^d^"                     ,"sb-nighttime",                           60,  1},
+	{"\x0b^d^"                     ,"sb-nighttime",                           60,  1},
+	// Contador Pomodoro
+	{"\x08^d^"                     ,"sb-timer-status",                         1,  0},
 };
