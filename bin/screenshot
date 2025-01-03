@@ -7,6 +7,7 @@ dunstctl close-all
 NAME="$(date +"%Y-%m-%d_%H-%M-%S").jpg"
 SCRENDIR="$HOME/Imágenes/Screenshots"
 FILE="$SCRENDIR/$NAME"
+SOUND="/usr/share/sounds/freedesktop/stereo/camera-shutter.oga"
 
 if [ ! -d "$SCRENDIR" ]; then
 	mkdir -p "$SCRENDIR"
@@ -34,9 +35,21 @@ selection_save(){
 
 
 case "$1" in
-	all_clip) all_clip ;;
-	selection_clip) selection_clip ;;
-	all_save) all_save ;;
-	selection_save) selection_save ;;
+	all_clip)
+		all_clip
+		pw-play "$SOUND"
+		;;
+	selection_clip)
+		selection_clip
+		pw-play "$SOUND"
+		;;
+	all_save)
+		all_save
+		pw-play "$SOUND"
+		;;
+	selection_save)
+		selection_save
+		pw-play "$SOUND"
+		;;
 	*) exit ;;
 esac

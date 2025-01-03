@@ -249,11 +249,11 @@ static const Key keys[] = {
 	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
 
 	// Cambiar volumen
-	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -59 dwmblocks") },
+	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("volinc -5; pkill -59 dwmblocks") },
+	{ MODKEY,                       XK_n,      spawn,            SHCMD("volinc -10; pkill -59 dwmblocks") },
 	{ 0,         XF86XK_AudioRaiseVolume,      spawn,            SHCMD("volinc 5; pkill -59 dwmblocks") },
-	{ 0,                XF86XK_AudioMute,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
-	{ MODKEY,                       XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -10%; pkill -59 dwmblocks") },
 	{ MODKEY,                       XK_m,      spawn,            SHCMD("volinc 10; pkill -59 dwmblocks") },
+	{ 0,                XF86XK_AudioMute,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
 	{ MODKEY|ControlMask,           XK_n,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
 	{ MODKEY|ControlMask,           XK_m,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
 	{ MODKEY|ShiftMask,             XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 32768; pkill -59 dwmblocks") },
