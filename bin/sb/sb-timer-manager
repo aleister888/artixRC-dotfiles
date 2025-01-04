@@ -87,8 +87,8 @@ if [ ! -f "$pomodorofile" ]; then
 # Si existen instancias previas, preguntar al usuario
 elif [ "$(cat $processlist | wc -l)" -ge 1 ]; then
 	pauseopt="Pausar"
-	deleteopt="Borrar"
-	eleccion="$(echo -e "$pauseopt\n$deleteopt" | dmenu -c -p "Temporizador existente")"
+	deleteopt="Eliminar"
+	eleccion="$(echo -e "$pauseopt\n$deleteopt" | dmenu -c)"
 
 	if [ "$eleccion" = "$pauseopt" ]; then
 		notify-send "Temporizador pausado"

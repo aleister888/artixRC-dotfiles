@@ -10,7 +10,6 @@ plugins=(
 	"zsh-users/zsh-history-substring-search"
 	"zsh-users/zsh-syntax-highlighting"
 	"zsh-users/zsh-autosuggestions"
-	"MichaelAquilina/zsh-you-should-use"
 )
 
 # Ruta done para clonar los repositorios
