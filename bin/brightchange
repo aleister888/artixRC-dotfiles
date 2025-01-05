@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -x
 
-# Script para cambiar el brillo directamente usando $brightdev/brightness
+# Script para cambiar el brillo
 
 # Prevenir que el script se ejecute varias veces simultáneamente
 [ $(pgrep -c "$(basename "$0")") -ge 2 ] && exit
@@ -12,54 +12,48 @@ else
 	brightdev=/sys/class/backlight/amdgpu_bl1
 fi
 
-[ -f $brightdev/max_brightness ] || exit
+# Verificar si el archivo existe antes de continuar
+[ ! -e "$brightdev/brightness" ] && exit 1
 
-# Calcular el nuevo valor para el brillo
-calculate_brightness() {
-	local max="$1" # Valor máximo para el brillo
-	local actual="$2" # Valor actual del brillo
-	local mode="$3" # Argumento ("dec" o "inc")
-	local gradient=$((max / 50)) # Velocidad de cambio del brillo
-	local new_brightness # Variable para el nuevo valor de brillo
+# Número de niveles de brillo (ajustar según preferencia)
+levels=10
 
-	# Establecemos incrementos del 25%
-	local increment=$((max / 4))
+maxBrightness=$(cat "$brightdev/max_brightness" 2>/dev/null)
+currentBrightness=$(cat "$brightdev/brightness" 2>/dev/null)
+steps=$(( maxBrightness / levels ))
 
-	# Calcular nuevo brillo en función del argumento que damos
-	# y cambiarlo gradualmente
-	if [ "$mode" == "inc" ]; then
-
-		# Salirse del script si el brillo ya esta al máximo
-		[ "$(( $(cat $brightdev/max_brightness) * 95 / 100))" -le "$(cat $brightdev/actual_brightness)" ] && exit
-
-		new_brightness=$((actual + increment)) # Aumentar el brillo gradualmente
-		while [ "$actual" -lt "$new_brightness" ] && [ "$actual" -le $((max-gradient)) ]; do
-			actual=$((actual + gradient))
-			echo $actual | doas /usr/bin/tee $brightdev/brightness >/dev/null
-		done
-
-	elif [ "$mode" == "dec" ]; then
-
-		# Salirse del script si el brillo ya está al mínimo
-		[ "$(cat $brightdev/actual_brightness)" -le "$increment" ] && exit
-
-		new_brightness=$((actual - increment)) # Bajar el brillo gradualmente (Mínimo 25%)
-		while [ "$actual" -gt "$new_brightness" ] && [ "$actual" -ge "$increment" ]; do
-			actual=$((actual - gradient))
-			echo $actual | doas /usr/bin/tee $brightdev/brightness >/dev/null
-		done
-
+# Crear un array con todos los niveles de brillo posibles
+levelsArray=()
+for ((i=1; i<=levels; i++)); do
+	value=$((steps * i))
+	if [[ value -le maxBrightness ]]; then
+		result=$value
+	else
+		result=$maxBrightness
 	fi
-}
+	levelsArray+=("$result")
+done
 
-max_brightness=$(cat $brightdev/max_brightness)
-current_brightness=$(cat $brightdev/brightness)
+# Encontramos el intervalo en el que nos encontramos
+for ((i=0; i<=levels; i++)); do
+	[ "${levelsArray[$i]}" -ge "$currentBrightness" ] && break
+done
 
-calculate_brightness "$max_brightness" "$current_brightness" "$1"
+case "$1" in
+	dec)
+		index=$((i-1))
+		[ $index -lt 0 ] && exit
+		;;
+	inc)
+		index=$((i+1))
+		[ $index -gt $((levels-1)) ] && exit
+		;;
+esac
 
-# Calcular el brillo y redondearlo al múltiplo de 25 más cercano
-result=$(awk "BEGIN {print (100 / $max_brightness * $(cat $brightdev/brightness))}")
-rounded=$(echo "scale=0; (($result + 12.5) / 25) * 25" | bc)
+next=${levelsArray[$index]}
 
-# Notificar el nivel de brillo
-notify-send -i brightness "Brillo: $rounded%" -t 500
+[ -z $next ] && exit
+
+echo "$next" | doas tee $brightdev/brightness
+
+notify-send -i brightness "Brillo: $(((index+1)*100 / levels))%" -t 500

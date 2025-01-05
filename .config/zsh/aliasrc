@@ -89,3 +89,9 @@ xprop_wininfo(){
 	}
 	'
 }
+
+desencapsular() {
+	local tag="$1"
+	shift
+	perl -pe "s/\\\\$tag\\{([^{}]*(?:\\{$tag\\}[^{}]*)*)\\}/\$1/g" "$@"
+}
