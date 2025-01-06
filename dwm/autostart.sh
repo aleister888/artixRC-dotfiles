@@ -17,9 +17,17 @@ nitrogen --restore
 . "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 # Cerrar instancias previas del script
-INSTANCIAS="$(pgrep -c -x "$(basename "$0")")"
-for _ in $(seq $((INSTANCIAS - 1))); do
+processlist=/tmp/startScript_processes
+my_id=$BASHPID
+instancias="$(pgrep -c -x "$(basename "$0")")"
+echo $my_id | tee -a $processlist >/dev/null
+
+for _ in $(seq $((instancias - 1))); do
 	pkill -o "$(basename "$0")"
+done
+
+for id in $(grep -v "^$my_id$" "$processlist"); do
+	kill -9 "$id" 2>/dev/null
 done
 
 # Cerramos eww

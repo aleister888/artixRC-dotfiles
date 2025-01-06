@@ -5,12 +5,14 @@
 # Detener el script si cualquier comando falla
 set -e
 
+days=7
+
 help_msg(){
 echo "Uso:
   $(basename "$0") [-hd] [<directorio_original> <directorio_destino>]
 
 OPCIONES:
-  -d	Borra las copias en el destino con mas de 30 dias de antigüedad
+  -d	Borra las copias en el destino con mas de $days dias de antigüedad
   -h	Muestra este mensaje" >&2
 exit
 }
@@ -41,5 +43,5 @@ echo "Copia de seguridad creada en ${bak_dir}/${bak_name}"
 
 # Eliminar las copias de seguridad con mas de 1 mes de antigüedad
 if [ "$delete_old" = true ]; then
-	find "$bak_dir" -type f -name "*.$extension" -mtime +30 -exec rm {} \;
+	find "$bak_dir" -type f -name "*.$extension" -mtime +$days -exec rm {} \;
 fi
