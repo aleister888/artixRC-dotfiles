@@ -5,9 +5,9 @@ unrar
 gzip
 unzip
 zip
-p7zip
 lha
 lrzip
 lzip
 lzop
 unarj
+7zip

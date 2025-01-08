@@ -52,11 +52,11 @@ function get_local_ip {
 }
 
 function get_time {
-	date +'%H:%M'
+	date +'%H:%M:%S'
 }
 
 function precmd {
-PROMPT="%B%F{red}[%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red}] "
+PROMPT="%B%F{red}[%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%F{white}:%F{magenta}%~%F{red}]%F{white}$ %b"
 }
 
 setopt promptsubst

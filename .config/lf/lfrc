@@ -37,9 +37,11 @@ map F restore-trash
 map <esc> home
 map z home
 map t cd /tmp
-# Seleccionar archivos
-map / :fzf_jump
+# Buscar archivo
+map / :fzf_file
 map <c-_> :fzf_search
+# Buscar directorio
+map ( :fzf_dir
 # Extraer/comprimir archivos
 map E extract
 map <c-e> compress
@@ -155,7 +157,7 @@ cmd bulk-rename ${{
 	/usr/bin/lf -remote "send $id unselect"
 }}
 
-# Cambiar de directorio con fzf
+# Buscar con fzf cadenas entre los archivos
 cmd fzf_search ${{
 	cmd="rg --column --line-number --no-heading --color=always --smart-case"
 	fzf --ansi --disabled --layout=reverse --header="Search in files" --delimiter=: \
@@ -165,8 +167,8 @@ cmd fzf_search ${{
 		--preview='bat --color=always --highlight-line={2} -- {1}'
 }}
 
-# Buscar con fzf cadenas entre los archivos
-cmd fzf_jump ${{
+# Elegir archivo con fzf
+cmd fzf_file ${{
 	res="$(find . -maxdepth 1 | fzf --reverse --header='Ir a la localización')"
 	if [ -n "$res" ]; then
 		if [ -d "$res" ]; then
@@ -178,6 +180,12 @@ cmd fzf_jump ${{
 		/usr/bin/lf -remote "send $id $cmd \"$res\""
 	fi
 	clear
+}}
+
+# Elegir carpeta con fzf
+cmd fzf_dir ${{
+	dir="$(find . -type d 2>/dev/null | fzf --preview 'eza -la --no-permissions --color=always {}' --preview-window=up:50%:wrap --height=100%)"
+	[ -z "$dir" ] || /usr/bin/lf -remote "send $id cd \"$dir\""
 }}
 
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
@@ -254,47 +262,47 @@ cmd restore-trash ${{
 
 # Abrir archivos en función del tipo
 cmd open ${{
-	case $(xdg-mime query filetype "$(readlink -f $f)") in
-		*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar | */gzip)
-			xarchiver "$fx" ;;
+case $(xdg-mime query filetype "$(readlink -f $f)") in
+	*/x-7z-compressed | */vnd.rar | */x-tar | */x-compressed-tar | */gzip)
+		xarchiver "$fx" ;;
 
-		*/zip | */vnd.comicbook+zip)
-			if [[ "$(readlink -f $f)" == *.cbz ]]; then
-				zathura "$f"
-			else
-				xarchiver "$fx"
-			fi ;;
+	*/zip | */vnd.comicbook+zip)
+		if [[ "$(readlink -f $f)" == *.cbz ]]; then
+			zathura "$f"
+		else
+			xarchiver "$fx"
+		fi ;;
 
-		*/vnd.*document*)
-			setsid -f libreoffice "$fx" ;;
+	*/vnd.*document*)
+		setsid -f libreoffice "$fx" ;;
 
-		*/pdf | */epub*)
-			zathura "$f" ;;
+	*/pdf | */epub*)
+		zathura "$f" ;;
 
-		text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop )
-			$EDITOR "$fx" ;;
+	text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop )
+		$EDITOR "$fx" ;;
 
-		image/*)
-			filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|ppm\|svg\|webp\)$')
-			index=$(printf "%s\n" $filelist | nl | grep "$(basename "$fx")" | awk '{print $1}')
-			setsid -f nsxiv -n $index $filelist & ;;
+	image/*)
+		filelist=$(ls -1 . | grep '.*\.\(jpg\|jpeg\|png\|gif\|bmp\|tiff\|ppm\|svg\|webp\)$')
+		index=$(printf "%s\n" $filelist | nl | grep "$(basename "$fx")" | awk '{print $1}')
+		setsid -f nsxiv -n $index $filelist & ;;
 
-		audio/*)
-			/usr/bin/mpv --audio-display=no "$f" ;;
+	audio/*)
+		/usr/bin/mpv --audio-display=no "$f" ;;
 
-		video/*)
-			/usr/bin/mpv "$f" ;;
+	video/*)
+		/usr/bin/mpv "$f" ;;
 
-		*/x-keepass2)
-			keepassxc "$f" ;;
+	*/x-keepass2)
+		keepassxc "$f" ;;
 
-		*/x-reaper-*)
-			reaper "$f" ;;
+	*/x-reaper-*)
+		reaper "$f" ;;
 
-		*/x-tuxguitar | application/gpx+xml | application/x-gnuplot | application/x-gtp)
-			tuxguitar-bin "$fx" ;;
+	*/x-tuxguitar | application/gpx+xml | application/x-gnuplot | application/x-gtp)
+		tuxguitar-bin "$fx" ;;
 
-		*)
-			for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done ;;
-	esac
+	*)
+		for f in $fx; do setsid -f $OPENER "$f" 2>&1 && clear; done ;;
+esac
 }}
