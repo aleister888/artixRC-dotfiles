@@ -37,7 +37,7 @@ for ((i=1; i<=levels; i++)); do
 done
 
 # Encontramos el intervalo en el que nos encontramos
-for ((i=0; i<=levels; i++)); do
+for ((i=0; i<levels; i++)); do
 	[ "${levelsArray[$i]}" -ge "$currentBrightness" ] && break
 done
 
@@ -49,6 +49,9 @@ case "$1" in
 	inc)
 		index=$((i+1))
 		[ $index -gt $((levels-1)) ] && exit
+		;;
+	*)
+		exit
 		;;
 esac
 
