@@ -397,3 +397,10 @@ rm "$HOME"/.bash* 2>/dev/null
 rm "$HOME"/.wget-hsts 2>/dev/null
 
 mkdir -p "$HOME"/.local/share/gnupg
+
+############
+# Arreglos #
+############
+
+pacman -Q poppler >/dev/null 2>&1 && \
+	sudo ln -s /usr/lib/libpoppler-cpp.so.2.0.0 /usr/lib/libpoppler-cpp.so.1

@@ -18,7 +18,7 @@ set info size:time
 set cleaner '~/.config/lf/cleaner'
 set previewer '~/.config/lf/scope'
 set ratios 3:5:4
-set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log:*.bbl:*.blg:*.synctex.gz:*.bcf:*.nav:*.run.xml:*.snm:System Volume Information"
+set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log:*.bbl:*.blg:*.synctex.gz:*.bcf:*.nav:*.run.xml:*.snm:*.xwm:System Volume Information"
 
 # Recargar pantalla
 map R clear
@@ -42,6 +42,7 @@ map / :fzf_file
 map <c-_> :fzf_search
 # Buscar directorio
 map ( :fzf_dir
+map <backspace2> :fzf_dir
 # Extraer/comprimir archivos
 map E extract
 map <c-e> compress
@@ -184,7 +185,9 @@ cmd fzf_file ${{
 
 # Elegir carpeta con fzf
 cmd fzf_dir ${{
-	dir="$(find . -type d 2>/dev/null | fzf --preview 'eza -la --no-permissions --color=always {}' --preview-window=up:50%:wrap --height=100%)"
+	dir="$(find . -type d 2>/dev/null |\
+	fzf --preview 'eza -la --no-permissions {}' \
+	--preview-window=up:50%:wrap --height=100%)"
 	[ -z "$dir" ] || /usr/bin/lf -remote "send $id cd \"$dir\""
 }}
 
