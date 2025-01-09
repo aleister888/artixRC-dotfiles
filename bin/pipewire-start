@@ -2,8 +2,8 @@
 
 # Iniciar PipeWire
 /usr/bin/pipewire &
-sleep 0.5; /usr/bin/pipewire-pulse &
-sleep 0.5; /usr/bin/wireplumber &
+sleep 1.0; /usr/bin/pipewire-pulse &
+sleep 1.5; /usr/bin/wireplumber &
 
 pw-metadata -n settings 0 clock.force-rate 44100
 pw-metadata -n settings 0 clock.force-quantum 256

@@ -395,3 +395,5 @@ WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 # Borrar archivos innecesarios
 rm "$HOME"/.bash* 2>/dev/null
 rm "$HOME"/.wget-hsts 2>/dev/null
+
+mkdir -p "$HOME"/.local/share/gnupg

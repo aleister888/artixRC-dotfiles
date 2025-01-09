@@ -187,6 +187,7 @@ nnoremap gg :1<CR><C-G>
 vnoremap " s"<C-r>""
 vnoremap ' s'<C-r>"'
 vnoremap ` s`<C-r>"`
+vnoremap 2` s``<C-r>"``
 vnoremap $ s$<C-r>"$
 vnoremap _ s_<C-r>"_
 vnoremap <leader>_ s__<C-r>"__
