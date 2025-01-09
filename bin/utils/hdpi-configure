@@ -16,3 +16,12 @@ for dir in dmenu dwm st; do
 	doas make clean --directory "$REPO" >/dev/null 2>&1
 
 done
+
+# Configurar eclipse para HDPI
+if [ -e /usr/bin/eclipse ]; then
+	echo "#!/bin/sh\nGDK_DPI_SCALE=0.5 GDK_SCALE=2 /usr/bin/eclipse" |\
+	doas tee /usr/local/bin/eclipse >/dev/null
+	doas chmod +x /usr/local/bin/eclipse
+fi
+
+sed -i 's/Xft.dpi:[0-9]*/Xft.dpi:192/g' ~/.config/Xresources
