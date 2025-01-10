@@ -222,8 +222,8 @@ static const Key keys[] = {
 
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
-	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } },
-	{ MODKEY|ShiftMask,             XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", "/run/media/", NULL } } },
+	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", "-command", "fzf_dir", NULL } } },
+	{ MODKEY|ShiftMask,             XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } },
 	{ MODKEY,                       XK_F4,     spawn,            SHCMD("tauon") },
 
 	// Montar/Desmontar dispositivos android

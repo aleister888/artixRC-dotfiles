@@ -37,6 +37,7 @@ map F restore-trash
 map <esc> home
 map z home
 map t cd /tmp
+map T cd /run/media
 # Buscar archivo
 map / :fzf_file
 map <c-_> :fzf_search
