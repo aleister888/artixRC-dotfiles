@@ -135,6 +135,7 @@ static const Rule rules[] = {
 	{ "Java",                  NULL,  NULL,  1<<11,  1,  0,  0,  0,  -1,    0 },
 	{ "Eclipse",               NULL,  NULL,  1<<11,  0,  0,  0,  0,  -1,    0 },
 	{ "KeePassXC",             NULL,  NULL,  1<<12,  0,  0,  0,  0,  -1,    0 },
+	{ "gnome-contacts",        NULL,  NULL,  1<<12,  0,  0,  0,  0,  -1,    0 },
 	{ TERMC,                   NULL,  NULL,      0,  0,  0,  1,  0,  -1,    0 },
 	{ NULL,  NULL,     "scratchpad",             0,  1,  0,  0,  0,  -1,  's' },
 	{ NULL,  NULL,   "Media viewer",             0,  1,  0,  0,  0,  -1,    0 },
