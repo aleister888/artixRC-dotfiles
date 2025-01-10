@@ -34,7 +34,7 @@ map S trash
 map D clean-trash
 map F restore-trash
 # Abrir scratchpad en el directorio actual
-map f cdterm
+map s cdterm
 # Cambiar de directorio
 map <esc> home
 map z home
@@ -64,8 +64,6 @@ map <c-z> $setsid -f dragon-drop -a -x $fx
 map P size
 # Crear directorio
 map m push %mkdir<space>
-# Ejecutar comandos
-map s shell
 # Copiar el directorio del archivo actual al portapapeles
 map Y ${{
 	printf '"%s"' "$(dirname "$fx")" | xclip -selection clipboard
