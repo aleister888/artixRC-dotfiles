@@ -198,21 +198,26 @@ vnoremap } s{<C-r>"}
 vnoremap [ s[<C-r>"]
 vnoremap ] s[<C-r>"]
 
+" Abrir scratchpad en el directorio del archivo actual
+nmap <silent><leader>s :execute '!' .
+	\ 'setsid -f sh -c "' .
+	\ expand(' $TERMINAL $TERMTITLE scratchpad ') .
+	\ '"' <CR><CR>
+
 " Activar/Desactivar comprobación ortografía
 nnoremap <silent><F4> :setlocal spell! spelllang=es_es<CR>
 inoremap <silent><F4> <C-O>:setlocal spell! spelllang=es_es<CR>
 nnoremap <silent><F5> :setlocal spell! spelllang=en_us<CR>
 inoremap <silent><F5> <C-O>:setlocal spell! spelllang=en_us<CR>
 
+
 " TeX
 au Filetype tex nmap <silent><leader>f <plug>(vimtex-toc-toggle)<CR>
 au Filetype tex nmap <leader>g :VimtexCompile<CR>
 au FileType tex nmap <leader>G :execute '!' .
 	\ 'setsid -f ' .
-	\ expand('$TERMINAL') . ' ' .
-	\ expand('$TERMTITLE') . ' "scratchpad" ' .
-	\ expand('$TERMEXEC') . ' ' .
-	\ 'xelatex %' <CR><CR>
+	\ expand(' $TERMINAL $TERMTITLE scratchpad ') .
+	\ expand(' $TERMEXEC xelatex ') . '%' <CR><CR>
 au Filetype tex nmap <silent><leader>h :VimtexView<CR>
 	function! ToggleVimtexErrors()
 		if len(filter(getwininfo(), 'v:val.quickfix')) > 0
