@@ -28,5 +28,5 @@ static const Block blocks[] = {
 	// Filtro de luz azul
 	{"\x0b^d^"                     ,"sb-nighttime",                           60,  1},
 	// Contador Pomodoro
-	{"\x08^d^"                     ,"sb-timer-status",                         1,  0},
+	{"\x08^d^"                     ,"sb-timer",                                1,  0},
 };

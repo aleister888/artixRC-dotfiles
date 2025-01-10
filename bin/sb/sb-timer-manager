@@ -18,10 +18,10 @@ create_timer(){
 	local timerwork
 	local timerbreak
 
-	timerwork="$(dmenu -c -p "¿Minutos de trabajo? " </dev/null)"
+	timerwork="$(dmenu -p "¿Minutos de trabajo? " </dev/null)"
 	[ -z "$timerwork" ] && exit
 
-	timerbreak="$(dmenu -c -p "¿Minutos de descanso? " </dev/null)"
+	timerbreak="$(dmenu -p "¿Minutos de descanso? " </dev/null)"
 	[ -z "$timerbreak" ] && exit
 
 	if [ "$timerwork" -ge 61 ] || [ "$timerbreak" -ge 61 ]; then
@@ -88,7 +88,7 @@ if [ ! -f "$pomodorofile" ]; then
 elif [ "$(cat $processlist | wc -l)" -ge 1 ]; then
 	pauseopt="Pausar"
 	deleteopt="Eliminar"
-	eleccion="$(echo -e "$pauseopt\n$deleteopt" | dmenu -c)"
+	eleccion="$(echo -e "$pauseopt\n$deleteopt" | dmenu)"
 
 	if [ "$eleccion" = "$pauseopt" ]; then
 		notify-send "Temporizador pausado"
