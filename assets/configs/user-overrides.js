@@ -25,6 +25,8 @@ user_pref("browser.tabs.inTitlebar", 0);
 
 // Mantener sesiones iniciadas
 user_pref("browser.sessionstore.privacy_level", 0);
+user_pref("privacy.clearOnShutdown.sessions", false);
+user_pref("privacy.clearOnShutdown.cache", false);
 
 // Mantener cookies hasta que estas expiren o se borren manualmente
 user_pref("network.cookie.lifetimePolicy", 0);
@@ -34,12 +36,10 @@ user_pref("privacy.clearOnShutdown.cookies", false);
 user_pref("privacy.sanitize.sanitizeOnShutdown", true);
 user_pref("privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs2", false);
 user_pref("privacy.sanitize.cpd.hasMigratedToNewPrefs2", false);
-user_pref("privacy.clearOnShutdown.cache", true);
 user_pref("privacy.clearOnShutdown.siteSettings", true);
 user_pref("privacy.clearOnShutdown.history", true);
 user_pref("privacy.clearOnShutdown.formdata", true);
 user_pref("privacy.clearOnShutdown.downloads", true);
-user_pref("privacy.clearOnShutdown.sessions", true);
 user_pref("privacy.clearOnShutdown.offlineApps", true);
 
 // Pantalla de inicio
