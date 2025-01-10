@@ -33,6 +33,8 @@ map <c-r> bulk-rename
 map S trash
 map D clean-trash
 map F restore-trash
+# Abrir scratchpad en el directorio actual
+map f cdterm
 # Cambiar de directorio
 map <esc> home
 map z home
@@ -123,6 +125,11 @@ cmd compress ${{
 		esac
 	fi
 	clear
+}}
+
+# Función para abrir un scratchpad en el directorio actual
+cmd cdterm &{{
+	cd "$(dirname $fx)"; setsid -f $TERMINAL $TERMTITLE scratchpad
 }}
 
 # Enviar una notificación con el tamaño del ítem seleccionado
