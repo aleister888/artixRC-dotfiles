@@ -2,10 +2,6 @@
 
 # Script para vincular (dispositivos de entrada)|(aplicaciones) a un micrófono virtual para compartir audio
 
-# TODO
-# - En el caso de aplicaciones como Firefox que pueden tener mas de una sink con el
-#   mismo nombre, añadir todos los sinks de dicha aplicación al micrófono virtual
-
 # Sink del micrófono virtual
 sinkL=my-combined-sink:playback_FL
 sinkR=my-combined-sink:playback_FR

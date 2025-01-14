@@ -14,6 +14,7 @@ jre17-openjdk
 kernel-modules-hook
 lib32-gnutls
 lib32-mesa
+libcamera
 libappimage
 lostfiles
 mailcap

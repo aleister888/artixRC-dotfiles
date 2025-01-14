@@ -374,7 +374,7 @@ sudo usermod -aG storage,input,users "$USER"
 [ "$music" == "true" ]     && lrcput-install
 
 # Configurar el audio de baja latencia
-audio-setup
+sudo audio-setup
 
 # Configuramos el reloj según la zona horaria escogida
 sudo set-clock
