@@ -1,0 +1,9 @@
+libx11
+libxft
+libxinerama
+xclip
+xdotool
+xorg
+xorg-twm
+xorg-xinit
+xorg-xkill

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Módulo para instalar yay. Un ayudante para instalar paquetes de
+# el AUR de forma automátizada.
+
+tmp_dir="/tmp/yay_install_temp"
+mkdir -p "$tmp_dir"
+git clone https://aur.archlinux.org/yay.git "$tmp_dir"
+sh -c "cd $tmp_dir && makepkg -si --noconfirm"

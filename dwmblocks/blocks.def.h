@@ -6,7 +6,7 @@ static unsigned int delimLen = 0;
 static const Block blocks[] = {
 	// Título                  Comando Tiempo de actualización Señal de actualización
 	// ¿Que canción esta sonando?
-	{"\x01^d^"                     ,"sb-tauon",                                1,  5},
+	{"\x01^d^"                     ,"music-metadata -d",                       1,  5},
 	// Estado de la batería (Si la hay)
 	{"\x02^d^"                     ,"sb-bat",                                  1, 10},
 	// Espacio libre
@@ -24,7 +24,9 @@ static const Block blocks[] = {
 	// Hora
 	{" \x08^c#CC241D^ ^c#FB4934^" ,"date +'%I:%M '",                          1,  0},
 	// Indicador Bloq Mayus
-	{"\x10^c#504945^"              ,"sb-bloq",                                 5,  2},
+	{"\x09^c#504945^"              ,"sb-bloq",                                 5,  2},
 	// Filtro de luz azul
-	{"\x09^d^"                     ,"sb-nighttime",                           60,  1},
+	{"\x0b^d^"                     ,"sb-nighttime",                           60,  1},
+	// Contador Pomodoro
+	{"\x08^d^"                     ,"sb-timer",                                1,  0},
 };

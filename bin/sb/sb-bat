@@ -1,43 +1,46 @@
 #!/bin/bash
 
-info-print(){
+# Contamos cuantas baterias hay
 num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l)
+# Guardamos el output de acpi
 out=$(acpi -b | grep -v "Unknown\|unavailable")
 
-# Extraer e imprimir la información para cada batería
+charging=false
+battery_level=()
+sum=0
+
+# Guardamos el nivel de carga de todas la baterias y calculamos la suma de los valores
 for ((i=1; i<=num_baterias; i++)); do
-	battery_level="$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
-
-	if [ "$i" == 1 ]; then
-		icon_seq='^f10^^d^^c#689D6A^'
-	else
-		icon_seq='^c#689D6A^'
-	fi
-
-	if echo "$out" | sed "${i}q;d" | grep Charging >/dev/null; then
-		baticon="󰂄 "
-	else
-		if [ "$i" == 1 ]; then
-			case $battery_level in
-				 [0-9])	baticon="󰁺 " ;;
-				1[0-9])	baticon="󰁺 " ;;
-				2[0-9])	baticon="󰁻 " ;;
-				3[0-9])	baticon="󰁼 " ;;
-				4[0-9])	baticon="󰁽 " ;;
-				5[0-9])	baticon="󰁾 " ;;
-				6[0-9])	baticon="󰁿 " ;;
-				7[0-9])	baticon="󰂀 " ;;
-				8[0-9])	baticon="󰂁 " ;;
-				9[0-9])	baticon="󰂂 " ;;
-				     *)	baticon="󰁹 " ;;
-			esac
-		else
-			baticon=""
-		fi
-	fi
-
-	echo "$icon_seq$baticon$battery_level%"
+	battery_level+=("$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')")
+	sum=$((sum + battery_level[i-1]))
+	echo "$out" | sed "${i}q;d" | grep Charging >/dev/null && charging=true
 done
-}
 
-info-print
+pre=" ^d^^c#689D6A^"
+
+# Definimos el icono en función del estado de la batería
+if $charging; then
+	pre+="󰂄 "
+else
+	# Calculamos la media
+	average=$((sum/num_baterias))
+	case $average in
+		 [0-9]) baticon="󰁺 " ;;
+		1[0-9]) baticon="󰁺 " ;;
+		2[0-9]) baticon="󰁻 " ;;
+		3[0-9]) baticon="󰁼 " ;;
+		4[0-9]) baticon="󰁽 " ;;
+		5[0-9]) baticon="󰁾 " ;;
+		6[0-9]) baticon="󰁿 " ;;
+		7[0-9]) baticon="󰂀 " ;;
+		8[0-9]) baticon="󰂁 " ;;
+		9[0-9]) baticon="󰂂 " ;;
+		     *) baticon="󰁹 " ;;
+	esac
+	pre+="$baticon"
+fi
+
+pre+="^c#689D6A^"
+
+# Imprimos el icono, las secuencias de colores y el % de cada batería
+echo "$pre${battery_level[@]}"

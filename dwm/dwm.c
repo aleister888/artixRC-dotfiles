@@ -73,10 +73,9 @@
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel, SchemeScratchNorm, SchemeScratchSel,
 	SchemeStickyNorm, SchemeStickySel, /* color schemes */
-	SchemeTag1,  SchemeTag2,  SchemeTag3,  SchemeTag4,
-	SchemeTag5,  SchemeTag6,  SchemeTag7,  SchemeTag8,
-	SchemeTag9,  SchemeTag10, SchemeTag11, SchemeTag12,
-	SchemeTag13, SchemeTag14, SchemeTag15, SchemeTag16};
+	SchemeTag1,  SchemeTag2,  SchemeTag3,  SchemeTag4, SchemeTag5,   SchemeTag6,
+	SchemeTag7,  SchemeTag8,  SchemeTag9,  SchemeTag10, SchemeTag11, SchemeTag12,
+	SchemeTag13, SchemeTag14, SchemeTag15, SchemeTag16, SchemeTag17, SchemeTag18};
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 	NetWMFullscreen, NetWMSticky, NetActiveWindow, NetWMWindowType,
 	NetWMWindowTypeDialog, NetClientList, NetClientInfo, NetLast }; /* EWMH atoms */
@@ -591,7 +590,7 @@ unswallow(Client *c)
 void
 buttonpress(XEvent *e)
 {
-	unsigned int i, x, click, occ;
+	unsigned int i, x, click, occ = 0;
 	Arg arg = {0};
 	Client *c;
 	Monitor *m;
@@ -605,14 +604,15 @@ buttonpress(XEvent *e)
 		focus(NULL);
 	}
 	if (ev->window == selmon->barwin) {
-		i = x = occ = 0;
-		/* Bitmask of occupied tags */
+		i = x = 0;
 		for (c = m->clients; c; c = c->next)
-			occ |= c->tags;
-
-		do
-			x += TEXTW(occ & 1 << i ? alttags[i] : tags[i]);
-		while (ev->x >= x && ++i < LENGTH(tags));
+			occ |= c->tags == 255 ? 0 : c->tags;
+		do {
+			/* do not reserve space for vacant tags */
+			if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+				continue;
+			x += TEXTW(tags[i]);
+		} while (ev->x >= x && ++i < LENGTH(tags));
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
@@ -1051,7 +1051,6 @@ drawbar(Monitor *m)
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
-	const char *tagtext;
 	Client *c;
 
 	if (!m->showbar)
@@ -1063,14 +1062,17 @@ drawbar(Monitor *m)
 	}
 
 	for (c = m->clients; c; c = c->next) {
-		occ |= c->tags;
+		occ |= c->tags == 255 ? 0 : c->tags;
 		if (c->isurgent)
 			urg |= c->tags;
 	}
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
-		tagtext = occ & 1 << i ? alttags[i] : tags[i];
-		w = TEXTW(tagtext);
+		/* do not draw vacant tags */
+		if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+		continue;
+
+		w = TEXTW(tags[i]);
 		drw_setscheme(
 			drw,
 			scheme[
@@ -1079,7 +1081,7 @@ drawbar(Monitor *m)
 				: SchemeNorm
 			]
 		);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tagtext, urg & 1 << i);
+		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
 		if (ulineall || m->tagset[m->seltags] & 1 << i) /* if there are conflicts, just move these lines directly underneath both 'drw_setscheme' and 'drw_text' :) */
 			drw_rect(drw, x + ulinepad, bh - ulinestroke - ulinevoffset, w - (ulinepad * 2), ulinestroke, 1, 0);
 		x += w;
@@ -1155,10 +1157,13 @@ focus(Client *c)
 		detachstack(c);
 		attachstack(c);
 		grabbuttons(c, 1);
-		if (c->scratchkey != 0)
+		if (c->scratchkey != 0) {
 			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
-		else
+		} else if (c->issticky) {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeStickySel][ColBorder].pixel);
+		} else {
 			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		}
 		setfocus(c);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);

@@ -184,17 +184,29 @@ mount_partitions(){
 # porque el comando no tiene la opción --disable-download-timeout.
 # Lo que podría hacer que la operación falle con conexiones muy lentas.
 basestrap_install(){
-	local basestrap_packages="base elogind-openrc openrc linux linux-firmware neovim opendoas mkinitcpio wget libnewt btrfs-progs"
+	local basestrap_packages
+
+	basestrap_packages="base elogind-openrc openrc linux linux-firmware neovim"
+	basestrap_packages+=" opendoas mkinitcpio wget libnewt btrfs-progs"
 
 	# Vamos a instalar los paquetes del grupo base-devel manualmente para luego poder borrar sudo
 	# (Si en su lugar instalamos el grupo, luego será más complicado desinstalar sudo)
-	basestrap_packages+=" autoconf automake bison debugedit fakeroot flex gc gcc groff guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
+	basestrap_packages+=" autoconf automake bison debugedit fakeroot flex gc gcc groff"
+	basestrap_packages+=" guile libisl libmpc libtool m4 make patch pkgconf texinfo which"
+
+	basestrap_packages+=" linux-headers linux-lts linux-lts-headers networkmanager networkmanager-openrc dosfstools"
+	basestrap_packages+=" cronie cronie-openrc cups cups-openrc freetype2 libjpeg-turbo grub git wpa_supplicant"
+	basestrap_packages+=" usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc dialog"
+
 	# Instalamos xkeyboard-config aquí para poder elegir el layout de teclado más adelante (s3)
+	basestrap_packages+=" xkeyboard-config bc"
+
 	# Instalamos pipewire aquí para evitar conflictos (p.e. se isntala jack2 y no pipewire-jack).
 	# Los paquetes para 32 bits se instalarán una vez activados los repos. de Arch Linux (s3)
+	basestrap_packages+=" pipewire-pulse wireplumber pipewire pipewire-alsa pipewire-audio pipewire-jack"
+
 	# Instalamos go y sudo para poder instalar compilar yay más adelante (makepkg:s3)
-	basestrap_packages+=" xkeyboard-config bc pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber go"
-	basestrap_packages+=" cronie cronie-openrc git linux-headers linux-lts linux-lts-headers grub networkmanager networkmanager-openrc wpa_supplicant dialog dosfstools cups cups-openrc freetype2 libjpeg-turbo usbutils pciutils cryptsetup device-mapper-openrc cryptsetup-openrc acpid-openrc openntpd-openrc sudo"
+	basestrap_packages+=" go sudo"
 
 	# Añadimos a los paquetes del sistema base el microcódigo de CPU correspodiente
 	local manufacturer

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Script para realizar copias de seguridad incrementales utilizando rsync
+
+set -o errexit  # Salir del script si cualquier comando devuelve un error
+set -o nounset  # Salir del script si se utiliza una variable no definida
+set -o pipefail # Establecer el estado de salida de una tubería al del primer comando que falla
+
+readonly SOURCE_DIR="${HOME}"
+readonly BACKUP_DIR="/run/media/$USER/$1"
+readonly DATETIME="$(date '+%Y-%m-%d_%H:%M:%S')"
+readonly BACKUP_PATH="${BACKUP_DIR}/${DATETIME}"
+readonly LATEST_LINK="${BACKUP_DIR}/latest"
+
+[ ! -d "${BACKUP_DIR}" ] && exit 1
+
+rsync -av --delete \
+	"${SOURCE_DIR}/" \
+	--link-dest "${LATEST_LINK}" \
+	--exclude=".cache" \
+	"${BACKUP_PATH}"
+
+rm -rf "${LATEST_LINK}"
+ln -s "${BACKUP_PATH}" "${LATEST_LINK}"

@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# Número máximo de caracteres del output
+[ -z "$FACT" ] && FACT=38
+[ -z "$ALTFACT" ] && ALTFACT=12
+
+# Establecemos el reproductor
+PLAYER="$(music-priority)"
+
+makesafe(){
+	if [ "${#1}" -gt "$FACT" ]; then
+		local cropped="${1:0:$((FACT-3))}"
+		echo "${cropped% }..."
+	else
+		[ -z "$1" ] || echo "$1"
+	fi
+}
+
+statusbar(){
+	[ -z "$PLAYER" ] && exit
+
+	# Obtener el título de la canción y estado de la reproducción
+	local title;  title="$(playerctl metadata --player="$PLAYER" title)"
+	local status; status="$(playerctl status --player="$PLAYER")"
+	local icon
+
+	[ -z "$title" ] && exit
+
+	if [ "$status" == "Playing" ]; then
+		icon="  "
+	elif [ -n "$status" ]; then
+		icon="  "
+	fi
+
+	echo "$icon$(makesafe "$title")"
+}
+
+metaprint(){
+	local out
+
+	case "$1" in
+		title)
+			if [ -z "$PLAYER" ]; then
+				out="Cannot detect artist"
+			else
+				out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
+			fi ;;
+		artist)
+			if [ -z "$PLAYER" ]; then
+				out="Player Stopped"
+			else
+				out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
+			fi ;;
+	esac
+
+	if [ "$withsafe" == "true" ]; then
+		makesafe "$out"
+	else
+		echo "$out"
+	fi
+}
+
+help_msg(){
+echo "Uso:
+  music-metadata [-Sdtacsh]
+
+OPCIONES:
+  -S	Habilitar máximo de caracteres ($FACT para -d, $ALTFACT para -t/-a)
+  -d	Imprimir información para la barra de estado (-S activado)
+  -t	Imprime el titulo
+  -a	Imprime el artista
+  -c	Imprime la localización en cache de la caratula o un placeholder si no encuentra ninguno
+  -s	Imprime el estado de la reproducción
+  -h	Muestra este mensaje
+
+NOTA:
+  Puedes cambiar el máximo de caracteres para -d con la variable \$FACT y el máximo para -t/-a con la variable \$ALTFACT" >&2
+}
+
+if echo "$@" | grep "\-h" >/dev/null; then
+	help_msg
+	exit
+fi
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-S) withsafe=true ;;
+		-d) statusbar
+			exit ;;
+		-t) FACT=$ALTFACT; metaprint title
+			exit ;;
+		-a) FACT=$ALTFACT; metaprint artist
+			exit ;;
+		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl 2>/dev/null)
+			if [ -z "$PLAYER" ] || [ -z "$COVER" ]; then
+				echo "$XDG_CONFIG_HOME/eww/placeholder.png"
+			else
+				echo "${COVER#file://}"
+			fi
+			exit ;;
+		-s) [ -n "$PLAYER" ] && playerctl status --player="$PLAYER"
+			exit ;;
+		*) help_msg
+			exit ;;
+	esac
+	shift
+done

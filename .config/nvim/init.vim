@@ -11,13 +11,12 @@ let mapleader = "," " Definir la tecla leader
 if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
-
-	Plug 'andis-sprinkis/lf-vim' " Resaltado para la configuración de lf
+	Plug 'elkowar/yuck.vim' " Soporte para el lenguaje yuck
+	Plug 'andis-sprinkis/lf-vim' " Soporte para el archivo de configuración de lf
 	Plug 'alisdair/vim-armasm' " Sintaxis para ARM Assembly
 	Plug 'cakebaker/scss-syntax.vim'
 	Plug 'ryanoasis/vim-devicons' " Iconos
 	Plug 'nvim-tree/nvim-web-devicons' " Iconos
-	Plug 'LunarWatcher/auto-pairs' " Auto-cerrar: ( { [
 	Plug 'morhetz/gruvbox' " Tema
 	Plug 'akinsho/bufferline.nvim' " Pestañas
 	Plug 'nvim-tree/nvim-tree.lua' " Árbol de directorios
@@ -28,7 +27,6 @@ if $USER !=# 'root'
 		\ 'do': { -> mkdp#util#install() },
 		\ 'for': ['markdown', 'vim-plug'] } " Previews para Markdown
 	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
-	Plug 'neoclide/coc.nvim', {'branch': 'release'} " Sugerencias de entrada / autocompletado
 	Plug 'sirver/ultisnips' " Snippets
 	Plug 'vim-airline/vim-airline' " Barra de estado
 	Plug 'vim-airline/vim-airline-themes'
@@ -75,21 +73,6 @@ let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_compiler_method = 'arara'
 let g:vimtex_quickfix_mode = 0
 
-" coc.nvim
-let g:coc_disable_startup_warning = 1
-let g:coc_global_extensions = [ 'coc-sh', 'coc-vimtex', 'coc-texlab' ]
-
-let g:coc_preferences = {
-	\ 'suggest.maxCompleteItemCount': 25,
-	\ 'suggest.detailField': 'abbr',
-	\ 'suggest.fixIncomplete': 0,
-	\ 'coc.preferences.formatOnType': v:false,
-	\ 'coc.preferences.formatOnSaveFiletypes': [],
-	\ 'diagnostic.enable': v:false,
-	\ 'signature.target': 'echo',
-	\ 'suggest.preview': v:false
-	\ }
-
 " ultisnips
 let g:UltiSnipsSnippetDirectories = ['~/.config/nvim/snips']
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -105,19 +88,6 @@ let g:airline_symbols.linenr = '   '
 let g:airline_symbols.maxlinenr = '   '
 let g:airline_symbols.dirty = '  '
 let g:airline_symbols.colnr = ' C:'
-
-function! CocStatus()
-	return g:coc ? 'COC' : ''
-endfunction
-function! AutoPairsStatus()
-	return g:pair ? '  {}' : ''
-endfunction
-function! TabStatus()
-	return g:tab ? '  \t' : ''
-endfunction
-if $USER !=# 'root'
-	let g:airline_section_x = airline#section#create(['%{CocStatus()}%{AutoPairsStatus()}%{TabStatus()}'])
-endif
 
 "###########################
 "# Configuración de neovim #
@@ -144,7 +114,7 @@ set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 
 " Indentación y tabulación
 autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
-autocmd FileType * setlocal copyindent preserveindent tabstop=2 shiftwidth=2
+autocmd FileType * setlocal copyindent preserveindent tabstop=8 shiftwidth=8
 
 if $USER !=# 'root'
 	set clipboard+=unnamedplus
@@ -179,24 +149,11 @@ hi SpellRare guifg=#FE8019 guibg=#282828
 
 hi ErrorMsg guifg=#FE8019 guibg=#282828
 
-hi CocErrorSign guifg=#B16286
-hi CocWarningSign guifg=#fabd2f
-hi CocInfoSign guifg=#83a598
-hi CocHintSign guifg=#8ec07c
-hi CocFloating guibg=#282828
-hi CocMenuSel guibg=#3C3836
-
-hi CocErrorHighlight guifg=#B16286 guibg=#282828
-hi CocUnusedHighlight guifg=#689D6A guibg=#282828
-hi CocWarningHighlight guifg=#fabd2f guibg=#282828
-hi CocInfoHighlight guifg=#83a598 guibg=#282828
-
 "#####################
 "# Atajos de teclado #
 "#####################
 
 " Plugins
-inoremap <silent><expr> <s-tab> pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
 nnoremap <silent><leader>t :NvimTreeToggle<CR>
 nnoremap <silent><leader>u :UndotreeToggle<CR>
 
@@ -230,6 +187,7 @@ nnoremap gg :1<CR><C-G>
 vnoremap " s"<C-r>""
 vnoremap ' s'<C-r>"'
 vnoremap ` s`<C-r>"`
+vnoremap 2` s``<C-r>"``
 vnoremap $ s$<C-r>"$
 vnoremap _ s_<C-r>"_
 vnoremap <leader>_ s__<C-r>"__
@@ -240,15 +198,26 @@ vnoremap } s{<C-r>"}
 vnoremap [ s[<C-r>"]
 vnoremap ] s[<C-r>"]
 
+" Abrir scratchpad en el directorio del archivo actual
+nmap <silent><leader>s :execute '!' .
+	\ 'setsid -f sh -c "' .
+	\ expand(' $TERMINAL $TERMTITLE scratchpad ') .
+	\ '"' <CR><CR>
+
 " Activar/Desactivar comprobación ortografía
 nnoremap <silent><F4> :setlocal spell! spelllang=es_es<CR>
 inoremap <silent><F4> <C-O>:setlocal spell! spelllang=es_es<CR>
 nnoremap <silent><F5> :setlocal spell! spelllang=en_us<CR>
 inoremap <silent><F5> <C-O>:setlocal spell! spelllang=en_us<CR>
 
+
 " TeX
 au Filetype tex nmap <silent><leader>f <plug>(vimtex-toc-toggle)<CR>
 au Filetype tex nmap <leader>g :VimtexCompile<CR>
+au FileType tex nmap <leader>G :execute '!' .
+	\ 'setsid -f ' .
+	\ expand(' $TERMINAL $TERMTITLE scratchpad ') .
+	\ expand(' $TERMEXEC xelatex ') . '%' <CR><CR>
 au Filetype tex nmap <silent><leader>h :VimtexView<CR>
 	function! ToggleVimtexErrors()
 		if len(filter(getwininfo(), 'v:val.quickfix')) > 0
@@ -262,11 +231,10 @@ au Filetype tex nmap <silent><leader>k <plug>(vimtex-clean)<CR>
 au Filetype tex vnoremap e s\emph{<C-r>"}
 au Filetype tex vnoremap b s\textbf{<C-r>"}
 au Filetype tex vnoremap i s\textit{<C-r>"}
+au Filetype tex vnoremap t s\text{<C-r>"}
+au Filetype tex vnoremap m s\texttt{<C-r>"}
 au Filetype tex vnoremap h s\hl{<C-r>"}
 
-
-" Shell
-au FileType sh nmap <leader>f :CocList outline<CR>
 
 " Markdown
 au Filetype markdown nmap <silent><leader>h :MarkdownPreview<CR>
@@ -278,39 +246,6 @@ au Filetype markdown nmap <silent><leader>h :MarkdownPreview<CR>
 		endif
 	endfunction
 au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
-
-" Activar/Desactivar sugerencias de entrada
-	let g:coc=1
-	function! CocToggle()
-		let g:coc = !g:coc
-		silent! execute (g:coc ? 'CocEnable' : 'CocDisable')
-	endfunction
-inoremap <silent><F1> <C-O>:call CocToggle()<CR>
-nnoremap <silent><F1> :call CocToggle()<CR>
-
-" Activar/Desactivar llaves automáticas
-	let g:pair = 1
-	function! PairToggle()
-		let g:pair = !g:pair
-		silent! AutoPairsToggle
-	endfunction
-inoremap <F2> <C-O>:call PairToggle()<CR>
-nnoremap <F2> :call PairToggle()<CR>
-
-" Alternar como se visualizan las tabulaciones
-	let g:tab = 1
-	function! TabExp()
-		if &tabstop == 2
-			set tabstop=8
-			set shiftwidth=8
-		else
-			set tabstop=2
-			set shiftwidth=2
-		endif
-		let g:tab = !g:tab
-	endfunction
-inoremap <F3> <C-O>:call TabExp()<CR>
-nnoremap <F3> :call TabExp()<CR>
 
 "######################
 "# Automatizar tareas #

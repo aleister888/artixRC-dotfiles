@@ -117,17 +117,11 @@ plugin_manage(){
 plugin_manage zsh-users/zsh-autosuggestions
 plugin_manage zsh-users/zsh-history-substring-search
 plugin_manage zsh-users/zsh-syntax-highlighting
-plugin_manage MichaelAquilina/zsh-you-should-use
-
-[ ! -d "$HOME/.config/zsh/ohmyzsh" ] && mkdir -p "$HOME/.config/zsh/ohmyzsh"
-	wget -q "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/dirhistory/dirhistory.plugin.zsh" \
-	-O "$HOME/.config/zsh/ohmyzsh/dirhistory.plugin.zsh"
 
 # Actualizar plugins de zsh
 sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull" >/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-history-substring-search && git pull" >/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-syntax-highlighting && git pull" >/dev/null
-sh -c "cd $HOME/.config/zsh/zsh-you-should-use && git pull" >/dev/null
 
 
 ############################

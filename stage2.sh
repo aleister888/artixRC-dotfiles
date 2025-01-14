@@ -10,19 +10,22 @@
 # dispositivo obtenerlo) directamente desde s1 (p.e. mediante un archivo
 # de texto que contenga información sobre el esquema de particionado).
 
+# TODO
+# Crear un script para actulizar los mirrolist, de forma que este no
+# se intente actualizar cuando no hay conexión.
+
 # En install_grub tendríamos que hacer que solo se añada la cadena con el
 # UUID al archivo /etc/default/grub si las dos variables no estan vacías
 # y son discos válidos.
 
 # Esta parte del script se ejecuta ya dentro de la instalación (chroot).
-# Resumidamente, se encarga de:
-# - Establecer la zona horaria del sistema
-# - Crear al usuario no-privilegiado y establecer las contraseñas
-# - Instalar y configurar GRUB y los servicios del sistema
-# - Crear el archivo swap
-# - Crear un archivo hosts
-# - Activar los repositorios de Arch Linux y elegir los más rápidos
-#   - Actualizar el mirrorlist periódicamente con reflector y cron
+# - Establece la zona horaria del sistema
+# - Crea al usuario no-privilegiado y establecer las contraseñas
+# - Instala y configurar GRUB y los servicios del sistema
+# - Crea el archivo swap
+# - Crea un archivo hosts
+# - Activa los repositorios de Arch Linux y elegir los más rápidos
+#   - Actualiza el mirrorlist periódicamente con reflector y cron
 
 REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
 
@@ -200,7 +203,7 @@ arch_support(){
 		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 		# Escoger los mejores repositorios para Arch Linux
-		@hourly root reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
+		@hourly root ping gnu.org -c 1 && reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist-arch
 	EOF
 }
 
@@ -259,7 +262,6 @@ service_add NetworkManager
 service_add cupsd
 service_add cronie
 service_add acpid
-service_add ntpd
 rc-update add device-mapper boot
 rc-update add dmcrypt boot
 rc-update add dmeventd boot
@@ -269,7 +271,13 @@ ln -s /usr/bin/nvim /usr/local/bin/vi
 
 # Clonar el repositorio completo e iniciar la última parte de la instalación
 if [ ! -d /home/"$username"/.dotfiles ]; then
-	su "$username" -c "git clone https://github.com/aleister888/artixRC-dotfiles.git /home/$username/.dotfiles"
+	# Nos aseguramos con el bucle que se clona el repositorio bien
+	while true; do
+		su "$username" -c \
+		"git clone https://github.com/aleister888/artixRC-dotfiles.git \
+		/home/$username/.dotfiles" && \
+		break
+	done
 fi
 
 # Configuramos sudo para stage3.sh

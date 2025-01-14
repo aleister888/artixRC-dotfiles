@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Módulo para instalar y configurar zsh como nuestra shell por defecto
+
+# Crear la carpeta ~/.config
+mkdir -p "$HOME/.config"
+
+# Plugins de zsh a clonar
+plugins=(
+	"zsh-users/zsh-history-substring-search"
+	"zsh-users/zsh-syntax-highlighting"
+	"zsh-users/zsh-autosuggestions"
+)
+
+# Ruta done para clonar los repositorios
+base_dir="$HOME/.dotfiles/.config/zsh"
+
+# Clonamos cada repositorio
+for plugin in "${plugins[@]}"; do
+	git clone "https://github.com/$plugin" "$base_dir/$(basename "$plugin")" >/dev/null
+done
+
+# Instalamos nuestros archivos de configuración
+"$HOME/.dotfiles/update.sh"
+echo "ZDOTDIR=\$HOME/.config/zsh" | sudo tee /etc/zsh/zshenv
+sudo chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell

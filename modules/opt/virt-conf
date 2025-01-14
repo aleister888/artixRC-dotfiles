@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Módulo para configurar libvirt de forma que nuestro usuario pueda usar
+# virt-manager sin tener que introducir la contraseña cada vez
+
+# TODO
+# Solo ejecutal la función virt_remove si se encontraron todos
+# los paquetes de "$RHOME"/.dotfiles/assets/packages/opt/virt
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Error: Este script debe ejecutarse como root." >&2
+	exit 1
+fi
+
+RUSER="$(getent passwd 1000 | cut -d: -f1)"
+RHOME="/home/$RUSER"
+
+# Instalar y configurar libvirt
+virt_install(){
+	# Instalamos los paquetes necesarios si no lo están ya
+	su "$RUSER" -c "yay -S --noconfirm --disable-download-timeout --needed $(cat "$RHOME"/.dotfiles/assets/packages/opt/virt | xargs)"
+
+	# Configurar QEMU para usar el usuario actual
+	sed -i "s/^#user = .*/user = \"$RUSER\"/"   /etc/libvirt/qemu.conf
+	sed -i "s/^#group = .*/group = \"$RUSER\"/" /etc/libvirt/qemu.conf
+
+	# Configurar libvirt
+	sed -i "s/^#unix_sock_group = .*/unix_sock_group = \"$RUSER\"/"     /etc/libvirt/libvirtd.conf
+	sed -i "s/^#unix_sock_rw_perms = .*/unix_sock_rw_perms = \"0770\"/" /etc/libvirt/libvirtd.conf
+
+	# Agregar el usuario a los grupos necesarios para la virtualización
+	usermod -aG libvirt,libvirt-qemu,kvm "$RUSER"
+
+	# Activar sericios necesarios
+	rc-update add libvirtd default
+	rc-update add virtlogd default
+}
+
+# Desinstalar libvirt por completo
+virt_remove(){
+	# Detener servicios
+	rc-service libvirtd stop
+	rc-service virtlogd stop
+
+	# Borrar servicios del runlevel default
+	rc-update del libvirtd default
+	rc-update del virtlogd default
+
+	# Borrar al usuario de los grupos
+	for group in libvirt libvirt-qemu kvm; do
+		gpasswd -d "$RUSER" $group
+	done
+
+	# Desinstalar los paquetes
+	su "$RUSER" -c "yay -Rcns --noconfirm $(cat "$RHOME"/.dotfiles/assets/packages/opt/virt | xargs)"
+
+	# Borrar archivos restantes
+	rm -rf /var/lib/libvirt
+	rm -rf /etc/libvirt
+
+	sync
+}
+
+if [ "$1" = "del" ]; then
+	virt_remove >/dev/null 2>&1
+else
+	virt_install
+fi

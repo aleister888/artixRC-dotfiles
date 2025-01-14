@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Ejecutar comandos en función del argumento con el que se ejecuta el script
+# Imprimir o establecer el volumen del micrófono
+
 case $1 in
 	vol)
 		pamixer --default-source --get-volume

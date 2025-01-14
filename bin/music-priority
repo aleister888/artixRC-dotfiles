@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Script para establecer la prioridad de los reproductores de música
+
+priority=("firefox" "tauon")
+
+# Establecemos el reproductor y salimos del loop
+for app in "${priority[@]}"; do {
+
+case "$app" in
+	# Si es firefox, comprobamos que se esta escuchando música
+	firefox)
+		if playerctl -p firefox metadata xesam:url 2>/dev/null |\
+		grep "youtube.com\|open.spotify.com\|mega.nz" >/dev/null ;then
+			PLAYER=$app
+			break
+		fi ;;
+	*)
+		if playerctl -p "$app" status >/dev/null 2>&1; then
+			PLAYER=$app
+			break
+		fi ;;
+esac
+
+} done
+
+printf "%s" "$PLAYER"

@@ -2,8 +2,6 @@
 source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
-source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-you-should-use/you-should-use.plugin.zsh
-source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/ohmyzsh/dirhistory.plugin.zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/aliasrc
 
 bindkey -e
@@ -40,9 +38,6 @@ bindkey  "^[[3~" delete-char
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-bindkey '^H' backward-kill-word
-bindkey '^[[3;5~' kill-word
-
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
@@ -57,11 +52,11 @@ function get_local_ip {
 }
 
 function get_time {
-	date +'%H:%M'
+	date +'%H:%M:%S'
 }
 
 function precmd {
-PROMPT="%B%F{red}[%f%b%B%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%f%b %B%F{magenta}%~%f%b%B%F{red}] "
+PROMPT="%B%F{red}[%F{yellow}$(get_time)%F{green}/%F{blue}$(get_local_ip)%F{white}:%F{magenta}%~%F{red}]%F{white}$ %b"
 }
 
 setopt promptsubst

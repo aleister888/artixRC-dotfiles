@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Módulo para remplazar sudo por OpenDoas
+
+RUSER="$(getent passwd 1000 | cut -d: -f1)"
+
+echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' | \
+	tee /etc/doas.conf
+
+chown -c root:root /etc/doas.conf
+chmod -c 0400 /etc/doas.conf
+rm /etc/sudoers
+pacman -Rcns sudo --noconfirm
+su "$RUSER" -c "yay -Sy --noconfirm --disable-download-timeout --needed doas-sudo-shim"

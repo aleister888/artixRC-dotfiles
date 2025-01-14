@@ -4,6 +4,7 @@
 # Código extraído de larbs.xyz/larbs.sh
 # https://github.com/LukeSmithxyz/voidrice
 # Créditos para: Luke Smith <luke@lukesmith.xyz>
+
 get_profile() {
 	# Obtiene el perfil predeterminado del archivo
 	# profiles.ini después de ejecutar Firefox
@@ -11,6 +12,7 @@ get_profile() {
 	profile=$(grep "Default=.." "$profilesini" | sed 's/Default=//')
 	echo "$profile"
 }
+
 makeuserjs(){
 	# Añadir al perfil el user.js y user-overrides.js
 	arkenfox="$pdir/arkenfox.js"
@@ -28,6 +30,7 @@ makeuserjs(){
 	# Ejecutar la actualización cuando sea necesario mediante un hook de pacman.
 	sudo cp "$HOME/.dotfiles/assets/system/arkenfox.hook" /etc/pacman.d/hooks/arkenfox.hook
 }
+
 installffaddons(){
 	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies violentmonkey darkreader xbs clearurls keepassxc-browser sponsorblock"
 	addontmp="$(mktemp -d)"
@@ -54,6 +57,7 @@ installffaddons(){
 	# Limpiar el directorio temporal
 	rm -rf "$addontmp"
 }
+
 installtheme(){
 	mkdir -p "$pdir/chrome/"
 	ln -s "$HOME/.dotfiles/assets/configs/userChrome.css" "$pdir/chrome/"
@@ -61,15 +65,18 @@ installtheme(){
 
 # Ruta base de perfiles de Firefox
 browserdir="$HOME/.mozilla/firefox"
+
 # Ejecutar Firefox en modo headless para generar un perfil predeterminado
 if [ ! -d "$HOME/.mozilla/firefox" ]; then
 	firefox --headless >/dev/null 2>&1 &
-	sleep 5 # Esperar un momento para que Firefox cree los archivos de perfil
+	sleep 5
 	pkill firefox
 fi
+
 # Obtener el perfil predeterminado
 profile=$(get_profile)
 pdir="$browserdir/$profile"
+
 makeuserjs
 installffaddons
 installtheme
