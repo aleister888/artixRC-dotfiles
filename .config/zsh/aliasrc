@@ -34,6 +34,17 @@ alias grub-update='doas grub-mkconfig -o /boot/grub/grub.cfg'
 # Limpiar dependencias innecesarias
 alias cleanup='yay -Rcns $(yay -Qdtq)'
 
+# Alias para encontrar enlaces simbólicos rotos y archivos no reclamados
+alias brokenlink='find / -xtype l -print 2>/dev/null'
+alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/null'
+alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
+
+# Alias para encontrar archivos pac de pacman
+alias pac='doas find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
+
+# Detectar que paquetes del AUR necesitan recompilarse
+alias rebuild-detector="checkrebuild -v"
+
 deepcleanup() {
 	pacman -Qqd 2>/dev/null | \
 	pacman -Rsu --print - 2>/dev/null | \
@@ -68,14 +79,7 @@ recoverypacman() {
 	--needed
 }
 
-# Alias para encontrar enlaces simbólicos rotos y archivos no reclamados
-alias brokenlink='find / -xtype l -print 2>/dev/null'
-alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/null'
-alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
-
-# Alias para encontrar archivos pac de pacman
-alias pac='doas find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
-
+# Imprimir instancia, clase y título de la ventana seleccionada
 xprop_wininfo(){
 	xprop | awk '
 	/^WM_CLASS/ {
@@ -90,6 +94,7 @@ xprop_wininfo(){
 	'
 }
 
+# Borrar entornos de un código laTeX
 desencapsular() {
 	tag="$1"
 	shift

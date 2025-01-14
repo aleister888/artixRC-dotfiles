@@ -231,7 +231,8 @@ au Filetype tex nmap <silent><leader>k <plug>(vimtex-clean)<CR>
 au Filetype tex vnoremap e s\emph{<C-r>"}
 au Filetype tex vnoremap b s\textbf{<C-r>"}
 au Filetype tex vnoremap i s\textit{<C-r>"}
-au Filetype tex vnoremap t s\texttt{<C-r>"}
+au Filetype tex vnoremap t s\text{<C-r>"}
+au Filetype tex vnoremap m s\texttt{<C-r>"}
 au Filetype tex vnoremap h s\hl{<C-r>"}
 
 

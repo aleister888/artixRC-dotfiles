@@ -265,7 +265,10 @@ cmd restore-trash ${{
 	trash-list | sed "s|$HOME|~|"
 	printf "¿Restaurar papelera? [s/N] "
 	read ans
-	[ $ans = "s" ] && trash-restore && printf "done"
+	if [ $ans = "s" ]; then
+		clear
+		trash-restore
+	fi && printf "Hecho!"
 	clear
 }}
 
