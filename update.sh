@@ -4,56 +4,73 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
+# TODO
+# - Hacer que los ajustes de GTK, etc. se sobreescriban
+#   si se ejecuta el script con -f
+# - Comprobar que mimetypes usa MSWord realmente
 
 # Actualizar repositorio
 sh -c "cd $HOME/.dotfiles && git pull" >/dev/null
-
 
 #######################################
 # Archivos de configuración y scripts #
 #######################################
 
-
 # Crear los directorios necesarios
-[ -d "$HOME/.config" ]		|| mkdir -p "$HOME/.config"
-[ -d "$HOME/.local/bin" ]	|| mkdir -p "$HOME/.local/bin"
-[ -d "$HOME/.local/share" ]	|| mkdir -p "$HOME/.local/share"
-[ -d "$HOME/.cache" ]		|| mkdir -p "$HOME/.cache"
+[ -d "$HOME/.config" ]      || mkdir -p "$HOME/.config"
+[ -d "$HOME/.local/bin" ]   || mkdir -p "$HOME/.local/bin"
+[ -d "$HOME/.local/share" ] || mkdir -p "$HOME/.local/share"
+[ -d "$HOME/.cache" ]       || mkdir -p "$HOME/.cache"
 
 # Instalar archivos de configuración y scripts
 sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.local/bin/ bin/" >/dev/null
 sh -c "cd $HOME/.dotfiles && stow --target=${HOME}/.config/ .config/" >/dev/null
-ln -s "$HOME/.dotfiles/.profile" "$HOME/.profile" 2>/dev/null
-ln -s "$HOME/.dotfiles/.profile" "$HOME/.config/zsh/.zprofile" 2>/dev/null
+ln -sf "$HOME/.dotfiles/.profile" "$HOME/.profile"
+ln -sf "$HOME/.dotfiles/.profile" "$HOME/.config/zsh/.zprofile"
 
 # Borrar enlaces rotos
-find "$HOME/.local/bin"	-type l ! -exec test -e {} \; -delete
-find "$HOME/.config"	-type l ! -exec test -e {} \; -delete
+find "$HOME/.local/bin" -type l ! -exec test -e {} \; -delete
+find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
 
 # Enlazar nuestro script de inicio
 [ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
 ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
 
-
 #########################
 # Configurar apariencia #
 #########################
 
+# Configurar el fondo de pantalla
+if [ ! -e "$HOME/.config/nitrogen/bg-saved.cfg" ]; then
+	mkdir -p "$HOME/.config/nitrogen"
+	cat <<-EOF > "$HOME/.config/nitrogen/bg-saved.cfg"
+		[xin_-1]
+		file=$HOME/.dotfiles/assets/wallpaper
+		mode=5
+		bgcolor=#000000"
+	EOF
+fi
 
-# Crear el archivo de configuración bg-saved.cfg
-mkdir -p "$HOME/.config/nitrogen"
-echo "[xin_-1]
-file=$HOME/.dotfiles/assets/wallpaper
-mode=5
-bgcolor=#000000" > "$HOME/.config/nitrogen/bg-saved.cfg"
-
+# Configurar el tema del cursor
+if [ ! -e "$HOME/.dotfiles/assets/configs/index.theme" ]; then
+	mkdir -p "$HOME/.local/share/icons/default"
+	cp "$HOME/.dotfiles/assets/configs/index.theme" \
+	"$HOME/.local/share/icons/default/index.theme"
+fi
 
 #######################
 # Configurar GTK y QT #
 #######################
 
-
 ASSETDIR="$HOME/.dotfiles/assets/configs"
+
+if [ ! -f "$HOME/.config/gtk-3.0/bookmarks" ]; then
+	hadBookmarks="false"
+else
+	hadBookmarks="true"
+	tmpBookmarks="/tmp/bookmarks"
+	cp -f "$HOME/.config/gtk-3.0/bookmarks" "$tmpBookmarks"
+fi
 
 # Copiar la configuración de GTK
 rm -rf ~/.config/gtk-[2-4].0
@@ -61,45 +78,55 @@ cp -rf "$ASSETDIR/gtk-2.0" ~/.config/gtk-2.0
 cp -rf "$ASSETDIR/gtk-3.0" ~/.config/gtk-3.0
 cp -rf "$ASSETDIR/gtk-4.0" ~/.config/gtk-4.0
 
-sudo mkdir -p /root/.config
-sudo rm -rf /root/.gtkrc-2.0 /root/.config/gtk-3.0 /root/.config/gtk-4.0
-sudo cp -f  "$ASSETDIR/.gtkrc-2.0" /root/.gtkrc-2.0
-sudo cp -rf "$ASSETDIR/gtk-3.0"    /root/.config/gtk-3.0/
-sudo cp -rf "$ASSETDIR/gtk-4.0"    /root/.config/gtk-4.0/
+if [ "$hadBookmarks" = "false" ]; then
+	# Definimos nuestros directorios anclados
+	cat <<-EOF > "$HOME/.config/gtk-3.0/bookmarks"
+		file://$HOME
+		file://$HOME/Descargas
+		file://$HOME/Documentos
+		file://$HOME/Imágenes
+		file://$HOME/Vídeos
+		file://$HOME/Música
+	EOF
+elif [ "$hadBookmarks" = "true" ]; then
+	mv "$tmpBookmarks" "$HOME/.config/gtk-3.0/bookmarks"
+fi
+
+sudo sh -c "
+	if [ ! -e /root/.gtkrc-2.0 ]; then
+		mkdir -p /root/.config
+		rm -rf /root/.gtkrc-2.0 /root/.config/gtk-3.0 /root/.config/gtk-4.0
+		cp -f  \"$ASSETDIR/.gtkrc-2.0\" /root/.gtkrc-2.0
+		cp -rf \"$ASSETDIR/gtk-3.0\"    /root/.config/gtk-3.0/
+		cp -rf \"$ASSETDIR/gtk-4.0\"    /root/.config/gtk-4.0/
+	fi
+"
 
 # Instalamos el tema de GTK4
 if [ ! -d /usr/share/themes/Gruvbox-Dark ]; then
 	# Clona el tema de gtk4
-	git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git /tmp/Gruvbox_Theme >/dev/null
+	git clone \
+	https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git \
+	/tmp/Gruvbox_Theme >/dev/null
 	# Copia el tema deseado a la carpeta de temas
 	sudo bash /tmp/Gruvbox_Theme/themes/install.sh
 fi
 
-# Definimos nuestros directorios marca-páginas
-echo "file:///home/$USER
-file:///home/$USER/Descargas
-file:///home/$USER/Documentos
-file:///home/$USER/Imágenes
-file:///home/$USER/Vídeos
-file:///home/$USER/Música" > "$HOME/.config/gtk-3.0/bookmarks"
-
 # Configuramos QT
-mkdir -p "$HOME/.config/qt5ct" "$HOME/.config/qt6ct"
-echo "[Appearance]
-color_scheme_path=$HOME/.dotfiles/assets/qt-colors/Gruvbox.conf
-custom_palette=true
-icon_theme=Papirus-Dark
-style=Fusion
+if [ ! -e "$HOME/.config/qt5ct/qt5ct.conf" ] || [ ! -e "$HOME/.config/qt6ct/qt6ct.conf" ]; then
+	mkdir -p "$HOME/.config/qt5ct" "$HOME/.config/qt6ct"
+	cat <<-EOF | tee "$HOME/.config/qt5ct/qt5ct.conf" "$HOME/.config/qt6ct/qt6ct.conf" >/dev/null
+		[Appearance]
+		color_scheme_path=$HOME/.dotfiles/assets/qt-colors/Gruvbox.conf
+		custom_palette=true
+		icon_theme=Papirus-Dark
+		style=Fusion
 
-[Fonts]
-fixed=\"Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,Bold\"
-general=\"Iosevka Fixed SS05 Semibold,12,0,0,0,0,0,0,0,0,Regular\"" | \
-	tee "$HOME/.config/qt5ct/qt5ct.conf" "$HOME/.config/qt6ct/qt6ct.conf" >/dev/null
-
-# Configurar el tema del cursor
-mkdir -p "$HOME/.local/share/icons/default"
-cp "$HOME/.dotfiles/assets/configs/index.theme" "$HOME/.local/share/icons/default/index.theme"
-
+		[Fonts]
+		fixed="Iosevka Fixed SS05,12,0,0,0,0,0,0,0,0,Bold"
+		general="Iosevka Fixed SS05 Semibold,12,0,0,0,0,0,0,0,0,Regular"
+	EOF
+fi
 
 ###############
 # Plugins ZSH #
@@ -123,11 +150,9 @@ sh -c "cd $HOME/.config/zsh/zsh-autosuggestions && git pull" >/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-history-substring-search && git pull" >/dev/null
 sh -c "cd $HOME/.config/zsh/zsh-syntax-highlighting && git pull" >/dev/null
 
-
 ############################
 # Aplicaciones por defecto #
 ############################
-
 
 rm -f "$HOME/.config/mimeapps.list"
 rm -rf ~/.local/share/mime
@@ -235,6 +260,9 @@ for association in "${word_associations[@]}"; do
 	xdg-mime default libreoffice-writer.desktop "$association"
 done
 
+#####################
+# Archivos .desktop #
+#####################
 
 # Ocultar archivos .desktop innecesarios
 desktopent=(
