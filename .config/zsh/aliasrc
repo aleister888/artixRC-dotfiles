@@ -18,12 +18,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Actualizar el sistema
-alias update='yay -Syuu --answerclean --answerdiff --removemake --ignore i3lock-fancy-git --ignore eww-git --ignore xdg-xmenu-git --ignore trayer-srg-git'
-
-# Customizar firefox
-fffix(){
-	bash -c "$(curl -fsSL https://raw.githubusercontent.com/black7375/Firefox-UI-Fix/master/install.sh)"
-}
+alias update='yay -Syuu --answerclean --answerdiff --removemake --ignore i3lock-fancy-git --ignore eww-git'
 
 # Herramientas
 alias xdotool_table='xmodmap -pk'

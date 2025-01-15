@@ -180,6 +180,7 @@ nnoremap <C-ScrollWheelDown> 5j<C-G>
 nnoremap <C-Up> 5k<C-G>
 nnoremap <C-Down> 5j<C-G>
 nnoremap = $<C-G>
+vnoremap = $h
 nnoremap G :$<CR><C-G>
 nnoremap gg :1<CR><C-G>
 
@@ -197,6 +198,8 @@ vnoremap { s{<C-r>"}
 vnoremap } s{<C-r>"}
 vnoremap [ s[<C-r>"]
 vnoremap ] s[<C-r>"]
+vnoremap ¿ s¿<C-r>"?
+vnoremap ? s¿<C-r>"?
 
 " Abrir scratchpad en el directorio del archivo actual
 nmap <silent><leader>s :execute '!' .

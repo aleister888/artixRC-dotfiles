@@ -268,9 +268,10 @@ yay-install
 sudo sudo2doas
 
 # Crear directorios
-for dir in Documentos Descargas Música Imágenes Público Vídeos
+for dir in Documentos Música Imágenes Público Vídeos
 	do mkdir -p "$HOME/$dir"
 done
+ln -s /tmp/ "$HOME/Descargas"
 
 # Escogemos que drivers de vídeo instalar
 driver_choose
