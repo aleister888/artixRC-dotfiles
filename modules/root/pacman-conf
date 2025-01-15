@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Configurar el audio de baja latencia
+
+sed -i 's/^#Color/Color\nILoveCandy/' /etc/pacman.conf
+sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
