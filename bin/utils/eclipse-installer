@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Script para instalar/desinstalar Eclipse IDE
+
+INSTALL_DIR="$HOME/.local/bin/eclipse"
+RUN_SCRIPT="/usr/bin/eclipse"
+
+install(){
+	# Obtener el año y el mes actual
+	local year=$(date +'%Y')
+	local month=$(date +'%m')
+
+	# Ajustar la versión de Eclipse según el mes actual
+	if [ "$month" -ge 6 ]; then
+		# Si el mes es junio o posterior, usar la versión de junio de este año
+		release_month="06"
+	else
+		# Si el mes es anterior a junio, usar la versión de diciembre del año anterior
+		release_month="12"
+		year=$((year - 1)) # Restar 1 al año para obtener el año anterior
+	fi
+
+	# Definir URL y nombre del archivo
+	local URL="https://www.eclipse.org/downloads/download.php"
+	local FILENAME="eclipse-java-$year-$release_month-R-linux-gtk-x86_64.tar.gz"
+	local DOWNLOAD_URL="$URL?file=/technology/epp/downloads/release/$year-$release_month/R/$FILENAME&r=1"
+	local TAR_LOCATION="/tmp/$FILENAME"
+
+	# Descargar y descomprimir el archivo
+	curl -L "$DOWNLOAD_URL" -o "$TAR_LOCATION" || exit
+	tar -xzf "$TAR_LOCATION" -C /tmp
+
+	# Instalarlo en $HOME
+	mv /tmp/eclipse $INSTALL_DIR
+
+	# Configurar el workspace por defecto
+	sed -i 's|@user.home/eclipse-workspace|@user.home/.local/share/eclipse-workspace|' \
+		$INSTALL_DIR/eclipse.ini
+
+	# Crear script de inicio
+	cat <<-EOF | sudo tee $RUN_SCRIPT >/dev/null
+		#!/bin/sh
+		export GTK_THEME=Adwaita:dark
+		$INSTALL_DIR/eclipse
+		rm -rf $HOME/.p2 $HOME/.eclipse
+	EOF
+	sudo chmod +x $RUN_SCRIPT
+}
+
+uninstall(){
+	rm -rf $INSTALL_DIR
+	sudo rm $RUN_SCRIPT
+}
+
+install
+#uninstall
