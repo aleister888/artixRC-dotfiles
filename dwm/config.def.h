@@ -284,6 +284,10 @@ static const Key keys[] = {
 	// Mostrar/Ocultar barra
 	{ MODKEY,                       XK_b,      togglebar,        {0} },
 
+	// Cambiar de espacio
+	{ MODKEY,                       XK_q,      shiftviewclients, { .i = -1 } },
+	{ MODKEY,                       XK_w,      shiftviewclients, { .i = +1 } },
+
 	// Cambiar foco/Mover ventana
 	STACKKEYS(MODKEY,                                            focus)
 	STACKKEYS(MODKEY|ShiftMask,                                  push)
