@@ -1,7 +1,8 @@
-> [!CAUTION]
-> - DWM está configurado para compilar en x86-64-v3 (config.mk: march=x86-64-v3)
+# aleister888's build of dwm
 
-Puedes consultar los atajos de teclado leyendo el código en [config.def.h](https://github.com/aleister888/artixRC-dotfiles/blob/main/dwm/config.def.h) (`static const Key keys[]`). O en la [guía de usuario](https://github.com/aleister888/artixRC-dotfiles/blob/main/assets/pdf/help.pdf) (_Ctrl+Alt+H_ para abrirla).
+> ¿Cuáles son los atajos de teclado?
+
+Puedes consultar los atajos de teclado leyendo el código en [config.def.h](https://github.com/aleister888/dwm/blob/main/dwm/config.def.h) (`static const Key keys[]`).
 
 ## Modificaciones
 
@@ -20,21 +21,16 @@ Puedes consultar los atajos de teclado leyendo el código en [config.def.h](http
 - Layout deck: [dwm-deck-6.2.diff](http://dwm.suckless.org/patches/deck/dwm-deck-6.2.diff)
 - Layout strairs: [dwm-stairs-fullgaps-20220430-8b48e30.diff](https://dwm.suckless.org/patches/stairs/dwm-stairs-fullgaps-20220430-8b48e30.diff)
 - Pantalla completa falsa: [dwm-selectivefakefullscreen-20201130-97099e7.diff](https://dwm.suckless.org/patches/selectivefakefullscreen/dwm-selectivefakefullscreen-20201130-97099e7.diff)
-- Combinar etiquetas desde el teclado: [dwm-combo-6.1.diff](https://dwm.suckless.org/patches/combo/dwm-combo-6.1.diff)
 - __Modificaciones a la barra de tareas:__
 	- Solo se muestran los espacios ocupados: [dwm-hide_vacant_tags-6.2.diff](https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff)
 	- El tamaño de la barra se puede configurar: [dwm-bar-height-spacing-6.3.diff](http://dwm.suckless.org/patches/bar_height/dwm-bar-height-spacing-6.3.diff)
 	- Hacer clic derecho abre un menú para elegir el layout: [dwm-layoutmenu-6.2.diff](http://dwm.suckless.org/patches/layoutmenu/dwm-layoutmenu-6.2.diff)
-	- Los espacios seleccionados tienen una barra como indicador: [dwm-underlinetags-6.2.diff](http://dwm.suckless.org/patches/underlinetags/dwm-underlinetags-6.2.diff)
-		- Además, los espacios se colorean al seleccionarlos:
-		- https://github.com/fitrh/dwm/commit/d139433339ed9289293d7353c279052d7fe3507e
-		- https://github.com/fitrh/dwm/commit/4e8cc1d41979ab729229940bd85825326d9c66ba
 	- Las ventanas flotantes nuevas aparecerán centradas: [dwm-alwayscenter-20200625-f04cac6.diff](http://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff)
 	- Las ventanas nuevas aparecerán al final del stack: [dwm-attachbottom-6.3.diff](http://dwm.suckless.org/patches/attachbottom/dwm-attachbottom-6.3.diff)
 	- Se pueden usar colores en la barra de estado: [dwm-status2d-6.3.diff](https://dwm.suckless.org/patches/status2d/dwm-status2d-6.3.diff)
 	- La barra de estado se puede clicar para ejecutar comandos: [dwm-statuscmd-nosignal-status2d-20210402-60bb3df.diff](https://dwm.suckless.org/patches/statuscmd/dwm-statuscmd-nosignal-status2d-20210402-60bb3df.diff)
 		- Se deben de añadir unas lineas para ignorar también los _^_
-```
+```c
 @@ buttonpress(XEvent *e)
 					if (x >= ev->x)
 						break;
@@ -51,4 +47,23 @@ Puedes consultar los atajos de teclado leyendo el código en [config.def.h](http
 				}
 			}
 		}
+```
+- Función para marcar/desmarcar una ventana como scratchpad
+```c
+void
+scratchtoggle(const Arg *arg)
+{
+	Client *c = selmon->sel;
+	if (!c) {
+		return;
+	} else {
+		if (c->scratchkey == 0) {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
+			c->scratchkey = ((char**)arg->v)[0][0];
+		} else {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+			c->scratchkey = 0;
+		}
+	}
+}
 ```
