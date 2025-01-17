@@ -161,9 +161,9 @@ typedef struct {
 	const char *title;
 	unsigned int tags;
 	int isfloating;
+	int isfakefullscreen;
 	int isterminal;
 	int noswallow;
-	int isfakefullscreen;
 	int monitor;
 	const char scratchkey;
 } Rule;
