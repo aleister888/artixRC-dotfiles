@@ -27,7 +27,7 @@
 # - Activa los repositorios de Arch Linux y elegir los más rápidos
 #   - Actualiza el mirrorlist periódicamente con reflector y cron
 
-REPO_URL="https://github.com/aleister888/dotfiles"
+REPO_URL="https://github.com/aleister888/artix-installer"
 
 # Funciones que invocaremos a menudo
 whip_msg(){

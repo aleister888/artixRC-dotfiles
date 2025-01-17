@@ -13,9 +13,8 @@ if ! ping -c 1 gnu.org >/dev/null 2>&1; then
 	exit
 fi
 
-# URL con el repositorio
-REPO_URL="https://github.com/aleister888/dotfiles"
-
+intentos=0
+intentos_maximos=5
 valid_timezone=false
 
 # Elegir la zona en función del nombre de la ciudad
@@ -29,7 +28,7 @@ timezone_select(){
 
 	# Utilizar Whiptail para presentar las opciones de región al usuario
 	region=""
-	region=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una region" \
+	region=$(whiptail --title "Selecciona una region" \
 	--menu "Por favor, elige una region:" 20 70 10 "${regions_array[@]}" 3>&1 1>&2 2>&3)
 
 	# Obtener la lista de zonas horarias disponibles para la región seleccionada
@@ -50,7 +49,7 @@ timezone_select(){
 	done
 
 	# Utilizar Whiptail para presentar las opciones de zona horaria al usuario dentro de la región seleccionada
-	timezone=$(whiptail --backtitle "$REPO_URL" --title "Selecciona una zona horaria en $region" \
+	timezone=$(whiptail --title "Selecciona una zona horaria en $region" \
 	--menu "Por favor, elige una zona horaria en $region:" 20 70 10 "${timezones_array[@]}" 3>&1 1>&2 2>&3)
 }
 
@@ -61,24 +60,38 @@ while [ "$valid_timezone" == "false" ]; do
 	if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
 		valid_timezone=true
 	else
-		whiptail --backtitle "$REPO_URL" \
+		whiptail \
 		--title "Zona horaria no valida" \
 		--yesno "Zona horaria no valida. ¿Desea volvera elegir?" \
 		10 60 || exit
 	fi
 done
 
-ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
-
 # Actualizar reloj
 while true; do
 	if [ -z "$CURRENT_TIME" ]; then
-		CURRENT_TIME=$( curl -s "http://worldtimeapi.org/api/timezone/$region/$timezone" |\
-			jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /' )
+		# Incrementar el contador de intentos
+		intentos=$((intentos + 1))
+
+		# Salir si se excede el número máximo de intentos
+		if [ $intentos -gt $intentos_maximos ]; then
+			echo "No se pudo obtener la hora después de $intentos_maximos intentos. Saliendo..." >&2
+			exit 1
+		fi
+
+		# Intentar obtener la hora actual
+		CURRENT_TIME=$(curl -s "http://worldtimeapi.org/api/timezone/$region/$timezone" | \
+			jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /')
+
+		# Agregar un breve retraso para evitar sobrecargar el servidor
+		sleep 1
 	else
+		# Si se obtiene la hora, salir del bucle
 		break
 	fi
 done
+
+ln -sf "/usr/share/zoneinfo/$region/$timezone" /etc/localtime
 
 hwclock --set --date="$CURRENT_TIME" && \
 hwclock --hctosys

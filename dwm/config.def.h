@@ -346,6 +346,8 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_0,                        9)
 	TAGKEYS(                        XK_apostrophe,              10)
 	TAGKEYS(                        XK_exclamdown,              11)
+	TAGKEYS(                        XK_q,                       12)
+	TAGKEYS(                        XK_w,                       13)
 	// Thinkpad
 	TAGKEYS(                        XK_Left,                    12)
 	TAGKEYS(                        XK_Down,                    13)
