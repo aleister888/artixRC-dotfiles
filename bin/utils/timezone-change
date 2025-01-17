@@ -14,7 +14,7 @@ if ! ping -c 1 gnu.org >/dev/null 2>&1; then
 fi
 
 # URL con el repositorio
-REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+REPO_URL="https://github.com/aleister888/dotfiles"
 
 valid_timezone=false
 

@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/master/assets/artix-linux.png" align="left" height="90px" hspace="10px" vspace="0px">
+<img src="https://raw.githubusercontent.com/aleister888/dotfiles/master/assets/artix-linux.png" align="left" height="90px" hspace="10px" vspace="0px">
 
 ### Artix Linux (OpenRC) - dotfiles
 
@@ -7,8 +7,8 @@
 Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración personal.
 
 <p float="center">
-	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/dev/assets/screenshots/screenshot1.jpg" width="49%" />
-	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/dev/assets/screenshots/screenshot2.jpg" width="49%" />
+	<img src="https://raw.githubusercontent.com/aleister888/dotfiles/dev/assets/screenshots/screenshot1.jpg" width="49%" />
+	<img src="https://raw.githubusercontent.com/aleister888/dotfiles/dev/assets/screenshots/screenshot2.jpg" width="49%" />
 </p>
 
 ---
@@ -18,7 +18,7 @@ Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración p
 - Utiliza `su` para ejecutar como root:
 
 ```
-curl -o stage1.sh https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/dev/stage1.sh && chmod +x stage1.sh && ./stage1.sh
+curl -o stage1.sh https://raw.githubusercontent.com/aleister888/dotfiles/dev/stage1.sh && chmod +x stage1.sh && ./stage1.sh
 ```
 
 > [!WARNING]

@@ -11,7 +11,7 @@
 #   - un subvolumen para la partición /     (@)
 #   - un subvolumen para la partición /home (@home)
 
-REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+REPO_URL="https://github.com/aleister888/dotfiles"
 
 whip_msg(){
 	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60
@@ -274,6 +274,6 @@ for dir in dev proc sys run; do
 done
 
 # Hacer chroot y ejecutar la 2a parte del script
-nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/dev/stage2.sh"
+nexturl="https://raw.githubusercontent.com/aleister888/dotfiles/dev/stage2.sh"
 next="/tmp/stage2.sh"
 artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""

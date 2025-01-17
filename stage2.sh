@@ -27,7 +27,7 @@
 # - Activa los repositorios de Arch Linux y elegir los más rápidos
 #   - Actualiza el mirrorlist periódicamente con reflector y cron
 
-REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+REPO_URL="https://github.com/aleister888/dotfiles"
 
 # Funciones que invocaremos a menudo
 whip_msg(){
@@ -275,7 +275,7 @@ if [ ! -d /home/"$username"/.dotfiles ]; then
 	while true; do
 		su "$username" -c \
 		"git clone --branch dev --single-branch \
-		https://github.com/aleister888/artixRC-dotfiles.git \
+		$REPO_URL.git \
 		/home/$username/.dotfiles" && \
 		break
 	done

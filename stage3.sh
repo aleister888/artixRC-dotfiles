@@ -11,7 +11,7 @@
 PATH="$PATH:$(find ~/.dotfiles/modules -type d | paste -sd ':' -)"
 
 # URL con el repositorio
-REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+REPO_URL="https://github.com/aleister888/dotfiles"
 
 # Funciones que invocaremos a menudo
 whip_msg(){ # Mensajes de tailbox
