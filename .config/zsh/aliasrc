@@ -95,3 +95,31 @@ desencapsular() {
 	shift
 	perl -pe "s/\\\\$tag\\{([^{}]*(?:\\{$tag\\}[^{}]*)*)\\}/\$1/g" "$@"
 }
+
+# Grabar la pantalla
+screenrecord() {
+	# Verificar si se proporcionó un archivo de salida
+	[ -z "$1" ] && {
+		echo "Se debe dar como argumento el archivo de salida" >&2
+		return 1
+	}
+
+	# Detectar resolución de pantalla
+	RESOLUTION=$(xrandr | grep '*' | awk '{print $1}')
+
+	# Definir dispositivos de audio
+	MICROPHONE=$(pactl list sources | grep -oP "Name: \K.*input.*" | head -n 1)
+	APPLICATIONS=$(pactl list sources | grep -oP "Name: \K.*output.*" | head -n 1)
+
+	ffmpeg \
+		-video_size "$RESOLUTION" \
+		-framerate 30 \
+		-f x11grab -i :0.0 \
+		-f pulse -i "$MICROPHONE" \
+		-f pulse -i "$APPLICATIONS" \
+		-filter_complex "[1:a][2:a]amerge=inputs=2[audio]" \
+		-map 0:v -map "[audio]" \
+		-c:v libx264 -preset ultrafast -crf 18 \
+		-c:a aac -b:a 192k \
+		"$1"
+}
