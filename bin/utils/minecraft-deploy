@@ -55,30 +55,6 @@ for MOD_URL in "${MODS[@]}"; do
 	descargar_mod "$MOD_URL" "$SERVERDIR"
 done
 
-##############
-# Tom's Mobs #
-##############
-
-TOM_MODS=(
-	"https://cdn.modrinth.com/data/PXaH6GuW/versions/YbEti9ns/toms_mobs-2.1.4%2B1.21.4.jar"
-	"https://cdn.modrinth.com/data/P7dR8mSH/versions/8FAH9fuR/fabric-api-0.114.2%2B1.21.4.jar"
-	"https://cdn.modrinth.com/data/xGdtZczs/versions/aek1vsQ6/polymer-bundled-0.11.3%2B1.21.4.jar"
-)
-
-for MOD_URL in "${TOM_MODS[@]}"; do
-	descargar_mod "$MOD_URL" "$SERVERDIR"
-done
-
-# https://modrinth.com/mod/toms-mobs
-curl -O "https://cdn.modrinth.com/data/PXaH6GuW/versions/YbEti9ns/toms_mobs-2.1.4%2B1.21.4.jar" \
-	--output-dir $SERVERDIR/mods/
-# https://modrinth.com/mod/fabric-api
-curl -O "https://cdn.modrinth.com/data/P7dR8mSH/versions/8FAH9fuR/fabric-api-0.114.2%2B1.21.4.jar" \
-	--output-dir $SERVERDIR/mods/
-# https://modrinth.com/mod/polymer
-curl -O "https://cdn.modrinth.com/data/xGdtZczs/versions/aek1vsQ6/polymer-bundled-0.11.3%2B1.21.4.jar" \
-	--output-dir $SERVERDIR/mods/
-
 ####################
 # Crear ejecutable #
 ####################
@@ -95,8 +71,8 @@ sudo chmod +x /usr/local/bin/$EXENAME
 cat <<- EOF >&2
 	El servidor ya está instalado en $SERVERDIR, y podrás iniciarlo con $EXENAME pero antes deberás:
 	    - Definir los jugadores permitidos en $SERVERDIR/whitelist.json (Tienes ya una plantilla, puedes ayudarte con https://mctools.org/whitelist-creator)
-	    - Definir el nombre del servidor en $SERVERDIR/server-properties (level-name)
-	        - Copiar tu mundo a una carpeta con ese mismo nombre
+	    - Definir el nombre del mundo en $SERVERDIR/server-properties (level-name)
+	        - Copiar tu mundo como un carpeta con ese mismo nombre (p.e. $SERVERDIR/nombreMundo)
 	    - Definir el mensaje del servidor en $SERVERDIR/server-properties (motd) [Opcional]
 	    - Abrir los puertos 25565-25575 de tu router si no lo están ya (TCP/UDP)
 EOF
