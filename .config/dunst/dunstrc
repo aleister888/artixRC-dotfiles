@@ -21,19 +21,19 @@ class = Dunst
 set_stack_tag = "tag"
 
 [urgency_low]
-background = "#222222"
+background = "#1d2021"
 foreground = "#bbbbbb"
-frame_color = "#222222"
+frame_color = "#1d2021"
 timeout = 2
 
 [urgency_normal]
-background = "#222222"
+background = "#1d2021"
 foreground = "#bbbbbb"
-frame_color = "#222222"
+frame_color = "#1d2021"
 timeout = 2
 
 [urgency_critical]
-background = "#222222"
+background = "#1d2021"
 foreground = "#bbbbbb"
-frame_color = "#222222"
+frame_color = "#1d2021"
 timeout = 0

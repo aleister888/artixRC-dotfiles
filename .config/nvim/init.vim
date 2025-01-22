@@ -159,7 +159,7 @@ nnoremap <silent><leader>u :UndotreeToggle<CR>
 
 " Abrir el mismo buffer en vertical/horizontal
 nnoremap <leader>v :vsplit %<CR>
-nnoremap <leader>h :split %<CR>
+nnoremap <leader>V :split %<CR>
 
 " Cambiar de pestaña
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
