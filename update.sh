@@ -140,7 +140,9 @@ fi
 
 plugin_manage(){
 	if [ ! -e "$HOME/.config/zsh/$(basename "$1")" ]; then
-		git clone "https://github.com/$1" "$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
+		git clone \
+			"https://github.com/$1" \
+			"$HOME/.dotfiles/.config/zsh/$(basename "$1")" >/dev/null
 	else
 		sh -c "cd $HOME/.config/zsh/$(basename "$1") && git pull" >/dev/null
 	fi
@@ -172,17 +174,21 @@ sudo update-mime-database /usr/share/mime
 	mkdir -p "$HOME/.local/share/applications"
 
 # Enlazamos el archivo .desktop para lf
-ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" "$HOME/.local/share/applications/file.desktop" 2>/dev/null
+ln -s "$HOME/.dotfiles/assets/desktop/lft.desktop" \
+	"$HOME/.local/share/applications/file.desktop" 2>/dev/null
 # Enlazamos el archivo .desktop para nvim
-ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" "$HOME/.local/share/applications/text.desktop" 2>/dev/null
+ln -s "$HOME/.dotfiles/assets/desktop/nvimt.desktop" \
+	"$HOME/.local/share/applications/text.desktop" 2>/dev/null
 # Enlazamos el archivo .desktop para el visor de imagenes
-ln -s "$HOME/.dotfiles/assets/desktop/image.desktop" "$HOME/.local/share/applications/image.desktop" 2>/dev/null
+ln -s "$HOME/.dotfiles/assets/desktop/image.desktop" \
+	"$HOME/.local/share/applications/image.desktop" 2>/dev/null
 
 # Nuestra función para establecer nuestro visor de imagenes, video, audio y editor de texto
 set_default_mime_types(){
 	local pattern="$1"
 	local desktop_file="$2"
-	awk -v pattern="$pattern" '$0 ~ pattern {print $1}' /etc/mime.types | while read -r line; do
+	awk -v pattern="$pattern" '$0 ~ pattern {print $1}' /etc/mime.types |\
+	while read -r line; do
 		xdg-mime default "$desktop_file" "$line"
 	done
 }
@@ -290,7 +296,8 @@ desktopent=(
 # Ruta done para clonar los repositorios
 # Clonamos cada repositorio
 for entry in "${desktopent[@]}"; do
-	sudo cp "/usr/share/applications/$entry.desktop" "/usr/local/share/applications/$entry.desktop" 2>/dev/null && \
+	sudo cp "/usr/share/applications/$entry.desktop" \
+		"/usr/local/share/applications/$entry.desktop" 2>/dev/null && \
 	echo 'NoDisplay=true' | sudo tee -a "/usr/local/share/applications/$entry.desktop" >/dev/null
 done
 
