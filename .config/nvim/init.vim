@@ -257,18 +257,20 @@ au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
 
-au BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwmblocks/' .
-	\ '; doas make clean install" && killall dwmblocks; dwmblocks &'
-
-au BufWritePost ~/.dotfiles/dwm/config.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwm/; doas make clean install"'
-
-au BufWritePost ~/.dotfiles/st/config.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/st/; doas make clean install"'
-
-au BufWritePost ~/.dotfiles/dmenu/config.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
+" Función para ejecutar la compilación
+autocmd BufWritePost <buffer=*config.def.h>
+	\ let subdir = fnamemodify(expand('%:p'), ':h:t') |
+	\ if (subdir == 'dmenu' ||
+	\     subdir == 'dwm' ||
+	\     subdir == 'st' ||
+	\     subdir == 'dwmblocks') |
+		\ let cmd = g:terminal_cmd . ' "cd ' . expand('%:p:h') .
+		\ '/; doas make clean install"' |
+		\ if subdir == 'dwmblocks' |
+			\ let cmd .= ' && killall dwmblocks; dwmblocks &' |
+		\ endif |
+		\ execute cmd |
+	\ endif
 
 au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
 

@@ -67,3 +67,41 @@ scratchtoggle(const Arg *arg)
 	}
 }
 ```
+- Actualizar el borde de las ventanas sticky inmediatamente
+```c
+void
+setsticky(Client *c, int sticky)
+{
+
+	if(sticky && !c->issticky) {
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+			PropModeReplace, (unsigned char *) &netatom[NetWMSticky], 1);
+		c->issticky = 1;
+		XSetWindowBorder(dpy, c->win, scheme[SchemeStickySel][ColBorder].pixel);
+	} else if(!sticky && c->issticky){
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+			PropModeReplace, (unsigned char *)0, 0);
+		c->issticky = 0;
+		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		arrange(c->mon);
+	}
+}
+```
+```c
+@@ -1101,10 +1101,13 @@ focus(Client *c)
+		detachstack(c);
+		attachstack(c);
+		grabbuttons(c, 1);
+-		if (c->scratchkey != 0)
++		if (c->scratchkey != 0) {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeScratchSel][ColBorder].pixel);
+-		else
++		} else if (c->issticky) {
++			XSetWindowBorder(dpy, c->win, scheme[SchemeStickySel][ColBorder].pixel);
++		} else {
+			XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
++		}
+		setfocus(c);
+	} else {
+		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+```
