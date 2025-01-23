@@ -258,7 +258,7 @@ au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
 
 " Función para ejecutar la compilación
-autocmd BufWritePost <buffer=*config.def.h>
+autocmd BufWritePost config.def.h
 	\ let subdir = fnamemodify(expand('%:p'), ':h:t') |
 	\ if (subdir == 'dmenu' ||
 	\     subdir == 'dwm' ||
