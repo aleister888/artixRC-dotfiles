@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Script para recompilar las aplicaciones suckless
+
+ctrl_file="/tmp/suckless-compile"
+
+# Verificar si el archivo existe y si tiene menos de 1 hora
+if [ -f "$ctrl_file" ]; then
+	# Obtener el tiempo de modificación del archivo (en segundos)
+	tiempo_modificado=$(stat -c %Y "$ctrl_file")
+	tiempo_actual=$(date +%s)
+	diferencia=$((tiempo_actual - tiempo_modificado))
+
+	# Si el archivo tiene menos de una hora (3600 segundos)
+	[ "$diferencia" -lt 3600 ] && exit 0
+fi
+
+# (Re)compilamos las aplicaciones suckless
+
+DPI="$(grep -oP "Xft.dpi:\K[0-9]*" "$HOME"/.config/Xresources)"
+
+if [ "$DPI" -ge 192 ]; then
+	for app in dmenu dwm st; do
+		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
+		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null 2>&1
+
+		# Crear un config.h con el tamaño de fuente aumentado
+		sed 's/pixelsize=[0-9]*/pixelsize=40/g' \
+			"$SUCKLESS_DIR"/config.def.h | tee "$SUCKLESS_DIR"/config.h >/dev/null
+
+		# Para dwm, aumentar el tamaño de la barra
+		[ "$app" = "dwm" ] && \
+			sed 's/user_bh.*=.*[0-9]*;/user_bh=32;/g' -i "$SUCKLESS_DIR"/config.h
+
+		# Compilar
+		sudo make install --directory "$SUCKLESS_DIR" >/dev/null 2>&1 && \
+			echo "$app compilado con éxito"
+
+		# Limpiar directorio
+		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null 2>&1
+	done
+
+	# Configurar eclipse para HDPI
+	if [ -e /usr/bin/eclipse ] && [ ! -x /usr/local/bin/eclipse ]; then
+		printf '#!/bin/sh\nGDK_DPI_SCALE=0.5 GDK_SCALE=2 /usr/bin/eclipse' |\
+			sudo tee /usr/local/bin/eclipse >/dev/null
+		sudo chmod +x /usr/local/bin/eclipse
+	fi
+else
+	for app in dwm dmenu st dwmblocks; do
+		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
+		sudo make install --directory "$SUCKLESS_DIR" >/dev/null 2>&1 && \
+			echo "$app compilado con éxito"
+	done
+fi
+
+# Crear el archivo de control
+touch "$ctrl_file"

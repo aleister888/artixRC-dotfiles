@@ -1,0 +1,22 @@
+/* See LICENSE file for copyright and license details. */
+/* Default settings; can be overriden by command line. */
+
+static int topbar = 1;
+static int centered = 0;
+static int min_width = 500;
+
+static const char *fonts[] = {
+	"Iosevka Term SS05:pixelsize=24",
+	"Symbols Nerd Font Mono:pixelsize=20:antialias=true:autohint=true",
+	"Noto Color Emoji:pixelsize=24:regular"
+};
+
+static const char *prompt = NULL;
+static const char *colors[SchemeLast][2] = {
+	[SchemeNorm] = { "#EBDBB2", "#1D2021" },
+	[SchemeSel]  = { "#EBDBB2", "#282828" },
+	[SchemeOut]  = { "#000000", "#00ffff" },
+};
+
+static unsigned int lines = 6;
+static const char worddelimiters[] = " ";

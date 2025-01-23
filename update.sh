@@ -36,6 +36,12 @@ find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
 [ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
 ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
 
+######################################
+# (Re)compilar aplicaciones suckless #
+######################################
+
+"$HOME"/.dotfiles/modules/suckless-compile
+
 #########################
 # Configurar apariencia #
 #########################

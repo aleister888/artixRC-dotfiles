@@ -221,14 +221,6 @@ vim_spell_download(){
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
-# Instalamos dwm y otras aplicaciones suckless
-suckless_install(){
-	# Instalar software suckless
-	for app in dwm dmenu st dwmblocks
-		do sudo make install --directory "$HOME/.dotfiles/$app" >/dev/null
-	done
-}
-
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d "$HOME/.config/keepassxc" ] && mkdir -p "$HOME/.config/keepassxc"
@@ -295,9 +287,6 @@ fi
 
 # Instalamos todos los paquetes a la vez
 yayinstall "${packages[@]}"
-
-# Instalamos dwm y otras utilidades
-suckless_install
 
 # Crear directorio para montar dispositivos android
 sudo mkdir /mnt/ANDROID
