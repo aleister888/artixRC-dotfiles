@@ -201,6 +201,9 @@ vnoremap ] s[<C-r>"]
 vnoremap ¿ s¿<C-r>"?
 vnoremap ? s¿<C-r>"?
 
+" Modo insert al final de la línea
+nnoremap <C-i> A
+
 " Abrir scratchpad en el directorio del archivo actual
 nmap <silent><leader>s :execute '!' .
 	\ 'setsid -f sh -c "' .
@@ -272,7 +275,10 @@ autocmd BufWritePost config.def.h
 		\ execute cmd |
 	\ endif
 
-au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
+au BufWritePost ~/.dotfiles/.config/dunst/dunstrc
+	\ :!pkill dunst;
+	\ dunst &;
+	\ notify-send -i preferences-desktop-notification-bell "Dunst reiniciado"
 
 " Borrar automaticamente los espacios sobrantes
 autocmd BufWritePre * let currPos = getpos(".")

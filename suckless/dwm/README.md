@@ -2,7 +2,7 @@
 
 > ¿Cuáles son los atajos de teclado?
 
-Puedes consultar los atajos de teclado leyendo el código en [config.def.h](https://github.com/aleister888/artix-installer/blob/main/suckless/dwm/config.def.h) (`static const Key keys[]`).
+Puedes consultar los atajos de teclado leyendo el código en [config.def.h](https://github.com/aleister888/artix-installer/blob/dev/suckless/dwm/config.def.h) (`static const Key keys[]`).
 
 ## Modificaciones
 
