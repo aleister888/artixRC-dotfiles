@@ -34,7 +34,7 @@ find "$HOME/.config"    -type l ! -exec test -e {} \; -delete
 
 # Enlazar nuestro script de inicio
 [ -d "$HOME/.local/share/dwm" ] || mkdir -p "$HOME/.local/share/dwm"
-ln -sf ~/.dotfiles/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
+ln -sf ~/.dotfiles/suckless/dwm/autostart.sh ~/.local/share/dwm/autostart.sh
 
 ######################################
 # (Re)compilar aplicaciones suckless #
