@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Instalador de ajustes para Artix OpenRC
 # por aleister888 <pacoe1000@gmail.com>
@@ -168,7 +168,7 @@ mkdir -p "$HOME/.local/share/mime/packages"
 sudo rm -f /usr/share/applications/mimeinfo.cache
 
 update-mime-database ~/.local/share/mime
-sudo update-mime-database /usr/share/mime
+#sudo update-mime-database /usr/share/mime
 
 [ ! -d "$HOME/.local/share/applications" ] && \
 	mkdir -p "$HOME/.local/share/applications"

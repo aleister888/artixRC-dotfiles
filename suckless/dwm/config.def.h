@@ -380,10 +380,6 @@ static const Button buttons[] = {
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-	{ ClkRootWin,           0,              Button2,        spawn,          SHCMD("xdg-xmenu") },
-	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("xdg-xmenu") },
-	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xmenu-apps") },
-	{ ClkStatusText,        0,              Button3,        spawn,          SHCMD("xmenu-apps") },
 	{ ClkStatusText,        0,              Button4,        spawn,          SHCMD("volinc 5; pkill -RTMIN+25 dwmblocks") },
 	{ ClkStatusText,        0,              Button5,        spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -RTMIN+25 dwmblocks") },
 };

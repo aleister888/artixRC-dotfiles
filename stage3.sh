@@ -235,7 +235,6 @@ scripts_link(){
 		"wakeme"
 		"pipewire-start"
 		"tray-toggle"
-		"xmenu-apps"
 		"rdp-connect"
 	)
 	for file in "${files[@]}"; do
