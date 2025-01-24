@@ -24,12 +24,8 @@ whip_yes(){ # Elegir con whiptail
 	--title "$1" --yesno "$2" 10 60
 }
 
-pacinstall() { # Instalar paquetes con pacman
-	sudo pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
-}
-
 yayinstall() { # Instalar paquetes con yay
-	yay -Sy --noconfirm --disable-download-timeout --needed "$@"
+	yay -Sy --noconfirm --needed "$@"
 }
 
 whip_menu(){ # Menus de whitpail
@@ -285,7 +281,10 @@ if sudo lsblk -nlf -o FSTYPE "$( df / | awk 'NR==2 {print $1}' )" | grep btrfs; 
 fi
 
 # Instalamos todos los paquetes a la vez
-yayinstall "${packages[@]}"
+while true; do
+	yayinstall "${packages[@]}" && \
+	break
+done
 
 # Crear directorio para montar dispositivos android
 sudo mkdir /mnt/ANDROID
