@@ -226,6 +226,10 @@ grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
 pacman -Sc --noconfirm
 pacman-key --populate && pacman-key --refresh-keys
 
+# Configurar pacman
+sed -i 's/^#Color/Color\nILoveCandy/' /etc/pacman.conf
+sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
+
 # Establecer zona horaria
 timezoneset
 

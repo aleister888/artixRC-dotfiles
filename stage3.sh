@@ -366,8 +366,6 @@ sudo usermod -aG storage,input,users "$USER"
 sudo audio-setup
 # Configuramos el reloj según la zona horaria escogida
 sudo set-clock
-# Terminamos de configurar pacman
-sudo pacman-conf
 
 # Scripts de elogind
 sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
