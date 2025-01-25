@@ -358,7 +358,7 @@ sudo usermod -aG storage,input,users "$USER"
 
 # Configurar el software de instalación opcional
 [ "$virt" == "true" ]      && sudo virt-conf
-[ "$audioProd" == "true" ] && sudo audio-production-conf
+[ "$audioProd" == "true" ] && sudo audioProd-conf
 [ "$music" == "true" ]     && lrcput-install
 
 # Configurar el audio de baja latencia

@@ -12,15 +12,20 @@ TIMEZONE="$(readlink /etc/localtime | sed 's|.*/zoneinfo/||')"
 
 while true; do
 
-if [ -z "$CURRENT_TIME" ]; then
-	CURRENT_TIME=$(
+	[ -z "$CURRENT_TIME" ] && CURRENT_TIME=$(
 		curl -s "http://worldtimeapi.org/api/timezone/$TIMEZONE" |\
 		jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /'
 	)
-else
+
+	[ -z "$CURRENT_TIME" ] && CURRENT_TIME=$(
+		curl -s "https://timeapi.io/api/Time/current/zone?timeZone=$TIMEZONE" |\
+		grep -oP '"dateTime":"\K[^"]+' | cut -d. -f1 | sed 's/T/ /'
+	)
+
 	# Si la variable esta establecida, salimos del bucle
-	break
-fi
+	[ -n "$CURRENT_TIME" ] && break
+
+	sleep 5
 
 done
 
