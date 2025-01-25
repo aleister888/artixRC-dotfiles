@@ -5,10 +5,10 @@ export repoDir="/tmp/artix-installer"
 # Configuramos el servidor de claves y actualizamos las claves
 grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
 	echo 'keyserver hkp://keyserver.ubuntu.com' |\
-	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
+	sudo tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
 
-pacman -Sc --noconfirm
-pacman-key --populate && pacman-key --refresh-keys
+sudo pacman -Sc --noconfirm
+sudo pacman-key --populate && pacman-key --refresh-keys
 
 # Instalamos:
 # - whiptail: para la interfaz TUI
@@ -16,7 +16,7 @@ pacman-key --populate && pacman-key --refresh-keys
 # - xkeyboard-config: para elegir el layout de teclado
 # - bc: para calcular el DPI de la pantalla
 # - git: para clonar el repositorio
-pacman -Sy --noconfirm --needed parted libnewt xkeyboard-config bc git
+sudo pacman -Sy --noconfirm --needed parted libnewt xkeyboard-config bc git
 
 # Clonamos el repositorio e iniciamos el instalador
 git clone --branch noinput https://github.com/aleister888/artix-installer.git \
