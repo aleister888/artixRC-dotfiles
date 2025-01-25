@@ -152,34 +152,6 @@ packages_show(){
 	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60
 }
 
-# Elegimos distribución de teclado
-kb_layout_select(){
-	# Hacer un array con las diferentes distribuciones posibles y elegir nuestro layout
-	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f  -printf "%f\n" | \
-	sort -u | grep -v '...')
-	keyboard_array=()
-	for key_layout in $key_layouts; do
-		keyboard_array+=("$key_layout" "$key_layout")
-	done
-	final_layout=$(whip_menu "Teclado" "Por favor, elige una distribucion de teclado:" \
-	${keyboard_array[@]})
-}
-
-kb_layout_conf(){
-	sudo mkdir -p /etc/X11/xorg.conf.d/ # X11
-	cat <<-EOF | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
-		Section "InputClass"
-		    Identifier "system-keyboard"
-		    MatchIsKeyboard "on"
-		    Option "XkbLayout" "$final_layout"
-		    Option "XkbModel" "pc105"
-		    Option "XkbOptions" "terminate:ctrl_alt_bksp"
-		EndSection
-	EOF
-	# Si elegimos español, configurar el layout de la tty en español también
-	[ "$final_layout" == "es" ] && sudo sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
-}
-
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make(){
 	mkdir -p "$HOME/.config"
@@ -264,9 +236,6 @@ ln -s /tmp/ "$HOME/Descargas"
 driver_choose
 # Elegimos que paquetes instalar
 packages_choose
-# Elegimos distribución de teclado
-kb_layout_select
-kb_layout_conf
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make
 
@@ -305,7 +274,8 @@ keepass_configure
 # Permitir hacer click tocando el trackpad (X11)
 # Créditos para: <luke@lukesmith.xyz>
 [ -e /sys/class/power_supply/BAT0 ] && \
-sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
+	sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" \
+	        "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Establecemos la versión de java por defecto
 sudo archlinux-java set java-17-openjdk
@@ -320,7 +290,8 @@ scripts_link
 trash_dir
 
 # Configurar syncthing para que se inicie con el ordenador
-echo "@reboot $USER syncthing --no-browser --no-default-folder" | sudo tee -a /etc/crontab
+echo "@reboot $USER syncthing --no-browser --no-default-folder" |\
+	sudo tee -a /etc/crontab >/dev/null
 
 # Si estamos usando una máquina virtual,
 # configuramos X11 para usar 1080p como resolución
@@ -368,9 +339,6 @@ sudo set-clock
 
 # Scripts de elogind
 sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
-
-# Script para redes con autenticación vía navegador
-sudo install -m 755 "$HOME/.dotfiles/assets/system/90-open_captive_portal" /etc/NetworkManager/dispatcher.d/90-open_captive_portal
 
 # Añadir entradas a /etc/environmentv
 echo 'CARGO_HOME="~/.local/share/cargo"
