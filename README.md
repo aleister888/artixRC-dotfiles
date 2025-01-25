@@ -7,8 +7,8 @@
 Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración personal.
 
 <p float="center">
-	<img src="https://raw.githubusercontent.com/aleister888/artix-installer/dev/assets/screenshots/screenshot1.jpg" width="49%" />
-	<img src="https://raw.githubusercontent.com/aleister888/artix-installer/dev/assets/screenshots/screenshot2.jpg" width="49%" />
+	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshots/screenshot1.jpg" width="49%" />
+	<img src="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/assets/screenshots/screenshot2.jpg" width="49%" />
 </p>
 
 ---
@@ -18,7 +18,7 @@ Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración p
 - Ejecuta como root:
 
 ```bash
-bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/dev/stage1.sh)
+bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/stage1.sh)
 ```
 
 > [!WARNING]

@@ -278,8 +278,7 @@ if [ ! -d /home/"$username"/.dotfiles ]; then
 	# Nos aseguramos con el bucle que se clona el repositorio bien
 	while true; do
 		su "$username" -c \
-		"git clone --branch dev --single-branch \
-		$REPO_URL.git \
+		"git clone https://github.com/aleister888/artixRC-dotfiles.git \
 		/home/$username/.dotfiles" && \
 		break
 	done
