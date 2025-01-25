@@ -374,15 +374,17 @@ get_password(){
 
 	# Pedir la contraseña la primera vez
 	password1=$(
-		whiptail --title "Entrada de Contraseña" \
-		--passwordbox "Introduce tu contraseña del usuario $userName:" \
+		whiptail --backtitle "$REPO_URL" \
+		--title "Entrada de Contraseña" \
+		--passwordbox "Introduce tu contraseña del usuario \'$userName\':" \
 		10 60 3>&1 1>&2 2>&3
 	)
 
 	# Pedir la contraseña una segunda vez
 	password2=$(
-		whiptail --title "Confirmación de Contraseña" \
-		--passwordbox "Introduce tu contraseña del usuario $userName:" \
+		whiptail --backtitle "$REPO_URL" \
+		--title "Confirmación de Contraseña" \
+		--passwordbox "Introduce tu contraseña del usuario \'$userName\':" \
 		10 60 3>&1 1>&2 2>&3
 	)
 

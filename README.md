@@ -18,11 +18,8 @@ Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración p
 - Ejecuta como root:
 
 ```bash
-bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/stage1.sh)
+bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/install.sh)
 ```
-
-> [!WARNING]
-> El instalador esta pensado para usarse solo desde el LiveISO de Artix Linux OpenRC. No ejecutes este programa desde tu propia instalación.
 
 > [!NOTE]
 > La instalación toma unos `30-45 minutos` aproximadamente.
@@ -62,10 +59,8 @@ Más detalles en: [Arch Wiki - dm-crypt](https://wiki.archlinux.org/title/Dm-cry
 
 #### Tareas por realizar
 
-- Coger todo el input del usuario en s1 de forma que la instalación sea completamente automática
 - Modularizar s3 dividiendo el script de instalación en diferentes scripts.
 	- De esta forma se podran instalar funcionalidades incluso despúes de haber instalado el sistema p.e. configurar libvirt.
-- Arreglar la lógica de s1-s2 para permitir instalaciones fuera del LiveISO
 
 ---
 
