@@ -8,7 +8,7 @@ grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
 	sudo tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
 
 sudo pacman -Sc --noconfirm
-sudo pacman-key --populate && pacman-key --refresh-keys
+sudo pacman-key --populate && sudo pacman-key --refresh-keys
 
 # Instalamos:
 # - whiptail: para la interfaz TUI
