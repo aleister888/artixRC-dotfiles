@@ -62,6 +62,7 @@ Más detalles en: [Arch Wiki - dm-crypt](https://wiki.archlinux.org/title/Dm-cry
 
 #### Tareas por realizar
 
+- Coger todo el input del usuario en s1 de forma que la instalación sea completamente automática
 - Modularizar s3 dividiendo el script de instalación en diferentes scripts.
 	- De esta forma se podran instalar funcionalidades incluso despúes de haber instalado el sistema p.e. configurar libvirt.
 - Arreglar la lógica de s1-s2 para permitir instalaciones fuera del LiveISO
