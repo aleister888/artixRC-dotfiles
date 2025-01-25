@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+set -o pipefail
 
 if [ "$(id -u)" -ne 0 ]; then
 	echo "Error: Este script debe ejecutarse como root." >&2

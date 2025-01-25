@@ -1,4 +1,0 @@
-#!/bin/sh
-
-yabridgectl add "$WINEPREFIX/drive_c/Program Files/Common Files"
-yabridgectl add "$WINEPREFIX/drive_c/Program Files/Steinberg"
