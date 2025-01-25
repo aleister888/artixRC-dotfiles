@@ -4,12 +4,31 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
-# Esta parte del script se encarga de formatear y particionar el disco duro e
-# instalar los paquetes del sistema base. El esquema de particiones puede ser:
-# - ext4  (con o sin encriptación LUKS)
-# - btrfs (con o sin encriptación LUKS)
-#   - un subvolumen para la partición /     (@)
-#   - un subvolumen para la partición /home (@home)
+# Esta parte del script se encarga de:
+#
+# - Formatear y particionar el disco. El esquema de particiones puede ser:
+#   - ext4  (con o sin encriptación LUKS)
+#   - btrfs (con o sin encriptación LUKS)
+#     - un subvolumen para la partición /     (@)
+#     - un subvolumen para la partición /home (@home)
+# - Instalar los paquetes del sistema base
+# - Crear un usuario y establecer la contraseña de este y el usuario root
+# - Configura el layout de teclado de X11 (/X11/xorg.conf.d/00-keyboard.conf)
+# - Configura el layout de teclado de la tty (/etc/conf.d/keymaps)
+#
+# - Pasa como variables los siguientes parámetros al siguiente script:
+#   - Nombre del usuario regular ($username)
+#   - DPI de la pantalla ($final_dpi)
+#   - Zona horaria del sistema ($systemTimezone)
+#   - Nombre del disco utilizado ($ROOT_DISK)
+#   - Si se usa encriptación ($crypt_root)
+#   - El tipo de partición de la instalación ($ROOT_FILESYSTEM)
+#   - Nombre de la partición principal ($rootPart)
+#   - Nombre de la partición desencriptada abierta ($cryptName)
+#   - Nombre del host ($hostName)
+#   - Driver de video a usar ($graphic_driver)
+#   - Variables con el software opcional elegido
+#     - $virt, $music, $noprivacy, $office, $latex, $audioProd
 
 REPO_URL="https://github.com/aleister888/artix-installer"
 
@@ -33,7 +52,15 @@ whip_menu(){
 	local MENU=$2
 	shift 2
 	whiptail --backtitle "$REPO_URL" \
-	--title "$TITLE" --menu "$MENU" 15 60 4 $@ 3>&1 1>&2 2>&3
+	--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
+}
+
+whip_input(){
+	local TITLE=$1
+	local INPUTBOX=$2
+	whiptail --backtitle "$REPO_URL" \
+	--title "$TITLE" --inputbox "$INPUTBOX" \
+	10 60 3>&1 1>&2 2>&3
 }
 
 echo_msg(){
@@ -142,6 +169,9 @@ format_disks(){
 		"ext4" "Ext4" "btrfs" "Btrfs"
 	)
 
+	# Nombre aleatorio de la particion encriptada abierta
+	cryptName="$$"
+
 	# Borramos la firma del disco
 	wipefs --all "/dev/$ROOT_DISK"
 
@@ -163,9 +193,9 @@ format_disks(){
 
 	# Si se eligió usar LUKS, es el momento de encriptar la partición
 	if [ "$crypt_root" == "true" ]; then
-		part_encrypt "/" "$rootPart" "cryptroot" && \
+		part_encrypt "/" "$rootPart" "$cryptName" && \
 		# Cambiamos el indicador del disco a la partición encriptada
-		rootPart="mapper/cryptroot"
+		rootPart="mapper/$cryptName"
 	fi
 
 	# Formateamos nuestra partición "/"
@@ -220,7 +250,7 @@ basestrap_install(){
 	basestrap_packages+=" patch pkgconf texinfo which"
 
 	basestrap_packages+=" linux-headers linux-lts linux-lts-headers"
-	basestrao_packages+=" networkmanager networkmanager-openrc dosfstools"
+	basestrap_packages+=" networkmanager networkmanager-openrc dosfstools"
 	basestrap_packages+=" cronie cronie-openrc cups cups-openrc freetype2"
 	basestrap_packages+=" libjpeg-turbo grub git wpa_supplicant usbutils"
 	basestrap_packages+=" pciutils cryptsetup device-mapper-openrc dialog"
@@ -333,36 +363,169 @@ calculate_dpi(){
 	)
 
 	# Redondeamos el DPI calculado al entero más cercano
-	rounded_dpi=$(printf "%.0f" "$displayDPI")
+	final_dpi=$(printf "%.0f" "$displayDPI")
 }
 
-get_password() {
+get_password(){
 	local password1 password2
+	local userName=$1
 
 	while true; do
 
-		# Pedir la contraseña la primera vez
-		password1=$(
-			whiptail --title "Entrada de Contraseña" \
-			--passwordbox "Introduce tu contraseña:" \
-			8 40 3>&1 1>&2 2>&3
+	# Pedir la contraseña la primera vez
+	password1=$(
+		whiptail --title "Entrada de Contraseña" \
+		--passwordbox "Introduce tu contraseña del usuario $userName:" \
+		10 60 3>&1 1>&2 2>&3
+	)
+
+	# Pedir la contraseña una segunda vez
+	password2=$(
+		whiptail --title "Confirmación de Contraseña" \
+		--passwordbox "Introduce tu contraseña del usuario $userName:" \
+		10 60 3>&1 1>&2 2>&3
+	)
+
+	# Si ambas contraseñas coinciden devolver el resultado
+	if [ "$password1" == "$password2" ]; then
+		echo "$password1" && break
+	else
+		whip_msg "Error" \
+		"Las contraseñas no coincide. Intentalo de nuevo"
+	fi
+
+	done
+}
+
+# Establecer zona horaria
+timezone_set(){
+
+	while true; do
+		# Obtener la lista de regiones disponibles
+		regions=$(
+			find /usr/share/zoneinfo -mindepth 1 -type d \
+			-printf "%f\n" | sort -u
 		)
 
-		# Pedir la contraseña una segunda vez
-		password2=$(
-			whiptail --title "Confirmación de Contraseña" \
-			--passwordbox "Confirma tu contraseña:" \
-			8 40 3>&1 1>&2 2>&3
+		# Crear un array con las regiones
+		regions_array=()
+		for region in $regions; do
+			regions_array+=("$region" "$region")
+		done
+
+		# Elegir la región
+		region=$(
+			whip_menu "Selecciona una region" \
+			"Por favor, elige una región" \
+			${regions_array[@]}
 		)
 
-		# Si ambas contraseñas coinciden devolver el resultado
-		if [ "$password1" == "$password2" ]; then
-			echo "$password1" && break
+		# Obtener la lista de zonas horarias de la región seleccionada
+		timezones=$(
+			find "/usr/share/zoneinfo/$region" -mindepth 1 -type f \
+			-printf "%f\n" | sort -u
+		)
+
+		# Crear un array con las distintas zonas horarias
+		timezones_array=()
+		for timezone in $timezones; do
+			timezones_array+=("$timezone" "$timezone")
+		done
+
+		# Elegir la zona horaria dentro de la región seleccionada
+		timezone=$(
+			whip_menu "Selecciona una zona horaria en $region" \
+			"Por favor, elige una zona horaria en $region:" \
+			${timezones_array[@]}
+		)
+
+		# Verificar si la zona horaria seleccionada es válida
+		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+			break
 		else
-			whip_msg "Error" \
-			"Las contraseñas no coincide. Intentalo de nuevo"
+			whip_msg "Zona horaria no valida" \
+			"Zona horaria no valida. Asegurate de elegir una zona horaria valida."
 		fi
 	done
+
+	echo "/usr/share/zoneinfo/$region/$timezone"
+}
+
+# Elegimos el driver de video
+driver_choose(){
+	local driver_options
+
+	# Opciones posibles
+	driver_options=(
+		"amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM"
+	)
+
+	# Elegimos nuestra tarjeta gráfica
+	graphic_driver=$(
+		whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
+		${driver_options[@]}
+	)
+}
+
+packages_choose(){
+	# Definimos todas las variables (menos daw, music y virt) como locales
+	local noprivacy office latex
+
+	while true; do
+
+		variables=("virt" "music" "noprivacy" "daw" "office" "latex")
+
+		# Reiniciamos las variables si no confirmamos la selección
+		for var in "${variables[@]}"; do eval "$var=false"; done
+
+		whip_yes "Virtualizacion" \
+			"¿Quieres instalar libvirt para ejecutar máquinas virtuales?" && \
+			virt="true"
+
+		whip_yes "Musica" \
+			"¿Deseas instalar software para manejar tu coleccion de musica?" && \
+			music="true"
+
+		whip_yes "Privacidad" \
+			"¿Deseas instalar Discord y Telegram?" && \
+			noprivacy="true"
+
+		whip_yes "Oficina" \
+			"¿Deseas instalar software de ofimatica?" && \
+			office="true"
+
+		whip_yes "laTeX" \
+			"¿Deseas instalar laTeX?" && \
+			latex="true"
+
+		whip_yes "DAW" \
+			"¿Deseas instalar software de produccion de audio?" && \
+			audioProd="true"
+
+		# Confirmamos la selección de paquetes a instalar (o no)
+		if packages_show; then
+			break
+		else
+			whip_msg "Operacion cancelada" \
+			"Se te volvera a preguntar que software desea instalar"
+		fi
+	done
+}
+
+# Elegimos que paquetes instalar
+packages_show(){
+	local scheme # Variable con la lista de paquetes a instalar
+	scheme="Se instalaran:\n"
+	[ "$virt"      == "true" ] && scheme+="libvirt\n"
+	[ "$music"     == "true" ] && scheme+="Softw. Gestión de Música\n"
+	[ "$noprivacy" == "true" ] && scheme+="Telegram y Discord\n"
+	[ "$office"    == "true" ] && scheme+="Softw. Ofimatica\n"
+	[ "$latex"     == "true" ] && scheme+="laTeX\n"
+	[ "$audioProd" == "true" ] && scheme+="Softw. Prod. Musical\n"
+
+	whiptail --backtitle "$REPO_URL" \
+		--title "Confirmar paquetes" \
+		--yesno "$scheme" 15 60
 }
 
 ##########
@@ -372,7 +535,8 @@ get_password() {
 # Configuramos el servidor de claves y actualizamos las claves
 grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
 	echo 'keyserver hkp://keyserver.ubuntu.com' | \
-	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
+	tee -a /etc/pacman.grub-install --target=x86_64-efi --efi-directory=/boot --recheck
+grub-install --target=x86_64-efi --efi-directory=/boot --removable --recheckd/gnupg/gpg.conf >/dev/null
 pacman -Sc --noconfirm
 pacman-key --populate && pacman-key --refresh-keys
 
@@ -398,6 +562,29 @@ kb_layout_select
 # Calculamos el DPI
 calculate_dpi
 
+rootPassword=$(get_password root)
+
+username="$(
+	whiptail --backtitle "$REPO_URL" \
+	--inputbox "Por favor, ingresa el nombre del usuario:" \
+	10 60 3>&1 1>&2 2>&3
+)"
+
+userPassword=$(get_password $username)
+
+systemTimezone=(timezone_set)
+
+hostName=$(
+	whip_input "Configuracion de Hostname" \
+	"Por favor, introduce el nombre que deseas darle a tu ordenador:" \
+)
+
+# Elegimos el driver de video y lo guardamos en la variable $graphic_driver
+driver_choose
+
+# Elegimos que software opcional instalar
+packages_choose
+
 # Instalamos paquetes en la nueva instalación
 basestrap_install
 
@@ -411,16 +598,6 @@ for dir in dev proc sys run; do
 	mount --rbind /$dir /mnt/$dir; mount --make-rslave /mnt/$dir
 done
 
-rootPassword=$(get_password)
-
-username="$(
-	whiptail --backtitle "$REPO_URL" \
-	--inputbox "Por favor, ingresa el nombre del usuario:" \
-	10 60 3>&1 1>&2 2>&3
-)"
-
-userPassword=$(get_password)
-
 artix-chroot /mnt sh -c "
 	useradd -m -G wheel,lp $username
 	yes $rootPassword | passwd
@@ -430,8 +607,30 @@ artix-chroot /mnt sh -c "
 # Copiamos el repositorio a la nueva instalación
 cp -r "$(dirname "$0")" "/mnt/home/$username/.dotfiles"
 
-# Hacer chroot y ejecutar la 2a parte del script
-#artix-chroot /mnt bash -c "
-#	export \
-#	rounded_dpi=$rounded_dpi \
-#"
+# Corregimos el propietario del repositorio copiado y ejecutamos la siguiente
+# parte del script pasandole las variables correspondientes.
+artix-chroot /mnt sh -c "
+	export \
+	username=$username \
+	final_dpi=$final_dpi \
+	systemTimezone=$systemTimezone \
+	ROOT_DISK=$ROOT_DISK \
+	crypt_root=$crypt_root \
+	ROOT_FILESYSTEM=$ROOT_FILESYSTEM \
+	rootPart=$rootPart \
+	cryptName=$cryptName \
+	hostName=$hostName \
+	graphic_driver=$graphic_driver \
+	virt=$virt \
+	music=$music \
+	noprivacy=$noprivacy \
+	office=$office \
+	latex=$latex \
+	audioProd=$audioProd
+
+	chown $username:$username -R \
+	   /home/$username/.dotfiles
+	cd /home/$username/.dotfiles
+
+	./stage2.sh
+"

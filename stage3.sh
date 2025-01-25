@@ -32,7 +32,8 @@ whip_menu(){ # Menus de whitpail
 	local TITLE=$1
 	local MENU=$2
 	shift 2
-	whiptail --backtitle "$REPO_URL" --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
+	whiptail --backtitle "$REPO_URL" \
+	--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 
 service_add(){ # Activar servicio
@@ -62,58 +63,43 @@ mapfile -t packages < <(cat \
 # 32 bits, que vienen de los repositorios de Arch Linux
 
 # Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
-driver_choose(){
-	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM")
-	# Elegimos nuestra tarjeta gráfica
-	graphic_driver=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
-	${driver_options[@]})
+
+driver_add(){
 	case $graphic_driver in
+
 	amd)
-		packages+=("xf86-video-amdgpu" "mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon") ;;
+	packages+=(
+		"xf86-video-amdgpu"
+		"mesa" "lib32-mesa"
+		"vulkan-radeon" "lib32-vulkan-radeon"
+	) ;;
+
 	nvidia)
-		packages+=("dkms" "nvidia-dkms" "nvidia-utils" "libva-vdpau-driver" "libva-mesa-driver" "nvidia-prime" "lib32-nvidia-utils" "nvidia-utils-openrc" "opencl-nvidia") ;;
+	packages+=(
+		"dkms" "nvidia-dkms" "nvidia-utils"
+		"libva-vdpau-driver" "libva-mesa-driver"
+		"nvidia-prime" "lib32-nvidia-utils"
+		"nvidia-utils-openrc" "opencl-nvidia"
+	) ;;
+
 	intel)
-		packages+=("xf86-video-intel" "libva-intel-driver" "lib32-libva-intel-driver" "vulkan-intel" "lib32-vulkan-intel") ;;
+	packages+=(
+		"xf86-video-intel"
+		"libva-intel-driver" "lib32-libva-intel-driver"
+		"vulkan-intel" "lib32-vulkan-intel"
+	) ;;
+
 	virtual)
-		packages+=("xf86-video-vmware" "xf86-input-vmmouse" "vulkan-virtio" "lib32-vulkan-virtio") ;;
+	packages+=(
+		"xf86-video-vmware" "xf86-input-vmmouse"
+		"vulkan-virtio" "lib32-vulkan-virtio"
+	) ;;
+
 	esac
 }
 
 # Elegir el software a instalar
-packages_choose(){
-	local packages_confirm="false"
-	# Definimos todas las variables (menos daw, music y virt) como locales
-	local noprivacy office latex
-
-	while [ "$packages_confirm" == "false" ]; do
-
-		variables=("virt" "music" "noprivacy" "daw" "office" "latex")
-
-		# Reiniciamos las variables si no confirmamos la selección
-		for var in "${variables[@]}"; do eval "$var=false"; done
-
-		whip_yes "Virtualizacion" "¿Quieres instalar libvirt para ejecutar máquinas virtuales?" && \
-			virt="true"
-		whip_yes "Musica"         "¿Deseas instalar software para manejar tu coleccion de musica?" && \
-			music="true"
-		whip_yes "Privacidad"     "¿Deseas instalar Discord y Telegram?" && \
-			noprivacy="true"
-		whip_yes "Oficina"        "¿Deseas instalar software de ofimatica?" && \
-			office="true"
-		whip_yes "laTeX"          "¿Deseas instalar laTeX?" && \
-			latex="true"
-		whip_yes "DAW"            "¿Deseas instalar software de produccion de audio?" && \
-			audioProd="true"
-
-		# Confirmamos la selección de paquetes a instalar (o no)
-		if packages_show; then
-			packages_confirm=true
-		else
-			whip_msg "Operacion cancelada" "Se te volvera a preguntar que software desea instalar"
-		fi
-	done
-
+packages_add(){
 	# Agregamos paquetes al array dependiendo de las respuestas
 	if [ "$virt" == "true" ]; then
 		while IFS= read -r package; do
@@ -132,61 +118,34 @@ packages_choose(){
 	fi
 
 	[ "$music" == "true" ] && \
-		packages+=("easytag" "picard" "flacon" "cuetools" "lrcget-bin" "python-tqdm")
+		packages+=(
+			"easytag" "picard" "flacon"
+			"cuetools" "lrcget-bin" "python-tqdm"
+		)
+
 	[ "$noprivacy" == "true" ] && \
 		packages+=("discord" "telegram-desktop")
+
 	[ "$office" == "true" ] && \
 		packages+=("libreoffice" "libreoffice-fresh-es")
 }
 
-# Elegimos que paquetes instalar
-packages_show(){
-	local scheme # Variable con la lista de paquetes a instalar
-	scheme="Se instalaran:\n"
-	[ "$virt"      == "true" ] && scheme+="libvirt\n"
-	[ "$music"     == "true" ] && scheme+="soft. gestión de música\n"
-	[ "$noprivacy" == "true" ] && scheme+="telegram y discord\n"
-	[ "$office"    == "true" ] && scheme+="soft. ofimatica\n"
-	[ "$latex"     == "true" ] && scheme+="laTeX\n"
-	[ "$audioProd"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
-	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60
-}
-
-# Calcular el DPI de nuestra pantalla y configurar Xresources
+# Configurar Xresources
 xresources_make(){
 	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
-	# Selección de resolución del monitor
-	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
-		"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K")
-
-	# Selección del tamaño del monitor en pulgadas (diagonal)
-	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
-		"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
-
-	# Definimos la resolución elegida
-	case $resolution in
-		"720p")  width=1280; height=720 ;;
-		"1080p") width=1920; height=1080 ;;
-		"1440p") width=2560; height=1440 ;;
-		"2160p") width=3840; height=2160 ;;
-	esac
-
-	# Calculamos el PPI y lo dividimos por 2
-	display_dpi=$(echo "scale=6; sqrt($width^2 + $height^2) / $size / 2" | bc)
-	# Redondeamos el PPI calculado al entero más cercano
-	rounded_dpi=$(printf "%.0f" "$display_dpi")
-	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 0.75
 	# Añadimos nuestro DPI a el arcivo Xresources
-	echo "Xft.dpi:$rounded_dpi" | tee -a "$XRES_FILE"
+	echo "Xft.dpi:$final_dpi" | tee -a "$XRES_FILE"
 }
 
 # Descargar los archivos de diccionario
 vim_spell_download(){
 	mkdir -p "$HOME/.local/share/nvim/site/spell/"
-	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
-	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
+	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" \
+		-q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
+	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" \
+		-q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
 # Configurar keepassxc para que siga el tema de QT
@@ -233,9 +192,11 @@ done
 ln -s /tmp/ "$HOME/Descargas"
 
 # Escogemos que drivers de vídeo instalar
-driver_choose
+driver_add
+
 # Elegimos que paquetes instalar
-packages_choose
+packages_add
+
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make
 
@@ -245,7 +206,7 @@ xresources_make
 sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
 # Instalar grub-btrfs solo si se detecta que / es una partición btrfs
-if sudo lsblk -nlf -o FSTYPE "$( df / | awk 'NR==2 {print $1}' )" | grep btrfs; then
+if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 	packages+=("grub-btrfs")
 fi
 
