@@ -4,18 +4,6 @@
 # por aleister888 <pacoe1000@gmail.com>
 # Licencia: GNU GPLv3
 
-# Esta parte del script se encarga de:
-#
-# - Formatear y particionar el disco. El esquema de particiones puede ser:
-#   - ext4  (con o sin encriptación LUKS)
-#   - btrfs (con o sin encriptación LUKS)
-#     - un subvolumen para la partición /     (@)
-#     - un subvolumen para la partición /home (@home)
-# - Instalar los paquetes del sistema base
-# - Crear un usuario y establecer la contraseña de este y el usuario root
-# - Configura el layout de teclado de X11 (/X11/xorg.conf.d/00-keyboard.conf)
-# - Configura el layout de teclado de la tty (/etc/conf.d/keymaps)
-#
 # - Pasa como variables los siguientes parámetros al siguiente script:
 #   - Nombre del usuario regular ($username)
 #   - DPI de la pantalla ($final_dpi)
@@ -296,11 +284,12 @@ basestrap_install(){
 
 # Elegimos distribución de teclado
 kb_layout_select(){
-	# Array con las diferentes distribuciones de tecladoposibles
 	key_layouts=$(
 		find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f \
 		-printf "%f\n" | sort -u | grep -v '...'
 	)
+
+	# Array con las diferentes distribuciones de teclado posibles
 	keyboard_array=()
 	for key_layout in $key_layouts; do
 		keyboard_array+=("$key_layout" "$key_layout")
@@ -379,7 +368,7 @@ get_password(){
 	password1=$(
 		whiptail --backtitle "$REPO_URL" \
 		--title "Entrada de Contraseña" \
-		--passwordbox "Introduce tu contraseña del usuario \'$userName\':" \
+		--passwordbox "Introduce tu contraseña del usuario $userName:" \
 		10 60 3>&1 1>&2 2>&3
 	)
 
@@ -387,7 +376,7 @@ get_password(){
 	password2=$(
 		whiptail --backtitle "$REPO_URL" \
 		--title "Confirmación de Contraseña" \
-		--passwordbox "Introduce tu contraseña del usuario \'$userName\':" \
+		--passwordbox "Introduce tu contraseña del usuario $userName:" \
 		10 60 3>&1 1>&2 2>&3
 	)
 

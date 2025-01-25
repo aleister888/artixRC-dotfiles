@@ -25,7 +25,15 @@ whip_yes(){ # Elegir con whiptail
 }
 
 yayinstall() { # Instalar paquetes con yay
-	yay -Sy --noconfirm --needed "$@"
+	# Usamos el flag -d para omitir las comprobaciones de las versiones de
+	# las dependencias. Hay paquetes del repositorio extra de Arch que
+	# tienen versiones conflictivas de sus dependencias en el repositorio
+	# world de Artix. Prefiero que la instalación no falle y luego tenga que
+	# resolver los posibles conflictos manualmente.
+	#
+	# p.e. (26/01/25) eza [extra] necesita de libgit 1:1.9.0, pero la
+	# versión que hay en world es 1:1.8.4
+	yay -Syd --noconfirm --needed "$@"
 }
 
 whip_menu(){ # Menus de whitpail
@@ -59,10 +67,6 @@ mapfile -t packages < <(cat \
 	"$HOME"/.dotfiles/assets/packages/system \
 	"$HOME"/.dotfiles/assets/packages/x11
 )
-# Ya instalamos pipewire en stage1.sh, pero no los paquetes para
-# 32 bits, que vienen de los repositorios de Arch Linux
-
-# Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
 
 driver_add(){
 	case $graphic_driver in
@@ -100,7 +104,7 @@ driver_add(){
 
 # Elegir el software a instalar
 packages_add(){
-	# Agregamos paquetes al array dependiendo de las respuestas
+	# Agregamos paquetes al array dependiendo de que se eligió
 	if [ "$virt" == "true" ]; then
 		while IFS= read -r package; do
 			packages+=("$package")
@@ -182,7 +186,8 @@ trash_dir(){
 
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
 yay-install
-# Reemplazar sudo por doas
+
+# Reemplamos sudo por doas
 sudo sudo2doas
 
 # Crear directorios
@@ -202,10 +207,9 @@ xresources_make
 
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
-# Créditos para: <luke@lukesmith.xyz>
 sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
-# Instalar grub-btrfs solo si se detecta que / es una partición btrfs
+# Instalar grub-btrfs solo si / es una partición btrfs
 if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 	packages+=("grub-btrfs")
 fi
@@ -232,8 +236,7 @@ keepass_configure
 # Suspender de forma automatica cuando la bateria cae por debajo del 10%
 [ -e /sys/class/power_supply/BAT0 ] && autosuspend-conf
 
-# Permitir hacer click tocando el trackpad (X11)
-# Créditos para: <luke@lukesmith.xyz>
+# Permitir hacer click tocando el trackpad (X11) <luke@lukesmith.xyz>
 [ -e /sys/class/power_supply/BAT0 ] && \
 	sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" \
 	        "/etc/X11/xorg.conf.d/40-libinput.conf"
@@ -243,10 +246,13 @@ sudo archlinux-java set java-17-openjdk
 
 # Descargar los diccionarios para vim
 vim_spell_download
+
 # Instalar los archivos de configuración e instalar plugins de zsh
 dotfiles-install
+
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link
+
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir
 
@@ -254,8 +260,7 @@ trash_dir
 echo "@reboot $USER syncthing --no-browser --no-default-folder" |\
 	sudo tee -a /etc/crontab >/dev/null
 
-# Si estamos usando una máquina virtual,
-# configuramos X11 para usar 1080p como resolución
+# Si estamos usando una máquina virtual, configuramos X11 para funcionar a 1080p
 [ "$graphic_driver" == "virtual" ] && \
 sudo cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
@@ -299,12 +304,15 @@ sudo audio-setup
 sudo set-clock
 
 # Scripts de elogind
-sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
+sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" \
+	/lib/elogind/system-sleep/nm-restart
 
-# Añadir entradas a /etc/environmentv
-echo 'CARGO_HOME="~/.local/share/cargo"
-GNUPGHOME="~/.local/share/gnupg"
-_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | sudo tee -a /etc/environment
+# Añadir entradas a /etc/environment
+cat <<-'EOF' | sudo tee -a /etc/environment
+	CARGO_HOME="~/.local/share/cargo"
+	GNUPGHOME="~/.local/share/gnupg"
+	_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"
+EOF
 
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 
@@ -319,5 +327,5 @@ mkdir -p "$HOME"/.local/share/gnupg
 ############
 
 pacman -Q poppler >/dev/null 2>&1 && \
-	sudo ln -sf /usr/lib/libpoppler-cpp.so.2.0.0 \
-	/usr/lib/libpoppler-cpp.so.1
+	sudo ln -s /usr/lib/libpoppler-cpp.so.2.0.0 \
+	/usr/lib/libpoppler-cpp.so.1 2>/dev/null

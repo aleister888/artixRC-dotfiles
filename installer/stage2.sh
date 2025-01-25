@@ -5,13 +5,7 @@
 # Licencia: GNU GPLv3
 
 # Esta parte del script se ejecuta ya dentro de la instalación (chroot).
-# - Establece la zona horaria del sistema (usando la variable $systemTimezone)
-# - Instala y configurar GRUB y los servicios del sistema
-# - Crea el archivo swap
-# - Crea un archivo hosts
-# - Activa los repositorios de Arch Linux y elegir los más rápidos
-#   - Actualiza el mirrorlist periódicamente con reflector y cron
-#
+
 # - Pasa como variables los siguientes parámetros al siguiente script:
 #   - DPI de la pantalla ($final_dpi)
 #   - Driver de video a usar ($graphic_driver)
