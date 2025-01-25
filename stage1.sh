@@ -23,7 +23,7 @@
 #   - Nombre del disco utilizado ($ROOT_DISK)
 #   - Si se usa encriptación ($crypt_root)
 #   - El tipo de partición de la instalación ($ROOT_FILESYSTEM)
-#   - Nombre de la partición principal ($rootPart)
+#   - Nombre de la partición principal ($rootPartName)
 #   - Nombre de la partición desencriptada abierta ($cryptName)
 #   - Nombre del host ($hostName)
 #   - Driver de video a usar ($graphic_driver)
@@ -169,6 +169,8 @@ format_disks(){
 		"ext4" "Ext4" "btrfs" "Btrfs"
 	)
 
+	rootPartName=
+
 	# Nombre aleatorio de la particion encriptada abierta
 	cryptName="$$"
 
@@ -195,6 +197,7 @@ format_disks(){
 	if [ "$crypt_root" == "true" ]; then
 		part_encrypt "/" "$rootPart" "$cryptName" && \
 		# Cambiamos el indicador del disco a la partición encriptada
+		rootPartName="$rootPart"
 		rootPart="mapper/$cryptName"
 	fi
 
@@ -619,7 +622,7 @@ artix-chroot /mnt sh -c "
 	ROOT_DISK=$ROOT_DISK \
 	crypt_root=$crypt_root \
 	ROOT_FILESYSTEM=$ROOT_FILESYSTEM \
-	rootPart=$rootPart \
+	rootPartName=$rootPartName \
 	cryptName=$cryptName \
 	hostName=$hostName \
 	graphic_driver=$graphic_driver \
