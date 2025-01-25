@@ -137,6 +137,7 @@ static const Rule rules[] = {
 	{ "Eclipse",               NULL,  NULL,  1<<11,  0,  0,  0,  0,  -1,    0 },
 	{ "KeePassXC",             NULL,  NULL,  1<<12,  0,  0,  0,  0,  -1,    0 },
 	{ "gnome-contacts",        NULL,  NULL,  1<<12,  0,  0,  0,  0,  -1,    0 },
+	{ "Standard Notes",        NULL,  NULL,  1<<13,  0,  0,  0,  0,  -1,    0 },
 	{ TERMC,                   NULL,  NULL,      0,  0,  0,  1,  0,  -1,    0 },
 	{ NULL,  NULL,     "scratchpad",             0,  1,  0,  0,  0,  -1,  's' },
 	{ NULL,  NULL,   "Media viewer",             0,  1,  0,  0,  0,  -1,    0 },
@@ -156,7 +157,7 @@ static const Layout layouts[] = {
 
 #define MODKEY Mod1Mask // Alt como modificador
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY, comboview,  {.ui = 1 << TAG} }, \
+	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY, toggleview, {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY, tag,        {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
@@ -186,12 +187,12 @@ static const char *spawnscratchpadcmd[] = { TERM, TERMT, "scratchpad", NULL }; /
 static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
 
 static const StatusCmd statuscmds[] = {
-	{ "music-control play-pause; pkill -39 dwmblocks", 1 },
+	{ "music-control play-pause; pkill -RTMIN+5 dwmblocks", 1 },
 	{ "sb-bat-info", 2 },
-	{ "sb-disks-info; pkill -49 dwmblocks", 3 },
+	{ "sb-disks-info; pkill -RTMIN+15 dwmblocks", 3 },
 	{ "notify-send $(uname -r)", 4 },
-	{ "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks", 5 },
-	{ "sb-ram-info; pkill -64 dwmblocks", 6 },
+	{ "pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+25 dwmblocks", 5 },
+	{ "sb-ram-info; pkill -RTMIN+30 dwmblocks", 6 },
 	{ "sb-cal-info", 7 },
 	{ "sb-timer-manager", 8 },
 	{ "blue-toggle", 11 },
@@ -242,24 +243,24 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 
 	// Controlar reproducción
-	{ MODKEY,                       XK_z,      spawn,            SHCMD("music-control previous; pkill -39 dwmblocks") },
-	{ 0,                XF86XK_AudioPrev,      spawn,            SHCMD("music-control previous; pkill -39 dwmblocks") },
-	{ MODKEY,                       XK_x,      spawn,            SHCMD("music-control next; pkill -39 dwmblocks") },
-	{ 0,                XF86XK_AudioNext,      spawn,            SHCMD("music-control next; pkill -39 dwmblocks") },
-	{ MODKEY|ShiftMask,             XK_z,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
-	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
-	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("music-control play-pause; pkill -39 dwmblocks") },
+	{ MODKEY,                       XK_z,      spawn,            SHCMD("music-control previous; pkill -RTMIN+5 dwmblocks") },
+	{ 0,                XF86XK_AudioPrev,      spawn,            SHCMD("music-control previous; pkill -RTMIN+5 dwmblocks") },
+	{ MODKEY,                       XK_x,      spawn,            SHCMD("music-control next; pkill -RTMIN+5 dwmblocks") },
+	{ 0,                XF86XK_AudioNext,      spawn,            SHCMD("music-control next; pkill -RTMIN+5 dwmblocks") },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,            SHCMD("music-control play-pause; -RTMIN+5 dwmblocks") },
+	{ MODKEY|ShiftMask,             XK_x,      spawn,            SHCMD("music-control play-pause; -RTMIN+5 dwmblocks") },
+	{ 0,                XF86XK_AudioPlay,      spawn,            SHCMD("music-control play-pause; -RTMIN+5 dwmblocks") },
 
 	// Cambiar volumen
-	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("volinc -5; pkill -59 dwmblocks") },
-	{ MODKEY,                       XK_n,      spawn,            SHCMD("volinc -10; pkill -59 dwmblocks") },
-	{ 0,         XF86XK_AudioRaiseVolume,      spawn,            SHCMD("volinc 5; pkill -59 dwmblocks") },
-	{ MODKEY,                       XK_m,      spawn,            SHCMD("volinc 10; pkill -59 dwmblocks") },
-	{ 0,                XF86XK_AudioMute,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
-	{ MODKEY|ControlMask,           XK_n,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
-	{ MODKEY|ControlMask,           XK_m,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -59 dwmblocks") },
-	{ MODKEY|ShiftMask,             XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 32768; pkill -59 dwmblocks") },
-	{ MODKEY|ShiftMask,             XK_m,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 65536; pkill -59 dwmblocks") },
+	{ 0,         XF86XK_AudioLowerVolume,      spawn,            SHCMD("volinc -5; pkill -RTMIN+25 dwmblocks") },
+	{ MODKEY,                       XK_n,      spawn,            SHCMD("volinc -10; pkill -RTMIN+25 dwmblocks") },
+	{ 0,         XF86XK_AudioRaiseVolume,      spawn,            SHCMD("volinc 5; pkill -RTMIN+25 dwmblocks") },
+	{ MODKEY,                       XK_m,      spawn,            SHCMD("volinc 10; pkill -RTMIN+25 dwmblocks") },
+	{ 0,                XF86XK_AudioMute,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+25 dwmblocks") },
+	{ MODKEY|ControlMask,           XK_n,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+25 dwmblocks") },
+	{ MODKEY|ControlMask,           XK_m,      spawn,            SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+25 dwmblocks") },
+	{ MODKEY|ShiftMask,             XK_n,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 32768; pkill -RTMIN+25 dwmblocks") },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,            SHCMD("pactl set-sink-volume @DEFAULT_SINK@ 65536; pkill -RTMIN+25 dwmblocks") },
 
 	// Cambiar brillo (Portátiles)
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,            SHCMD("brightchange dec") },
@@ -270,8 +271,8 @@ static const Key keys[] = {
 
 	// Forzar cerrar ventana
 	{ MODKEY|ShiftMask,             XK_c,      spawn,            SHCMD("xkill") },
-	{ 0,                    XK_Caps_Lock,      spawn,            SHCMD("sleep 0.2; pkill -36 dwmblocks")},
-	{ 0,                     XK_Num_Lock,      spawn,            SHCMD("sleep 0.2; pkill -36 dwmblocks")},
+	{ 0,                    XK_Caps_Lock,      spawn,            SHCMD("sleep 0.2; pkill -RTMIN+2 dwmblocks")},
+	{ 0,                     XK_Num_Lock,      spawn,            SHCMD("sleep 0.2; pkill -RTMIN+2 dwmblocks")},
 
 	// Tomar capturas de pantalla
 	{ 0,                            XK_Print,  spawn,            SHCMD("screenshot all_clip") },
@@ -379,10 +380,6 @@ static const Button buttons[] = {
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-	{ ClkRootWin,           0,              Button2,        spawn,          SHCMD("xdg-xmenu") },
-	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("xdg-xmenu") },
-	{ ClkRootWin,           0,              Button3,        spawn,          SHCMD("xmenu-apps") },
-	{ ClkStatusText,        0,              Button3,        spawn,          SHCMD("xmenu-apps") },
-	{ ClkStatusText,        0,              Button4,        spawn,          SHCMD("volinc 5; pkill -59 dwmblocks") },
-	{ ClkStatusText,        0,              Button5,        spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -59 dwmblocks") },
+	{ ClkStatusText,        0,              Button4,        spawn,          SHCMD("volinc 5; pkill -RTMIN+25 dwmblocks") },
+	{ ClkStatusText,        0,              Button5,        spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; pkill -RTMIN+25 dwmblocks") },
 };

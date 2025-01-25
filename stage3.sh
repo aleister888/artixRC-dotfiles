@@ -11,7 +11,7 @@
 PATH="$PATH:$(find ~/.dotfiles/modules -type d | paste -sd ':' -)"
 
 # URL con el repositorio
-REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+REPO_URL="https://github.com/aleister888/artix-installer"
 
 # Funciones que invocaremos a menudo
 whip_msg(){ # Mensajes de tailbox
@@ -24,12 +24,8 @@ whip_yes(){ # Elegir con whiptail
 	--title "$1" --yesno "$2" 10 60
 }
 
-pacinstall() { # Instalar paquetes con pacman
-	sudo pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
-}
-
 yayinstall() { # Instalar paquetes con yay
-	yay -Sy --noconfirm --disable-download-timeout --needed "$@"
+	yay -Sy --noconfirm --needed "$@"
 }
 
 whip_menu(){ # Menus de whitpail
@@ -221,14 +217,6 @@ vim_spell_download(){
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
-# Instalamos dwm y otras aplicaciones suckless
-suckless_install(){
-	# Instalar software suckless
-	for app in dwm dmenu st dwmblocks
-		do sudo make install --directory "$HOME/.dotfiles/$app" >/dev/null
-	done
-}
-
 # Configurar keepassxc para que siga el tema de QT
 keepass_configure(){
 	[ ! -d "$HOME/.config/keepassxc" ] && mkdir -p "$HOME/.config/keepassxc"
@@ -243,7 +231,6 @@ scripts_link(){
 		"wakeme"
 		"pipewire-start"
 		"tray-toggle"
-		"xmenu-apps"
 		"rdp-connect"
 	)
 	for file in "${files[@]}"; do
@@ -268,9 +255,10 @@ yay-install
 sudo sudo2doas
 
 # Crear directorios
-for dir in Documentos Descargas Música Imágenes Público Vídeos
+for dir in Documentos Música Imágenes Público Vídeos
 	do mkdir -p "$HOME/$dir"
 done
+ln -s /tmp/ "$HOME/Descargas"
 
 # Escogemos que drivers de vídeo instalar
 driver_choose
@@ -293,10 +281,10 @@ if sudo lsblk -nlf -o FSTYPE "$( df / | awk 'NR==2 {print $1}' )" | grep btrfs; 
 fi
 
 # Instalamos todos los paquetes a la vez
-yayinstall "${packages[@]}"
-
-# Instalamos dwm y otras utilidades
-suckless_install
+while true; do
+	yayinstall "${packages[@]}" && \
+	break
+done
 
 # Crear directorio para montar dispositivos android
 sudo mkdir /mnt/ANDROID
@@ -370,12 +358,11 @@ sudo usermod -aG storage,input,users "$USER"
 
 # Configurar el software de instalación opcional
 [ "$virt" == "true" ]      && sudo virt-conf
-[ "$audioProd" == "true" ] && sudo audio-production-conf
+[ "$audioProd" == "true" ] && sudo audioProd-conf
 [ "$music" == "true" ]     && lrcput-install
 
 # Configurar el audio de baja latencia
 sudo audio-setup
-
 # Configuramos el reloj según la zona horaria escogida
 sudo set-clock
 

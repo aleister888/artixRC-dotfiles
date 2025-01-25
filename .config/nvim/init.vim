@@ -159,7 +159,7 @@ nnoremap <silent><leader>u :UndotreeToggle<CR>
 
 " Abrir el mismo buffer en vertical/horizontal
 nnoremap <leader>v :vsplit %<CR>
-nnoremap <leader>h :split %<CR>
+nnoremap <leader>V :split %<CR>
 
 " Cambiar de pestaña
 nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
@@ -180,6 +180,7 @@ nnoremap <C-ScrollWheelDown> 5j<C-G>
 nnoremap <C-Up> 5k<C-G>
 nnoremap <C-Down> 5j<C-G>
 nnoremap = $<C-G>
+vnoremap = $h
 nnoremap G :$<CR><C-G>
 nnoremap gg :1<CR><C-G>
 
@@ -197,6 +198,11 @@ vnoremap { s{<C-r>"}
 vnoremap } s{<C-r>"}
 vnoremap [ s[<C-r>"]
 vnoremap ] s[<C-r>"]
+vnoremap ¿ s¿<C-r>"?
+vnoremap ? s¿<C-r>"?
+
+" Modo insert al final de la línea
+nnoremap <C-i> A
 
 " Abrir scratchpad en el directorio del archivo actual
 nmap <silent><leader>s :execute '!' .
@@ -254,20 +260,25 @@ au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
 " Auto-compilar software suckless
 let g:terminal_cmd = '!$(which $TERMINAL) $TERMTITLE scratchpad $TERMEXEC sh -c'
 
-au BufWritePost ~/.dotfiles/dwmblocks/blocks.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwmblocks/' .
-	\ '; doas make clean install" && killall dwmblocks; dwmblocks &'
+" Función para ejecutar la compilación
+autocmd BufWritePost config.def.h
+	\ let subdir = fnamemodify(expand('%:p'), ':h:t') |
+	\ if (subdir == 'dmenu' ||
+	\     subdir == 'dwm' ||
+	\     subdir == 'st' ||
+	\     subdir == 'dwmblocks') |
+		\ let cmd = g:terminal_cmd . ' "cd ' . expand('%:p:h') .
+		\ '/; doas make clean install"' |
+		\ if subdir == 'dwmblocks' |
+			\ let cmd .= ' && killall dwmblocks; dwmblocks &' |
+		\ endif |
+		\ execute cmd |
+	\ endif
 
-au BufWritePost ~/.dotfiles/dwm/config.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dwm/; doas make clean install"'
-
-au BufWritePost ~/.dotfiles/st/config.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/st/; doas make clean install"'
-
-au BufWritePost ~/.dotfiles/dmenu/config.def.h
-	\ execute g:terminal_cmd . ' "cd ~/.dotfiles/dmenu/; doas make clean install"'
-
-au BufWritePost ~/.dotfiles/.config/dunst/dunstrc :!pkill dunst; dunst &
+au BufWritePost ~/.dotfiles/.config/dunst/dunstrc
+	\ :!pkill dunst;
+	\ dunst &;
+	\ notify-send -i preferences-desktop-notification-bell "Dunst reiniciado"
 
 " Borrar automaticamente los espacios sobrantes
 autocmd BufWritePre * let currPos = getpos(".")

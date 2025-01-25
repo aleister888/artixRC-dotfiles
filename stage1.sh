@@ -11,7 +11,7 @@
 #   - un subvolumen para la partición /     (@)
 #   - un subvolumen para la partición /home (@home)
 
-REPO_URL="https://github.com/aleister888/artixRC-dotfiles"
+REPO_URL="https://github.com/aleister888/artix-installer"
 
 whip_msg(){
 	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60

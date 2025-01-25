@@ -10,6 +10,11 @@ snippet beg "" w
 \end{$1}$0
 endsnippet
 
+# Multiplicación
+snippet · "" i
+\cdot $0
+endsnippet
+
 # Mini-página
 snippet mini "" bi
 \begin{minipage}[${1:tcb}]{${2:.45}\textwidth}
@@ -18,8 +23,13 @@ snippet mini "" bi
 endsnippet
 
 # Entrada de una lista
-snippet im "" i
+snippet itm "" i
 \item $0
+endsnippet
+
+# Texto dentro del modo matemático
+snippet txt "text" i
+\text{${1:texto}}${2}
 endsnippet
 
 # Fuente negrita
