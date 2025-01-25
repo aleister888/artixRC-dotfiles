@@ -22,4 +22,4 @@ pacman -Sy --noconfirm --needed parted libnewt xkeyboard-config bc git
 git clone --branch noinput https://github.com/aleister888/artix-installer.git \
 	$repoDir
 
-cd $repoDir/installer; ./stage1.sh
+cd $repoDir/installer; sudo ./stage1.sh
