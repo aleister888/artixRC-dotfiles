@@ -572,7 +572,7 @@ username="$(
 
 userPassword=$(get_password $username)
 
-systemTimezone=(timezone_set)
+systemTimezone=$(timezone_set)
 
 hostName=$(
 	whip_input "Configuracion de Hostname" \
