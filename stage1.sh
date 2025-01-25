@@ -274,6 +274,6 @@ for dir in dev proc sys run; do
 done
 
 # Hacer chroot y ejecutar la 2a parte del script
-nexturl="https://raw.githubusercontent.com/aleister888/artixRC-dotfiles/main/stage2.sh"
+nexturl="https://raw.githubusercontent.com/aleister888/artix-installer/main/stage2.sh"
 next="/tmp/stage2.sh"
 artix-chroot /mnt bash -c "wget -O \"$next\" \"$nexturl\"; chmod +x \"$next\"; \"$next\""

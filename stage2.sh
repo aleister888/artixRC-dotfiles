@@ -278,7 +278,7 @@ if [ ! -d /home/"$username"/.dotfiles ]; then
 	# Nos aseguramos con el bucle que se clona el repositorio bien
 	while true; do
 		su "$username" -c \
-		"git clone https://github.com/aleister888/artixRC-dotfiles.git \
+		"git clone https://github.com/aleister888/artix-installer.git \
 		/home/$username/.dotfiles" && \
 		break
 	done
