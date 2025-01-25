@@ -43,8 +43,7 @@ echo_msg(){
 # Instalamos GRUB
 install_grub(){
 	local cryptdisk cryptid decryptid
-	cryptdisk="/dev/$rootPart"
-	cryptid=$(lsblk -nd -o UUID /dev/"$cryptdisk")
+	cryptid=$(lsblk -nd -o UUID /dev/"$rootPart")
 	decryptid=$(lsblk -n -o UUID /dev/mapper/"$cryptName")
 
 	# Obtenemos el nombre del dispositivo donde se aloja la partición boot
