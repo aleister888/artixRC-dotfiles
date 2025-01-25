@@ -526,21 +526,6 @@ packages_show(){
 # SCRIPT #
 ##########
 
-# Configuramos el servidor de claves y actualizamos las claves
-grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
-	echo 'keyserver hkp://keyserver.ubuntu.com' | \
-	tee -a /etc/pacman.grub-install --target=x86_64-efi --efi-directory=/boot --recheck
-grub-install --target=x86_64-efi --efi-directory=/boot --removable --recheckd/gnupg/gpg.conf >/dev/null
-pacman -Sc --noconfirm
-pacman-key --populate && pacman-key --refresh-keys
-
-# Instalamos:
-# - whiptail: para la interfaz TUI
-# - parted: para formatear nuestros discos
-# - xkeyboard-config: para elegir el layout de teclado
-# - bc: para calcular el DPI de la pantalla
-pacman -Sy --noconfirm --needed parted libnewt xkeyboard-config bc
-
 # Elegimos como se formatearán nuestros discos
 scheme_setup
 
@@ -579,6 +564,11 @@ driver_choose
 # Elegimos que software opcional instalar
 packages_choose
 
+# Avisamos al usuario de que ya puede relajarse y dejar que el haga su trabajo
+whip_msg "Hora del cafe" \
+"El instalador ya tiene toda la información necesaria, puedes dejar el ordenador
+desatendido. La instalacion tomara 30-45min aproximadamente."
+
 # Instalamos paquetes en la nueva instalación
 basestrap_install
 
@@ -599,7 +589,7 @@ artix-chroot /mnt sh -c "
 "
 
 # Copiamos el repositorio a la nueva instalación
-cp -r "$(dirname "$0")" "/mnt/home/$username/.dotfiles"
+cp -r "$repoDir" "/mnt/home/$username/.dotfiles"
 
 # Corregimos el propietario del repositorio copiado y ejecutamos la siguiente
 # parte del script pasandole las variables correspondientes.
