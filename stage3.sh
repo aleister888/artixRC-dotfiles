@@ -390,4 +390,5 @@ mkdir -p "$HOME"/.local/share/gnupg
 ############
 
 pacman -Q poppler >/dev/null 2>&1 && \
-	sudo ln -s /usr/lib/libpoppler-cpp.so.2.0.0 /usr/lib/libpoppler-cpp.so.1
+	sudo ln -sf /usr/lib/libpoppler-cpp.so.2.0.0 \
+	/usr/lib/libpoppler-cpp.so.1
