@@ -184,26 +184,26 @@ disk_setup(){
 		mkfs.btrfs -f "/dev/$rootPart"
 
 		mount "/dev/$rootPart" /mnt
-		btrfs subvolume create /mnt/@
+		btrfs subvolume create /mnt/root
 		# Creamos el subvolumen home
-		btrfs subvolume create /mnt/@home
+		btrfs subvolume create /mnt/home
 		# Creamos el subvolumen swap
-		btrfs subvolume create /mnt/@swap
+		btrfs subvolume create /mnt/swap
 		umount -R /mnt
 
 		mount -t btrfs \
-			-o noatime,compress=zstd:1,autodefrag,subvol=@ \
+			-o noatime,compress=zstd:1,autodefrag,subvol=root \
 			"/dev/$rootPart" /mnt
 
 		mkdir /mnt/home
 		mkdir /mnt/swap
 
 		mount -t btrfs \
-			-o noatime,compress=zstd:1,autodefrag,subvol=@home \
+			-o noatime,compress=zstd:1,autodefrag,subvol=home \
 			"/dev/$rootPart" /mnt/home
 
 		mount -t btrfs \
-			-o noatime,nodatacow,subvol=@swap \
+			-o noatime,nodatacow,subvol=swap \
 			"/dev/$rootPart" /mnt/swap
 
 		btrfs filesystem mkswapfile -s 8G /mnt/swap/swapfile
