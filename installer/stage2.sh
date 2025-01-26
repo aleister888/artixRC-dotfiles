@@ -192,12 +192,8 @@ rc-update add device-mapper boot
 rc-update add dmcrypt boot
 rc-update add dmeventd boot
 
-# Hacemos que el servicio swap se inicie después de montar todos los discos,
-# en caso contrario puede ser que se intente activar el archivo swap antes de
-# que el subvolumen swap se monte (btrfs).
+# Hacemos que la swap se utilize despúes de montar todos los discos
 sed -i '/rc_need="localmount"/s/^#//g' /etc/conf.d/swap
-rc-update del swap boot
-service_add swap
 
 ln -s /usr/bin/nvim /usr/local/bin/vim
 ln -s /usr/bin/nvim /usr/local/bin/vi
