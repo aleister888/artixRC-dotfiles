@@ -57,13 +57,6 @@ Más detalles en: [Arch Wiki - dm-crypt](https://wiki.archlinux.org/title/Dm-cry
 
 ---
 
-#### Tareas por realizar
-
-- Modularizar s3 dividiendo el script de instalación en diferentes scripts.
-	- De esta forma se podran instalar funcionalidades incluso despúes de haber instalado el sistema p.e. configurar libvirt.
-
----
-
 #### Créditos y Referencias
 
 Agradecimientos especiales a:
