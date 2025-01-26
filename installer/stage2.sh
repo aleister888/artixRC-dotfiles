@@ -119,18 +119,15 @@ arch_support(){
 	rsync lib32-elogind
 
 	# Activar repositorios de Arch
-	sed -i '/\[world\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^/#/' \
-		/etc/pacman.conf
-
 	grep -q "^\[extra\]" /etc/pacman.conf || \
 	cat <<-EOF >>/etc/pacman.conf
 		[extra]
 		Include = /etc/pacman.d/mirrorlist-arch
 
-		[world]
-		Include = /etc/pacman.d/mirrorlist
-
 		[multilib]
+		Include = /etc/pacman.d/mirrorlist-arch
+
+		[community]
 		Include = /etc/pacman.d/mirrorlist-arch
 	EOF
 
