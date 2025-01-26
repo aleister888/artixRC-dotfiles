@@ -206,10 +206,10 @@ mount_partitions(){
 	# Para btrfs tenemos que montar los dos subvolúmenes creados.
 	# Montamos el subvolumen @ en /mnt y el subvolumen @home en /mnt/home
 	if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
-		mount -o noatime,compress=zstd,subvol=@ \
+		mount -o noatime,compress=zstd:1,autodefrag,subvol=@ \
 			"/dev/$rootPart" /mnt
 		mkdir -p /mnt/home
-		mount -o noatime,compress=zstd,subvol=@home \
+		mount -o noatime,compress=zstd:1,autodefrag,subvol=@home \
 			"/dev/$rootPart" /mnt/home
 	else
 		mount -o noatime "/dev/$rootPart" /mnt
@@ -305,7 +305,7 @@ kb_layout_select(){
 
 kb_layout_conf(){
 	sudo mkdir -p /mnt/etc/X11/xorg.conf.d/ # X11
-	cat <<-EOF >  /mnt/etc/X11/xorg.conf.d/00-keyboard.conf
+	cat <<-EOF > /mnt/etc/X11/xorg.conf.d/00-keyboard.conf
 		Section "InputClass"
 		    Identifier "system-keyboard"
 		    MatchIsKeyboard "on"
@@ -532,8 +532,9 @@ format_disks
 # Montamos nuestras particiones
 mount_partitions
 
-# Elegimos distribución de teclado
+# Elegimos y establecemos la distribución de teclado
 kb_layout_select
+kb_layout_conf
 
 # Calculamos el DPI
 calculate_dpi
@@ -563,8 +564,7 @@ packages_choose
 
 # Avisamos al usuario de que ya puede relajarse y dejar que el haga su trabajo
 whip_msg "Hora del cafe" \
-"El instalador ya tiene toda la información necesaria, puedes dejar el ordenador
-desatendido. La instalacion tomara 30-45min aproximadamente."
+"El instalador ya tiene toda la información necesaria, puedes dejar el ordenador desatendido. La instalacion tomara 30-45min aproximadamente."
 
 # Instalamos paquetes en la nueva instalación
 basestrap_install
