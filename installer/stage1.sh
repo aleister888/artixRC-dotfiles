@@ -383,9 +383,6 @@ get_password(){
 	# Si ambas contraseñas coinciden devolver el resultado
 	if [ "$password1" == "$password2" ]; then
 		echo "$password1" && break
-	else
-		whip_msg "Error" \
-		"Las contraseñas no coincide. Intentalo de nuevo"
 	fi
 
 	done
