@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export repoDir="/tmp/artix-installer"
+repoDir="/tmp/artix-installer"
 
 # Configuramos el servidor de claves y actualizamos las claves
 grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \

@@ -589,7 +589,7 @@ artix-chroot /mnt sh -c "
 "
 
 # Copiamos el repositorio a la nueva instalación
-cp -r "$repoDir" "/mnt/home/$username/.dotfiles"
+cp -r "$(dirname "$0")/.." "/mnt/home/$username/.dotfiles"
 
 # Corregimos el propietario del repositorio copiado y ejecutamos la siguiente
 # parte del script pasandole las variables correspondientes.

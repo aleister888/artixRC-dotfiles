@@ -71,9 +71,3 @@ Agradecimientos especiales a:
 - [Luke Smith](https://github.com/LukeSmithxyz) por la inspiración y sus scripts.
 - [suckless.org](https://suckless.org) por las herramientas utilizadas.
 - [Sidhanth Rathod](https://github.com/siduck/dotfiles) por el widget de `eww`.
-
-Referencias:
-
-1. [Artix Linux Wiki](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
-2. [Arch Wiki](https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system)
-3. [Gentoo Wiki](https://wiki.gentoo.org/wiki/Dm-crypt)
