@@ -368,6 +368,12 @@ get_password(){
 		# Si ambas contraseñas coinciden devolver el resultado
 		if [ "$password1" == "$password2" ]; then
 			echo "$password1" && break
+		else
+			# Mostrar un mensaje de error si las contraseñas no coinciden
+			whiptail --backtitle "$REPO_URL" \
+			--title "Error" \
+			--msgbox "Las contraseñas no coinciden. Inténtalo de nuevo." \
+			10 60 3>&1 1>&2 2>&3
 		fi
 
 	done
@@ -444,12 +450,11 @@ driver_choose(){
 }
 
 packages_choose(){
-	# Definimos todas las variables (menos daw, music y virt) como locales
 	local noprivacy office latex
 
 	while true; do
 
-		variables=("virt" "music" "noprivacy" "daw" "office" "latex")
+		variables=("virt" "music" "noprivacy" "audioProd" "office" "latex")
 
 		# Reiniciamos las variables si no confirmamos la selección
 		for var in "${variables[@]}"; do eval "$var=false"; done
