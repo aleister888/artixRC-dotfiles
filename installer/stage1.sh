@@ -59,7 +59,7 @@ scheme_show(){
 	# Definimos el nombre de las particiones de nuestro disco principal
 	# (Los NVME tienen un sistema de nombrado distinto)
 	case "$ROOT_DISK" in
-		*"nvme"*)
+		*"nvme"* | *"mmcblk"*)
 			bootPart="$ROOT_DISK"p1
 			rootPart="$ROOT_DISK"p2 ;;
 		*)
@@ -146,18 +146,18 @@ disk_setup(){
 	rootPartName=
 
 	# Nombre aleatorio de la partición encriptada abierta
-	cryptName="$$"
+	cryptName=$(
+		cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 5 | head -n 1
+	)
 
 	# Borramos la firma del disco
 	wipefs --all "/dev/$ROOT_DISK"
 
-	# Creamos nuestra tabla de particionado y partición de arranque
-	parted "/dev/$ROOT_DISK" --script \
-	mklabel gpt mkpart ESP fat32 1MiB 513MiB set 1 boot on
-	mkfs.fat -F32 "/dev/$bootPart"
+	# Creamos nuestra tabla de particionado y las dos particiones necesarias
+	printf "label: gpt\n,550M,U\n,,\n" | sfdisk "/dev/$ROOT_DISK"
 
-	# Creamos la partición root
-	parted -s "/dev/$ROOT_DISK" mkpart primary 513MiB 100%
+	# Formateamos la primera partición como EFI
+	mkfs.fat -F32 "/dev/$bootPart"
 
 	# Si se eligió usar LUKS, es el momento de encriptar la partición
 	if [ "$crypt_root" == "true" ]; then
@@ -571,10 +571,8 @@ whip_msg "Hora del cafe" \
 # Instalamos paquetes en la nueva instalación
 basestrap_install
 
-mkdir -p /mnt/etc
-
 # Creamos el fstab
-fstabgen -U /mnt >> /mnt/etc/fstab
+fstabgen -U /mnt >/mnt/etc/fstab
 
 # Montamos los directorios necesarios para el chroot
 for dir in dev proc sys run; do
