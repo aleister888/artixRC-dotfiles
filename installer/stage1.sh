@@ -121,17 +121,18 @@ scheme_setup(){
 
 # Encriptar el disco duro
 part_encrypt(){
+	local cryptPassword
 	while true; do
-		whip_msg "LUKS" "Se va a encriptar el disco $1. A continuación se te pedirá la contraseña del disco"
-		cryptsetup luksFormat -q --verify-passphrase "/dev/$2" && break
+		cryptPassword=$(
+			get_password "Entrada de Contraseña" "Confirmación de contraseña" \
+			"Introduce la contraseña de encriptación del disco $1:" \
+			"Re-introduce la contraseña de encriptación del disco $1:"
+		)
+		yes "$cryptPassword" | cryptsetup luksFormat -q --verify-passphrase "/dev/$2" && break
 		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 	done
 
-	while true; do
-		whip_msg "LUKS" "Se te pedirá la contraseña para poder desencriptar el disco temporalmente y comenzar la instalación."
-		cryptsetup open "/dev/$2" "$3" && break
-		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
-	done
+	yes "$cryptPassword" | cryptsetup open "/dev/$2" "$3" && break
 }
 
 disk_setup(){
@@ -345,23 +346,26 @@ calculate_dpi(){
 
 get_password(){
 	local password1 password2
-	local userName=$1
+	local title1=$1
+	local title2=$2
+	local box1=$3
+	local box2=$4
 
 	while true; do
 
 		# Pedir la contraseña la primera vez
 		password1=$(
 			whiptail --backtitle "$REPO_URL" \
-			--title "Entrada de Contraseña" \
-			--passwordbox "Introduce la contraseña del usuario $userName:" \
+			--title "$title1" \
+			--passwordbox "$box1" \
 			10 60 3>&1 1>&2 2>&3
 		)
 
 		# Pedir la contraseña una segunda vez
 		password2=$(
 			whiptail --backtitle "$REPO_URL" \
-			--title "Confirmación de Contraseña" \
-			--passwordbox "Re-introduce la contraseña del usuario $userName:" \
+			--title "$title2" \
+			--passwordbox "$box2" \
 			10 60 3>&1 1>&2 2>&3
 		)
 
@@ -526,7 +530,11 @@ kb_layout_conf
 # Calculamos el DPI
 calculate_dpi
 
-rootPassword=$(get_password root)
+rootPassword=$(
+	get_password "Entrada de Contraseña" "Confirmación de contraseña" \
+	"Introduce la contraseña del superusuario:" \
+	"Re-introduce la contraseña del superusuario"
+)
 
 username="$(
 	whiptail --backtitle "$REPO_URL" \
@@ -534,7 +542,11 @@ username="$(
 	10 60 3>&1 1>&2 2>&3
 )"
 
-userPassword=$(get_password $username)
+userPassword=$(
+	get_password "Entrada de Contraseña" "Confirmación de contraseña" \
+	"Introduce la contraseña del usuario $userName:" \
+	"Re-introduce la contraseña del usuario $userName:"
+)
 
 systemTimezone=$(timezone_set)
 
