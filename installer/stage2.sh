@@ -235,5 +235,5 @@ su "$username" -c "
 	latex=$latex \
 	audioProd=$audioProd
 
-	cd /home/$username/.dotfiles && ./stage3.sh
+	cd /home/$username/.dotfiles/installer && ./stage3.sh
 "

@@ -611,7 +611,7 @@ artix-chroot /mnt sh -c "
 
 	chown $username:$username -R \
 	   /home/$username/.dotfiles
-	cd /home/$username/.dotfiles
+	cd /home/$username/.dotfiles/installer
 
 	./stage2.sh
 "
