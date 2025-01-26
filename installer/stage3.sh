@@ -32,7 +32,8 @@ whip_menu(){ # Menus de whitpail
 	local TITLE=$1
 	local MENU=$2
 	shift 2
-	whiptail --backtitle "$REPO_URL" --title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
+	whiptail --backtitle "$REPO_URL" \
+	--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 
 service_add(){ # Activar servicio
@@ -58,63 +59,44 @@ mapfile -t packages < <(cat \
 	"$HOME"/.dotfiles/assets/packages/system \
 	"$HOME"/.dotfiles/assets/packages/x11
 )
-# Ya instalamos pipewire en stage1.sh, pero no los paquetes para
-# 32 bits, que vienen de los repositorios de Arch Linux
 
-# Vamos a elegir primero que paquetes instalar y que acciones tomar, y luego instalar todo conjuntamente
-driver_choose(){
-	# Opciones posibles
-	driver_options=("amd" "AMD" "nvidia" "NVIDIA" "intel" "Intel" "virtual" "VM")
-	# Elegimos nuestra tarjeta gráfica
-	graphic_driver=$(whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
-	${driver_options[@]})
+driver_add(){
 	case $graphic_driver in
+
 	amd)
-		packages+=("xf86-video-amdgpu" "mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon") ;;
+	packages+=(
+		"xf86-video-amdgpu"
+		"mesa" "lib32-mesa"
+		"vulkan-radeon" "lib32-vulkan-radeon"
+	) ;;
+
 	nvidia)
-		packages+=("dkms" "nvidia-dkms" "nvidia-utils" "libva-vdpau-driver" "libva-mesa-driver" "nvidia-prime" "lib32-nvidia-utils" "nvidia-utils-openrc" "opencl-nvidia") ;;
+	packages+=(
+		"dkms" "nvidia-dkms" "nvidia-utils"
+		"libva-vdpau-driver" "libva-mesa-driver"
+		"nvidia-prime" "lib32-nvidia-utils"
+		"nvidia-utils-openrc" "opencl-nvidia"
+	) ;;
+
 	intel)
-		packages+=("xf86-video-intel" "libva-intel-driver" "lib32-libva-intel-driver" "vulkan-intel" "lib32-vulkan-intel") ;;
+	packages+=(
+		"xf86-video-intel"
+		"libva-intel-driver" "lib32-libva-intel-driver"
+		"vulkan-intel" "lib32-vulkan-intel"
+	) ;;
+
 	virtual)
-		packages+=("xf86-video-vmware" "xf86-input-vmmouse" "vulkan-virtio" "lib32-vulkan-virtio") ;;
+	packages+=(
+		"xf86-video-vmware" "xf86-input-vmmouse"
+		"vulkan-virtio" "lib32-vulkan-virtio"
+	) ;;
+
 	esac
 }
 
 # Elegir el software a instalar
-packages_choose(){
-	local packages_confirm="false"
-	# Definimos todas las variables (menos daw, music y virt) como locales
-	local noprivacy office latex
-
-	while [ "$packages_confirm" == "false" ]; do
-
-		variables=("virt" "music" "noprivacy" "daw" "office" "latex")
-
-		# Reiniciamos las variables si no confirmamos la selección
-		for var in "${variables[@]}"; do eval "$var=false"; done
-
-		whip_yes "Virtualizacion" "¿Quieres instalar libvirt para ejecutar máquinas virtuales?" && \
-			virt="true"
-		whip_yes "Musica"         "¿Deseas instalar software para manejar tu coleccion de musica?" && \
-			music="true"
-		whip_yes "Privacidad"     "¿Deseas instalar Discord y Telegram?" && \
-			noprivacy="true"
-		whip_yes "Oficina"        "¿Deseas instalar software de ofimatica?" && \
-			office="true"
-		whip_yes "laTeX"          "¿Deseas instalar laTeX?" && \
-			latex="true"
-		whip_yes "DAW"            "¿Deseas instalar software de produccion de audio?" && \
-			audioProd="true"
-
-		# Confirmamos la selección de paquetes a instalar (o no)
-		if packages_show; then
-			packages_confirm=true
-		else
-			whip_msg "Operacion cancelada" "Se te volvera a preguntar que software desea instalar"
-		fi
-	done
-
-	# Agregamos paquetes al array dependiendo de las respuestas
+packages_add(){
+	# Agregamos paquetes al array dependiendo de que se eligió
 	if [ "$virt" == "true" ]; then
 		while IFS= read -r package; do
 			packages+=("$package")
@@ -132,89 +114,34 @@ packages_choose(){
 	fi
 
 	[ "$music" == "true" ] && \
-		packages+=("easytag" "picard" "flacon" "cuetools" "lrcget-bin" "python-tqdm")
+		packages+=(
+			"easytag" "picard" "flacon"
+			"cuetools" "lrcget-bin" "python-tqdm"
+		)
+
 	[ "$noprivacy" == "true" ] && \
 		packages+=("discord" "telegram-desktop")
+
 	[ "$office" == "true" ] && \
 		packages+=("libreoffice" "libreoffice-fresh-es")
 }
 
-# Elegimos que paquetes instalar
-packages_show(){
-	local scheme # Variable con la lista de paquetes a instalar
-	scheme="Se instalaran:\n"
-	[ "$virt"      == "true" ] && scheme+="libvirt\n"
-	[ "$music"     == "true" ] && scheme+="soft. gestión de música\n"
-	[ "$noprivacy" == "true" ] && scheme+="telegram y discord\n"
-	[ "$office"    == "true" ] && scheme+="soft. ofimatica\n"
-	[ "$latex"     == "true" ] && scheme+="laTeX\n"
-	[ "$audioProd"       == "true" ] && scheme+="Tuxguitar REAPER Metronome Audio-Plugins\n"
-	whiptail --backtitle "$REPO_URL" --title "Confirmar paquetes" --yesno "$scheme" 15 60
-}
-
-# Elegimos distribución de teclado
-kb_layout_select(){
-	# Hacer un array con las diferentes distribuciones posibles y elegir nuestro layout
-	key_layouts=$(find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f  -printf "%f\n" | \
-	sort -u | grep -v '...')
-	keyboard_array=()
-	for key_layout in $key_layouts; do
-		keyboard_array+=("$key_layout" "$key_layout")
-	done
-	final_layout=$(whip_menu "Teclado" "Por favor, elige una distribucion de teclado:" \
-	${keyboard_array[@]})
-}
-
-kb_layout_conf(){
-	sudo mkdir -p /etc/X11/xorg.conf.d/ # X11
-	cat <<-EOF | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf >/dev/null
-		Section "InputClass"
-		    Identifier "system-keyboard"
-		    MatchIsKeyboard "on"
-		    Option "XkbLayout" "$final_layout"
-		    Option "XkbModel" "pc105"
-		    Option "XkbOptions" "terminate:ctrl_alt_bksp"
-		EndSection
-	EOF
-	# Si elegimos español, configurar el layout de la tty en español también
-	[ "$final_layout" == "es" ] && sudo sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
-}
-
-# Calcular el DPI de nuestra pantalla y configurar Xresources
+# Configurar Xresources
 xresources_make(){
 	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
-	# Selección de resolución del monitor
-	resolution=$(whip_menu "Resolucion del Monitor" "Seleccione la resolucion de su monitor:" \
-		"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K")
-
-	# Selección del tamaño del monitor en pulgadas (diagonal)
-	size=$(whip_menu "Tamaño del Monitor" "Seleccione el tamaño de su monitor (en pulgadas):" \
-		"14" "Portatil" "15.6" "Portatil" "17" "Portatil" "24" "Escritorio" "27" "Escritorio")
-
-	# Definimos la resolución elegida
-	case $resolution in
-		"720p")  width=1280; height=720 ;;
-		"1080p") width=1920; height=1080 ;;
-		"1440p") width=2560; height=1440 ;;
-		"2160p") width=3840; height=2160 ;;
-	esac
-
-	# Calculamos el PPI y lo dividimos por 2
-	display_dpi=$(echo "scale=6; sqrt($width^2 + $height^2) / $size / 2" | bc)
-	# Redondeamos el PPI calculado al entero más cercano
-	rounded_dpi=$(printf "%.0f" "$display_dpi")
-	clear; echo "El DPI de su pantalla es: $rounded_dpi"; sleep 0.75
 	# Añadimos nuestro DPI a el arcivo Xresources
-	echo "Xft.dpi:$rounded_dpi" | tee -a "$XRES_FILE"
+	echo "Xft.dpi:$final_dpi" | tee -a "$XRES_FILE"
 }
 
 # Descargar los archivos de diccionario
 vim_spell_download(){
 	mkdir -p "$HOME/.local/share/nvim/site/spell/"
-	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
-	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" -q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
+	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" \
+		-q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
+	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug" \
+		-q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
 }
 
 # Configurar keepassxc para que siga el tema de QT
@@ -251,7 +178,8 @@ trash_dir(){
 
 # Instalamos yay (https://aur.archlinux.org/packages/yay)
 yay-install
-# Reemplazar sudo por doas
+
+# Reemplamos sudo por doas
 sudo sudo2doas
 
 # Crear directorios
@@ -261,22 +189,20 @@ done
 ln -s /tmp/ "$HOME/Descargas"
 
 # Escogemos que drivers de vídeo instalar
-driver_choose
+driver_add
+
 # Elegimos que paquetes instalar
-packages_choose
-# Elegimos distribución de teclado
-kb_layout_select
-kb_layout_conf
+packages_add
+
 # Calcular el DPI de nuestra pantalla y configurar Xresources
 xresources_make
 
 # Antes de instalar los paquetes, configurar makepkg para
 # usar todos los núcleos durante la compliación
-# Créditos para: <luke@lukesmith.xyz>
 sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
-# Instalar grub-btrfs solo si se detecta que / es una partición btrfs
-if sudo lsblk -nlf -o FSTYPE "$( df / | awk 'NR==2 {print $1}' )" | grep btrfs; then
+# Instalar grub-btrfs solo si / es una partición btrfs
+if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 	packages+=("grub-btrfs")
 fi
 
@@ -302,28 +228,31 @@ keepass_configure
 # Suspender de forma automatica cuando la bateria cae por debajo del 10%
 [ -e /sys/class/power_supply/BAT0 ] && autosuspend-conf
 
-# Permitir hacer click tocando el trackpad (X11)
-# Créditos para: <luke@lukesmith.xyz>
+# Permitir hacer click tocando el trackpad (X11) <luke@lukesmith.xyz>
 [ -e /sys/class/power_supply/BAT0 ] && \
-sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" "/etc/X11/xorg.conf.d/40-libinput.conf"
+	sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" \
+	        "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Establecemos la versión de java por defecto
 sudo archlinux-java set java-17-openjdk
 
 # Descargar los diccionarios para vim
 vim_spell_download
+
 # Instalar los archivos de configuración e instalar plugins de zsh
 dotfiles-install
+
 # Crear enlaces simbólicos a /usr/local/bin/ para ciertos scripts
 scripts_link
+
 # Crear el directorio /.Trash con permisos adecuados
 trash_dir
 
 # Configurar syncthing para que se inicie con el ordenador
-echo "@reboot $USER syncthing --no-browser --no-default-folder" | sudo tee -a /etc/crontab
+echo "@reboot $USER syncthing --no-browser --no-default-folder" |\
+	sudo tee -a /etc/crontab >/dev/null
 
-# Si estamos usando una máquina virtual,
-# configuramos X11 para usar 1080p como resolución
+# Si estamos usando una máquina virtual, configuramos X11 para funcionar a 1080p
 [ "$graphic_driver" == "virtual" ] && \
 sudo cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
@@ -367,15 +296,15 @@ sudo audio-setup
 sudo set-clock
 
 # Scripts de elogind
-sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" /lib/elogind/system-sleep/nm-restart
+sudo install -m 755 "$HOME/.dotfiles/assets/system/nm-restart" \
+	/lib/elogind/system-sleep/nm-restart
 
-# Script para redes con autenticación vía navegador
-sudo install -m 755 "$HOME/.dotfiles/assets/system/90-open_captive_portal" /etc/NetworkManager/dispatcher.d/90-open_captive_portal
-
-# Añadir entradas a /etc/environmentv
-echo 'CARGO_HOME="~/.local/share/cargo"
-GNUPGHOME="~/.local/share/gnupg"
-_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"' | sudo tee -a /etc/environment
+# Añadir entradas a /etc/environment
+cat <<-'EOF' | sudo tee -a /etc/environment
+	CARGO_HOME="~/.local/share/cargo"
+	GNUPGHOME="~/.local/share/gnupg"
+	_JAVA_OPTIONS=-Djava.util.prefs.userRoot="~/.config/java"
+EOF
 
 WINEPREFIX="$HOME/.config/wineprefixes" winetricks -q mfc42
 
@@ -390,5 +319,5 @@ mkdir -p "$HOME"/.local/share/gnupg
 ############
 
 pacman -Q poppler >/dev/null 2>&1 && \
-	sudo ln -sf /usr/lib/libpoppler-cpp.so.2.0.0 \
-	/usr/lib/libpoppler-cpp.so.1
+	sudo ln -s /usr/lib/libpoppler-cpp.so.2.0.0 \
+	/usr/lib/libpoppler-cpp.so.1 2>/dev/null

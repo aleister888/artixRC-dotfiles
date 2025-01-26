@@ -18,11 +18,8 @@ Auto-instalador de Artix Linux (OpenRC) con dmw, st, dmenu y mi configuración p
 - Ejecuta como root:
 
 ```bash
-bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/stage1.sh)
+bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/install.sh)
 ```
-
-> [!WARNING]
-> El instalador esta pensado para usarse solo desde el LiveISO de Artix Linux OpenRC. No ejecutes este programa desde tu propia instalación.
 
 > [!NOTE]
 > La instalación toma unos `30-45 minutos` aproximadamente.
@@ -33,7 +30,7 @@ bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/s
 
 - **Encriptación**: `/` y `/home` encriptados; `/boot` no encriptado.
 - Soporte para **btrfs** y **ext4**
-- Compatible con **BIOS** y **UEFI**.
+- Compatible solo con **UEFI**.
 - Configuración automática de `Xorg` y `eww` basada en el DPI y la resolución.
 - Entorno limpio y organizado según el estándar [XDG Base Directory](https://wiki.archlinux.org/title/XDG_Base_Directory).
 
@@ -60,14 +57,6 @@ Más detalles en: [Arch Wiki - dm-crypt](https://wiki.archlinux.org/title/Dm-cry
 
 ---
 
-#### Tareas por realizar
-
-- Modularizar s3 dividiendo el script de instalación en diferentes scripts.
-	- De esta forma se podran instalar funcionalidades incluso despúes de haber instalado el sistema p.e. configurar libvirt.
-- Arreglar la lógica de s1-s2 para permitir instalaciones fuera del LiveISO
-
----
-
 #### Créditos y Referencias
 
 Agradecimientos especiales a:
@@ -75,9 +64,3 @@ Agradecimientos especiales a:
 - [Luke Smith](https://github.com/LukeSmithxyz) por la inspiración y sus scripts.
 - [suckless.org](https://suckless.org) por las herramientas utilizadas.
 - [Sidhanth Rathod](https://github.com/siduck/dotfiles) por el widget de `eww`.
-
-Referencias:
-
-1. [Artix Linux Wiki](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
-2. [Arch Wiki](https://wiki.archlinux.org/title/dm-crypt/Encrypting_an_entire_system)
-3. [Gentoo Wiki](https://wiki.gentoo.org/wiki/Dm-crypt)

@@ -1,1 +1,1 @@
-/home/aleister/.dotfiles/.profile
+/home/aleister/.dotfiles/assets/configs/.profile

@@ -111,7 +111,7 @@ set number relativenumber cursorline " Opciones del cursor
 set ignorecase incsearch " Ajustes de búsqueda
 set list fillchars+=vert:\| " Líneas de separación vertical y carácteres invisibles
 set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
-set colorcolumn=81
+set colorcolumn=81 " Marcar la columna 81
 
 " Indentación y tabulación
 autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
