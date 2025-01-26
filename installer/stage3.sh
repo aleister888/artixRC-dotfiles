@@ -25,15 +25,7 @@ whip_yes(){ # Elegir con whiptail
 }
 
 yayinstall() { # Instalar paquetes con yay
-	# Usamos el flag -d para omitir las comprobaciones de las versiones de
-	# las dependencias. Hay paquetes del repositorio extra de Arch que
-	# tienen versiones conflictivas de sus dependencias en el repositorio
-	# world de Artix. Prefiero que la instalación no falle y luego tenga que
-	# resolver los posibles conflictos manualmente.
-	#
-	# p.e. (26/01/25) eza [extra] necesita de libgit 1:1.9.0, pero la
-	# versión que hay en world es 1:1.8.4
-	yay -Syd --noconfirm --needed "$@"
+	yay -Sy --noconfirm --needed "$@"
 }
 
 whip_menu(){ # Menus de whitpail
