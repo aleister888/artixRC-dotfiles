@@ -30,7 +30,7 @@ bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/i
 
 - **Encriptación**: `/` y `/home` encriptados; `/boot` no encriptado.
 - Soporte para **btrfs** y **ext4**
-- Compatible con **BIOS** y **UEFI**.
+- Compatible solo con **UEFI**.
 - Configuración automática de `Xorg` y `eww` basada en el DPI y la resolución.
 - Entorno limpio y organizado según el estándar [XDG Base Directory](https://wiki.archlinux.org/title/XDG_Base_Directory).
 

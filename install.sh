@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ ! -d /sys/firmware/efi ]; then
+	printf "El sistema no es UEFI. Abortando..."
+	exit 1
+fi
+
 repoDir="/tmp/artix-installer"
 
 # Configuramos el servidor de claves y actualizamos las claves

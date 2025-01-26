@@ -49,16 +49,11 @@ install_grub(){
 	esac
 
 	# Instalar GRUB
-	if [ ! -d /sys/firmware/efi ]; then
-		grub-install --target=i386-pc --boot-directory=/boot \
-			--bootloader-id=Artix "$bootDrive" --recheck
-	else
-		grub-install --target=x86_64-efi --efi-directory=/boot \
-			--bootloader-id=Artix --recheck "$bootDrive"
+	grub-install --target=x86_64-efi --efi-directory=/boot \
+		--recheck "$bootDrive"
 
-		grub-install --target=x86_64-efi --efi-directory=/boot \
-			--bootloader-id=Artix --removable --recheck "$bootDrive"
-	fi
+	grub-install --target=x86_64-efi --efi-directory=/boot \
+		--removable --recheck "$bootDrive"
 
 	# Si se usa encriptación, le decimos a GRUB el UUID de la partición
 	# encriptada y desencriptada.
@@ -71,26 +66,6 @@ install_grub(){
 	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-# Creamos el archivo swap
-swap_create(){
-	# Btrfs necesita un volumen dedicad para el archivo swap, porque no
-	# puede hacer snapshots de volúmenes con swapfiles.
-	if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
-		btrfs subvolume create /swap
-		btrfs filesystem mkswapfile \
-			--size 4g --uuid clear /swap/swapfile
-		swapon /swap/swapfile
-		echo "/swap/swapfile none swap defaults 0 0" |\
-			tee -a /etc/fstab
-	else
-		fallocate -l 4GB /swapfile
-		chmod 0600 /swapfile
-		mkswap /swapfile
-		swapon /swapfile
-		echo "/swapfile none swap defaults 0 0" |\
-			tee -a /etc/fstab
-	fi
-}
 
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
 hostname_config(){
@@ -184,7 +159,11 @@ if [ "$crypt_root" = "true" ]; then
 	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi
 
-if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+if [ "$ROOT_FILESYSTEM" = "btrfs"]; then
+	sed -i 's/BINARIES=()/BINARIES=(\/usr\/bin\/btrfs)/g' /etc/mkinitcpio.conf
+fi
+
+if echo "$(lspci;lsusb)" | grep -i bluetooth; then
 	pacinstall bluez-openrc bluez-utils && \
 	service_add bluetoothd
 	echo_msg "Bluetooth detectado. Se instaló bluez."

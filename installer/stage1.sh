@@ -14,18 +14,11 @@
 #   - Nombre de la partición principal ($rootPartName)
 #   - Nombre de la partición desencriptada abierta ($cryptName)
 #   - Nombre del host ($hostName)
-#   - Driver de video a usar ($graphic_driver)
+#   - Driver de vídeo a usar ($graphic_driver)
 #   - Variables con el software opcional elegido
 #     - $virt, $music, $noprivacy, $office, $latex, $audioProd
 
 REPO_URL="https://github.com/aleister888/artix-installer"
-
-# Detectamos si el sitema es UEFI o BIOS.
-if [ ! -d /sys/firmware/efi ]; then
-	PART_TYPE="msdos" # MBR para BIOS
-else
-	PART_TYPE="gpt" # GPT para UEFI
-fi
 
 whip_msg(){
 	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60
@@ -60,16 +53,8 @@ echo_msg(){
 scheme_show(){
 	local scheme   # Variable con el esquema de particiones completo
 	local rootType # Tipo de partición/ (LUKS o normal)
-	bootMount=     # Punto de montaje con la partición de arranque
 	bootPart=      # Partición de arranque
 	rootPart=      # Partición con el sistema
-
-	# Establecemos la partición de arranque en función del tipo de sistema
-	if [ "$PART_TYPE" == "msdos" ]; then
-		bootMount="/boot"
-	else
-		bootMount="/boot/efi"
-	fi
 
 	# Definimos el nombre de las particiones de nuestro disco principal
 	# (Los NVME tienen un sistema de nombrado distinto)
@@ -91,7 +76,7 @@ scheme_show(){
 
 	# Creamos el esquema que whiptail nos mostrará
 	scheme="/dev/$ROOT_DISK    $(lsblk -dn -o size /dev/"$ROOT_DISK")
-	/dev/$bootPart  $bootMount
+	/dev/$bootPart  /boot
 	/dev/$rootPart  $rootType
 	"
 	if [ "$crypt_root" == "true" ]; then
@@ -103,7 +88,7 @@ scheme_show(){
 		--title "Confirmar particionado" \
 		--yesno "$scheme" 15 60
 	then
-		whip_yes "Salir" "¿Desea cancelar la instalacion? En caso contrario, volvera a elegir su esquema de particiones" && \
+		whip_yes "Salir" "¿Desea cancelar la instalación? En caso contrario, volverá a elegir su esquema de particiones" && \
 		exit 1
 	fi
 }
@@ -114,7 +99,7 @@ scheme_setup(){
 		while true; do
 			ROOT_DISK=$(
 				whip_menu "Discos disponibles" \
-				"Selecciona un disco para la instalacion:" \
+				"Selecciona un disco para la instalación:" \
 				"$(lsblk -dn -o name,size | tr '\n' ' ')"
 			) && break
 		done
@@ -137,19 +122,19 @@ scheme_setup(){
 # Encriptar el disco duro
 part_encrypt(){
 	while true; do
-		whip_msg "LUKS" "Se va a encriptar el disco $1. A continuacion se te pedira la contraseña del disco"
+		whip_msg "LUKS" "Se va a encriptar el disco $1. A continuación se te pedirá la contraseña del disco"
 		cryptsetup luksFormat -q --verify-passphrase "/dev/$2" && break
-		whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
+		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 	done
 
 	while true; do
-		whip_msg "LUKS" "Se te pedira la contraseña para poder desencriptar el disco temporalmente y comenzar la instalacion."
+		whip_msg "LUKS" "Se te pedirá la contraseña para poder desencriptar el disco temporalmente y comenzar la instalación."
 		cryptsetup open "/dev/$2" "$3" && break
-		whip_msg "LUKS" "Hubo un error, debera introducir la contraseña otra vez"
+		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 	done
 }
 
-format_disks(){
+disk_setup(){
 	# Elegimos el sistema de ficheros
 	ROOT_FILESYSTEM=$(
 		whip_menu "Sistema de archivos" \
@@ -159,24 +144,16 @@ format_disks(){
 
 	rootPartName=
 
-	# Nombre aleatorio de la particion encriptada abierta
+	# Nombre aleatorio de la partición encriptada abierta
 	cryptName="$$"
 
 	# Borramos la firma del disco
 	wipefs --all "/dev/$ROOT_DISK"
 
 	# Creamos nuestra tabla de particionado y partición de arranque
-	if [ "$PART_TYPE" == "msdos" ]; then
-		# BIOS -> MBR
-		echo -e "label: dos\nstart=1MiB, size=512MiB, type=83\n" | \
-		sfdisk --quiet -f "/dev/$ROOT_DISK"
-		mkfs.fat -F32 "/dev/$bootPart"
-	else
-		# UEFI -> GPT
-		parted "/dev/$ROOT_DISK" --script \
-		mklabel gpt mkpart ESP fat32 1MiB 513MiB set 1 boot on
-		mkfs.fat -F32 "/dev/$bootPart"
-	fi
+	parted "/dev/$ROOT_DISK" --script \
+	mklabel gpt mkpart ESP fat32 1MiB 513MiB set 1 boot on
+	mkfs.fat -F32 "/dev/$bootPart"
 
 	# Creamos la partición root
 	parted -s "/dev/$ROOT_DISK" mkpart primary 513MiB 100%
@@ -189,37 +166,50 @@ format_disks(){
 		rootPart="mapper/$cryptName"
 	fi
 
-	# Formateamos nuestra partición "/"
+	# Formateamos y montamosnuestras particiones
 	if [ "$ROOT_FILESYSTEM" == "ext4" ]; then
+
 		mkfs.ext4 "/dev/$rootPart"
+
+		# Creamos el archivo swap
+		mount "/dev/$rootPart" /mnt
+		mkdir /mnt/swap
+		fallocate -l 8G /mnt/swap/swapfile
+		chmod 0600 /swapfile
+		mkswap /swapfile
+
 	elif [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
+
 		mkfs.btrfs -f "/dev/$rootPart"
+
 		mount "/dev/$rootPart" /mnt
 		btrfs subvolume create /mnt/@
+		# Creamos el subvolumen home
 		btrfs subvolume create /mnt/@home
-		umount /mnt
-	fi
-}
+		# Creamos el subvolumen swap
+		btrfs subvolume create /mnt/@swap
+		umount -R /mnt
 
-# Función para montar nuestras particiones
-mount_partitions(){
-	# Para btrfs tenemos que montar los dos subvolúmenes creados.
-	# Montamos el subvolumen @ en /mnt y el subvolumen @home en /mnt/home
-	if [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
-		mount -o noatime,compress=zstd:1,autodefrag,subvol=@ \
+		mount -t btrfs \
+			-o noatime,compress=zstd:1,autodefrag,subvol=@ \
 			"/dev/$rootPart" /mnt
-		mkdir -p /mnt/home
-		mount -o noatime,compress=zstd:1,autodefrag,subvol=@home \
+
+		mkdir /mnt/home
+		mkdir /mnt/swap
+
+		mount -t btrfs \
+			-o noatime,compress=zstd:1,autodefrag,subvol=@home \
 			"/dev/$rootPart" /mnt/home
-	else
-		mount -o noatime "/dev/$rootPart" /mnt
+
+		mount -t btrfs \
+			-o noatime,nodatacow,subvol=@swap \
+			"/dev/$rootPart" /mnt/swap
+
+		btrfs filesystem mkswapfile -s 8G /mnt/swap/swapfile
+
 	fi
 
-	mkdir /mnt/boot
-
-	# Montamos nuestra partición de arranque
-	mount "/dev/$bootPart" /mnt/boot
-	[ "$PART_TYPE" == "gpt" ] && mkdir /mnt/boot/efi
+	swapon /mnt/swap/swapfile
 }
 
 # Instalar paquetes con basestrap
@@ -245,7 +235,7 @@ basestrap_install(){
 	basestrap_packages+=" cronie cronie-openrc cups cups-openrc freetype2"
 	basestrap_packages+=" libjpeg-turbo grub git wpa_supplicant usbutils"
 	basestrap_packages+=" pciutils cryptsetup device-mapper-openrc dialog"
-	basestrap_packages+=" cryptsetup-openrc acpid-openrc"
+	basestrap_packages+=" cryptsetup-openrc acpid-openrc efibootmgr"
 
 	# Instalamos pipewire para evitar conflictos (p.e. se isntala jack2 y no
 	# pipewire-jack). Los paquetes para 32 bits se instalarán una vez
@@ -259,17 +249,12 @@ basestrap_install(){
 	# Añadimos el paquete con el microcódigo de CPU correspodiente
 	local manufacturer
 	manufacturer=$(
-		grep vendor_id /proc/cpuinfo | awk '{print $1}' | head -1
+		grep vendor_id /proc/cpuinfo | awk '{print $3}' | head -1
 	)
 	if [ "$manufacturer" == "GenuineIntel" ]; then
 		basestrap_packages+=" intel-ucode"
 	elif [ "$manufacturer" == "AuthenticAMD" ]; then
 		basestrap_packages+=" amd-ucode"
-	fi
-
-	# Si el sistema es UEFI, instalaremos también efibootmgr
-	if [ -d /sys/firmware/efi ]; then
-		basestrap_packages+=" efibootmgr"
 	fi
 
 	# Si el dispositivo tiene bluetooth, instalaremos blueman
@@ -364,26 +349,26 @@ get_password(){
 
 	while true; do
 
-	# Pedir la contraseña la primera vez
-	password1=$(
-		whiptail --backtitle "$REPO_URL" \
-		--title "Entrada de Contraseña" \
-		--passwordbox "Introduce tu contraseña del usuario $userName:" \
-		10 60 3>&1 1>&2 2>&3
-	)
+		# Pedir la contraseña la primera vez
+		password1=$(
+			whiptail --backtitle "$REPO_URL" \
+			--title "Entrada de Contraseña" \
+			--passwordbox "Introduce la contraseña del usuario $userName:" \
+			10 60 3>&1 1>&2 2>&3
+		)
 
-	# Pedir la contraseña una segunda vez
-	password2=$(
-		whiptail --backtitle "$REPO_URL" \
-		--title "Confirmación de Contraseña" \
-		--passwordbox "Introduce tu contraseña del usuario $userName:" \
-		10 60 3>&1 1>&2 2>&3
-	)
+		# Pedir la contraseña una segunda vez
+		password2=$(
+			whiptail --backtitle "$REPO_URL" \
+			--title "Confirmación de Contraseña" \
+			--passwordbox "Re-introduce la contraseña del usuario $userName:" \
+			10 60 3>&1 1>&2 2>&3
+		)
 
-	# Si ambas contraseñas coinciden devolver el resultado
-	if [ "$password1" == "$password2" ]; then
-		echo "$password1" && break
-	fi
+		# Si ambas contraseñas coinciden devolver el resultado
+		if [ "$password1" == "$password2" ]; then
+			echo "$password1" && break
+		fi
 
 	done
 }
@@ -406,7 +391,7 @@ timezone_set(){
 
 		# Elegir la región
 		region=$(
-			whip_menu "Selecciona una region" \
+			whip_menu "Selecciona una región" \
 			"Por favor, elige una región" \
 			${regions_array[@]}
 		)
@@ -435,14 +420,14 @@ timezone_set(){
 			break
 		else
 			whip_msg "Zona horaria no valida" \
-			"Zona horaria no valida. Asegurate de elegir una zona horaria valida."
+			"Zona horaria no valida. Asegúrate de elegir una zona horaria valida."
 		fi
 	done
 
 	echo "/usr/share/zoneinfo/$region/$timezone"
 }
 
-# Elegimos el driver de video
+# Elegimos el driver de vídeo
 driver_choose(){
 	local driver_options
 
@@ -526,11 +511,8 @@ packages_show(){
 # Elegimos como se formatearán nuestros discos
 scheme_setup
 
-# Formateamos los discos
-format_disks
-
-# Montamos nuestras particiones
-mount_partitions
+# Formateamos, creamos la swap y montamos los discos
+disk_setup
 
 # Elegimos y establecemos la distribución de teclado
 kb_layout_select
