@@ -211,6 +211,9 @@ disk_setup(){
 	fi
 
 	swapon /mnt/swap/swapfile
+
+	mkdir /mnt/boot
+	mount "/dev/$bootPart" /mnt/boot
 }
 
 # Instalar paquetes con basestrap
