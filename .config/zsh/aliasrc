@@ -122,8 +122,10 @@ screenrecord() {
 }
 
 yabridgectl_dirs(){
-	yabridgectl add "$WINEPREFIX/drive_c/Program Files/Common Files"
-	yabridgectl add "$WINEPREFIX/drive_c/Program Files/Steinberg"
+	[ -d "$WINEPREFIX/drive_c/Program Files/Common Files" ] && \
+		yabridgectl add "$WINEPREFIX/drive_c/Program Files/Common Files"
+	[ -d "$WINEPREFIX/drive_c/Program Files/Steinberg" ] && \
+		yabridgectl add "$WINEPREFIX/drive_c/Program Files/Steinberg"
 }
 
 # Alias para encontrar archivos pac de pacman
