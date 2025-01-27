@@ -176,8 +176,8 @@ disk_setup(){
 		mount "/dev/$rootPart" /mnt
 		mkdir /mnt/swap
 		fallocate -l 8G /mnt/swap/swapfile
-		chmod 0600 /swapfile
-		mkswap /swapfile
+		chmod 0600 /mnt/swap/swapfile
+		mkswap /mnt/swap/swapfile
 
 	elif [ "$ROOT_FILESYSTEM" == "btrfs" ]; then
 
