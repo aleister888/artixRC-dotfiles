@@ -187,7 +187,7 @@ ln -s "$HOME/.dotfiles/assets/desktop/image.desktop" \
 set_default_mime_types(){
 	local pattern="$1"
 	local desktop_file="$2"
-	awk -v pattern="$pattern" '$0 ~ pattern {print $1}' /etc/mime.types |\
+	awk -v pattern="$pattern" '$0 ~ pattern {print $1}' /etc/mime.types | \
 	while read -r line; do
 		xdg-mime default "$desktop_file" "$line"
 	done

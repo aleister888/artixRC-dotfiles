@@ -10,7 +10,7 @@ for app in "${priority[@]}"; do {
 case "$app" in
 	# Si es firefox, comprobamos que se esta escuchando música
 	firefox)
-		if playerctl -p firefox metadata xesam:url 2>/dev/null |\
+		if playerctl -p firefox metadata xesam:url 2>/dev/null | \
 		grep "youtube.com\|open.spotify.com\|mega.nz" >/dev/null ;then
 			PLAYER=$app
 			break

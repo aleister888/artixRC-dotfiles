@@ -12,7 +12,8 @@ kill $(pgrep tauonmb)
 sleep 1
 
 # Extraemos los temas
-aunpack "$HOME/.dotfiles/assets/themes.tar.gz" -X "$HOME/.local/share/TauonMusicBox/theme/"
+aunpack "$HOME/.dotfiles/assets/themes.tar.gz" \
+	-X "$HOME/.local/share/TauonMusicBox/theme/"
 
 # Archivo de configuración
 CONF="$HOME/.local/share/TauonMusicBox/tauon.conf"

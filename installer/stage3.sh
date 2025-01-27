@@ -249,7 +249,7 @@ scripts_link
 trash_dir
 
 # Configurar syncthing para que se inicie con el ordenador
-echo "@reboot $USER syncthing --no-browser --no-default-folder" |\
+echo "@reboot $USER syncthing --no-browser --no-default-folder" | \
 	sudo tee -a /etc/crontab >/dev/null
 
 # Si estamos usando una máquina virtual, configuramos X11 para funcionar a 1080p

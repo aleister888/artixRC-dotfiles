@@ -23,8 +23,8 @@ pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | \
 }
 
 # Función para hacer sonar la alarma hasta que la apage
-# Vamos a guardar el volúmen que tenia el dispostivo de audio, para poner la alarma
-# con un volumen alto y luego restaurar el nivel de volumen previo
+# Vamos a guardar el volúmen que tenia el dispostivo de audio, para poner la
+# alarma con un volumen alto y luego restaurar el nivel de volumen previo
 wakeme(){
 	# Guardamos el volumen original y ponemos el volumen al 70%
 	local VOL="$(pamixer --get-volume)"
@@ -32,10 +32,12 @@ wakeme(){
 	# Hacer sonar alarma
 	ffplay -nodisp -autoexit "$ALARMA" &
 
-	# Esperar a que cierre este menu para cerrar el proceso que esta haciendo sonar la alarma
+	# Esperar a que cierre este menu para cerrar el proceso que esta
+	# haciendo sonar la alarma
 	yad --title "Cerrar Alarma" --button="Apagar Alarma"
 
-	# Una vez que el usuario interactúa con el menú se detiene la reproducción de la alarma
+	# Una vez que el usuario interactúa con el menú se detiene la
+	# reproducción de la alarma
 	pkill ffplay
 	pactl set-sink-volume @DEFAULT_SINK@ "$VOL"%
 }
@@ -43,7 +45,8 @@ wakeme(){
 SPEAKERS="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
 OG_SINK="$(pactl get-default-sink)"
 
-# Si el dispositivo de audio no son los altavoces, cambiar a estos antes de reproducir la alarma
+# Si el dispositivo de audio no son los altavoces, cambiar a estos antes de
+# reproducir la alarma
 if [ "$(pactl get-default-sink)" != "$SPEAKERS" ]; then
 	# Cambiamos a altavoces
 	pactl set-default-sink "$SPEAKERS"

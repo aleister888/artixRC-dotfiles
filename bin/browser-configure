@@ -19,7 +19,8 @@ makeuserjs(){
 	overrides="$pdir/user-overrides.js"
 	userjs="$pdir/user.js"
 	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" "$overrides"
-	[ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
+	[ ! -f "$arkenfox" ] && \
+		curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
 	cat "$arkenfox" "$overrides" > "$userjs"
 	chown "$USER:wheel" "$arkenfox" "$userjs"
 	# Instalar el script de actualizado.
@@ -32,9 +33,13 @@ makeuserjs(){
 }
 
 installffaddons(){
-	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies violentmonkey darkreader xbs clearurls keepassxc-browser sponsorblock"
+	addonlist="ublock-origin decentraleyes istilldontcareaboutcookies"
+	addonlist+=" violentmonkey darkreader xbs clearurls keepassxc-browser"
+	addonlist+=" sponsorblock"
 	addontmp="$(mktemp -d)"
+
 	mkdir -p "$pdir/extensions/"
+
 	for addon in $addonlist; do
 		if [ "$addon" == "ublock-origin" ]; then
 			addonurl="$(curl -sL https://api.github.com/repos/gorhill/uBlock/releases/latest | \
@@ -44,10 +49,12 @@ installffaddons(){
 				grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*')"
 		fi
 		file="${addonurl##*/}"
+
 		wget -q "$addonurl" -O "$addontmp/$file"
+
 		id="$(unzip -p "$addontmp/$file" manifest.json | grep "\"id\"" | head -n 1)"
-		id="${id%\"*}"
-		id="${id##*\"}"
+		id="${id%\"*}"; id="${id##*\"}"
+
 		# Mover el archivo al directorio de extensiones con el nombre correcto
 		[ -n "$id" ] && mv "$addontmp/$file" "$pdir/extensions/$id.xpi"
 	done

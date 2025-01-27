@@ -3,7 +3,7 @@
 info-print(){
 	# Contar el número de baterías disponibles
 	num_baterias=$(
-		find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' |\
+		find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | \
 		wc -l
 	)
 	out=$(acpi -b | grep -v "Unknown\|unavailable")
@@ -16,7 +16,7 @@ info-print(){
 		fi
 		porcentaje="$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%')"
 		tiempo="$(
-			echo "$out" | sed "${i}q;d" |\
+			echo "$out" | sed "${i}q;d" | \
 				grep -oP ' [0-9]{2}:[0-9]{2}:[0-9]{2}'
 		)"
 		echo "${estado}${porcentaje}${tiempo}"

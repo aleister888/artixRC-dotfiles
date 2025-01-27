@@ -3,7 +3,10 @@
 # Script para desmontar dispositivos android
 
 # Elegir que dispositivo Android desmontar
-chosen="$(awk '/simple-mtpfs/ {print $2}' /etc/mtab | dmenu -p "Que dispositivo desmontar?")" || exit 1
+chosen="$(
+	awk '/simple-mtpfs/ {print $2}' /etc/mtab | \
+		dmenu -p "Que dispositivo desmontar?"
+	)" || exit 1
 
 # Verificar si se seleccionó un dispositivo
 [ -z "$chosen" ] && exit

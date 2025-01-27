@@ -9,7 +9,7 @@ repoDir="/tmp/artix-installer"
 
 # Configuramos el servidor de claves y actualizamos las claves
 grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
-	echo 'keyserver hkp://keyserver.ubuntu.com' |\
+	echo 'keyserver hkp://keyserver.ubuntu.com' | \
 	sudo tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
 
 sudo pacman -Sc --noconfirm

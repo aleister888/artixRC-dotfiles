@@ -4,11 +4,11 @@
 
 # Función para escapar el nombre de teléfonos móviles.
 escape(){
-	echo "$@" |\
-	iconv -cf UTF-8 -t ASCII//TRANSLIT |\
-	tr -d '[:punct:]' |\
-	tr '[:upper:]' '[:lower:]' |\
-	tr ' ' '-' |\
+	echo "$@" | \
+	iconv -cf UTF-8 -t ASCII//TRANSLIT | \
+	tr -d '[:punct:]' | \
+	tr '[:upper:]' '[:lower:]' | \
+	tr ' ' '-' | \
 	sed "s/-\+/-/g;s/\(^-\|-\$\)//g"
 }
 

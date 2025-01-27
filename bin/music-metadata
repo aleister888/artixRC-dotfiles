@@ -40,17 +40,17 @@ metaprint(){
 
 	case "$1" in
 		title)
-			if [ -z "$PLAYER" ]; then
-				out="Cannot detect artist"
-			else
-				out="$(playerctl metadata --player="$PLAYER" title 2>/dev/null)"
-			fi ;;
+		if [ -z "$PLAYER" ]; then
+			out="Cannot detect artist"
+		else
+			out="$(playerctl metadata --player="$PLAYER" title)"
+		fi ;;
 		artist)
-			if [ -z "$PLAYER" ]; then
-				out="Player Stopped"
-			else
-				out="$(playerctl metadata --player="$PLAYER" artist 2>/dev/null)"
-			fi ;;
+		if [ -z "$PLAYER" ]; then
+			out="Player Stopped"
+		else
+			out="$(playerctl metadata --player="$PLAYER" artist)"
+		fi ;;
 	esac
 
 	if [ "$withsafe" == "true" ]; then
@@ -91,7 +91,7 @@ while [[ "$#" -gt 0 ]]; do
 			exit ;;
 		-a) FACT=$ALTFACT; metaprint artist
 			exit ;;
-		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl 2>/dev/null)
+		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl)
 			if [ -z "$PLAYER" ] || [ -z "$COVER" ]; then
 				echo "$XDG_CONFIG_HOME/eww/placeholder.png"
 			else
