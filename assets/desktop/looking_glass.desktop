@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Lookin Glass
+Exec=looking-glass-client -p 6000 -f /dev/shm/looking-glass input:rawMouse yes -m KEY_RIGHTSHIFT
+Terminal=false
+Icon=preferences-desktop-remote-desktop

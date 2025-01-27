@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script para mover todos los conflictos de syncthing a un directorio común
 
