@@ -21,23 +21,26 @@ DPI="$(grep -oP "Xft.dpi:\K[0-9]*" "$HOME"/.config/Xresources)"
 
 if [ "$DPI" -ge 192 ]; then
 	for app in dmenu dwm st; do
+
 		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
-		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null 2>&1
+		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
 
 		# Crear un config.h con el tamaño de fuente aumentado
 		sed 's/pixelsize=[0-9]*/pixelsize=40/g' \
-			"$SUCKLESS_DIR"/config.def.h | tee "$SUCKLESS_DIR"/config.h >/dev/null
+			"$SUCKLESS_DIR"/config.def.h |\
+			tee "$SUCKLESS_DIR"/config.h >/dev/null
 
 		# Para dwm, aumentar el tamaño de la barra
 		[ "$app" = "dwm" ] && \
-			sed 's/user_bh.*=.*[0-9]*;/user_bh=32;/g' -i "$SUCKLESS_DIR"/config.h
+			sed 's/user_bh.*=.*[0-9]*;/user_bh=32;/g' \
+			-i "$SUCKLESS_DIR"/config.h
 
 		# Compilar
-		sudo make install --directory "$SUCKLESS_DIR" >/dev/null 2>&1 && \
+		sudo make install --directory "$SUCKLESS_DIR" >/dev/null && \
 			echo "$app compilado con éxito"
 
 		# Limpiar directorio
-		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null 2>&1
+		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
 	done
 
 	# Configurar eclipse para HDPI
@@ -49,7 +52,7 @@ if [ "$DPI" -ge 192 ]; then
 else
 	for app in dwm dmenu st dwmblocks; do
 		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
-		sudo make install --directory "$SUCKLESS_DIR" >/dev/null 2>&1 && \
+		sudo make install --directory "$SUCKLESS_DIR" >/dev/null && \
 			echo "$app compilado con éxito"
 	done
 fi

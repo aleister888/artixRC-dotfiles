@@ -8,7 +8,8 @@ up_hours=$(((up_seconds % 86400) / 3600))
 up_minutes=$(((up_seconds % 3600) / 60))
 
 if [ $up_days -gt 0 ]; then
-	printf "  %d día(s), %d hora(s), %d minuto(s)\n" $up_days $up_hours $up_minutes
+	printf "  %d día(s), %d hora(s), %d minuto(s)\n" \
+		$up_days $up_hours $up_minutes
 elif [ $up_hours -gt 0 ]; then
 	printf "  %d hora(s), %d minuto(s)\n" $up_hours $up_minutes;
 else

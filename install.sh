@@ -24,7 +24,7 @@ sudo pacman-key --populate && sudo pacman-key --refresh-keys
 sudo pacman -Sy --noconfirm --needed parted libnewt xkeyboard-config bc git
 
 # Clonamos el repositorio e iniciamos el instalador
-git clone https://github.com/aleister888/artix-installer.git \
+git clone --depth 1 https://github.com/aleister888/artix-installer.git \
 	$repoDir
 
 cd $repoDir/installer; sudo ./stage1.sh

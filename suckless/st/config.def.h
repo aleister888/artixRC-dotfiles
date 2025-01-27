@@ -12,7 +12,7 @@ static char *font2[] = {
 	"Noto Color Emoji:pixelsize=16:regular",
 };
 
-static int borderpx = 2;
+static int borderpx = 0;
 
 /* modkey options: ControlMask, ShiftMask or XK_ANY_MOD */
 static uint url_opener_modkey = XK_ANY_MOD;

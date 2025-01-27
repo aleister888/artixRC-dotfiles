@@ -11,4 +11,6 @@ chown -c root:root /etc/doas.conf
 chmod -c 0400 /etc/doas.conf
 rm /etc/sudoers
 pacman -Rcns sudo --noconfirm
-su "$RUSER" -c "yay -Sy --noconfirm --disable-download-timeout --needed doas-sudo-shim"
+su "$RUSER" -c "
+	yay -Sy --noconfirm --disable-download-timeout --needed doas-sudo-shim
+"

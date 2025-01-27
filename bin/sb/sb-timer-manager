@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/sh -x
 
 # Script para empezar un contador pomodoro
 
@@ -58,7 +58,9 @@ timer_count(){
 	while [ "$worktime" -gt 0 ] || [ "$breaktime" -gt 0 ]; do
 		grep true $breakfile && work_completed="true"
 		if [ "$worktime" -gt 0 ]; then
-			sed -i "s/^W [0-9]*/W $((worktime - 1))/" "$pomodorofile"
+			sed -i "s/^W [0-9]*/W $((worktime - 1))/" \
+				"$pomodorofile"
+
 			worktime=$((worktime - 1))
 		else
 			if [ "$work_completed" = "false" ]; then
@@ -66,7 +68,9 @@ timer_count(){
 				pw-play $sound
 				notify-send "Hora del descanso"
 			fi
-			sed -i "s/^B [0-9]*/B $((breaktime - 1))/" "$pomodorofile"
+			sed -i "s/^B [0-9]*/B $((breaktime - 1))/" \
+				"$pomodorofile"
+
 			breaktime=$((breaktime - 1))
 		fi
 		sleep 1

@@ -15,12 +15,14 @@ TIMEZONE="$(readlink /etc/localtime | sed 's|.*/zoneinfo/||')"
 while true; do
 
 	[ -z "$CURRENT_TIME" ] && CURRENT_TIME=$(
-		curl -s "http://worldtimeapi.org/api/timezone/$TIMEZONE" |\
+		curl -s \
+		"http://worldtimeapi.org/api/timezone/$TIMEZONE" |\
 		jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /'
 	)
 
 	[ -z "$CURRENT_TIME" ] && CURRENT_TIME=$(
-		curl -s "https://timeapi.io/api/Time/current/zone?timeZone=$TIMEZONE" |\
+		curl -s \
+		"https://timeapi.io/api/Time/current/zone?timeZone=$TIMEZONE" |\
 		grep -oP '"dateTime":"\K[^"]+' | cut -d. -f1 | sed 's/T/ /'
 	)
 

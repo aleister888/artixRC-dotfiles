@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Contamos cuantas baterias hay
-num_baterias=$(find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l)
+num_baterias=$(
+	find /sys/class/power_supply/ -maxdepth 1 -name 'BAT[0-9]*' | wc -l
+)
 # Guardamos el output de acpi
 out=$(acpi -b | grep -v "Unknown\|unavailable")
 
@@ -11,7 +13,9 @@ sum=0
 
 # Guardamos el nivel de carga de todas la baterias y calculamos la suma de los valores
 for ((i=1; i<=num_baterias; i++)); do
-	battery_level+=("$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')")
+	battery_level+=(
+		"$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
+	)
 	sum=$((sum + battery_level[i-1]))
 	echo "$out" | sed "${i}q;d" | grep Charging >/dev/null && charging=true
 done

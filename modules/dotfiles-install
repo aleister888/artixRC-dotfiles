@@ -17,7 +17,8 @@ base_dir="$HOME/.dotfiles/.config/zsh"
 
 # Clonamos cada repositorio
 for plugin in "${plugins[@]}"; do
-	git clone "https://github.com/$plugin" "$base_dir/$(basename "$plugin")" >/dev/null
+	git clone "https://github.com/$plugin" \
+		"$base_dir/$(basename "$plugin")" >/dev/null
 done
 
 # Instalamos nuestros archivos de configuración

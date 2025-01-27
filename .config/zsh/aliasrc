@@ -9,7 +9,7 @@ alias v='nvim'
 alias c='/bin/clear'
 alias dmk='doas make install'
 alias cp='cp -iv'
-alias cat='bat -p'
+alias cat='bat -p --tabs 8'
 alias ls='eza -lagX --time-style iso --group-directories-first --smart-group'
 alias grep='grep --color=auto'
 
@@ -33,9 +33,6 @@ alias cleanup='yay -Rcns $(yay -Qdtq)'
 alias brokenlink='find / -xtype l -print 2>/dev/null'
 alias unownedfiles='doas find / ! -name "/mnt/*" -nogroup -nouser -print 2>/dev/null'
 alias lostfiles='doas lostfiles | grep -iv "Theme\|opt\|Font"'
-
-# Alias para encontrar archivos pac de pacman
-alias pac='doas find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null'
 
 # Detectar que paquetes del AUR necesitan recompilarse
 alias rebuild-detector="checkrebuild -v"
@@ -127,4 +124,22 @@ screenrecord() {
 yabridgectl_dirs(){
 	yabridgectl add "$WINEPREFIX/drive_c/Program Files/Common Files"
 	yabridgectl add "$WINEPREFIX/drive_c/Program Files/Steinberg"
+}
+
+# Alias para encontrar archivos pac de pacman
+pac() {
+	# Buscar archivos .pacnew y .pacsave
+	doas find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) 2>/dev/null | while read -r file; do
+		# Obtener el nombre del archivo original
+		original_file="${file%.pacnew}"
+		original_file="${original_file%.pacsave}"
+
+		# Mostrar encabezado con formato
+		printf "\n##$(printf '#%.0s' $(seq 1 ${#original_file}))##\n"
+		printf "# $original_file #\n"
+		printf "##$(printf '#%.0s' $(seq 1 ${#original_file}))##\n\n"
+
+		# Mostrar diferencias y limitar la salida
+		diff -d "$file" "$original_file" | head -n 20
+	done
 }

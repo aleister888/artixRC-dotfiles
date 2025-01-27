@@ -373,7 +373,7 @@ get_password(){
 		)
 
 		# Si ambas contraseñas coinciden devolver el resultado
-		if [ "$password1" == "$password2" ]; then
+		if [ "$password1" == "$password2" ] && [ ! -z "$password1" ]; then
 			echo "$password1" && break
 		else
 			# Mostrar un mensaje de error si las contraseñas no coinciden
@@ -429,7 +429,8 @@ timezone_set(){
 		)
 
 		# Verificar si la zona horaria seleccionada es válida
-		if [ -f "/usr/share/zoneinfo/$region/$timezone" ]; then
+		if [ -f "/usr/share/zoneinfo/$region/$timezone" ] && \
+			[ ! -z "$region" ] && [ ! -z "$timezone" ]; then
 			break
 		else
 			whip_msg "Zona horaria no valida" \
@@ -536,7 +537,7 @@ calculate_dpi
 rootPassword=$(
 	get_password "Entrada de Contraseña" "Confirmación de contraseña" \
 	"Introduce la contraseña del superusuario:" \
-	"Re-introduce la contraseña del superusuario"
+	"Re-introduce la contraseña del superusuario:"
 )
 
 username="$(
@@ -547,8 +548,8 @@ username="$(
 
 userPassword=$(
 	get_password "Entrada de Contraseña" "Confirmación de contraseña" \
-	"Introduce la contraseña del usuario $userName:" \
-	"Re-introduce la contraseña del usuario $userName:"
+	"Introduce la contraseña del usuario $username:" \
+	"Re-introduce la contraseña del usuario $username:"
 )
 
 systemTimezone=$(timezone_set)

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 descargar_mod() {
 	MOD_URL=$1
