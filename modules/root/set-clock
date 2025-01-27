@@ -9,6 +9,9 @@ fi
 
 TIMEZONE="$(readlink /etc/localtime | sed 's|.*/zoneinfo/||')"
 
+# Inicializamos un contador
+COUNTER=1
+
 # Ejecutamos curl en un bucle hasta que la variable este definida
 # porque aveces no se se recibe correctamente la fecha.
 
@@ -28,6 +31,15 @@ while true; do
 
 	# Si la variable esta establecida, salimos del bucle
 	[ -n "$CURRENT_TIME" ] && break
+
+	# Si el contador es mayor a 5, salimos del bucle
+	if [ "$COUNTER" -ge 5 ]; then
+		echo "Error: No se pudo obtener la hora después de 5 intentos." >&2
+		exit 1
+	fi
+
+	# Incrementamos el contador
+	COUNTER=$((COUNTER + 1))
 
 	sleep 5
 

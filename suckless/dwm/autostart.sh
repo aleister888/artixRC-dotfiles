@@ -4,15 +4,14 @@
 # por aleister888 <pacoe1000@gmail.com>
 
 source "$HOME/.dotfiles/.profile"
+# Leemos nuestro perfil de zsh
+. "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 XDG_RUNTIME_DIR=/run/user/$(id -u)
 export XDG_RUNTIME_DIR
 
 # Mostramos el fondo de pantalla
 nitrogen --restore
-
-# Leemos nuestro perfil de zsh
-. "$XDG_CONFIG_HOME/zsh/.zprofile"
 
 # Cerrar instancias previas del script
 processlist=/tmp/startScript_processes
@@ -51,24 +50,39 @@ ewwspawn(){
 	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
 
 	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
-	resolution=$(xrandr | grep -E ' connected (primary )?[0-9]+x[0-9]+' | awk -F '[x+]' '{print $2}')
+	resolution=$(
+		xrandr | \
+		grep -E ' connected (primary )?[0-9]+x[0-9]+' | \
+		awk -F '[x+]' '{print $2}'
+	)
 
 	# Verificar y crear enlaces simbólicos según los rangos de resolución
 	if [[ $resolution -ge 2160 ]]; then
-		[[ "$current_link" != "$file_2160" ]] && ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
+		[[ "$current_link" != "$file_2160" ]] && \
+		ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	else
-		[[ "$current_link" != "$file_1080" ]] && ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
+		[[ "$current_link" != "$file_1080" ]] && \
+		ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
 	fi
 
-	# Cerrar el widget si hay mas de un monitor en uso o alguna ventana activa
-	if [ "$monitors" -gt 1 ] || xdotool getactivewindow &>/dev/null || pgrep i3lock &>/dev/null; then
+	# Cerrar el widget si hay mas de un monitor en uso o alguna
+	# ventana activa
+	if \
+		[ "$monitors" -gt 1 ] || \
+		xdotool getactivewindow &>/dev/null || \
+		pgrep i3lock &>/dev/null
+	then
 		pkill eww
-	# Invocar nuestro widget si hay un solo monitor activo y eww no esta ya en ejecución
+
+	# Invocar nuestro widget si hay un solo monitor activo y eww no esta
+	# ya en ejecución
 	elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
 		eww open dashboard &
 	fi
+
 	# Esperar antes de ejecutar el bucle otra vez
 	sleep 0.2
+
 	done
 }
 
@@ -78,7 +92,8 @@ virtualmic(){
 	# Salir si se encuentra el sink
 	pactl list | grep '\(Name\|Monitor Source\): my-combined-sink' && exit
 
-	# En caso contrario, intentar crear el sink cada 5 segundos durante un máximo de 5 intentos
+	# En caso contrario, intentar crear el sink cada 5 segundos durante un
+	# máximo de 5 intentos
 	while [ $counter -lt 6 ]; do
 		# Verificar si Wireplumber está en ejecución
 		pgrep wireplumber && ~/.local/bin/pipewire-virtualmic &
@@ -97,7 +112,9 @@ virtualmic(){
 xset -dpms && xset s off &
 
 # Leer la configuración Xresources
-[ -f "$XDG_CONFIG_HOME/Xresources" ] && xrdb -merge "$XDG_CONFIG_HOME/Xresources"
+if [ -f "$XDG_CONFIG_HOME/Xresources" ]; then
+	xrdb -merge "$XDG_CONFIG_HOME/Xresources"
+fi
 
 # Ocultar el cursor si no se está usando
 pgrep unclutter || unclutter --start-hidden --timeout 2 &
@@ -105,7 +122,7 @@ pgrep unclutter || unclutter --start-hidden --timeout 2 &
 # Pipewire
 pgrep pipewire || pipewire-start &
 
-# Iniciar el compositor (Solo en hardware real. Desactivar para máquinas virtuales)
+# Iniciar el compositor (Solo en maquinas real.)
 grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
 pgrep picom || picom &
 
@@ -117,7 +134,7 @@ pgrep dwmblocks     || dwmblocks & # Barra de estado
 pgrep nm-applet     || nm-applet & # Applet de red
 
 # Si se detecta una tarjeta bluetooth, iniciar blueman-applet
-if lspci | grep -i bluetooth >/dev/null || lsusb | grep -i bluetooth >/dev/null; then
+if echo "$(lspci;lsusb)" | grep -i bluetooth; then
 	pgrep blueman-applet || blueman-applet &
 fi
 
@@ -152,7 +169,8 @@ while true; do
 
 	activewindow="$(xdotool getwindowclassname "$(xdotool getactivewindow)")"
 
-	# Si alguna de estas aplicaciones esta enfocada y reproduciendo vídeo/audio, no mostrar el salvapantallas
+	# Si alguna de estas aplicaciones esta enfocada y reproduciendo
+	# vídeo/audio, no mostrar el salvapantallas
 	players=("vlc" "firefox" "mpv")
 	for player in "${players[@]}"; do
 		if [ "$(playerctl --player "$player" status)" == "Playing" ] && \
@@ -162,7 +180,7 @@ while true; do
 		fi
 	done
 
-	# Si alguna de estas aplicaciones esta enfocada, no mostrar el salvapantallas
+	# Si alguna de estas apps esta enfocada, no mostrar el salvapantallas
 	apps="looking-glass\|TuxGuitar"
 	echo "$activewindow" | grep "$apps" && resultado=1
 
@@ -176,7 +194,9 @@ while true; do
 done &
 
 # Servidor VNC Local (Solo para equipos que no lleven batería)
-[ ! -e /sys/class/power_supply/BAT0 ] && sh -c 'pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none' &
+if [ ! -e /sys/class/power_supply/BAT0 ]; then
+	pgrep x0vncserver || x0vncserver -localhost -SecurityTypes none &
+fi
 
 # Iniciar hydroxide si está instalado
 # https://github.com/emersion/hydroxide?tab=readme-ov-file#usage
