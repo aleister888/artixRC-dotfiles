@@ -49,6 +49,7 @@ if $USER !=# 'root'
 		\ 'coc-sh',
 		\ 'coc-vimtex',
 		\ 'coc-texlab',
+		\ 'coc-java',
 	\ ]
 
 	call plug#end()
