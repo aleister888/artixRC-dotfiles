@@ -5,6 +5,9 @@ assets/pdf/help.synctex.gz
 
 bookmarks
 
+.config/lf/colors
+.config/lf/icons
+
 .config/eww/C*
 .config/eww/dashboard.scss
 

@@ -1,7 +1,7 @@
 " Auto-instalar vim-plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
-	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -11,25 +11,45 @@ let mapleader = "," " Definir la tecla leader
 if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
-	Plug 'elkowar/yuck.vim' " Soporte para el lenguaje yuck
-	Plug 'andis-sprinkis/lf-vim' " Soporte para el archivo de configuración de lf
-	Plug 'alisdair/vim-armasm' " Sintaxis para ARM Assembly
-	Plug 'cakebaker/scss-syntax.vim'
-	Plug 'ryanoasis/vim-devicons' " Iconos
+	" Apariencia
+	Plug 'ryanoasis/vim-devicons'      " Iconos
 	Plug 'nvim-tree/nvim-web-devicons' " Iconos
-	Plug 'morhetz/gruvbox' " Tema
+	Plug 'morhetz/gruvbox'             " Tema
+	Plug 'vim-airline/vim-airline'     " Barra de estado
+	Plug 'vim-airline/vim-airline-themes'
+	" Visualización colores
+	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+
+	" Sintaxis
+	Plug 'alisdair/vim-armasm'       " Lenguaje: ARM Assembly
+	Plug 'uiiaoo/java-syntax.vim'    " Lenguaje: Java
+	Plug 'cakebaker/scss-syntax.vim' " Lenguaje: SCSS
+	Plug 'elkowar/yuck.vim'          " Lenguaje: yuck
+	Plug 'andis-sprinkis/lf-vim'     " Configuración: lf
+
+	" Menús
 	Plug 'akinsho/bufferline.nvim' " Pestañas
+	Plug 'mbbill/undotree'         " Mostrar árbol de cambios
 	Plug 'nvim-tree/nvim-tree.lua' " Árbol de directorios
-	Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " Pre-visualización de colores
-	Plug 'mbbill/undotree' " Mostrar árbol de cambios
-	Plug 'preservim/vim-markdown' " Funciones para markdown
+
+	" Lenguajes
+	"   Markdown:
+	Plug 'preservim/vim-markdown'
 	Plug 'iamcco/markdown-preview.nvim', {
 		\ 'do': { -> mkdp#util#install() },
-		\ 'for': ['markdown', 'vim-plug'] } " Previews para Markdown
-	Plug 'lervag/vimtex' " Sugerencias de entrada (laTeX)
-	Plug 'sirver/ultisnips' " Snippets
-	Plug 'vim-airline/vim-airline' " Barra de estado
-	Plug 'vim-airline/vim-airline-themes'
+		\ 'for': ['markdown', 'vim-plug'] }
+	"   Latex:
+	Plug 'lervag/vimtex'
+	Plug 'sirver/ultisnips'
+
+	" LSP
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	let g:coc_disable_startup_warning = 1
+	let g:coc_global_extensions = [
+		\ 'coc-sh',
+		\ 'coc-vimtex',
+		\ 'coc-texlab',
+	\ ]
 
 	call plug#end()
 endif
@@ -37,6 +57,29 @@ endif
 "################################
 "# Configuración de los plugins #
 "################################
+
+" coc
+inoremap <silent><expr> <s-tab>
+	\ pumvisible() ? coc#pum#confirm() : "\<C-g>u\<tab>"
+let g:coc_preferences = {
+	\ 'suggest.maxCompleteItemCount': 25,
+	\ 'suggest.detailField': 'abbr',
+	\ 'suggest.fixIncomplete': 0,
+	\ 'coc.preferences.formatOnType': v:false,
+	\ 'coc.preferences.formatOnSaveFiletypes': [],
+	\ 'diagnostic.enable': v:false,
+	\ 'signature.target': 'echo',
+	\ 'suggest.preview': v:false
+\ }
+augroup my_coc_highlights
+	au!
+	au ColorScheme * highlight CocErrorSign guifg =   #B16286
+	au ColorScheme * highlight CocWarningSign guifg = #fabd2f
+	au ColorScheme * highlight CocInfoSign guifg =    #83a598
+	au ColorScheme * highlight CocHintSign guifg =    #8ec07c
+	au ColorScheme * highlight CocFloating guibg =    #282828
+	au ColorScheme * highlight CocMenuSel guibg =     #3C3836
+augroup END
 
 " vim-armasm
 let asmsyntax='armasm'
@@ -46,19 +89,19 @@ let filetype_inc='armasm'
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
 " vim-markdown
+let g:vim_markdown_math = 1
+let g:vim_markdown_syntax = 'on'
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_syntax = 'on'
-let g:vim_markdown_math = 1
 
 " markdown-preview.nvim
 let g:mkdp_auto_start = 0
 let g:mkdp_refresh_slow = 1
-let g:mkdp_preview_options = { 'disable_filename': 1 }
-let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 let g:mkdp_page_title = '${name}'
+let g:mkdp_browserfunc = 'OpenMarkdownPreview'
+let g:mkdp_preview_options = { 'disable_filename': 1 }
 
 function OpenMarkdownPreview (url)
 	execute "silent ! setsid -f firefox --new-window " . a:url
@@ -93,25 +136,43 @@ let g:airline_symbols.colnr = ' C:'
 "# Configuración de neovim #
 "###########################
 
-syntax enable " Activar resaltado de sintaxis
-set title " Cambiar el título de la ventana al del archivo
-set encoding=UTF-8 " Establecer la codificación de caracteres en UTF-8
-set mouse=a " Permitir el uso del mouse en todos los modos
-set tags=/dev/null " Desactivar ctags
-set hidden " Cambiar de buffer sin guardar los cambios
-set autochdir " Cambiar el directorio de trabajo al del archivo abierto
-set ttimeoutlen=0 " Tiempo de espera entre teclas
-set wildmode=longest,list,full " Navegación y autocompletado de comandos
-set pumheight=10 " Altura máxima del menú de autocompletado
-set scrolloff=5 " Añadir márgenes en los extremos de la ventana
-set wrap " Desactiva el ajuste de línea
-set laststatus=3 " Mostar una sola barra de estado para todas las ventanas
-set lazyredraw " No re-dibujar mientras se ejecutan macros
-set number relativenumber cursorline " Opciones del cursor
-set ignorecase incsearch " Ajustes de búsqueda
-set list fillchars+=vert:\| " Líneas de separación vertical y carácteres invisibles
-set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
-set colorcolumn=81 " Marcar la columna 81
+" Activar resaltado de sintaxis
+	syntax enable
+" Título de la ventana: Título del archivo
+	set title
+" Codificación de caracteres: UTF-8
+	set encoding=UTF-8
+" Permitir el uso del mouse en todos los modos
+	set mouse=a
+" Desactivar ctags
+	set tags=/dev/null
+" Cambiar de buffer sin guardar los cambios
+	set hidden
+" Cambiar el directorio de trabajo al del archivo
+	set autochdir
+" Tiempo de espera entre teclas
+	set ttimeoutlen=0
+" Navegación y autocompletado de comandos
+	set wildmode=longest,list,full
+" Altura máxima del menú de autocompletado
+	set pumheight=10
+" Añadir márgenes en los extremos de la ventana
+	set scrolloff=5
+" Desactiva el ajuste de línea
+	set wrap
+" Una sola barra de estado para todas las ventanas
+	set laststatus=3
+" No re-dibujar mientras se ejecutan macros
+	set lazyredraw
+" Opciones del cursor
+	set number relativenumber cursorline
+" Ajustes de búsqueda
+	set ignorecase incsearch
+" Líneas de separación vertical y carácteres invisibles
+	set list fillchars+=vert:\|
+	set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
+" Marcar la columna 80
+	set colorcolumn=80
 
 " Indentación y tabulación
 autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
@@ -134,21 +195,19 @@ endif
 
 set background=dark termguicolors
 
-hi Normal ctermbg=none guibg=none
+hi Normal  ctermbg=none guibg=none
 hi NonText ctermbg=none guibg=none
-hi LineNr ctermbg=none guibg=none
-hi Folded ctermbg=none guibg=none
+hi LineNr  ctermbg=none guibg=none
+hi Folded  ctermbg=none guibg=none
 
-hi Search guifg=#282828 guibg=#D5C4A1
-hi IncSearch guifg=#282828 guibg=#D3869B
-hi CurSearch guifg=#83A598 guibg=#282828
-
-hi SpellBad guifg=#8EC07C guibg=#282828
-hi SpellCap guifg=#8EC07C guibg=#282828
+hi Search     guifg=#282828 guibg=#D5C4A1
+hi IncSearch  guifg=#282828 guibg=#D3869B
+hi CurSearch  guifg=#83A598 guibg=#282828
+hi SpellBad   guifg=#8EC07C guibg=#282828
+hi SpellCap   guifg=#8EC07C guibg=#282828
 hi SpellLocal guifg=#FABD2F guibg=#282828
-hi SpellRare guifg=#FE8019 guibg=#282828
-
-hi ErrorMsg guifg=#FE8019 guibg=#282828
+hi SpellRare  guifg=#FE8019 guibg=#282828
+hi ErrorMsg   guifg=#FE8019 guibg=#282828
 
 "#####################
 "# Atajos de teclado #
@@ -253,6 +312,9 @@ au Filetype markdown nmap <silent><leader>h :MarkdownPreview<CR>
 		endif
 	endfunction
 au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
+
+" Java
+autocmd FileType java nmap <leader>g :botright terminal java-run %<CR>
 
 "######################
 "# Automatizar tareas #

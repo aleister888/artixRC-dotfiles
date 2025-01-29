@@ -315,3 +315,8 @@ wget 'https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl' -q -O \
 [ ! -f "$HOME/.local/share/nvim/site/spell/es.utf-8.sug" ] && \
 wget 'https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug' -q -O \
 	"$HOME/.local/share/nvim/site/spell/es.utf-8.sug"
+
+# Actualizar iconos y colores lf
+lfUrl="https://raw.githubusercontent.com/gokcehan/lf/master/etc"
+curl $lfUrl/colors.example -o ~/.config/lf/colors
+curl $lfUrl/icons.example -o ~/.config/lf/icons

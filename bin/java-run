@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Verificar que se haya pasado un archivo como argumento
+if [ -z "$1" ]; then
+	exit 1
+fi
+
+# Extraer el nombre del archivo y la ruta completa
+JAVA_FILE="$1"
+JAVA_FILE_NAME=$(basename "$JAVA_FILE" .java)
+
+# Definir la cantidad máxima de niveles hacia atrás que se deben buscar
+MAX_DEPTH=5
+ROOT_DIR=""
+
+# Función para buscar el directorio src hacia atrás
+find_root() {
+	local current_dir="$1"
+	local level=0
+
+	while [ "$level" -lt "$MAX_DEPTH" ]; do
+		if [ -d "$current_dir/src" ]; then
+			ROOT_DIR="$current_dir"
+			break
+		fi
+		current_dir=$(dirname "$current_dir")
+		level=$((level + 1))
+	done
+}
+
+# Obtener el directorio de trabajo actual
+CURRENT_DIR=$(pwd)
+
+# Buscar hacia atrás el directorio 'src'
+find_root "$CURRENT_DIR"
+
+# Salir si no encontramos el directorio 'src'
+if [ -z "$ROOT_DIR" ]; then
+	echo "No se encontró el directorio 'src'" >&2
+	exit 1
+fi
+
+# Preguntar si el directorio encontrado es el correcto
+echo "Se encontró el directorio 'src' en: $ROOT_DIR"
+read -rp "¿Es este el directorio raíz? (s/N): " choice
+
+# Si la respuesta es 's', proceder a compilar y ejecutar
+if [ "$choice" == "s" ]; then
+	PACKAGE_NAME=$(
+		grep -m 1 "package" "$JAVA_FILE" |\
+		sed 's/package \(.*\);/\1/'
+	)
+	echo "Compilando y ejecutando el código desde $ROOT_DIR..."
+
+	# Compilar y ejecutar
+	if javac "$JAVA_FILE"; then
+		cd "$ROOT_DIR/src" && java "$PACKAGE_NAME.$JAVA_FILE_NAME"
+	else
+		echo "Falló la ejecución" >&2
+		exit 1
+	fi
+else
+	echo "Operación cancelada."
+	exit 1
+fi

@@ -234,7 +234,7 @@ keepass_configure
 	        "/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Establecemos la versión de java por defecto
-sudo archlinux-java set java-17-openjdk
+sudo archlinux-java set java-21-openjdk
 
 # Descargar los diccionarios para vim
 vim_spell_download
