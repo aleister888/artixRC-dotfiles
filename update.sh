@@ -6,7 +6,7 @@
 
 # Variables
 DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
-CONF_DIR="${XDG_CONFIG_HOME:-$CONF_DIR}"
+CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 REPO_DIR="$HOME/.dotfiles"
 ASSETDIR="$REPO_DIR/assets/configs"
 
