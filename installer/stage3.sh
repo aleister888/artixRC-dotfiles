@@ -1,4 +1,6 @@
 #!/bin/bash -x
+# shellcheck disable=SC2068
+# shellcheck disable=SC2154
 
 # Auto-instalador para Artix OpenRC (Parte 3)
 # por aleister888 <pacoe1000@gmail.com>

@@ -1,4 +1,5 @@
 #!/bin/bash -x
+# shellcheck disable=SC2068
 
 # Auto-instalador para Artix OpenRC (Parte 1)
 # por aleister888 <pacoe1000@gmail.com>
@@ -132,7 +133,7 @@ part_encrypt(){
 		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
 	done
 
-	yes "$cryptPassword" | cryptsetup open "/dev/$2" "$3" && break
+	yes "$cryptPassword" | cryptsetup open "/dev/$2" "$3" && return
 }
 
 disk_setup(){
@@ -146,9 +147,7 @@ disk_setup(){
 	rootPartName=
 
 	# Nombre aleatorio de la partición encriptada abierta
-	cryptName=$(
-		cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 5 | head -n 1
-	)
+	cryptName=$(tr -dc 'a-zA-Z' < /dev/urandom | fold -w 5 | head -n 1)
 
 	# Borramos la firma del disco
 	wipefs --all "/dev/$ROOT_DISK"
@@ -373,7 +372,7 @@ get_password(){
 		)
 
 		# Si ambas contraseñas coinciden devolver el resultado
-		if [ "$password1" == "$password2" ] && [ ! -z "$password1" ]; then
+		if [ "$password1" == "$password2" ] && [ -n "$password1" ]; then
 			echo "$password1" && break
 		else
 			# Mostrar un mensaje de error si las contraseñas no coinciden
@@ -430,7 +429,7 @@ timezone_set(){
 
 		# Verificar si la zona horaria seleccionada es válida
 		if [ -f "/usr/share/zoneinfo/$region/$timezone" ] && \
-			[ ! -z "$region" ] && [ ! -z "$timezone" ]; then
+			[ -n "$region" ] && [ -n "$timezone" ]; then
 			break
 		else
 			whip_msg "Zona horaria no valida" \

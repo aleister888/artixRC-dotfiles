@@ -1,4 +1,5 @@
 #!/bin/bash -x
+# shellcheck disable=SC2154
 
 # Auto-instalador para Artix OpenRC (Parte 2)
 # por aleister888 <pacoe1000@gmail.com>
@@ -36,7 +37,7 @@ echo_msg(){
 
 # Instalamos GRUB
 install_grub(){
-	local cryptdisk cryptid decryptid
+	local cryptid decryptid
 	cryptid=$(lsblk -nd -o UUID /dev/"$rootPartName")
 	decryptid=$(lsblk -n -o UUID /dev/mapper/"$cryptName")
 

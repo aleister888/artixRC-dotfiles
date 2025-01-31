@@ -7,14 +7,14 @@
 # Variables
 DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
 CONF_DIR="${XDG_CONFIG_HOME:-$CONF_DIR}"
-REPO_DIR="$HOME/.doftiles"
+REPO_DIR="$HOME/.dotfiles"
 ASSETDIR="$REPO_DIR/assets/configs"
 
 # Guardamos el hash del script para comprobar mas adelante si este ha cambiado
 OGHASH=$(sha256sum "$0" | awk '{print $1}')
 
 # Actualizamos repositorio
-sh -c "cd $REPO_DIR && git pull" || \
+sh -c "cd $REPO_DIR && git pull" >/dev/null || \
 	exit 1
 
 # Guardamos el hash tras hacer pull
@@ -55,7 +55,7 @@ ln -sf ~/.dotfiles/suckless/dwm/autostart.sh \
 # Compilar aplicaciones suckless #
 ##################################
 
-"$HOME"/.dotfiles/modules/suckless-compile
+"$HOME"/.dotfiles/modules/suckless-compile 2>/dev/null
 
 #########################
 # Configurar apariencia #
@@ -305,5 +305,5 @@ wget 'https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug' -q -O \
 
 # Actualizar iconos y colores lf
 lfUrl="https://raw.githubusercontent.com/gokcehan/lf/master/etc"
-curl $lfUrl/colors.example -o ~/.config/lf/colors
-curl $lfUrl/icons.example  -o ~/.config/lf/icons
+curl $lfUrl/colors.example -o ~/.config/lf/colors 2>/dev/null
+curl $lfUrl/icons.example  -o ~/.config/lf/icons  2>/dev/null
