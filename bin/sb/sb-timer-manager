@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/bash
 
 # Script para empezar un contador pomodoro
 
@@ -35,12 +35,13 @@ create_timer(){
 }
 
 # Cerrar instancias previas del script
-close_old(){
-	for id in $(grep -v "^$my_id$" "$processlist"); do
-		kill -9 "$id" 2>/dev/null
-	done
+close_old() {
+	while read -r id; do
+		if [[ "$id" != "$my_id" ]]; then
+			kill -9 "$id" 2>/dev/null
+		fi
+	done < "$processlist"
 }
-
 get_status(){
 	# El tiempo de trabajo y de pausa se guarda en un archivo como líneas
 	local content

@@ -1,11 +1,13 @@
 #!/bin/bash
 
 percentage () {
-	local val=$(echo $1 | tr '%' ' ' | awk '{print $1}')
+	local val
 	local icon1=$2
 	local icon2=$3
 	local icon3=$4
 	local icon4=$5
+	val=$(echo "$1" | tr '%' ' ' | awk '{print $1}')
+
 	if [ "$val" -le 15 ]; then
 		echo "$icon1"
 	elif [ "$val" -le 30 ]; then
@@ -30,8 +32,9 @@ get_percentage () {
 }
 
 get_icon () {
-	local vol=$(get_percentage)
-	local muted=$(is_muted)
+	local vol muted
+	vol=$(get_percentage)
+	muted=$(is_muted)
 	if [[ $muted == 'yes' ]]; then
 		echo "󰖁"
 	else
@@ -40,7 +43,8 @@ get_icon () {
 }
 
 get_vol () {
-	local percent=$(get_percentage)
+	local percent
+	percent=$(get_percentage)
 	echo "$percent" | tr -d '%'
 }
 

@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/bash
 
 pomodorofile=/tmp/pomodoro_timer
 [ ! -f $pomodorofile ] && exit
@@ -31,7 +31,7 @@ print_time(){
 
 get_status
 
-if [ $worktime -gt 0 ]; then
+if [ "$worktime" -gt 0 ]; then
 	[ "$counting" = "false" ] && workicon="$workicon$pauseicon"
 	print_time "$worktime" "$workicon"
 else

@@ -2,9 +2,11 @@
 
 # Script de alarma
 
+XDG_RUNTIME_DIR=/run/user/$(id -u)
+
 export LC_TIME=en_US.UTF-8
 export DISPLAY=:0
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
+export XDG_RUNTIME_DIR
 
 DAY=$(date +%A)
 
@@ -27,7 +29,8 @@ pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | \
 # alarma con un volumen alto y luego restaurar el nivel de volumen previo
 wakeme(){
 	# Guardamos el volumen original y ponemos el volumen al 70%
-	local VOL="$(pamixer --get-volume)"
+	local VOL
+	VOL="$(pamixer --get-volume)"
 	pactl set-sink-volume @DEFAULT_SINK@ 70%
 	# Hacer sonar alarma
 	ffplay -nodisp -autoexit "$ALARMA" &

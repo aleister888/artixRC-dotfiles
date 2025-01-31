@@ -1,9 +1,14 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # Script para cambiar el brillo
 
+# Sonido
+sound="/usr/share/sounds/freedesktop/stereo/audio-volume-change.oga"
+# Número de niveles de brillo (ajustar según preferencia)
+levels=10
+
 # Prevenir que el script se ejecute varias veces simultáneamente
-[ $(pgrep -c "$(basename "$0")") -ge 2 ] && exit
+[ $(pgrep -c "$(basename "$0")") -ge 2 ] && exit 1
 
 # Establecer el dispositivo en función de si nuestro procesador es AMD
 if grep "GenuineIntel" /proc/cpuinfo >/dev/null; then
@@ -14,11 +19,6 @@ fi
 
 # Verificar si el archivo existe antes de continuar
 [ ! -e "$brightdev/brightness" ] && exit 1
-
-sound="/usr/share/sounds/freedesktop/stereo/audio-volume-change.oga"
-
-# Número de niveles de brillo (ajustar según preferencia)
-levels=10
 
 maxBrightness=$(cat "$brightdev/max_brightness" 2>/dev/null)
 currentBrightness=$(cat "$brightdev/brightness" 2>/dev/null)
@@ -57,7 +57,7 @@ esac
 
 next=${levelsArray[$index]}
 
-[ -z $next ] && exit
+[ -z "$next" ] && exit
 
 echo "$next" | doas tee $brightdev/brightness
 

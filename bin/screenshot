@@ -13,8 +13,8 @@ SOUND="/usr/share/sounds/freedesktop/stereo/camera-shutter.oga"
 mkdir -p "$SCRENDIR"
 
 capture() {
-	local mode=$1
-	local destination=$2
+	mode=$1
+	destination=$2
 
 	# Captura de pantalla
 	if [ "$mode" = "all" ]; then

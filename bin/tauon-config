@@ -3,7 +3,7 @@
 # Script para auto-configurar TauonMusicBox
 # https://github.com/Taiko2k/TauonMusicBox
 
-rm "$HOME"/.local/share/TauonMusicBox/state* ;\
+rm "$HOME"/.local/share/TauonMusicBox/state*
 rm "$HOME"/.local/share/TauonMusicBox/tauon.conf
 
 # Iniciamos tauon para que se cree el archivo de configuración

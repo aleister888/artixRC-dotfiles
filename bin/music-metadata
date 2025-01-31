@@ -10,7 +10,7 @@ PLAYER="$(music-priority)"
 makesafe(){
 	if [ "${#1}" -gt "$FACT" ]; then
 		local cropped="${1:0:$((FACT-3))}"
-		printf "${cropped% }..."
+		echo "${cropped% }..."
 	else
 		[ -z "$1" ] || echo "$1"
 	fi

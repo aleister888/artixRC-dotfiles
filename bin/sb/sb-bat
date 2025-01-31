@@ -11,7 +11,8 @@ charging=false
 battery_level=()
 sum=0
 
-# Guardamos el nivel de carga de todas la baterias y calculamos la suma de los valores
+# Guardamos el nivel de carga de todas la baterias y
+# calculamos la suma de los valores
 for ((i=1; i<=num_baterias; i++)); do
 	battery_level+=(
 		"$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
@@ -47,4 +48,5 @@ fi
 pre+="^c#689D6A^"
 
 # Imprimos el icono, las secuencias de colores y el % de cada batería
-echo "$pre${battery_level[@]}"
+IFS=' '
+echo "$pre${battery_level[*]}"

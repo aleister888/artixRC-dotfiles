@@ -201,14 +201,14 @@ hi NonText ctermbg=none guibg=none
 hi LineNr  ctermbg=none guibg=none
 hi Folded  ctermbg=none guibg=none
 
-hi Search     guifg=#282828 guibg=#D5C4A1
-hi IncSearch  guifg=#282828 guibg=#D3869B
-hi CurSearch  guifg=#83A598 guibg=#282828
-hi SpellBad   guifg=#8EC07C guibg=#282828
-hi SpellCap   guifg=#8EC07C guibg=#282828
-hi SpellLocal guifg=#FABD2F guibg=#282828
-hi SpellRare  guifg=#FE8019 guibg=#282828
-hi ErrorMsg   guifg=#FE8019 guibg=#282828
+autocmd VimEnter * hi Search     guifg=#282828 guibg=#D5C4A1
+autocmd VimEnter * hi IncSearch  guifg=#282828 guibg=#D3869B
+autocmd VimEnter * hi CurSearch  guifg=#83A598 guibg=#282828
+autocmd VimEnter * hi SpellBad   guifg=#8EC07C guibg=#282828
+autocmd VimEnter * hi SpellCap   guifg=#8EC07C guibg=#282828
+autocmd VimEnter * hi SpellLocal guifg=#FABD2F guibg=#282828
+autocmd VimEnter * hi SpellRare  guifg=#FE8019 guibg=#282828
+autocmd VimEnter * hi ErrorMsg   guifg=#FE8019 guibg=#282828
 
 "#####################
 "# Atajos de teclado #
