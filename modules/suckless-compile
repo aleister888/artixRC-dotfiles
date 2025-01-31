@@ -2,21 +2,6 @@
 
 # Script para recompilar las aplicaciones suckless
 
-ctrl_file="/tmp/suckless-compile"
-
-# Verificar si el archivo existe y si tiene menos de 1 hora
-if [ -f "$ctrl_file" ]; then
-	# Obtener el tiempo de modificación del archivo (en segundos)
-	tiempo_modificado=$(stat -c %Y "$ctrl_file")
-	tiempo_actual=$(date +%s)
-	diferencia=$((tiempo_actual - tiempo_modificado))
-
-	# Si el archivo tiene menos de una hora (3600 segundos)
-	[ "$diferencia" -lt 3600 ] && exit 0
-fi
-
-# (Re)compilamos las aplicaciones suckless
-
 DPI="$(grep -oP "Xft.dpi:\K[0-9]*" "$HOME"/.config/Xresources)"
 
 if [ "$DPI" -ge 192 ]; then
@@ -56,6 +41,3 @@ else
 			echo "$app compilado con éxito"
 	done
 fi
-
-# Crear el archivo de control
-touch "$ctrl_file"
