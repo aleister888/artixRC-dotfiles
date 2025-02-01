@@ -1,5 +1,7 @@
 #!/bin/sh
 
+REPO_URL="https://github.com/aleister888/artix-installer"
+
 # Alias para herramientas comunes
 alias wget='wget --hsts-file="$XDG_CONFIG_HOME"/wget-hsts'
 alias gpg2='gpg2 --homedir "$XDG_DATA_HOME"/gnupg'
@@ -18,7 +20,10 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Actualizar el sistema
-alias update='yay -Syuu --answerclean --answerdiff --removemake --ignore i3lock-fancy-git --ignore eww-git'
+alias update='
+	yay -Syuu --answerclean --answerdiff --removemake \
+		--ignore i3lock-fancy-git --ignore eww-git
+'
 
 # Herramientas
 alias xdotool_table='xmodmap -pk'
@@ -72,12 +77,12 @@ reexplicit() {
 
 # Recuperación en caso de paquetes rotos
 recoverypacman() {
-	yay "$@"  \
-	--logfile /dev/null   \
-	--noscriptlet     \
-	--dbonly          \
-	--overwrite "*"   \
-	--nodeps          \
+	yay "$@" \
+	--logfile /dev/null \
+	--noscriptlet \
+	--dbonly \
+	--overwrite "*" \
+	--nodeps \
 	--needed
 }
 
@@ -153,5 +158,83 @@ pac() {
 
 		# Mostrar diferencias y limitar la salida
 		diff -d "$file" "$original_file" | head -n 20
+	done
+}
+
+whip_msg(){
+	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60
+}
+
+whip_yes(){
+	whiptail --backtitle "$REPO_URL" --title "$1" --yesno "$2" 10 60
+}
+
+whip_menu(){
+	TITLE="$1"
+	MENU="$2"
+	shift 2
+	# shellcheck disable=SC2068
+	whiptail --backtitle "$REPO_URL" \
+	--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
+}
+
+# Función para ver el historial de commits
+view_commits() {
+	git log --oneline --graph --decorate | nvim -
+}
+
+# Función para hacer commit y push
+commit_and_push() {
+	git add .
+	git commit || {
+		whip_msg "Error" "El commit no se completó correctamente."
+		return 1
+	}
+	if git push; then
+		whip_msg "Éxito" "Commit y push realizados con éxito."
+	else
+		whip_msg "Error" "El push no se completó correctamente."
+	fi
+}
+
+# Función para restaurar con git reset --hard origin
+reset_hard() {
+	if whip_yes \
+	   "Restaurar" \
+	   "¿Estás seguro? Se perderán los cambios locales."; then
+		git reset --hard origin
+	else
+		whip_msg "Cancelado" "Operación cancelada."
+	fi
+}
+
+githelp() {
+	# Comprobar si estamos en un directorio de Git
+	if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+		return 1
+	fi
+
+	# Menú principal
+	while true; do
+		choice=$(
+			whip_menu \
+				"GitHub" "Selecciona una opción:" \
+				"1" "Ver historial de commits" \
+				"2" "Hacer commit y push" \
+				"3" "Restaurar con git reset --hard origin" \
+				"4" "Salir"
+		)
+
+		case $choice in
+			1) view_commits ;;
+			2) commit_and_push ;;
+			3) reset_hard ;;
+			4)
+				whip_yes "Salir" \
+				"¿Estás seguro de que quieres salir?" && \
+				break
+				;;
+			*) whip_msg "Error" "Opción no válida." ;;
+		esac
 	done
 }

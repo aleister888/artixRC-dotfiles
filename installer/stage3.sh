@@ -12,30 +12,8 @@
 # Importamos todos los componentes en los que se separa el script
 PATH="$PATH:$(find ~/.dotfiles/modules -type d | paste -sd ':' -)"
 
-# URL con el repositorio
-REPO_URL="https://github.com/aleister888/artix-installer"
-
-# Funciones que invocaremos a menudo
-whip_msg(){ # Mensajes de tailbox
-	whiptail --backtitle "$REPO_URL" \
-	--title "$1" --msgbox "$2" 10 60
-}
-
-whip_yes(){ # Elegir con whiptail
-	whiptail --backtitle "$REPO_URL" \
-	--title "$1" --yesno "$2" 10 60
-}
-
 yayinstall() { # Instalar paquetes con yay
 	yay -Sy --noconfirm --needed "$@"
-}
-
-whip_menu(){ # Menus de whitpail
-	local TITLE=$1
-	local MENU=$2
-	shift 2
-	whiptail --backtitle "$REPO_URL" \
-	--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 
 service_add(){ # Activar servicio

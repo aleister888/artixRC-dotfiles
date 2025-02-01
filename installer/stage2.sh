@@ -14,25 +14,12 @@
 #   - Variables con el software opcional elegido
 #     - $virt, $music, $noprivacy, $office, $latex, $audioProd
 
-
-REPO_URL="https://github.com/aleister888/artix-installer"
-
-# Funciones que invocaremos a menudo
-whip_msg(){
-	whiptail --backtitle "$REPO_URL" \
-	--title "$1" --msgbox "$2" 10 60
-}
-
 pacinstall() {
 	pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
 service_add(){
 	rc-update add "$1" default
-}
-
-echo_msg(){
-	echo "$1 $(tput setaf 7)$(tput setab 2)OK$(tput sgr0)"
 }
 
 # Instalamos GRUB
@@ -163,7 +150,6 @@ fi
 if echo "$(lspci;lsusb)" | grep -i bluetooth; then
 	pacinstall bluez-openrc bluez-utils bluez-obex && \
 	service_add bluetoothd
-	echo_msg "Bluetooth detectado. Se instaló bluez."
 fi
 
 # Instalamos grub
