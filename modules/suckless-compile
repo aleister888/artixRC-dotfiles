@@ -6,8 +6,8 @@ DPI="$(grep -oP "Xft.dpi:\K[0-9]*" "$HOME"/.config/Xresources)"
 
 if [ "$DPI" -ge 192 ]; then
 	for app in dmenu dwm st dwmblocks; do
-
 		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
+
 		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
 
 		# Crear un config.h con el tamaño de fuente aumentado
@@ -37,6 +37,9 @@ if [ "$DPI" -ge 192 ]; then
 else
 	for app in dwm dmenu st dwmblocks; do
 		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
+
+		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
+
 		sudo make install --directory "$SUCKLESS_DIR" >/dev/null && \
 			echo "$app compilado con éxito"
 	done

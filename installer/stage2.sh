@@ -161,7 +161,7 @@ if [ "$crypt_root" = "true" ]; then
 fi
 
 if echo "$(lspci;lsusb)" | grep -i bluetooth; then
-	pacinstall bluez-openrc bluez-utils && \
+	pacinstall bluez-openrc bluez-utils bluez-obex && \
 	service_add bluetoothd
 	echo_msg "Bluetooth detectado. Se instaló bluez."
 fi
