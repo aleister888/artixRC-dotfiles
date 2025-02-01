@@ -1,10 +1,22 @@
 #!/bin/bash
 
+# Función para obtener y validar la hora
+obtener_hora() {
+	local hora
+	hora=$(dmenu -p "Ingrese una hora (HH:MM):" </dev/null)
+
+	if [[ $hora =~ ^([01][0-9]|2[0-3]):[0-5][0-9]$ ]]; then
+		echo "$hora"
+	else
+		return 1
+	fi
+}
+
 # Define las opciones con iconos
 options=(
 	" Bloquear"
 	" Suspender"
-	" Suspender hasta las 7:00"
+	" Suspender hasta las..."
 	" Cerrar sesión"
 	" Reinciar"
 	" Apagar"
@@ -19,7 +31,12 @@ chosen=$(printf "%s\n" "${options[@]}" | dmenu -c -l ${#options[@]})
 case $chosen in
 	"${options[0]}") sleep 0.17; i3lock-fancy-rapid 4 4;;
 	"${options[1]}") loginctl suspend;;
-	"${options[2]}") doas /usr/local/bin/wake now;;
+	"${options[2]}")
+		hora=$(obtener_hora)
+		if [ $? -eq 0 ]; then
+			sudo /usr/local/bin/wakeat "$hora" now
+		fi
+		;;
 	"${options[3]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas pkill X;;
 	"${options[4]}") doas /usr/bin/openrc-shutdown -r now;;
 	"${options[5]}") doas /usr/bin/openrc-shutdown -p now;;
