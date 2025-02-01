@@ -8,6 +8,20 @@ export XDG_RUNTIME_DIR=/run/user/1000
 
 wait_mins=10
 
+# Comprobaciones:
+
+# Verifica que el script se ejecuta como root
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Error: Este script debe ejecutarse como root." >&2
+	exit 1
+fi
+
+# Comprueba que el usuario regular existe
+if [ -z "$REGULARUSER" ]; then
+	echo "Error: No se encontró un usuario regular." >&2
+	exit 1
+fi
+
 notify() {
 	su "$REGULARUSER" -c \
 		"notify-send -u critical -i system-error \"$1\""
@@ -26,12 +40,15 @@ tosleep() {
 		wake_time="$wake_time_today"
 	fi
 
-	rtcwake -m mem -l -t "$wake_time"
+	if ! rtcwake -m mem -l -t "$wake_time"; then
+		notify "Error al programar la suspensión"
+		exit 1
+	fi
 }
 
 # Validación de entrada: formato HH:MM
 if [ -n "$1" ]; then
-	if ! echo "$1" | grep -qE '^[0-2][0-9]:[0-5][0-9]$'; then
+	if ! echo "$1" | grep -qE '^([01][0-9]|2[0-3]):[0-5][0-9]$'; then
 		echo "Formato de hora incorrecto. Usa HH:MM (ej. 07:30)"
 		exit 1
 	fi
@@ -41,17 +58,19 @@ else
 fi
 
 # Verifica si hay máquinas virtuales corriendo antes de suspender
-if [ "$(virsh list --state-running --id | grep -cv '^$')" -ge "1" ]; then
-	notify "Suspensión cancelada (Máquina virtual activa)"
-	exit
+if command -v virsh >/dev/null 2>&1; then
+	VMs_activas="$(virsh list --state-running --id | grep -cv '^$')"
+	if [ "$VMs_activas" -ge 1 ]; then
+		notify "Suspensión cancelada (Máquina virtual activa)"
+		exit
+	fi
 fi
 
-# Si el usuario pasa "now", suspende inmediatamente
-if [ "$2" = "now" ]; then
-	notify "El sistema se suspenderá ahora"
-else
+# Si el usuario pasa "now", suspende inmediatamente, en el caso
+# contrario, se esperan $wait_mins antes de suspender el equipo.
+if [ "$2" != "now" ]; then
 	notify "El sistema se suspenderá en $wait_mins minutos"
-	sleep "$wait_mins"m
+	sleep $((wait_mins * 60))
 fi
 
 tosleep "$wake_time"

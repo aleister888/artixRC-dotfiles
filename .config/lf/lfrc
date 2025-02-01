@@ -41,11 +41,8 @@ map z home
 map t cd /tmp
 map T cd /run/media
 # Buscar archivo
-map / :fzf_file
-map <c-_> :fzf_search
-# Buscar directorio
-map ( :fzf_dir
-map <backspace2> :fzf_dir
+map / :fzf_search
+map <c-_> :fzf_grep
 # Extraer/comprimir archivos
 map E extract
 map <c-e> compress
@@ -165,9 +162,9 @@ cmd bulk-rename ${{
 }}
 
 # Buscar con fzf cadenas entre los archivos
-cmd fzf_search ${{
+cmd fzf_grep ${{
 	cmd="rg --column --line-number --no-heading --color=always --smart-case"
-	fzf --ansi --disabled --layout=reverse --header="Search in files" --delimiter=: \
+	fzf --ansi --disabled --layout=reverse --delimiter=: \
 		--bind="start:reload([ -n {q} ] && $cmd -- {q} || true)" \
 		--bind="change:reload([ -n {q} ] && $cmd -- {q} || true)" \
 		--bind='enter:become(lf -remote "send $id select \"$(printf "%s" {1} | sed '\''s/\\/\\\\/g;s/"/\\"/g'\'')\"")' \
@@ -175,8 +172,8 @@ cmd fzf_search ${{
 }}
 
 # Elegir archivo con fzf
-cmd fzf_file ${{
-	res="$(find . -maxdepth 1 | fzf --reverse --header='Ir a la localización')"
+cmd fzf_search ${{
+	res="$(find . | fzf --reverse --header='Ir a la localización')"
 	if [ -n "$res" ]; then
 		if [ -d "$res" ]; then
 			cmd="cd"
@@ -187,14 +184,6 @@ cmd fzf_file ${{
 		/usr/bin/lf -remote "send $id $cmd \"$res\""
 	fi
 	clear
-}}
-
-# Elegir carpeta con fzf
-cmd fzf_dir ${{
-	dir="$(find . -type d 2>/dev/null |\
-	fzf --preview 'eza -la --no-permissions {}' \
-	--preview-window=up:50%:wrap --height=100%)"
-	[ -z "$dir" ] || /usr/bin/lf -remote "send $id cd \"$dir\""
 }}
 
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
