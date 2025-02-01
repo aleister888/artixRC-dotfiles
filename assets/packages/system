@@ -45,4 +45,4 @@ xdg-user-dirs
 zenity
 zsh
 timeshift
-memtest86+
+memtest86+-efi
