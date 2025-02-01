@@ -278,6 +278,9 @@ desktopent=(
 	"lstopo"
 )
 
+[ -d /usr/local/share/applications ] || \
+	sudo mkdir -p /usr/local/share/applications
+
 # Ocultamos estas entradas .desktop
 for entry in "${desktopent[@]}"; do
 	if [ -e "/usr/share/applications/$entry.desktop" ]; then
