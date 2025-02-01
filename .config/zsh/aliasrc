@@ -27,7 +27,6 @@ alias update='
 
 # Herramientas
 alias xdotool_table='xmodmap -pk'
-alias push='git add . && git commit && git push'
 alias du='BLOCKSIZE=1073741824 du -s * | sort -rnk 1'
 alias grub-update='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 
@@ -141,6 +140,16 @@ yabridgectl_dirs(){
 		yabridgectl add "$WINEPREFIX/drive_c/Program Files/Common Files"
 	[ -d "$WINEPREFIX/drive_c/Program Files/Steinberg" ] && \
 		yabridgectl add "$WINEPREFIX/drive_c/Program Files/Steinberg"
+}
+
+push() {
+	if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+		git add . && \
+		git commit && \
+		git push
+	else
+		echo "No estás dentro de ningún repositorio"
+	fi
 }
 
 # Alias para encontrar archivos pac de pacman
