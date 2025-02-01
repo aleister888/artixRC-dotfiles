@@ -3,56 +3,110 @@
 # Script de alarma
 
 XDG_RUNTIME_DIR=/run/user/$(id -u)
-
-export LC_TIME=en_US.UTF-8
+export LC_TIME=en_US.UTF-8 # 'date +%A' nos dará el nombre del día en Inglés
 export DISPLAY=:0
 export XDG_RUNTIME_DIR
 
-DAY=$(date +%A)
+VOL_LEVEL=50
 
-if [ "$DAY" == "Saturday" ] || [ "$DAY" == "Sunday" ]; then
-	echo "It's $DAY, time to rest! Exiting the script."
-	exit 0
+help_msg(){
+	echo -e "Uso: echo $(basename "$0") [-ofh] [-s Nombre del sink] [Archivo de audio]\n"
+	echo "  -o: Usar el dispositivo de audio original"
+	echo "  -f: Ejecutar el script también sábados y domingos"
+	echo "  -h: Mostrar este mensaje"
+}
+
+use_og_output=false
+include_weekends=false
+
+if echo "$@" | grep "\-h" >/dev/null; then
+	help_msg
+	exit
 fi
 
-ALARMA="$1"
+while [[ "$#" -gt 1 ]]; do
+	case "$1" in
+		-o) use_og_output=true ;;
+		-f) include_weekends=true ;;
+		-s)
+			use_og_output=false
+			shift
+			# Si se da el sink con su ID numérica, usar el ID mismo
+			if [[ "$1" =~ ^[0-9]+$ ]]; then
+				OVER_SINK="$1"
+			# Si no, obtenemos el ID del sink
+			else
+				OVER_SINK=$(
+					pactl list short sinks | \
+					grep "${1%.monitor}" | awk '{print $1}'
+				)
+			fi ;;
+		 *) help_msg; exit ;;
+	esac
+	shift
+done
 
-# Imprime todos los dispositivos de salida
+if [ "$include_weekends" == "false" ]; then
+	DAY=$(date +%A)
+	if [ "$DAY" == "Saturday" ] || [ "$DAY" == "Sunday" ]; then
+		echo "Es $DAY ¡Hora de descansar!"
+		exit 0
+	fi
+fi
+
+ALARMA=$1
+if [ ! -f "$ALARMA" ]; then
+	echo "Error: El archivo de audio '$ALARMA' no existe."
+	exit 1
+elif ! xdg-mime query filetype "$ALARMA" | grep "audio/.*"; then
+	echo "Error: EL archivo no es un archivo de audio."
+	exit 1
+fi
+
+# Imprime todos los dispositivos de salida y sus IDs
 getout(){
 pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | \
 	awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | \
 	sed 's/Name: //' | sed 's/^.//' | grep output
 }
 
-# Función para hacer sonar la alarma hasta que la apage
-# Vamos a guardar el volúmen que tenia el dispostivo de audio, para poner la
-# alarma con un volumen alto y luego restaurar el nivel de volumen previo
+# Función para hacer sonar la alarma hasta que la apague
 wakeme(){
-	# Guardamos el volumen original y ponemos el volumen al 70%
-	local VOL
-	VOL="$(pamixer --get-volume)"
-	pactl set-sink-volume @DEFAULT_SINK@ 70%
-	# Hacer sonar alarma
+	# Guardamos el volumen original
+	local VOL_OG
+	VOL_OG="$(pamixer --get-volume)"
+
+	# Cambiamos el volumen a $VOL_SET
+	pactl set-sink-volume @DEFAULT_SINK@ "$VOL_LEVEL"%
+	# Hacemos sonar alarma
 	ffplay -nodisp -autoexit "$ALARMA" &
 
-	# Esperar a que cierre este menu para cerrar el proceso que esta
+	# Esperar a que cierre este menú para cerrar el proceso que esta
 	# haciendo sonar la alarma
 	yad --title "Cerrar Alarma" --button="Apagar Alarma"
 
 	# Una vez que el usuario interactúa con el menú se detiene la
 	# reproducción de la alarma
 	pkill ffplay
-	pactl set-sink-volume @DEFAULT_SINK@ "$VOL"%
+
+	# Se restaura el nivel de volumen original
+	pactl set-sink-volume @DEFAULT_SINK@ "$VOL_OG"%
 }
 
-SPEAKERS="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
+# Variable para obtener el sink del dispostivo de audio de la placa base
+# (Si no se definió ya un sink para la salida de audio con -s)
+[ -z "$OVER_SINK" ] && \
+OVER_SINK="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
+
+# Sink original
 OG_SINK="$(pactl get-default-sink)"
 
-# Si el dispositivo de audio no son los altavoces, cambiar a estos antes de
-# reproducir la alarma
-if [ "$(pactl get-default-sink)" != "$SPEAKERS" ]; then
+# Si el sink de audio no es el de la placa base, cambiar a este para la alarma.
+if [ -n "$OVER_SINK" ] && \
+   [ "$(pactl get-default-sink)" != "$OVER_SINK" ] && \
+   [ "$use_og_output" = "false" ] ; then
 	# Cambiamos a altavoces
-	pactl set-default-sink "$SPEAKERS"
+	pactl set-default-sink "$OVER_SINK"
 	# Hacer sonar la alarma
 	wakeme
 	pactl set-default-sink "$OG_SINK"
