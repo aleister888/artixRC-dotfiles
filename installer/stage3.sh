@@ -156,7 +156,7 @@ keepass_configure(){
 # Crear enlaces simbólicos a /usr/local/bin para ciertos scripts
 scripts_link(){
 	files=(
-		"wake"
+		"wakeat"
 		"wakeme"
 		"pipewire-start"
 		"tray-toggle"

@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# Script para suspender el sistema hasta cierta hora (HH:MM)
+
+REGULARUSER="$(getent passwd 1000 | cut -d: -f1)"
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=/run/user/1000
+
+wait_mins=10
+
+notify() {
+	su "$REGULARUSER" -c \
+		"notify-send -u critical -i system-error \"$1\""
+}
+
+tosleep() {
+	target_time="$1"
+	current_time=$(date +%s)
+	wake_time_today=$(date -d "$(date +%Y-%m-%d) $target_time" +%s)
+
+	if [ "$wake_time_today" -le "$current_time" ]; then
+		# Si la hora de reactivación ya pasó, usa la de mañana
+		wake_time=$(date -d "tomorrow $target_time" +%s)
+	else
+		# Si la hora de reactivación aún no ha pasado, usa la de hoy
+		wake_time="$wake_time_today"
+	fi
+
+	rtcwake -m mem -l -t "$wake_time"
+}
+
+# Validación de entrada: formato HH:MM
+if [ -n "$1" ]; then
+	if ! echo "$1" | grep -qE '^[0-2][0-9]:[0-5][0-9]$'; then
+		echo "Formato de hora incorrecto. Usa HH:MM (ej. 07:30)"
+		exit 1
+	fi
+	wake_time="$1"
+else
+	wake_time="07:00"
+fi
+
+# Verifica si hay máquinas virtuales corriendo antes de suspender
+if [ "$(virsh list --state-running --id | grep -cv '^$')" -ge "1" ]; then
+	notify "Suspensión cancelada (Máquina virtual activa)"
+	exit
+fi
+
+# Si el usuario pasa "now", suspende inmediatamente
+if [ "$2" = "now" ]; then
+	notify "El sistema se suspenderá ahora"
+else
+	notify "El sistema se suspenderá en $wait_mins minutos"
+	sleep "$wait_mins"m
+fi
+
+tosleep "$wake_time"
