@@ -1,0 +1,31 @@
+snippet main "" b
+public static void main(String[] args) {
+	$0
+}
+endsnippet
+
+snippet pkg
+package `basename $(pwd)`;
+endsnippet
+
+snippet sout "" b
+System.out.print$1($2);$0
+endsnippet
+
+snippet soutf "" b
+System.out.print$1(
+	$2
+);$0
+endsnippet
+
+snippet Sin "" b
+Scanner scanner = new Scanner(System.in);
+endsnippet
+
+snippet class ""
+public class `!p snip.rv = snip.basename` {
+
+	$0
+
+}
+endsnippet

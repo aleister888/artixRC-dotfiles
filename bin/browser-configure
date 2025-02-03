@@ -48,6 +48,7 @@ installffaddons(){
 		"keepassxc-browser"
 		"sponsorblock"
 		"checkmarks-web-ext"
+		"clear-browsing-data"
 	)
 	addontmp="$(mktemp -d)"
 
