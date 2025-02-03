@@ -5,8 +5,8 @@
 
 # Aquí se establece la prioridad de los reproductores:
 priority=(
-	"firefox"
 	"tauon"
+	"firefox"
 )
 
 # Lista de dominios permitidos para firefox

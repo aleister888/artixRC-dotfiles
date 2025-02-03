@@ -176,7 +176,7 @@ let g:airline_symbols.colnr = ' C:'
 	set colorcolumn=80
 
 " Indentación y tabulación
-autocmd FileType * setlocal noautoindent nosmartindent nocindent noexpandtab
+autocmd FileType * setlocal nosmartindent nocindent noexpandtab
 autocmd FileType * setlocal copyindent preserveindent tabstop=8 shiftwidth=8
 
 if $USER !=# 'root'
@@ -315,7 +315,7 @@ au Filetype markdown nmap <silent><leader>h :MarkdownPreview<CR>
 au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
 
 " Java
-autocmd FileType java nmap <leader>g :botright terminal java-run %<CR>
+autocmd FileType java nmap <leader>g :botright terminal java-run %<CR> :startinsert<CR>
 
 "######################
 "# Automatizar tareas #
