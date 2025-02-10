@@ -1,13 +1,13 @@
 #!/bin/bash
 
-help_msg(){
-echo "Uso:
+help_msg() {
+	echo "Uso:
   $(basename "$0") <directorio> [-th]"
-exit
+	exit
 }
 
 # Comporobar que el archivo es del tipo correcto
-filetype_test(){
+filetype_test() {
 	local mimeType fileToCheck
 	fileToCheck="$1"
 	mimeType="$2"
@@ -75,7 +75,6 @@ renombrar_archivo() {
 		filetype_test "$archivo" "$tipo" || return
 	fi
 
-
 	# Crear el nuevo nombre preservando la extensión
 	nuevo_nombre="${year}-${month}-${day}_${hour}-${minute}-${second}.${extension}"
 	nuevo_archivo="$(dirname "$archivo")/$nuevo_nombre"
@@ -91,8 +90,8 @@ DIRECTORIO="$1"
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
-		-t) test_for_type="true" ;;
-		-h) help_msg ;;
+	-t) test_for_type="true" ;;
+	-h) help_msg ;;
 	esac
 	shift
 done

@@ -59,7 +59,7 @@ done
 # Crear ejecutable #
 ####################
 
-cat <<- EOF | doas tee /usr/local/bin/$EXENAME >/dev/null
+cat <<-EOF | doas tee /usr/local/bin/$EXENAME >/dev/null
 	#!/bin/sh
 
 	cd $SERVERDIR
@@ -68,7 +68,7 @@ EOF
 
 sudo chmod +x /usr/local/bin/$EXENAME
 
-cat <<- EOF >&2
+cat <<-EOF >&2
 	El servidor ya está instalado en $SERVERDIR, y podrás iniciarlo con $EXENAME pero antes deberás:
 	    - Definir los jugadores permitidos en $SERVERDIR/whitelist.json (Tienes ya una plantilla, puedes ayudarte con https://mctools.org/whitelist-creator)
 	    - Definir el nombre del mundo en $SERVERDIR/server-properties (level-name)

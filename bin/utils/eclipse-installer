@@ -5,7 +5,7 @@
 INSTALL_DIR="$HOME/.local/bin/eclipse"
 RUN_SCRIPT="/usr/bin/eclipse"
 
-install(){
+install() {
 	# Obtener el año y el mes actual
 	local year=$(date +'%Y')
 	local month=$(date +'%m')
@@ -47,7 +47,7 @@ install(){
 	sudo chmod +x $RUN_SCRIPT
 }
 
-uninstall(){
+uninstall() {
 	rm -rf $INSTALL_DIR
 	sudo rm $RUN_SCRIPT
 }

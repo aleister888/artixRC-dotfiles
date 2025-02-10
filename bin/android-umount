@@ -4,9 +4,9 @@
 
 # Elegir que dispositivo Android desmontar
 chosen="$(
-	awk '/simple-mtpfs/ {print $2}' /etc/mtab | \
+	awk '/simple-mtpfs/ {print $2}' /etc/mtab |
 		dmenu -p "Que dispositivo desmontar?"
-	)" || exit 1
+)" || exit 1
 
 # Verificar si se seleccionó un dispositivo
 [ -z "$chosen" ] && exit

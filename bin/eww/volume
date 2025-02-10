@@ -1,6 +1,6 @@
 #!/bin/bash
 
-percentage () {
+percentage() {
 	local val
 	local icon1=$2
 	local icon2=$3
@@ -19,7 +19,7 @@ percentage () {
 	fi
 }
 
-is_muted () {
+is_muted() {
 	if [ "$(pamixer --get-volume-human)" = "muted" ]; then
 		echo "yes"
 	else
@@ -27,11 +27,11 @@ is_muted () {
 	fi
 }
 
-get_percentage () {
+get_percentage() {
 	echo "$(pamixer --get-volume)%"
 }
 
-get_icon () {
+get_icon() {
 	local vol muted
 	vol=$(get_percentage)
 	muted=$(is_muted)
@@ -42,13 +42,13 @@ get_icon () {
 	fi
 }
 
-get_vol () {
+get_vol() {
 	local percent
 	percent=$(get_percentage)
 	echo "$percent" | tr -d '%'
 }
 
-set_vol () {
+set_vol() {
 	val=$(echo "$1" | tr '.' ' ' | awk '{print $1}')
 	if test "$val" -gt 100; then
 		val=100
@@ -57,8 +57,8 @@ set_vol () {
 }
 
 case $1 in
-	"icon") get_icon ;;
-	"vol") get_vol ;;
-	"muted") is_muted ;;
-	"set") set_vol "$2" ;;
+"icon") get_icon ;;
+"vol") get_vol ;;
+"muted") is_muted ;;
+"set") set_vol "$2" ;;
 esac

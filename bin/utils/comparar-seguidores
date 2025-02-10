@@ -9,12 +9,12 @@
 
 # Verifica si se pasó el argumento
 if [ -z "$1" ]; then
-echo "Uso:
+	echo "Uso:
   $(basename "$0") <informe_instagram_comprimido>"
-exit 1
+	exit 1
 fi
 
-IN="$1" # Informe de Instagram comprimido proporcionado como primer argumento
+IN="$1"       # Informe de Instagram comprimido proporcionado como primer argumento
 OUT="/tmp/$$" # Directorio temporal para extraer el informe
 
 # Descomprime el informe
@@ -28,12 +28,12 @@ seguidos=$(grep -oP 'href="https://www\.instagram\.com/\K[^"]+' \
 
 # Encontrar gente que no te sigue de vuelta
 no_seguidores=$(echo "$seguidos" | grep -Fxv -f <(echo "$seguidores"))
-echo "$no_seguidores" > ./vuelta.txt
+echo "$no_seguidores" >./vuelta.txt
 
 # Extraer solicitudes de seguimiento pendientes
 pending_requests=$(grep -oP 'href="https://www\.instagram\.com/\K[^"]+' \
 	"$OUT/connections/followers_and_following/pending_follow_requests.html")
-echo "$pending_requests" > ./peticiones.txt
+echo "$pending_requests" >./peticiones.txt
 
 # Limpieza de archivos temporales
 rm -rf "$OUT"

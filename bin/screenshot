@@ -35,9 +35,15 @@ capture() {
 	pw-play "$SOUND"
 }
 
+# Cerramos unclutter antes de tomar la captura
+pkill unclutter
+
 case "$1" in
-	all_clip) capture all "$TMP" ;;
-	selection_clip) capture selection "$TMP" ;;
-	all_save) capture all "$FILE" ;;
-	selection_save) capture selection "$FILE" ;;
+all_clip) capture all "$TMP" ;;
+selection_clip) capture selection "$TMP" ;;
+all_save) capture all "$FILE" ;;
+selection_save) capture selection "$FILE" ;;
 esac
+
+# Ejecutamos unclutter tras tomar la captura
+exec unclutter --start-hidden --timeout 2

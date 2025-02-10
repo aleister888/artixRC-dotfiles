@@ -7,21 +7,23 @@
 # Establecemos el reproductor
 PLAYER="$(music-priority)"
 
-makesafe(){
+makesafe() {
 	if [ "${#1}" -gt "$FACT" ]; then
-		local cropped="${1:0:$((FACT-3))}"
+		local cropped="${1:0:$((FACT - 3))}"
 		echo "${cropped% }..."
 	else
 		[ -z "$1" ] || echo "$1"
 	fi
 }
 
-statusbar(){
+statusbar() {
 	[ -z "$PLAYER" ] && exit
 
 	# Obtener el título de la canción y estado de la reproducción
-	local title;  title="$(playerctl metadata --player="$PLAYER" title)"
-	local status; status="$(playerctl status --player="$PLAYER")"
+	local title
+	title="$(playerctl metadata --player="$PLAYER" title)"
+	local status
+	status="$(playerctl status --player="$PLAYER")"
 	local icon
 
 	[ -z "$title" ] && exit
@@ -35,22 +37,24 @@ statusbar(){
 	echo "$icon$(makesafe "$title")"
 }
 
-metaprint(){
+metaprint() {
 	local out
 
 	case "$1" in
-		title)
+	title)
 		if [ -z "$PLAYER" ]; then
 			out="Cannot detect artist"
 		else
 			out="$(playerctl metadata --player="$PLAYER" title)"
-		fi ;;
-		artist)
+		fi
+		;;
+	artist)
 		if [ -z "$PLAYER" ]; then
 			out="Player Stopped"
 		else
 			out="$(playerctl metadata --player="$PLAYER" artist)"
-		fi ;;
+		fi
+		;;
 	esac
 
 	if [ "$withsafe" == "true" ]; then
@@ -60,8 +64,8 @@ metaprint(){
 	fi
 }
 
-help_msg(){
-echo "Uso:
+help_msg() {
+	echo "Uso:
   music-metadata [-Sdtacsh]
 
 OPCIONES:
@@ -84,24 +88,38 @@ fi
 
 while [[ "$#" -gt 0 ]]; do
 	case "$1" in
-		-S) withsafe=true ;;
-		-d) statusbar
-			exit ;;
-		-t) FACT=$ALTFACT; metaprint title
-			exit ;;
-		-a) FACT=$ALTFACT; metaprint artist
-			exit ;;
-		-c) COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl)
-			if [ -z "$PLAYER" ] || [ -z "$COVER" ]; then
-				echo "$XDG_CONFIG_HOME/eww/placeholder.png"
-			else
-				echo "${COVER#file://}"
-			fi
-			exit ;;
-		-s) [ -n "$PLAYER" ] && playerctl status --player="$PLAYER"
-			exit ;;
-		*) help_msg
-			exit ;;
+	-S) withsafe=true ;;
+	-d)
+		statusbar
+		exit
+		;;
+	-t)
+		FACT=$ALTFACT
+		metaprint title
+		exit
+		;;
+	-a)
+		FACT=$ALTFACT
+		metaprint artist
+		exit
+		;;
+	-c)
+		COVER=$(playerctl --player="$PLAYER" metadata mpris:artUrl)
+		if [ -z "$PLAYER" ] || [ -z "$COVER" ]; then
+			echo "$XDG_CONFIG_HOME/eww/placeholder.png"
+		else
+			echo "${COVER#file://}"
+		fi
+		exit
+		;;
+	-s)
+		[ -n "$PLAYER" ] && playerctl status --player="$PLAYER"
+		exit
+		;;
+	*)
+		help_msg
+		exit
+		;;
 	esac
 	shift
 done

@@ -9,7 +9,7 @@ export XDG_RUNTIME_DIR
 
 VOL_LEVEL=50
 
-help_msg(){
+help_msg() {
 	echo -e "Uso: echo $(basename "$0") [-ofh] [-s Nombre del sink] [Archivo de audio]\n"
 	echo "  -o: Usar el dispositivo de audio original"
 	echo "  -f: Ejecutar el script también sábados y domingos"
@@ -26,22 +26,26 @@ fi
 
 while [[ "$#" -gt 1 ]]; do
 	case "$1" in
-		-o) use_og_output=true ;;
-		-f) include_weekends=true ;;
-		-s)
-			use_og_output=false
-			shift
-			# Si se da el sink con su ID numérica, usar el ID mismo
-			if [[ "$1" =~ ^[0-9]+$ ]]; then
-				OVER_SINK="$1"
-			# Si no, obtenemos el ID del sink
-			else
-				OVER_SINK=$(
-					pactl list short sinks | \
+	-o) use_og_output=true ;;
+	-f) include_weekends=true ;;
+	-s)
+		use_og_output=false
+		shift
+		# Si se da el sink con su ID numérica, usar el ID mismo
+		if [[ "$1" =~ ^[0-9]+$ ]]; then
+			OVER_SINK="$1"
+		# Si no, obtenemos el ID del sink
+		else
+			OVER_SINK=$(
+				pactl list short sinks |
 					grep "${1%.monitor}" | awk '{print $1}'
-				)
-			fi ;;
-		 *) help_msg; exit ;;
+			)
+		fi
+		;;
+	*)
+		help_msg
+		exit
+		;;
 	esac
 	shift
 done
@@ -64,14 +68,14 @@ elif ! xdg-mime query filetype "$ALARMA" | grep "audio/.*"; then
 fi
 
 # Imprime todos los dispositivos de salida y sus IDs
-getout(){
-pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' | \
-	awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' | \
-	sed 's/Name: //' | sed 's/^.//' | grep output
+getout() {
+	pactl list sources | grep -oE 'Source #([0-9]+)|Name: [^\n]+.*' |
+		awk '{printf "%s ", $2; if (NR % 2 == 0) printf "\n"}' |
+		sed 's/Name: //' | sed 's/^.//' | grep output
 }
 
 # Función para hacer sonar la alarma hasta que la apague
-wakeme(){
+wakeme() {
 	# Guardamos el volumen original
 	local VOL_OG
 	VOL_OG="$(pamixer --get-volume)"
@@ -95,16 +99,16 @@ wakeme(){
 
 # Variable para obtener el sink del dispostivo de audio de la placa base
 # (Si no se definió ya un sink para la salida de audio con -s)
-[ -z "$OVER_SINK" ] && \
-OVER_SINK="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
+[ -z "$OVER_SINK" ] &&
+	OVER_SINK="$(getout | awk '/output\.pci/ && /analog-stereo/ {print $1}')"
 
 # Sink original
 OG_SINK="$(pactl get-default-sink)"
 
 # Si el sink de audio no es el de la placa base, cambiar a este para la alarma.
-if [ -n "$OVER_SINK" ] && \
-   [ "$(pactl get-default-sink)" != "$OVER_SINK" ] && \
-   [ "$use_og_output" = "false" ] ; then
+if [ -n "$OVER_SINK" ] &&
+	[ "$(pactl get-default-sink)" != "$OVER_SINK" ] &&
+	[ "$use_og_output" = "false" ]; then
 	# Cambiamos a altavoces
 	pactl set-default-sink "$OVER_SINK"
 	# Hacer sonar la alarma

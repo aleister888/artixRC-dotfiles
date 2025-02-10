@@ -7,7 +7,8 @@ rm "$HOME"/.local/share/TauonMusicBox/state*
 rm "$HOME"/.local/share/TauonMusicBox/tauon.conf
 
 # Iniciamos tauon para que se cree el archivo de configuración
-tauon >/dev/null & sleep 5
+tauon >/dev/null &
+sleep 5
 kill $(pgrep tauonmb)
 sleep 1
 

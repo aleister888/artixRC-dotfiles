@@ -1,10 +1,11 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
-#define DLINES "16"          // Lineas para los comandos de dmenu
-#define TERM   "st"          // Terminal
-#define TERMT  "-t"          // Flag usada para establecer el título de la terminal
-#define TERMC  "st-256color" // Clase de ventana de la terminal
-#define BROWSER "firefox"    // Navegador Web
+#define DLINES "16"        // Lineas para los comandos de dmenu
+#define TERM   "kitty"     // Terminal
+#define TERMT  "--title"   // Flag usada para establecer el título de la terminal
+#define TERME  "--execute" // Flag usada de ejecución de la terminal
+#define TERMC  "kitty"     // Clase de ventana de la terminal
+#define BROWSER "firefox"  // Navegador Web
 
 static const char *fonts[] = {
 	"Symbols Nerd Font Mono:pixelsize=22:antialias=true:autohint=true",
@@ -225,7 +226,7 @@ static const Key keys[] = {
 
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
-	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, "lf", NULL } } },
+	{ MODKEY,                       XK_F3,     spawn,            SHCMD("xdg-open ~/") },
 	{ MODKEY,                       XK_F4,     spawn,            SHCMD("tauon") },
 
 	// Montar/Desmontar dispositivos android
@@ -239,7 +240,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_F11,    spawn,            SHCMD("pkill dwm") },
 
 	// Ajustes de audio
-	{ MODKEY,                       XK_F12,    spawn,            {.v = (const char*[]){ TERM, TERMT, "scratchpad", "pulsemixer", NULL } } },
+	{ MODKEY,                       XK_F12,    spawn,            {.v = (const char*[]){ TERM, TERMT, "scratchpad", TERME, "pulsemixer", NULL } } },
 	{ MODKEY|ShiftMask,             XK_F12,    spawn,            SHCMD("pipewire-virtualmic-select") },
 
 	// Controlar reproducción

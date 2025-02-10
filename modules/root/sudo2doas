@@ -4,7 +4,7 @@
 
 RUSER="$(getent passwd 1000 | cut -d: -f1)"
 
-echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' | \
+echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' |
 	tee /etc/doas.conf
 
 chown -c root:root /etc/doas.conf

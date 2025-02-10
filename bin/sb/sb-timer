@@ -14,17 +14,17 @@ workicon="^c#928273^"
 breakicon="^c#d79921^"
 pauseicon="^f6^"
 
-get_status(){
+get_status() {
 	# El tiempo de trabajo y de pausa se guarda en un archivo como lineas
 	worktime="$(echo "$content" | grep -oP "^W \K[0-9]*")"
 	breaktime="$(echo "$content" | grep -oP "^B \K[0-9]*")"
 }
 
-print_time(){
+print_time() {
 	local total_seconds="$1"
 	local icon="$2"
-	local minutes=$(( ( total_seconds % 3600 ) / 60 ))
-	local seconds=$(( total_seconds - ( minutes * 60 ) ))
+	local minutes=$(((total_seconds % 3600) / 60))
+	local seconds=$((total_seconds - (minutes * 60)))
 	[ "$seconds" -lt "10" ] && seconds=0"$seconds"
 	echo "$icon $minutes:$seconds "
 }

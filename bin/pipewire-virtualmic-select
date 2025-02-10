@@ -14,16 +14,16 @@ EXCLUDE_PATTERN="my-combined-sink\|my-virtualmic\|PulseAudio\|Midi\|v4l2\|WEBRTC
 
 # Dispositivos/aplicaciones a elegir (borrar)
 DEL_DEVICES=$(
-	pw-link -l my-combined-sink | \
-	pcre2grep -M 'my-combined-sink:playback_F[LR]\n(^ .*\n)*' | \
-	grep -oP '\- \K.*'
+	pw-link -l my-combined-sink |
+		pcre2grep -M 'my-combined-sink:playback_F[LR]\n(^ .*\n)*' |
+		grep -oP '\- \K.*'
 )
 
 # Dispositivos/aplicaciones a elegir (añadir)
 DEVICES=$(
-	pw-link -o | \
-	grep -P ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])' | \
-	grep -v "$EXCLUDE_PATTERN" | sort -u
+	pw-link -o |
+		grep -P ':((capture)|(output)_((FL)|(FR)|(MONO)))|(out[12])' |
+		grep -v "$EXCLUDE_PATTERN" | sort -u
 )
 
 # Borrar de las entradas a añadir las que ya están vinculadas
@@ -31,17 +31,17 @@ for ADDED in $DEL_DEVICES; do
 	DEVICES=$(echo "$DEVICES" | grep -v "$ADDED")
 done
 
-sink_match(){
+sink_match() {
 	local pwflag
 	local cselected
 	[ "$1" = "del" ] && pwflag="-d"
 
 	case "$selected" in
-		*FL) cselected="${selected%FL}FR" ;;
-		*FR) cselected="$selected" selected="${selected%FR}FL" ;;
-		*1)  cselected="${selected%1}2"   ;;
-		*2)  cselected="$selected" selected="${selected%2}1" ;;
-		*)   cselected="$selected"
+	*FL) cselected="${selected%FL}FR" ;;
+	*FR) cselected="$selected" selected="${selected%FR}FL" ;;
+	*1) cselected="${selected%1}2" ;;
+	*2) cselected="$selected" selected="${selected%2}1" ;;
+	*) cselected="$selected" ;;
 	esac
 
 	pw-link $pwflag "$selected" "$sinkL"
@@ -49,7 +49,7 @@ sink_match(){
 }
 
 # Función para vincular/desvincular dispositivos/aplicaciones
-sink_edit(){
+sink_edit() {
 	local dmenu_selected
 
 	# Lista con nuestros dispositivos/aplicaciones
@@ -60,7 +60,7 @@ sink_edit(){
 	fi
 
 	# Elegir el sink con dmenu mostrando solo la información esencial
-	dmenu_selected=$(echo "$sinks" | sed 's/:.*//g' | sort -u | \
+	dmenu_selected=$(echo "$sinks" | sed 's/:.*//g' | sort -u |
 		dmenu -l 10)
 	if [ -z "$dmenu_selected" ]; then
 		# Salir del script si no se eligió ninguna opción
@@ -90,11 +90,11 @@ add="Añadir sink al micrófono virtual"
 del="Quitar sink del micrófono virtual"
 chosen=$(echo -e "$add\n$del" | dmenu -l 10)
 if [ "$chosen" = "$add" ]; then
-	[ -z "$DEVICES" ] && \
+	[ -z "$DEVICES" ] &&
 		notify-send -i $ICON "No hay sinks que añadir" && exit
 	sink_edit add
 elif [ "$chosen" = "$del" ]; then
-	[ -z "$DEL_DEVICES" ] && \
+	[ -z "$DEL_DEVICES" ] &&
 		notify-send -i $ICON "No hay sinks que borrar" && exit
 	sink_edit del
 fi

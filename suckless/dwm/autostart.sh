@@ -36,57 +36,57 @@ pkill eww
 
 # Función para ajustar el tamaño del widget de eww en función de la resolución
 # y abrirlo solo si hay un único monitor y ninguna ventana abierta
-ewwspawn(){
+ewwspawn() {
 	while true; do
-	local monitors
-	local resolution
-	# Contamos el numero de monitores activos
-	monitors=$(xrandr | awk '/ connected/ { print $1 }' | wc -l)
-	# Definir el archivo al que apunta el enlace simbólico actual
-	current_link=$(readlink -f "$XDG_CONFIG_HOME/eww/dashboard.scss")
+		local monitors
+		local resolution
+		# Contamos el numero de monitores activos
+		monitors=$(xrandr | awk '/ connected/ { print $1 }' | wc -l)
+		# Definir el archivo al que apunta el enlace simbólico actual
+		current_link=$(readlink -f "$XDG_CONFIG_HOME/eww/dashboard.scss")
 
-	# Definir los archivos de los que se crearán los enlaces simbólicos
-	file_1080="$HOME/.dotfiles/.config/eww/dashboard/dashboard1080p.scss"
-	file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
+		# Definir los archivos de los que se crearán los enlaces simbólicos
+		file_1080="$HOME/.dotfiles/.config/eww/dashboard/dashboard1080p.scss"
+		file_2160="$HOME/.dotfiles/.config/eww/dashboard/dashboard2160p.scss"
 
-	# Ejecutar xrandr y obtener la resolución vertical del monitor primario
-	resolution=$(
-		xrandr | \
-		grep -E ' connected (primary )?[0-9]+x[0-9]+' | \
-		awk -F '[x+]' '{print $2}'
-	)
+		# Ejecutar xrandr y obtener la resolución vertical del monitor primario
+		resolution=$(
+			xrandr |
+				grep -E ' connected (primary )?[0-9]+x[0-9]+' |
+				awk -F '[x+]' '{print $2}'
+		)
 
-	# Verificar y crear enlaces simbólicos según los rangos de resolución
-	if [[ $resolution -ge 2160 ]]; then
-		[[ "$current_link" != "$file_2160" ]] && \
-		ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
-	else
-		[[ "$current_link" != "$file_1080" ]] && \
-		ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
-	fi
+		# Verificar y crear enlaces simbólicos según los rangos de resolución
+		if [[ $resolution -ge 2160 ]]; then
+			[[ "$current_link" != "$file_2160" ]] &&
+				ln -sf "$file_2160" "$XDG_CONFIG_HOME/eww/dashboard.scss"
+		else
+			[[ "$current_link" != "$file_1080" ]] &&
+				ln -sf "$file_1080" "$XDG_CONFIG_HOME/eww/dashboard.scss"
+		fi
 
-	# Cerrar el widget si hay mas de un monitor en uso o alguna
-	# ventana activa
-	if \
-		[ "$monitors" -gt 1 ] || \
-		xdotool getactivewindow &>/dev/null || \
-		pgrep i3lock &>/dev/null
-	then
-		pkill eww
+		# Cerrar el widget si hay mas de un monitor en uso o alguna
+		# ventana activa
+		if
+			[ "$monitors" -gt 1 ] ||
+				xdotool getactivewindow &>/dev/null ||
+				pgrep i3lock &>/dev/null
+		then
+			pkill eww
 
-	# Invocar nuestro widget si hay un solo monitor activo y eww no esta
-	# ya en ejecución
-	elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
-		eww open dashboard &
-	fi
+		# Invocar nuestro widget si hay un solo monitor activo y eww no esta
+		# ya en ejecución
+		elif [ "$monitors" -lt 2 ] && ! pgrep eww >/dev/null; then
+			eww open dashboard &
+		fi
 
-	# Esperar antes de ejecutar el bucle otra vez
-	sleep 0.2
+		# Esperar antes de ejecutar el bucle otra vez
+		sleep 0.2
 
 	done
 }
 
-virtualmic(){
+virtualmic() {
 	# Contador para evitar bucles infinitos
 	local counter=0
 	# Salir si se encuentra el sink
@@ -123,26 +123,29 @@ pgrep unclutter || unclutter --start-hidden --timeout 2 &
 pgrep pipewire || pipewire-start &
 
 # Iniciar el compositor (Solo en maquinas real.)
-grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name || \
-pgrep picom || picom &
+grep "Q35\|VMware" /sys/devices/virtual/dmi/id/product_name ||
+	pgrep picom || picom &
 
 # Servicios del sistema
-pgrep polkit-gnome  || /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+pgrep polkit-gnome || /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pgrep gnome-keyring || gnome-keyring-daemon -r -d &
-pgrep udiskie       || udiskie -t -a & # Auto-montador de discos
-pgrep dwmblocks     || dwmblocks & # Barra de estado
-pgrep nm-applet     || nm-applet & # Applet de red
+pgrep udiskie || udiskie -t -a & # Auto-montador de discos
+pgrep dwmblocks || dwmblocks &   # Barra de estado
+pgrep nm-applet || nm-applet &   # Applet de red
 
 # Si se detecta una tarjeta bluetooth, iniciar blueman-applet
-if echo "$(lspci;lsusb)" | grep -i bluetooth; then
+if echo "$(
+	lspci
+	lsusb
+)" | grep -i bluetooth; then
 	pgrep blueman-applet || blueman-applet &
 fi
 
 # Corregir el nivel del micrófono en portátiles
 if [ -e /sys/class/power_supply/BAT0 ]; then
-	mic=$(pactl list short sources | \
-	grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" | \
-	awk '{print $1}')
+	mic=$(pactl list short sources |
+		grep -E "alsa_input.pci-[0-9]*_[0-9]*_[0-9].\.[0-9].analog-stereo" |
+		awk '{print $1}')
 	pactl set-source-volume "$mic" 25%
 fi
 
@@ -163,7 +166,7 @@ while true; do
 	# Si alguno de estos procesos esta activo, no mostrar el salvapantallas
 	processes=("i3lock")
 	for process in "${processes[@]}"; do
-		! pgrep "$process" > /dev/null
+		! pgrep "$process" >/dev/null
 		resultado=$((resultado + $?))
 	done
 
@@ -173,8 +176,8 @@ while true; do
 	# vídeo/audio, no mostrar el salvapantallas
 	players=("vlc" "firefox" "mpv")
 	for player in "${players[@]}"; do
-		if [ "$(playerctl --player "$player" status)" == "Playing" ] && \
-		   [ "$activewindow" = "$player" ]; then
+		if [ "$(playerctl --player "$player" status)" == "Playing" ] &&
+			[ "$activewindow" = "$player" ]; then
 			resultado=1
 			break
 		fi

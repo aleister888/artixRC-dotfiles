@@ -3,10 +3,10 @@
 # Imprimir o establecer el volumen del micrófono
 
 case $1 in
-	vol)
-		pamixer --default-source --get-volume
+vol)
+	pamixer --default-source --get-volume
 	;;
-	set)
-		pamixer --default-source --set-volume "$2"
+set)
+	pamixer --default-source --set-volume "$2"
 	;;
 esac

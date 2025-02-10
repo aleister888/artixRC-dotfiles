@@ -14,7 +14,7 @@ breakfile=/tmp/pomodoro_status
 sound="/usr/share/sounds/freedesktop/stereo/complete.oga"
 
 # Crear nuevo temporizador
-create_timer(){
+create_timer() {
 	local timerwork
 	local timerbreak
 
@@ -40,9 +40,9 @@ close_old() {
 		if [[ "$id" != "$my_id" ]]; then
 			kill -9 "$id" 2>/dev/null
 		fi
-	done < "$processlist"
+	done <"$processlist"
 }
-get_status(){
+get_status() {
 	# El tiempo de trabajo y de pausa se guarda en un archivo como líneas
 	local content
 	content="$(cat "$pomodorofile")"
@@ -50,7 +50,7 @@ get_status(){
 	breaktime="$(echo "$content" | grep -oP "^B \K[0-9]*")"
 }
 
-timer_count(){
+timer_count() {
 	get_status
 	local work_completed="false"
 
@@ -65,7 +65,7 @@ timer_count(){
 			worktime=$((worktime - 1))
 		else
 			if [ "$work_completed" = "false" ]; then
-				echo "true" > $breakfile
+				echo "true" >$breakfile
 				pw-play $sound
 				notify-send "Hora del descanso"
 			fi

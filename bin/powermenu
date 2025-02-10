@@ -29,17 +29,20 @@ chosen=$(printf "%s\n" "${options[@]}" | dmenu -c -l ${#options[@]})
 
 # Maneja la opción elegida usando un caso
 case $chosen in
-	"${options[0]}") sleep 0.17; i3lock-fancy-rapid 4 4;;
-	"${options[1]}") loginctl suspend;;
-	"${options[2]}")
-		hora=$(obtener_hora)
-		if [ $? -eq 0 ]; then
-			sudo /usr/local/bin/wakeat "$hora" now
-		fi
-		;;
-	"${options[3]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas pkill X;;
-	"${options[4]}") doas /usr/bin/openrc-shutdown -r now;;
-	"${options[5]}") doas /usr/bin/openrc-shutdown -p now;;
-	"${options[6]}") loginctl reboot --firmware-setup;;
-	"${options[7]}") pkill dwm;;
+"${options[0]}")
+	sleep 0.17
+	i3lock-fancy-rapid 4 4
+	;;
+"${options[1]}") loginctl suspend ;;
+"${options[2]}")
+	hora=$(obtener_hora)
+	if [ $? -eq 0 ]; then
+		sudo /usr/local/bin/wakeat "$hora" now
+	fi
+	;;
+"${options[3]}") $TERMINAL $TERMTITLE "scratchpad" $TERMEXEC doas pkill X ;;
+"${options[4]}") doas /usr/bin/openrc-shutdown -r now ;;
+"${options[5]}") doas /usr/bin/openrc-shutdown -p now ;;
+"${options[6]}") loginctl reboot --firmware-setup ;;
+"${options[7]}") pkill dwm ;;
 esac

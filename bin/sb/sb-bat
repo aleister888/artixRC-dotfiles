@@ -13,11 +13,11 @@ sum=0
 
 # Guardamos el nivel de carga de todas la baterias y
 # calculamos la suma de los valores
-for ((i=1; i<=num_baterias; i++)); do
+for ((i = 1; i <= num_baterias; i++)); do
 	battery_level+=(
 		"$(echo "$out" | sed "${i}q;d" | grep -oP '\d+%' | tr -d '%')"
 	)
-	sum=$((sum + battery_level[i-1]))
+	sum=$((sum + battery_level[i - 1]))
 	echo "$out" | sed "${i}q;d" | grep Charging >/dev/null && charging=true
 done
 
@@ -28,19 +28,19 @@ if $charging; then
 	pre+="󰂄 "
 else
 	# Calculamos la media
-	average=$((sum/num_baterias))
+	average=$((sum / num_baterias))
 	case $average in
-		 [0-9]) baticon="󰁺 " ;;
-		1[0-9]) baticon="󰁺 " ;;
-		2[0-9]) baticon="󰁻 " ;;
-		3[0-9]) baticon="󰁼 " ;;
-		4[0-9]) baticon="󰁽 " ;;
-		5[0-9]) baticon="󰁾 " ;;
-		6[0-9]) baticon="󰁿 " ;;
-		7[0-9]) baticon="󰂀 " ;;
-		8[0-9]) baticon="󰂁 " ;;
-		9[0-9]) baticon="󰂂 " ;;
-		     *) baticon="󰁹 " ;;
+	[0-9]) baticon="󰁺 " ;;
+	1[0-9]) baticon="󰁺 " ;;
+	2[0-9]) baticon="󰁻 " ;;
+	3[0-9]) baticon="󰁼 " ;;
+	4[0-9]) baticon="󰁽 " ;;
+	5[0-9]) baticon="󰁾 " ;;
+	6[0-9]) baticon="󰁿 " ;;
+	7[0-9]) baticon="󰂀 " ;;
+	8[0-9]) baticon="󰂁 " ;;
+	9[0-9]) baticon="󰂂 " ;;
+	*) baticon="󰁹 " ;;
 	esac
 	pre+="$baticon"
 fi

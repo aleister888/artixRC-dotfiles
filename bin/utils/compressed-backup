@@ -7,14 +7,14 @@ set -e
 
 days=7
 
-help_msg(){
-echo "Uso:
+help_msg() {
+	echo "Uso:
   $(basename "$0") [-hd] [<directorio_original> <directorio_destino>]
 
 OPCIONES:
   -d	Borra las copias en el destino con mas de $days dias de antigüedad
   -h	Muestra este mensaje" >&2
-exit
+	exit
 }
 
 delete_old=false
@@ -23,8 +23,8 @@ bak_dir="$2"
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
-		-d) delete_old="true" ;;
-		-h) help_msg ;;
+	-d) delete_old="true" ;;
+	-h) help_msg ;;
 	esac
 	shift
 done

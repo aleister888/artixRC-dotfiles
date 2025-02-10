@@ -9,7 +9,7 @@ if [ -e "${XDG_CONFIG_HOME:-$HOME/.config}/useralias" ]; then
 	. "${XDG_CONFIG_HOME:-$HOME/.config}/useralias"
 fi
 
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
@@ -59,10 +59,10 @@ export XDG_STATE_HOME="$HOME/.local/state"
 export EDITOR="nvim"
 export SUDO_EDITOR="nvim"
 export READER="zathura"
-export TERMINAL="st"
-export TERMTITLE="-t"
-export TERMEXEC=""
-export TERM="st-256color"
+export TERMINAL="kitty"
+export TERMTITLE="--title"
+export TERMEXEC="--execute"
+export TERM="xterm-kitty"
 export BROWSER="firefox"
 export VIDEO="mpv"
 export PAGER="less"

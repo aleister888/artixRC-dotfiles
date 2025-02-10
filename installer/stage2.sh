@@ -18,12 +18,12 @@ pacinstall() {
 	pacman -Sy --noconfirm --disable-download-timeout --needed "$@"
 }
 
-service_add(){
+service_add() {
 	rc-update add "$1" default
 }
 
 # Instalamos GRUB
-install_grub(){
+install_grub() {
 	local cryptid decryptid
 	cryptid=$(lsblk -nd -o UUID /dev/"$rootPartName")
 	decryptid=$(lsblk -n -o UUID /dev/mapper/"$cryptName")
@@ -31,9 +31,11 @@ install_grub(){
 	# Obtenemos el nombre del dispositivo donde se aloja la partición boot
 	case "$ROOT_DISK" in
 	*"nvme"*)
-		bootDrive="${ROOT_DISK%p[0-9]}" ;;
+		bootDrive="${ROOT_DISK%p[0-9]}"
+		;;
 	*)
-		bootDrive="${ROOT_DISK%[0-9]}" ;;
+		bootDrive="${ROOT_DISK%[0-9]}"
+		;;
 	esac
 
 	# Instalar GRUB
@@ -46,7 +48,7 @@ install_grub(){
 	# Si se usa encriptación, le decimos a GRUB el UUID de la partición
 	# encriptada y desencriptada.
 	if [ "$crypt_root" = "true" ]; then
-		echo GRUB_ENABLE_CRYPTODISK=y >> /etc/default/grub
+		echo GRUB_ENABLE_CRYPTODISK=y >>/etc/default/grub
 		sed -i "s/\(^GRUB_CMDLINE_LINUX_DEFAULT=\".*\)\"/\1 cryptdevice=UUID=$cryptid:cryptroot root=UUID=$decryptid\"/" /etc/default/grub
 	fi
 
@@ -54,14 +56,13 @@ install_grub(){
 	grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-
 # Definimos el nombre de nuestra máquina y creamos el archivo hosts
-hostname_config(){
-	echo "$hostName" > /etc/hostname
+hostname_config() {
+	echo "$hostName" >/etc/hostname
 
 	# Este archivo hosts bloquea el acceso a sitios maliciosos
 	curl -o /etc/hosts \
-	"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+		"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
 
 	cat <<-EOF | tee -a /etc/hosts
 		127.0.0.1 localhost
@@ -72,31 +73,31 @@ hostname_config(){
 }
 
 # Activar repositorios de Arch Linux
-arch_support(){
+arch_support() {
 	# Activar lib32
 	sed -i '/#\[lib32\]/{s/^#//;n;s/^.//}' /etc/pacman.conf && pacman -Sy
 
 	# Instalar paquetes necesarios
 	pacinstall archlinux-mirrorlist archlinux-keyring artix-keyring \
-	artix-archlinux-support lib32-artix-archlinux-support pacman-contrib \
-	rsync lib32-elogind
+		artix-archlinux-support lib32-artix-archlinux-support pacman-contrib \
+		rsync lib32-elogind
 
 	# Activar repositorios de Arch
-	grep -q "^\[extra\]" /etc/pacman.conf || \
-	cat <<-EOF >>/etc/pacman.conf
-		[extra]
-		Include = /etc/pacman.d/mirrorlist-arch
+	grep -q "^\[extra\]" /etc/pacman.conf ||
+		cat <<-EOF >>/etc/pacman.conf
+			[extra]
+			Include = /etc/pacman.d/mirrorlist-arch
 
-		[multilib]
-		Include = /etc/pacman.d/mirrorlist-arch
+			[multilib]
+			Include = /etc/pacman.d/mirrorlist-arch
 
-		[community]
-		Include = /etc/pacman.d/mirrorlist-arch
-	EOF
+			[community]
+			Include = /etc/pacman.d/mirrorlist-arch
+		EOF
 
 	# Actualizar cambios
-	pacman -Sy --noconfirm && \
-	pacman-key --populate archlinux
+	pacman -Sy --noconfirm &&
+		pacman-key --populate archlinux
 	pacinstall reflector
 
 	# Escoger mirrors más rápidos de los repositorios de Arch
@@ -105,7 +106,7 @@ arch_support(){
 		--save /etc/pacman.d/mirrorlist-arch
 
 	# Configurar cronie para actualizar automáticamente los mirrors de Arch
-	cat <<-EOF > /etc/crontab
+	cat <<-EOF >/etc/crontab
 		SHELL=/bin/bash
 		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -115,11 +116,11 @@ arch_support(){
 }
 
 # Cambiar la codificación del sistema a español
-genlocale(){
+genlocale() {
 	sed -i -E 's/^#(en_US\.UTF-8 UTF-8)/\1/' /etc/locale.gen
 	sed -i -E 's/^#(es_ES\.UTF-8 UTF-8)/\1/' /etc/locale.gen
 	locale-gen
-	echo "LANG=es_ES.UTF-8" > /etc/locale.conf
+	echo "LANG=es_ES.UTF-8" >/etc/locale.conf
 }
 
 ##########
@@ -132,8 +133,8 @@ ln -sf "$systemTimezone" /etc/localtime
 hwclock --systohc
 
 # Configurar el servidor de claves y limpiar la cache
-grep ubuntu /etc/pacman.d/gnupg/gpg.conf || \
-	echo 'keyserver hkp://keyserver.ubuntu.com' | \
+grep ubuntu /etc/pacman.d/gnupg/gpg.conf ||
+	echo 'keyserver hkp://keyserver.ubuntu.com' |
 	tee -a /etc/pacman.d/gnupg/gpg.conf >/dev/null
 pacman -Sc --noconfirm
 pacman-key --populate && pacman-key --refresh-keys
@@ -147,9 +148,12 @@ if [ "$crypt_root" = "true" ]; then
 	sed -i -e '/^HOOKS=/ s/block/& encrypt/' /etc/mkinitcpio.conf
 fi
 
-if echo "$(lspci;lsusb)" | grep -i bluetooth; then
-	pacinstall bluez-openrc bluez-utils bluez-obex && \
-	service_add bluetoothd
+if echo "$(
+	lspci
+	lsusb
+)" | grep -i bluetooth; then
+	pacinstall bluez-openrc bluez-utils bluez-obex &&
+		service_add bluetoothd
 fi
 
 # Instalamos grub

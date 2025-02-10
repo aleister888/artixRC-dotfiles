@@ -16,7 +16,7 @@ yayinstall() { # Instalar paquetes con yay
 	yay -Sy --noconfirm --needed "$@"
 }
 
-service_add(){ # Activar servicio
+service_add() { # Activar servicio
 	sudo rc-update add "$1" default
 }
 
@@ -24,90 +24,95 @@ service_add(){ # Activar servicio
 
 # Guardamos nuestros paquetes en un array con mapfile desde los
 # diferentes archivos
-mapfile -t packages < <(cat \
-	"$HOME"/.dotfiles/assets/packages/appearance \
-	"$HOME"/.dotfiles/assets/packages/cli-tools \
-	"$HOME"/.dotfiles/assets/packages/compress \
-	"$HOME"/.dotfiles/assets/packages/documents \
-	"$HOME"/.dotfiles/assets/packages/fonts \
-	"$HOME"/.dotfiles/assets/packages/gui-apps \
-	"$HOME"/.dotfiles/assets/packages/misc \
-	"$HOME"/.dotfiles/assets/packages/mozilla \
-	"$HOME"/.dotfiles/assets/packages/multimedia \
-	"$HOME"/.dotfiles/assets/packages/pipewire \
-	"$HOME"/.dotfiles/assets/packages/services \
-	"$HOME"/.dotfiles/assets/packages/system \
-	"$HOME"/.dotfiles/assets/packages/x11
+mapfile -t packages < <(
+	cat \
+		"$HOME"/.dotfiles/assets/packages/appearance \
+		"$HOME"/.dotfiles/assets/packages/cli-tools \
+		"$HOME"/.dotfiles/assets/packages/compress \
+		"$HOME"/.dotfiles/assets/packages/documents \
+		"$HOME"/.dotfiles/assets/packages/fonts \
+		"$HOME"/.dotfiles/assets/packages/gui-apps \
+		"$HOME"/.dotfiles/assets/packages/misc \
+		"$HOME"/.dotfiles/assets/packages/mozilla \
+		"$HOME"/.dotfiles/assets/packages/multimedia \
+		"$HOME"/.dotfiles/assets/packages/pipewire \
+		"$HOME"/.dotfiles/assets/packages/services \
+		"$HOME"/.dotfiles/assets/packages/system \
+		"$HOME"/.dotfiles/assets/packages/x11
 )
 
-driver_add(){
+driver_add() {
 	case $graphic_driver in
 
 	amd)
-	packages+=(
-		"xf86-video-amdgpu"
-		"mesa" "lib32-mesa"
-		"vulkan-radeon" "lib32-vulkan-radeon"
-	) ;;
+		packages+=(
+			"xf86-video-amdgpu"
+			"mesa" "lib32-mesa"
+			"vulkan-radeon" "lib32-vulkan-radeon"
+		)
+		;;
 
 	nvidia)
-	packages+=(
-		"dkms" "nvidia-dkms" "nvidia-utils"
-		"libva-vdpau-driver" "libva-mesa-driver"
-		"nvidia-prime" "lib32-nvidia-utils"
-		"nvidia-utils-openrc" "opencl-nvidia"
-	) ;;
+		packages+=(
+			"dkms" "nvidia-dkms" "nvidia-utils"
+			"libva-vdpau-driver" "libva-mesa-driver"
+			"nvidia-prime" "lib32-nvidia-utils"
+			"nvidia-utils-openrc" "opencl-nvidia"
+		)
+		;;
 
 	intel)
-	packages+=(
-		"xf86-video-intel"
-		"libva-intel-driver" "lib32-libva-intel-driver"
-		"vulkan-intel" "lib32-vulkan-intel"
-	) ;;
+		packages+=(
+			"xf86-video-intel"
+			"libva-intel-driver" "lib32-libva-intel-driver"
+			"vulkan-intel" "lib32-vulkan-intel"
+		)
+		;;
 
 	virtual)
-	packages+=(
-		"xf86-video-vmware" "xf86-input-vmmouse"
-		"vulkan-virtio" "lib32-vulkan-virtio"
-	) ;;
+		packages+=(
+			"xf86-video-vmware" "xf86-input-vmmouse"
+			"vulkan-virtio" "lib32-vulkan-virtio"
+		)
+		;;
 
 	esac
 }
 
 # Elegir el software a instalar
-packages_add(){
+packages_add() {
 	# Agregamos paquetes al array dependiendo de que se eligió
 	if [ "$virt" == "true" ]; then
 		while IFS= read -r package; do
 			packages+=("$package")
-		done < "$HOME/.dotfiles/assets/packages/opt/virt"
+		done <"$HOME/.dotfiles/assets/packages/opt/virt"
 	fi
 	if [ "$latex" == "true" ]; then
 		while IFS= read -r package; do
 			packages+=("$package")
-		done < "$HOME/.dotfiles/assets/packages/opt/latex"
+		done <"$HOME/.dotfiles/assets/packages/opt/latex"
 	fi
 	if [ "$audioProd" == "true" ]; then
 		while IFS= read -r package; do
 			packages+=("$package")
-		done < "$HOME/.dotfiles/assets/packages/opt/daw"
+		done <"$HOME/.dotfiles/assets/packages/opt/daw"
 	fi
 
-	[ "$music" == "true" ] && \
+	[ "$music" == "true" ] &&
 		packages+=(
 			"easytag" "picard" "flacon"
 			"cuetools" "lrcget-bin" "python-tqdm"
 		)
 
-	[ "$noprivacy" == "true" ] && \
+	[ "$noprivacy" == "true" ] &&
 		packages+=("discord" "telegram-desktop")
 
-	[ "$office" == "true" ] && \
+	[ "$office" == "true" ] &&
 		packages+=("libreoffice" "libreoffice-fresh-es")
 }
 
 # Configurar Xresources
-xresources_make(){
+xresources_make() {
 	mkdir -p "$HOME/.config"
 	XRES_FILE="$HOME/.config/Xresources"
 	cp "$HOME/.dotfiles/assets/configs/Xresources" "$XRES_FILE"
@@ -116,7 +121,7 @@ xresources_make(){
 }
 
 # Descargar los archivos de diccionario
-vim_spell_download(){
+vim_spell_download() {
 	mkdir -p "$HOME/.local/share/nvim/site/spell/"
 	wget "https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.spl" \
 		-q -O "$HOME/.local/share/nvim/site/spell/es.utf-8.spl"
@@ -125,14 +130,14 @@ vim_spell_download(){
 }
 
 # Configurar keepassxc para que siga el tema de QT
-keepass_configure(){
+keepass_configure() {
 	[ ! -d "$HOME/.config/keepassxc" ] && mkdir -p "$HOME/.config/keepassxc"
 	cp "$HOME/.dotfiles/assets/configs/keepassxc.ini" \
 		"$HOME/.config/keepassxc/keepassxc.ini"
 }
 
 # Crear enlaces simbólicos a /usr/local/bin para ciertos scripts
-scripts_link(){
+scripts_link() {
 	files=(
 		"wakeat"
 		"wakeme"
@@ -146,7 +151,7 @@ scripts_link(){
 }
 
 # Crear el directorio /.Trash con permisos adecuados
-trash_dir(){
+trash_dir() {
 	sudo mkdir --parent /.Trash
 	sudo chmod a+rw /.Trash
 	sudo chmod +t /.Trash
@@ -163,8 +168,8 @@ yay-install
 sudo sudo2doas
 
 # Crear directorios
-for dir in Documentos Música Imágenes Público Vídeos
-	do mkdir -p "$HOME/$dir"
+for dir in Documentos Música Imágenes Público Vídeos; do
+	mkdir -p "$HOME/$dir"
 done
 ln -s /tmp/ "$HOME/Descargas"
 
@@ -188,8 +193,8 @@ fi
 
 # Instalamos todos los paquetes a la vez
 while true; do
-	yayinstall "${packages[@]}" && \
-	break
+	yayinstall "${packages[@]}" &&
+		break
 done
 
 # Crear directorio para montar dispositivos android
@@ -209,9 +214,9 @@ keepass_configure
 [ -e /sys/class/power_supply/BAT0 ] && autosuspend-conf
 
 # Permitir hacer click tocando el trackpad (X11) <luke@lukesmith.xyz>
-[ -e /sys/class/power_supply/BAT0 ] && \
+[ -e /sys/class/power_supply/BAT0 ] &&
 	sudo cp "$HOME/.dotfiles/assets/configs/40-libinput.conf" \
-	        "/etc/X11/xorg.conf.d/40-libinput.conf"
+		"/etc/X11/xorg.conf.d/40-libinput.conf"
 
 # Establecemos la versión de java por defecto
 sudo archlinux-java set java-21-openjdk
@@ -229,12 +234,12 @@ scripts_link
 trash_dir
 
 # Configurar syncthing para que se inicie con el ordenador
-echo "@reboot $USER syncthing --no-browser --no-default-folder" | \
+echo "@reboot $USER syncthing --no-browser --no-default-folder" |
 	sudo tee -a /etc/crontab >/dev/null
 
 # Si estamos usando una máquina virtual, configuramos X11 para funcionar a 1080p
-[ "$graphic_driver" == "virtual" ] && \
-sudo cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
+[ "$graphic_driver" == "virtual" ] &&
+	sudo cp "$HOME/.dotfiles/assets/configs/xorg.conf" /etc/X11/xorg.conf
 
 # Permitir a Steam controlar mandos de PlayStation 4
 sudo cp "$HOME/.dotfiles/assets/udev/99-steam-controller-perms.rules" \
@@ -249,26 +254,26 @@ service_add tlp
 # Configurar y activar xdm
 service_add xdm
 sudo cp "$HOME/.dotfiles/assets/xdm/Xresources" /etc/X11/xdm/Xresources
-sudo cp "$HOME/.dotfiles/assets/xdm/Xsetup_0"   /etc/X11/xdm/Xsetup_0
+sudo cp "$HOME/.dotfiles/assets/xdm/Xsetup_0" /etc/X11/xdm/Xsetup_0
 
 # Activar WiFi y Bluetooth
 sudo rfkill unblock wifi
-{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null \
-	&& sudo rfkill unblock bluetooth
+{ lspci | grep -i bluetooth || lsusb | grep -i bluetooth; } >/dev/null &&
+	sudo rfkill unblock bluetooth
 
 # Permitir al usuario escanear redes Wi-Fi y cambiar ajustes de red
 sudo usermod -aG network "$USER"
-[ -e /sys/class/power_supply/BAT0 ] && \
-sudo cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" \
-	"/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
+[ -e /sys/class/power_supply/BAT0 ] &&
+	sudo cp "$HOME/.dotfiles/assets/udev/50-org.freedesktop.NetworkManager.rules" \
+		"/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules"
 
 # /etc/polkit-1/rules.d/99-artix.rules
 sudo usermod -aG storage,input,users "$USER"
 
 # Configurar el software de instalación opcional
-[ "$virt" == "true" ]      && sudo virt-conf
+[ "$virt" == "true" ] && sudo virt-conf
 [ "$audioProd" == "true" ] && sudo audioProd-conf
-[ "$music" == "true" ]     && lrcput-install
+[ "$music" == "true" ] && lrcput-install
 
 # Configurar el audio de baja latencia
 sudo audio-setup
@@ -298,6 +303,6 @@ mkdir -p "$HOME"/.local/share/gnupg
 # Arreglos #
 ############
 
-pacman -Q poppler >/dev/null 2>&1 && \
+pacman -Q poppler >/dev/null 2>&1 &&
 	sudo ln -s /usr/lib/libpoppler-cpp.so.2.0.0 \
-	/usr/lib/libpoppler-cpp.so.1 2>/dev/null
+		/usr/lib/libpoppler-cpp.so.1 2>/dev/null

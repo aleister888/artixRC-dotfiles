@@ -16,7 +16,7 @@ RUSER="$(getent passwd 1000 | cut -d: -f1)"
 RHOME="/home/$RUSER"
 
 # Instalar y configurar libvirt
-virt_install(){
+virt_install() {
 	# Instalamos los paquetes necesarios si no lo están ya
 	su "$RUSER" -c "
 		yay -S --noconfirm --disable-download-timeout --needed \
@@ -24,7 +24,7 @@ virt_install(){
 	"
 
 	# Configurar QEMU para usar el usuario actual
-	sed -i "s/^#user = .*/user = \"$RUSER\"/"   /etc/libvirt/qemu.conf
+	sed -i "s/^#user = .*/user = \"$RUSER\"/" /etc/libvirt/qemu.conf
 	sed -i "s/^#group = .*/group = \"$RUSER\"/" /etc/libvirt/qemu.conf
 
 	# Configurar libvirt
@@ -42,7 +42,7 @@ virt_install(){
 }
 
 # Desinstalar libvirt por completo
-virt_remove(){
+virt_remove() {
 	# Detener servicios
 	rc-service libvirtd stop
 	rc-service virtlogd stop

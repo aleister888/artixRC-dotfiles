@@ -19,14 +19,17 @@ allowed_domains=(
 # Establecemos el reproductor y salimos del loop
 for app in "${priority[@]}"; do
 
-case "$app" in
+	case "$app" in
 	# Si es firefox, comprobamos que se está reproduciendo
 	# contenido en uno de los dominios permitidos
 	firefox)
 		# Convierte el array en una expresión regular
-		domains_pattern=$(IFS=\|; echo "${allowed_domains[*]}")
-		if playerctl -p firefox metadata xesam:url 2>/dev/null | \
-		   grep -qE "$domains_pattern"; then
+		domains_pattern=$(
+			IFS=\|
+			echo "${allowed_domains[*]}"
+		)
+		if playerctl -p firefox metadata xesam:url 2>/dev/null |
+			grep -qE "$domains_pattern"; then
 			PLAYER=$app
 			break
 		fi
@@ -37,7 +40,7 @@ case "$app" in
 			break
 		fi
 		;;
-esac
+	esac
 
 done
 

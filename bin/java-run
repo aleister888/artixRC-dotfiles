@@ -41,8 +41,8 @@ if [ -z "$ROOT_DIR" ]; then
 else
 	echo "Se encontró el directorio 'src' en: $ROOT_DIR"
 	PACKAGE_NAME=$(
-		grep -m 1 "package" "$JAVA_FILE" |\
-		sed 's/package \(.*\);/\1/'
+		grep -m 1 "package" "$JAVA_FILE" |
+			sed 's/package \(.*\);/\1/'
 	)
 	echo "Compilando y ejecutando el código desde $ROOT_DIR..."
 

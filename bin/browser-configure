@@ -10,7 +10,7 @@ get_profile() {
 	echo "$profile"
 }
 
-makeuserjs(){
+makeuserjs() {
 	# Añadir al perfil el user.js y user-overrides.js
 	arkenfox="$pdir/arkenfox.js"
 	overrides="$pdir/user-overrides.js"
@@ -19,10 +19,10 @@ makeuserjs(){
 	ln -fs "$HOME/.dotfiles/assets/configs/user-overrides.js" \
 		"$overrides"
 
-	[ ! -f "$arkenfox" ] && \
-		curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
+	[ ! -f "$arkenfox" ] &&
+		curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" >"$arkenfox"
 
-	cat "$arkenfox" "$overrides" > "$userjs"
+	cat "$arkenfox" "$overrides" >"$userjs"
 	chown "$USER:wheel" "$arkenfox" "$userjs"
 
 	# Instalar el script de actualizado.
@@ -36,7 +36,7 @@ makeuserjs(){
 		/etc/pacman.d/hooks/arkenfox.hook
 }
 
-installffaddons(){
+installffaddons() {
 	addonlist=(
 		"ublock-origin"
 		"decentraleyes"
@@ -57,13 +57,13 @@ installffaddons(){
 	for addon in "${addonlist[@]}"; do
 		if [ "$addon" == "ublock-origin" ]; then
 			addonurl=$(
-				curl -sL "https://api.github.com/repos/gorhill/uBlock/releases/latest" | \
-				grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4
+				curl -sL "https://api.github.com/repos/gorhill/uBlock/releases/latest" |
+					grep -E 'browser_download_url.*firefox' | cut -d '"' -f 4
 			)
 		else
 			addonurl=$(
-				curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" | \
-				grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*'
+				curl --silent "https://addons.mozilla.org/en-US/firefox/addon/${addon}/" |
+					grep -o 'https://addons.mozilla.org/firefox/downloads/file/[^"]*'
 			)
 		fi
 
@@ -72,10 +72,11 @@ installffaddons(){
 		wget -q "$addonurl" -O "$addontmp/$file"
 
 		id="$(
-			unzip -p "$addontmp/$file" manifest.json | \
+			unzip -p "$addontmp/$file" manifest.json |
 				grep "\"id\"" | head -n 1
 		)"
-		id="${id%\"*}"; id="${id##*\"}"
+		id="${id%\"*}"
+		id="${id##*\"}"
 
 		# Mover el archivo al directorio de extensiones con el nombre
 		# correcto, si no se obtuvo el id, ponerle el nombre de la
@@ -93,7 +94,7 @@ installffaddons(){
 	rm -rf "$addontmp"
 }
 
-installtheme(){
+installtheme() {
 	mkdir -p "$pdir/chrome/"
 	ln -fs "$HOME/.dotfiles/assets/configs/userChrome.css" "$pdir/chrome/"
 }

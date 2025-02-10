@@ -9,7 +9,7 @@ export PARALLEL_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"/parallel
 
 # Función para verificar que las dependencias estan instaladas
 check_command() {
-	if ! command -v "$1" &> /dev/null; then
+	if ! command -v "$1" &>/dev/null; then
 		echo -e "El comando $1 no se encontró. Por favor, instálalo usando:\n"
 		echo "$2"
 		exit 1
@@ -21,7 +21,7 @@ check_command "ffmpeg" "sudo pacman -S ffmpeg"
 check_command "glyrc" "sudo pacman -S glyrc"
 check_command "eyeD3" "yay -S python-eyed3"
 
-usage(){
+usage() {
 	echo -e "Uso: $0 [-plh] [Directorio original] [Directorio para la copia]\n"
 	printf "  -p: Convertir archivos en paralelo (Más rápido, pero consumirá más recursos)\n"
 	printf "  -l: Añadir letras (Más lento, requiere conexión a internet)\n"
@@ -40,14 +40,14 @@ lyrics=false
 
 while getopts 'plh' flag; do
 	case "${flag}" in
-		p) parallel=true ;;
-		l) lyrics=true ;;
-		h) usage ;;
-		*) usage ;;
+	p) parallel=true ;;
+	l) lyrics=true ;;
+	h) usage ;;
+	*) usage ;;
 	esac
 done
 
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 
 # Directorios
 OG_DIR="$1"
@@ -68,11 +68,11 @@ SYNC_DIFF=$(mktemp "$TMP_DIR/SYNC_DIFF.XXXXXX")
 echo "Buscando archivos desactualizados o sobrantes..."
 
 # Almacenar la lista de archivos en variables temporales
-find "$OG_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' > "$OG_TMP"
-find "$BK_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' > "$BK_TMP"
+find "$OG_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' >"$OG_TMP"
+find "$BK_DIR" -type f -printf '%P\n' | sed 's/\.[^.]*$//' >"$BK_TMP"
 
 # Crear un script para borrar los archivos que han sido eliminados en el directorio original
-grep -vFxf "$OG_TMP" "$BK_TMP" | uniq > "$SYNC_DIFF"
+grep -vFxf "$OG_TMP" "$BK_TMP" | uniq >"$SYNC_DIFF"
 sed -i -e "s|^|rm -rf \"$BK_DIR/|" -e 's|$|.mp3"|' -e '1i #!/bin/sh' "$SYNC_DIFF" >/dev/null 2>&1
 
 # Función para comparar y añadir archivos obsoletos al archivo SYNC_DIFF
@@ -82,14 +82,14 @@ compare_and_append() {
 		local og_time=$(date -r "$og_file" +%Y%m%d%H%M%S 2>/dev/null)
 		local bk_file="$BK_DIR/${file%.*}.mp3"
 
-	if [ -e "$og_file" ]; then
-		if [ -e "$bk_file" ]; then
-		bk_time=$(date -r "$bk_file" +%Y%m%d%H%M%S 2>/dev/null)
-			if [ "$og_time" -gt "$bk_time" ]; then
-				echo "rm -rf \"$bk_file\"" >> "$SYNC_DIFF"
+		if [ -e "$og_file" ]; then
+			if [ -e "$bk_file" ]; then
+				bk_time=$(date -r "$bk_file" +%Y%m%d%H%M%S 2>/dev/null)
+				if [ "$og_time" -gt "$bk_time" ]; then
+					echo "rm -rf \"$bk_file\"" >>"$SYNC_DIFF"
+				fi
 			fi
 		fi
-	fi
 	done
 }
 
@@ -121,7 +121,7 @@ convert_file() {
 	local dest_file="$dest_dir/${file%.*}.mp3"
 
 	# Función para borrar/sustituir caracteres conflictivos
-	clean_non_ascii(){
+	clean_non_ascii() {
 		iconv -f UTF-8 -t ASCII//TRANSLIT
 	}
 
@@ -133,14 +133,16 @@ convert_file() {
 
 		# Extraer metadatos y guardar en memoria
 		local metadata=$(ffmpeg -nostdin -i "$og_dir/$file" -f ffmetadata - 2>&1)
-		local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}'		| clean_non_ascii)
-		local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}'		| clean_non_ascii)
-		local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}'	| clean_non_ascii)
-		local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}'		| clean_non_ascii)
-		local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}'		| sed 's|/.*||')
-		local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}'			| sed 's|/.*||')
-		local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}'			| sed 's|-.*||')
-		[ -z "$disc" ] && disc=1; [ -z "$track" ] && track=1; [ -z "$disc" ] && disc=1
+		local title=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^title=/ {print $2}' | clean_non_ascii)
+		local artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^artist=/ {print $2}' | clean_non_ascii)
+		local album_artist=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album_artist=/ {print $2}' | clean_non_ascii)
+		local album=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^album=/ {print $2}' | clean_non_ascii)
+		local track=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^track=/ {print $2}' | sed 's|/.*||')
+		local disc=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^disc=/ {print $2}' | sed 's|/.*||')
+		local date=$(echo "$metadata" | awk -F '=' 'tolower($0) ~ /^date=/ {print $2}' | sed 's|-.*||')
+		[ -z "$disc" ] && disc=1
+		[ -z "$track" ] && track=1
+		[ -z "$disc" ] && disc=1
 
 		# Convertir a mp3
 		ffmpeg -nostdin -i "$og_dir/$file" \
@@ -164,7 +166,7 @@ convert_file() {
 		if [ "$4" = "true" ]; then
 			# Obtener la letra
 			glyrc lyrics -a "$artist" -t "$title" \
-			-l "en" --write "$tmplyrics" --from "chartlyrics;metallum" >/dev/null 2>&1
+				-l "en" --write "$tmplyrics" --from "chartlyrics;metallum" >/dev/null 2>&1
 			# Añadir letra, borrardo/sustituyendo caracteres conflictivos (Si esta se encontró)
 			if [ -f "$tmplyrics" ]; then
 				iconv -f UTF-8 -t ASCII//TRANSLIT "$tmplyrics" -o "$tmplyrics"
@@ -181,20 +183,20 @@ export -f convert_file
 # Convertir archivos de formatos compatibles
 if [ $parallel = "true" ]; then
 	# Calcular el número máximo de descriptores de archivo que vamos a usar
-	FDS=$(( $(ulimit -n) / 14 ))
+	FDS=$(($(ulimit -n) / 14))
 	# Convertir los archivos de forma paralela
 	find "$OG_DIR" -type f \
-	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
-	-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
-	-printf '%P\n' | \
-	parallel -j "$FDS" -P "$(nproc --ignore=$(( $(nproc) / 3 )))" \
-	--no-notice convert_file "{= s/\n/\\n/g =}" \'$BK_DIR\' \'$OG_DIR\' \'$lyrics\'
+		\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
+		-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
+		-printf '%P\n' |
+		parallel -j "$FDS" -P "$(nproc --ignore=$(($(nproc) / 3)))" \
+			--no-notice convert_file "{= s/\n/\\n/g =}" \'$BK_DIR\' \'$OG_DIR\' \'$lyrics\'
 else
 	# Convertir los archivos de uno en uno
 	find "$OG_DIR" -type f \
-	\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
-	-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
-	-printf '%P\n' | while read -r file; do
+		\( -name '*.mp3' -o -name '*.m4a' -o -name '*.amr' \
+		-o -name '*.aac' -o -name '*.wav' -o -name '*.flac' \) \
+		-printf '%P\n' | while read -r file; do
 		convert_file "$file" "$BK_DIR" "$OG_DIR" "$lyrics"
 	done
 fi

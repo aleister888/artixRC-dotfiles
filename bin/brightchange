@@ -22,11 +22,11 @@ fi
 
 maxBrightness=$(cat "$brightdev/max_brightness" 2>/dev/null)
 currentBrightness=$(cat "$brightdev/brightness" 2>/dev/null)
-steps=$(( maxBrightness / levels ))
+steps=$((maxBrightness / levels))
 
 # Crear un array con todos los niveles de brillo posibles
 levelsArray=()
-for ((i=1; i<=levels; i++)); do
+for ((i = 1; i <= levels; i++)); do
 	value=$((steps * i))
 	if [[ value -le maxBrightness ]]; then
 		result=$value
@@ -37,22 +37,22 @@ for ((i=1; i<=levels; i++)); do
 done
 
 # Encontramos el intervalo en el que nos encontramos
-for ((i=0; i<levels; i++)); do
+for ((i = 0; i < levels; i++)); do
 	[ "${levelsArray[$i]}" -ge "$currentBrightness" ] && break
 done
 
 case "$1" in
-	dec)
-		index=$((i-1))
-		[ $index -lt 0 ] && exit
-		;;
-	inc)
-		index=$((i+1))
-		[ $index -gt $((levels-1)) ] && exit
-		;;
-	*)
-		exit
-		;;
+dec)
+	index=$((i - 1))
+	[ $index -lt 0 ] && exit
+	;;
+inc)
+	index=$((i + 1))
+	[ $index -gt $((levels - 1)) ] && exit
+	;;
+*)
+	exit
+	;;
 esac
 
 next=${levelsArray[$index]}
@@ -63,4 +63,4 @@ echo "$next" | doas tee $brightdev/brightness
 
 pw-play $sound
 
-notify-send -i brightness "Brillo: $(((index+1)*100 / levels))%" -t 500
+notify-send -i brightness "Brillo: $(((index + 1) * 100 / levels))%" -t 500

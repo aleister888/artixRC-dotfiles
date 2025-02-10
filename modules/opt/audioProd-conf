@@ -7,7 +7,7 @@
 ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop \
 	/usr/share/applications/
 
-[ ! -d /usr/share/icons/hicolor/96x96/apps ] && \
+[ ! -d /usr/share/icons/hicolor/96x96/apps ] &&
 	mkdir -p /usr/share/icons/hicolor/96x96/apps
 
 ln -s /opt/tuxguitar/share/pixmaps/tuxguitar.png \

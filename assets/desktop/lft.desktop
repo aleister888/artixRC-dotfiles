@@ -1,10 +1,13 @@
 [Desktop Entry]
 Type=Application
-Name=lf File Manager (St)
-Comment=Simple terminal-based file manager
-Exec=st lf %F
+Name=lf Administrador de archivos
 Terminal=false
 Icon=utilities-terminal
 Categories=System;FileTools;FileManager
 GenericName=File Manager
 MimeType=inode/directory;
+Exec=kitty  lf %F
+Exec=kitty  lf %F
+Exec=kitty --execute lf %F
+Exec=kitty --execute lf %F
+Exec=kitty --execute lf %F

@@ -10,3 +10,5 @@ bat
 cdrtools
 ffmpegthumbnailer
 odt2txt
+astyle
+shfmt

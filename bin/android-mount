@@ -3,13 +3,13 @@
 # Script para montar dispositivos android
 
 # Función para escapar el nombre de teléfonos móviles.
-escape(){
-	echo "$@" | \
-	iconv -cf UTF-8 -t ASCII//TRANSLIT | \
-	tr -d '[:punct:]' | \
-	tr '[:upper:]' '[:lower:]' | \
-	tr ' ' '-' | \
-	sed "s/-\+/-/g;s/\(^-\|-\$\)//g"
+escape() {
+	echo "$@" |
+		iconv -cf UTF-8 -t ASCII//TRANSLIT |
+		tr -d '[:punct:]' |
+		tr '[:upper:]' '[:lower:]' |
+		tr ' ' '-' |
+		sed "s/-\+/-/g;s/\(^-\|-\$\)//g"
 }
 
 # Directorio donde montar el dispositivo

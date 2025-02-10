@@ -21,37 +21,39 @@
 
 REPO_URL="https://github.com/aleister888/artix-installer"
 
-whip_msg(){
+whip_msg() {
 	whiptail --backtitle "$REPO_URL" --title "$1" --msgbox "$2" 10 60
 }
 
-whip_yes(){
+whip_yes() {
 	whiptail --backtitle "$REPO_URL" --title "$1" --yesno "$2" 10 60
 }
 
-whip_menu(){
+whip_menu() {
 	local TITLE=$1
 	local MENU=$2
 	shift 2
 	whiptail --backtitle "$REPO_URL" \
-	--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
+		--title "$TITLE" --menu "$MENU" 15 60 5 $@ 3>&1 1>&2 2>&3
 }
 
-whip_input(){
+whip_input() {
 	local TITLE=$1
 	local INPUTBOX=$2
 	whiptail --backtitle "$REPO_URL" \
-	--title "$TITLE" --inputbox "$INPUTBOX" \
-	10 60 3>&1 1>&2 2>&3
+		--title "$TITLE" --inputbox "$INPUTBOX" \
+		10 60 3>&1 1>&2 2>&3
 }
 
-echo_msg(){
-	clear; echo "$1"; sleep 1
+echo_msg() {
+	clear
+	echo "$1"
+	sleep 1
 }
 
 # Muestra como quedarían las particiones de nuestra instalación para # confirmar
 # los cambios. También prepara las variables para formatear los discos
-scheme_show(){
+scheme_show() {
 	local scheme   # Variable con el esquema de particiones completo
 	local rootType # Tipo de partición/ (LUKS o normal)
 	bootPart=      # Partición de arranque
@@ -60,12 +62,14 @@ scheme_show(){
 	# Definimos el nombre de las particiones de nuestro disco principal
 	# (Los NVME tienen un sistema de nombrado distinto)
 	case "$ROOT_DISK" in
-		*"nvme"* | *"mmcblk"*)
-			bootPart="$ROOT_DISK"p1
-			rootPart="$ROOT_DISK"p2 ;;
-		*)
-			bootPart="$ROOT_DISK"1
-			rootPart="$ROOT_DISK"2 ;;
+	*"nvme"* | *"mmcblk"*)
+		bootPart="$ROOT_DISK"p1
+		rootPart="$ROOT_DISK"p2
+		;;
+	*)
+		bootPart="$ROOT_DISK"1
+		rootPart="$ROOT_DISK"2
+		;;
 	esac
 
 	# Mostrar si la partición esta encriptada
@@ -81,27 +85,26 @@ scheme_show(){
 	/dev/$rootPart  $rootType
 	"
 	if [ "$crypt_root" == "true" ]; then
-	scheme+="/dev/mapper/root  /"
+		scheme+="/dev/mapper/root  /"
 	fi
 
 	# Mostramos el esquema para confirmar los cambios
 	if ! whiptail --backtitle "$REPO_URL" \
 		--title "Confirmar particionado" \
-		--yesno "$scheme" 15 60
-	then
-		whip_yes "Salir" "¿Desea cancelar la instalación? En caso contrario, volverá a elegir su esquema de particiones" && \
-		exit 1
+		--yesno "$scheme" 15 60; then
+		whip_yes "Salir" "¿Desea cancelar la instalación? En caso contrario, volverá a elegir su esquema de particiones" &&
+			exit 1
 	fi
 }
 
 # Función para elegir como se formatearán nuestros discos
-scheme_setup(){
+scheme_setup() {
 	while true; do
 		while true; do
 			ROOT_DISK=$(
 				whip_menu "Discos disponibles" \
-				"Selecciona un disco para la instalación:" \
-				"$(lsblk -dn -o name,size | tr '\n' ' ')"
+					"Selecciona un disco para la instalación:" \
+					"$(lsblk -dn -o name,size | tr '\n' ' ')"
 			) && break
 		done
 
@@ -121,13 +124,13 @@ scheme_setup(){
 }
 
 # Encriptar el disco duro
-part_encrypt(){
+part_encrypt() {
 	local cryptPassword
 	while true; do
 		cryptPassword=$(
 			get_password "Entrada de Contraseña" "Confirmación de contraseña" \
-			"Introduce la contraseña de encriptación del disco $1:" \
-			"Re-introduce la contraseña de encriptación del disco $1:"
+				"Introduce la contraseña de encriptación del disco $1:" \
+				"Re-introduce la contraseña de encriptación del disco $1:"
 		)
 		yes "$cryptPassword" | cryptsetup luksFormat -q --verify-passphrase "/dev/$2" && break
 		whip_msg "LUKS" "Hubo un error, deberá introducir la contraseña otra vez"
@@ -136,18 +139,18 @@ part_encrypt(){
 	yes "$cryptPassword" | cryptsetup open "/dev/$2" "$3" && return
 }
 
-disk_setup(){
+disk_setup() {
 	# Elegimos el sistema de ficheros
 	ROOT_FILESYSTEM=$(
 		whip_menu "Sistema de archivos" \
-		"Selecciona el sistema de archivos para /:" \
-		"ext4" "Ext4" "btrfs" "Btrfs"
+			"Selecciona el sistema de archivos para /:" \
+			"ext4" "Ext4" "btrfs" "Btrfs"
 	)
 
 	rootPartName=
 
 	# Nombre aleatorio de la partición encriptada abierta
-	cryptName=$(tr -dc 'a-zA-Z' < /dev/urandom | fold -w 5 | head -n 1)
+	cryptName=$(tr -dc 'a-zA-Z' </dev/urandom | fold -w 5 | head -n 1)
 
 	# Borramos la firma del disco
 	wipefs --all "/dev/$ROOT_DISK"
@@ -160,9 +163,9 @@ disk_setup(){
 
 	# Si se eligió usar LUKS, es el momento de encriptar la partición
 	if [ "$crypt_root" == "true" ]; then
-		part_encrypt "/" "$rootPart" "$cryptName" && \
-		# Cambiamos el indicador del disco a la partición encriptada
-		rootPartName="$rootPart"
+		part_encrypt "/" "$rootPart" "$cryptName" &&
+			# Cambiamos el indicador del disco a la partición encriptada
+			rootPartName="$rootPart"
 		rootPart="mapper/$cryptName"
 	fi
 
@@ -219,7 +222,7 @@ disk_setup(){
 # Ejecutamos basestrap en un bucle hasta que se ejecute correctamente
 # porque el comando no tiene la opción --disable-download-timeout.
 # Lo que podría hacer que la operación falle con conexiones muy lentas.
-basestrap_install(){
+basestrap_install() {
 	local basestrap_packages
 
 	basestrap_packages="base elogind-openrc openrc linux linux-firmware"
@@ -261,7 +264,10 @@ basestrap_install(){
 	fi
 
 	# Si el dispositivo tiene bluetooth, instalaremos blueman
-	if echo "$(lspci;lsusb)" | grep -i bluetooth; then
+	if echo "$(
+		lspci
+		lsusb
+	)" | grep -i bluetooth; then
 		basestrap_packages+=" blueman"
 	fi
 
@@ -271,10 +277,10 @@ basestrap_install(){
 }
 
 # Elegimos distribución de teclado
-kb_layout_select(){
+kb_layout_select() {
 	key_layouts=$(
 		find /usr/share/X11/xkb/symbols/ -mindepth 1 -type f \
-		-printf "%f\n" | sort -u | grep -v '...'
+			-printf "%f\n" | sort -u | grep -v '...'
 	)
 
 	# Array con las diferentes distribuciones de teclado posibles
@@ -286,14 +292,14 @@ kb_layout_select(){
 	# Elegimos nuestro layout
 	final_layout=$(
 		whip_menu "Teclado" \
-		"Por favor, elige una distribucion de teclado:" \
-		${keyboard_array[@]}
+			"Por favor, elige una distribucion de teclado:" \
+			${keyboard_array[@]}
 	)
 }
 
-kb_layout_conf(){
+kb_layout_conf() {
 	sudo mkdir -p /mnt/etc/X11/xorg.conf.d/ # X11
-	cat <<-EOF > /mnt/etc/X11/xorg.conf.d/00-keyboard.conf
+	cat <<-EOF >/mnt/etc/X11/xorg.conf.d/00-keyboard.conf
 		Section "InputClass"
 		    Identifier "system-keyboard"
 		    MatchIsKeyboard "on"
@@ -303,38 +309,54 @@ kb_layout_conf(){
 		EndSection
 	EOF
 	# Si elegimos español, configurar el layout de la tty en español también
-	[ "$final_layout" == "es" ] && \
+	[ "$final_layout" == "es" ] &&
 		sudo sed -i 's|keymap="us"|keymap="es"|' /etc/conf.d/keymaps
 }
 
 # Calcular el DPI
-calculate_dpi(){
+calculate_dpi() {
 	local resolution size width height fact displayDPI
 
 	# Selección de resolución del monitor
 	resolution=$(
 		whip_menu "Resolucion del Monitor" \
-		"Seleccione la resolucion de su monitor:" \
-		"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K"
+			"Seleccione la resolucion de su monitor:" \
+			"720p" "HD" "1080p" "Full-HD" "1440p" "QHD" "2160p" "4K"
 	)
 
 	# Selección del tamaño del monitor en pulgadas (diagonal)
 	size=$(
 		whip_menu "Tamaño del Monitor" \
-		"Seleccione el tamaño de su monitor (en pulgadas):" \
-		"14" "Portatil" \
-		"15.6" "Portatil" \
-		"17" "Portatil" \
-		"24" "Escritorio" \
-		"27" "Escritorio"
+			"Seleccione el tamaño de su monitor (en pulgadas):" \
+			"14" "Portatil" \
+			"15.6" "Portatil" \
+			"17" "Portatil" \
+			"24" "Escritorio" \
+			"27" "Escritorio"
 	)
 
 	# Definimos la resolución elegida
 	case $resolution in
-		"720p")  width=1280; height=720;  fact="0.6";;
-		"1080p") width=1920; height=1080; fact="0.6";;
-		"1440p") width=2560; height=1440; fact="0.6";;
-		"2160p") width=3840; height=2160; fact="1.2";;
+	"720p")
+		width=1280
+		height=720
+		fact="0.6"
+		;;
+	"1080p")
+		width=1920
+		height=1080
+		fact="0.6"
+		;;
+	"1440p")
+		width=2560
+		height=1440
+		fact="0.6"
+		;;
+	"2160p")
+		width=3840
+		height=2160
+		fact="1.2"
+		;;
 	esac
 
 	# Calculamos el DPI
@@ -346,7 +368,7 @@ calculate_dpi(){
 	final_dpi=$(printf "%.0f" "$displayDPI")
 }
 
-get_password(){
+get_password() {
 	local password1 password2
 	local title1=$1
 	local title2=$2
@@ -358,17 +380,17 @@ get_password(){
 		# Pedir la contraseña la primera vez
 		password1=$(
 			whiptail --backtitle "$REPO_URL" \
-			--title "$title1" \
-			--passwordbox "$box1" \
-			10 60 3>&1 1>&2 2>&3
+				--title "$title1" \
+				--passwordbox "$box1" \
+				10 60 3>&1 1>&2 2>&3
 		)
 
 		# Pedir la contraseña una segunda vez
 		password2=$(
 			whiptail --backtitle "$REPO_URL" \
-			--title "$title2" \
-			--passwordbox "$box2" \
-			10 60 3>&1 1>&2 2>&3
+				--title "$title2" \
+				--passwordbox "$box2" \
+				10 60 3>&1 1>&2 2>&3
 		)
 
 		# Si ambas contraseñas coinciden devolver el resultado
@@ -377,22 +399,22 @@ get_password(){
 		else
 			# Mostrar un mensaje de error si las contraseñas no coinciden
 			whiptail --backtitle "$REPO_URL" \
-			--title "Error" \
-			--msgbox "Las contraseñas no coinciden. Inténtalo de nuevo." \
-			10 60 3>&1 1>&2 2>&3
+				--title "Error" \
+				--msgbox "Las contraseñas no coinciden. Inténtalo de nuevo." \
+				10 60 3>&1 1>&2 2>&3
 		fi
 
 	done
 }
 
 # Establecer zona horaria
-timezone_set(){
+timezone_set() {
 
 	while true; do
 		# Obtener la lista de regiones disponibles
 		regions=$(
 			find /usr/share/zoneinfo -mindepth 1 -type d \
-			-printf "%f\n" | sort -u
+				-printf "%f\n" | sort -u
 		)
 
 		# Crear un array con las regiones
@@ -404,14 +426,14 @@ timezone_set(){
 		# Elegir la región
 		region=$(
 			whip_menu "Selecciona una región" \
-			"Por favor, elige una región" \
-			${regions_array[@]}
+				"Por favor, elige una región" \
+				${regions_array[@]}
 		)
 
 		# Obtener la lista de zonas horarias de la región seleccionada
 		timezones=$(
 			find "/usr/share/zoneinfo/$region" -mindepth 1 -type f \
-			-printf "%f\n" | sort -u
+				-printf "%f\n" | sort -u
 		)
 
 		# Crear un array con las distintas zonas horarias
@@ -423,17 +445,17 @@ timezone_set(){
 		# Elegir la zona horaria dentro de la región seleccionada
 		timezone=$(
 			whip_menu "Selecciona una zona horaria en $region" \
-			"Por favor, elige una zona horaria en $region:" \
-			${timezones_array[@]}
+				"Por favor, elige una zona horaria en $region:" \
+				${timezones_array[@]}
 		)
 
 		# Verificar si la zona horaria seleccionada es válida
-		if [ -f "/usr/share/zoneinfo/$region/$timezone" ] && \
+		if [ -f "/usr/share/zoneinfo/$region/$timezone" ] &&
 			[ -n "$region" ] && [ -n "$timezone" ]; then
 			break
 		else
 			whip_msg "Zona horaria no valida" \
-			"Zona horaria no valida. Asegúrate de elegir una zona horaria valida."
+				"Zona horaria no valida. Asegúrate de elegir una zona horaria valida."
 		fi
 	done
 
@@ -441,7 +463,7 @@ timezone_set(){
 }
 
 # Elegimos el driver de vídeo
-driver_choose(){
+driver_choose() {
 	local driver_options
 
 	# Opciones posibles
@@ -452,11 +474,11 @@ driver_choose(){
 	# Elegimos nuestra tarjeta gráfica
 	graphic_driver=$(
 		whip_menu "Selecciona tu tarjeta grafica" "Elige una opcion:" \
-		${driver_options[@]}
+			${driver_options[@]}
 	)
 }
 
-packages_choose(){
+packages_choose() {
 	local noprivacy office latex
 
 	while true; do
@@ -467,27 +489,27 @@ packages_choose(){
 		for var in "${variables[@]}"; do eval "$var=false"; done
 
 		whip_yes "Virtualizacion" \
-			"¿Quieres instalar libvirt para ejecutar máquinas virtuales?" && \
+			"¿Quieres instalar libvirt para ejecutar máquinas virtuales?" &&
 			virt="true"
 
 		whip_yes "Musica" \
-			"¿Deseas instalar software para manejar tu coleccion de musica?" && \
+			"¿Deseas instalar software para manejar tu coleccion de musica?" &&
 			music="true"
 
 		whip_yes "Privacidad" \
-			"¿Deseas instalar Discord y Telegram?" && \
+			"¿Deseas instalar Discord y Telegram?" &&
 			noprivacy="true"
 
 		whip_yes "Oficina" \
-			"¿Deseas instalar software de ofimatica?" && \
+			"¿Deseas instalar software de ofimatica?" &&
 			office="true"
 
 		whip_yes "laTeX" \
-			"¿Deseas instalar laTeX?" && \
+			"¿Deseas instalar laTeX?" &&
 			latex="true"
 
 		whip_yes "DAW" \
-			"¿Deseas instalar software de produccion de audio?" && \
+			"¿Deseas instalar software de produccion de audio?" &&
 			audioProd="true"
 
 		# Confirmamos la selección de paquetes a instalar (o no)
@@ -495,20 +517,20 @@ packages_choose(){
 			break
 		else
 			whip_msg "Operacion cancelada" \
-			"Se te volvera a preguntar que software desea instalar"
+				"Se te volvera a preguntar que software desea instalar"
 		fi
 	done
 }
 
 # Elegimos que paquetes instalar
-packages_show(){
+packages_show() {
 	local scheme # Variable con la lista de paquetes a instalar
 	scheme="Se instalaran:\n"
-	[ "$virt"      == "true" ] && scheme+="libvirt\n"
-	[ "$music"     == "true" ] && scheme+="Softw. Gestión de Música\n"
+	[ "$virt" == "true" ] && scheme+="libvirt\n"
+	[ "$music" == "true" ] && scheme+="Softw. Gestión de Música\n"
 	[ "$noprivacy" == "true" ] && scheme+="Telegram y Discord\n"
-	[ "$office"    == "true" ] && scheme+="Softw. Ofimatica\n"
-	[ "$latex"     == "true" ] && scheme+="laTeX\n"
+	[ "$office" == "true" ] && scheme+="Softw. Ofimatica\n"
+	[ "$latex" == "true" ] && scheme+="laTeX\n"
 	[ "$audioProd" == "true" ] && scheme+="Softw. Prod. Musical\n"
 
 	whiptail --backtitle "$REPO_URL" \
@@ -535,27 +557,27 @@ calculate_dpi
 
 rootPassword=$(
 	get_password "Entrada de Contraseña" "Confirmación de contraseña" \
-	"Introduce la contraseña del superusuario:" \
-	"Re-introduce la contraseña del superusuario:"
+		"Introduce la contraseña del superusuario:" \
+		"Re-introduce la contraseña del superusuario:"
 )
 
 username="$(
 	whiptail --backtitle "$REPO_URL" \
-	--inputbox "Por favor, ingresa el nombre del usuario:" \
-	10 60 3>&1 1>&2 2>&3
+		--inputbox "Por favor, ingresa el nombre del usuario:" \
+		10 60 3>&1 1>&2 2>&3
 )"
 
 userPassword=$(
 	get_password "Entrada de Contraseña" "Confirmación de contraseña" \
-	"Introduce la contraseña del usuario $username:" \
-	"Re-introduce la contraseña del usuario $username:"
+		"Introduce la contraseña del usuario $username:" \
+		"Re-introduce la contraseña del usuario $username:"
 )
 
 systemTimezone=$(timezone_set)
 
 hostName=$(
 	whip_input "Configuracion de Hostname" \
-	"Por favor, introduce el nombre que deseas darle a tu ordenador:" \
+		"Por favor, introduce el nombre que deseas darle a tu ordenador:"
 )
 
 # Elegimos el driver de video y lo guardamos en la variable $graphic_driver
@@ -566,7 +588,7 @@ packages_choose
 
 # Avisamos al usuario de que ya puede relajarse y dejar que el haga su trabajo
 whip_msg "Hora del cafe" \
-"El instalador ya tiene toda la información necesaria, puedes dejar el ordenador desatendido. La instalacion tomara 30-45min aproximadamente."
+	"El instalador ya tiene toda la información necesaria, puedes dejar el ordenador desatendido. La instalacion tomara 30-45min aproximadamente."
 
 # Instalamos paquetes en la nueva instalación
 basestrap_install
@@ -576,7 +598,8 @@ fstabgen -U /mnt >/mnt/etc/fstab
 
 # Montamos los directorios necesarios para el chroot
 for dir in dev proc sys run; do
-	mount --rbind /$dir /mnt/$dir; mount --make-rslave /mnt/$dir
+	mount --rbind /$dir /mnt/$dir
+	mount --make-rslave /mnt/$dir
 done
 
 artix-chroot /mnt sh -c "
