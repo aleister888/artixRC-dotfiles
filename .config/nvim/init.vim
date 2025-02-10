@@ -11,6 +11,7 @@ let mapleader = "," " Definir la tecla leader
 if $USER !=# 'root'
 	call plug#begin('~/.local/share/nvim/plugged')
 
+	" Auto-indentar código (TeX, Java, Bash)
 	Plug 'vim-autoformat/vim-autoformat'
 
 	" Apariencia
@@ -61,6 +62,8 @@ endif
 
 " vim-autoformat
 let g:formatdef_latexindent = '"latexindent -"'
+let g:formatdef_astyle_java= '"astyle --style=allman --indent=spaces=4 -n"'
+let g:formatters_java = ['astyle_java']
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
@@ -170,6 +173,10 @@ set list fillchars+=vert:\|
 set list listchars=tab:\|\ ,trail:·,lead:·,precedes:<,extends:>
 " Marcar la columna 80
 set colorcolumn=80
+
+" Indentación y tabulación
+autocmd FileType * setlocal nosmartindent nocindent noexpandtab
+autocmd FileType * setlocal copyindent preserveindent tabstop=8 shiftwidth=8
 
 if $USER !=# 'root'
 	set clipboard+=unnamedplus
@@ -308,6 +315,8 @@ au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
 
 " Java
 autocmd FileType java nmap <leader>g :botright terminal java-run %<CR> :startinsert<CR>
+autocmd FileType java setlocal nosmartindent nocindent expandtab
+autocmd FileType java setlocal copyindent preserveindent tabstop=4 shiftwidth=4
 
 "######################
 "# Automatizar tareas #
@@ -342,4 +351,4 @@ au BufWritePre * %s/\s\+$//e
 au BufWritePre * %s/\n\+\%$//e
 au BufWritePre * cal cursor(currPos[1], currPos[2])
 
-au BufWrite * :Autoformat
+autocmd BufWritePre *.java,*.sh,*.tex :Autoformat

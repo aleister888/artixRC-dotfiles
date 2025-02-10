@@ -21,3 +21,5 @@ texlive-publishers
 texlive-xetex
 ttf-fira-mono
 ttf-fira-sans
+perl-yaml-tiny
+perl-file-homedir

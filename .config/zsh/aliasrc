@@ -46,6 +46,7 @@ cleanup() {
 		yay -Rcns $packages
 	fi
 }
+
 deepcleanup() {
 	pacman -Qqd 2>/dev/null |
 		pacman -Rsu --print - 2>/dev/null |
@@ -304,7 +305,7 @@ githelp() {
 	done
 }
 
-script_format() {
+code_format() {
 	# Directorio donde se encuentran los scripts
 	directorio=$1
 
@@ -319,12 +320,22 @@ script_format() {
 		mime_type=$(xdg-mime query filetype "$archivo")
 
 		# Si el tipo MIME es 'application/x-shellscript', formatear el archivo
-		if [ "$mime_type" = "application/x-shellscript" ]; then
-			echo "Formateando $archivo..."
-			shfmt -w "$archivo" # Formatear el archivo en su lugar
-		fi
+		case "$mime_type" in
+		application/x-shellscript)
+			shfmt -w "$archivo" &&
+				echo "Formateado: $archivo"
+			;;
+		text/x-java)
+			astyle --style=allman --indent=spaces=4 -n "$archivo" &&
+				echo "Formateado: $archivo"
+			;;
+		text/x-tex)
+			latexindent -s "$archivo" 2>/dev/null &&
+				echo "Formateado: $archivo"
+			;;
+		esac
 	done
 
 	# Mensaje final
-	echo "Todos los archivos shell han sido formateados."
+	echo "Todos los archivos han sido formateados."
 }
