@@ -67,6 +67,16 @@ let g:formatters_java = ['astyle_java']
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
+function! FAutoformat()
+	let g:autoformat_autoindent = 1
+	let g:autoformat_retab = 1
+	let g:autoformat_remove_trailing_spaces = 1
+	silent! execute "Autoformat"
+	silent! execute "Autoformat"
+	let g:autoformat_autoindent = 0
+	let g:autoformat_retab = 0
+	let g:autoformat_remove_trailing_spaces = 0
+endfunction
 
 " coc
 inoremap <silent><expr> <s-tab>
@@ -216,6 +226,7 @@ autocmd VimEnter * hi ErrorMsg   guifg=#FE8019 guibg=#282828
 " Plugins
 nnoremap <silent><leader>t :NvimTreeToggle<CR>
 nnoremap <silent><leader>u :UndotreeToggle<CR>
+nnoremap <silent><leader>a :call FAutoformat()<CR>
 
 " Abrir el mismo buffer en vertical/horizontal
 nnoremap <leader>v :vsplit %<CR>

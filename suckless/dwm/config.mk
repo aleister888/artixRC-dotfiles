@@ -18,16 +18,16 @@ XINERAMAFLAGS = -DXINERAMA
 
 # Librerías e inclusiones
 INCS = -I${X11INC} \
-	`$(PKG_CONFIG) --cflags freetype2`
+       `$(PKG_CONFIG) --cflags freetype2`
 LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} \
-	`$(PKG_CONFIG) --libs fontconfig` \
-	`$(PKG_CONFIG) --libs xft` \
-	-lX11-xcb -lxcb -lxcb-res ${KVMLIB}
+       `$(PKG_CONFIG) --libs fontconfig` \
+       `$(PKG_CONFIG) --libs xft` \
+       -lX11-xcb -lxcb -lxcb-res ${KVMLIB}
 
 # Opciones de compilación
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} -D_GNU_SOURCE
 CFLAGS = -march=native -flto=auto -O3 -Os ${INCS} ${CPPFLAGS} \
-	-pipe -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Wno-unused-function
+	 -pipe -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Wno-unused-function
 LDFLAGS = ${LIBS}
 
 # Compliador y enlazador

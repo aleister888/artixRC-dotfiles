@@ -15,15 +15,15 @@ XINERAMAFLAGS = -DXINERAMA
 
 # Librerías e inclusiones
 INCS = -I${X11INC} \
-	`$(PKG_CONFIG) --cflags freetype2`
+       `$(PKG_CONFIG) --cflags freetype2`
 LIBS = -L${X11LIB} -lX11 -lfontconfig -lXft ${XINERAMALIBS} \
-	`$(PKG_CONFIG) --libs fontconfig` \
-	`$(PKG_CONFIG) --libs xft`
+       `$(PKG_CONFIG) --libs fontconfig` \
+       `$(PKG_CONFIG) --libs xft`
 
 # Opciones de compilación
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} -D_GNU_SOURCE
 CFLAGS = -march=x86-64-v3 -O3 -Os ${INCS} ${CPPFLAGS} \
-	-pipe -std=c99 -pedantic -Wall -Wno-deprecated-declarations
+	 -pipe -std=c99 -pedantic -Wall -Wno-deprecated-declarations
 LDFLAGS  = ${LIBS}
 
 # Compliador y enlazador
