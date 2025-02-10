@@ -287,7 +287,8 @@ githelp() {
 				"2" "Hacer commit y push" \
 				"3" "Restaurar con git reset --hard origin" \
 				"4" "Restaurar a un commit específico" \
-				"5" "Salir"
+				"5" "Cambiar el mensaje del último commit" \
+				"6" "Salir"
 		)
 
 		case $choice in
@@ -296,11 +297,15 @@ githelp() {
 		3) reset_hard ;;
 		4) reset_to_commit ;;
 		5)
+			git commit --amend &&
+				git push origin +HEAD
+			;;
+		6)
 			whip_yes "Salir" \
 				"¿Estás seguro de que quieres salir?" &&
 				break
 			;;
-		*) whip_msg "Error" "Opción no válida." ;;
+		*) break ;;
 		esac
 	done
 }

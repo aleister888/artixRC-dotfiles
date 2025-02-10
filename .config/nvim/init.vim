@@ -351,4 +351,6 @@ au BufWritePre * %s/\s\+$//e
 au BufWritePre * %s/\n\+\%$//e
 au BufWritePre * cal cursor(currPos[1], currPos[2])
 
-autocmd BufWritePre *.java,*.sh,*.tex :Autoformat
+au BufWritePre * if &filetype == 'sh' | :Autoformat | endif
+au BufWritePre * if &filetype == 'tex' | :Autoformat | endif
+au BufWritePre * if &filetype == 'java' | :Autoformat | endif
