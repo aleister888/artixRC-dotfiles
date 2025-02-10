@@ -196,10 +196,11 @@ whip_input() {
 		10 60 3>&1 1>&2 2>&3
 }
 
+# Función para validar la indentación de un archivo
 indent_check() {
 	# Validar que el número de espacios es un entero
 	if ! print -r -- "$1" | grep -qE '^[0-9]+$' || [ ! -f "$2" ]; then
-		echo "Uso: indent_check <nEspacios> <archivo>"
+		echo "Uso: indent_check <nº espacios> <archivo>"
 		return 1
 	fi
 
@@ -260,7 +261,7 @@ reset_to_commit() {
 	# Confirmar antes de hacer el reset
 	if whip_yes "Restaurar commit" "¿Estás seguro de que quieres retroceder al commit $commit_hash? Se perderán los cambios después de este commit."; then
 		# Realizar el reset al commit seleccionado
-		git reset --hard $commit_hash
+		git reset --hard "$commit_hash"
 		# Hacer push forzado al repositorio remoto
 		if git push origin HEAD --force; then
 			whip_msg "Éxito" "Repositorio remoto actualizado con éxito."
