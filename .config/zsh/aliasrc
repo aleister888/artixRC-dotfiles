@@ -336,8 +336,18 @@ code_format() {
 				echo "Formateado: $archivo"
 			;;
 		text/x-tex)
-			latexindent -s "$archivo" 2>/dev/null &&
+			latexindent -w "$archivo" >/dev/null 2>&1 &&
 				echo "Formateado: $archivo"
+
+			# Extraer el nombre base sin extensión
+			nombre_base=$(echo "$archivo" | sed 's/\.[^.]*$//')
+
+			# Mover archivos .bak generados por latexindent
+			for bak_archivo in "${nombre_base}".bak*; do
+				if [ -f "$bak_archivo" ]; then
+					mv "$bak_archivo" /tmp/
+				fi
+			done
 			;;
 		esac
 	done

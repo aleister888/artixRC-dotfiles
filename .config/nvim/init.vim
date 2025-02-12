@@ -325,7 +325,7 @@ endfunction
 au FileType markdown nmap <silent><leader>f :call TocToggle()<CR>
 
 " Java
-autocmd FileType java nmap <leader>g :botright terminal java-run %<CR> :startinsert<CR>
+autocmd FileType java nmap <leader>g :botright terminal java %<CR> :startinsert<CR>
 autocmd FileType java setlocal nosmartindent nocindent expandtab
 autocmd FileType java setlocal copyindent preserveindent tabstop=4 shiftwidth=4
 
