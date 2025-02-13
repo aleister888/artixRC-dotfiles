@@ -21,7 +21,7 @@ set ratios 3:5:4
 set hiddenfiles ".*:*.aux:*.toc:*.sty:*.out:*.log:*.bbl:*.blg:*.synctex.gz:*.bcf:*.nav:*.run.xml:*.snm:*.xwm:*.class"
 
 # Recargar pantalla
-map R clear
+map R $clear
 # Recargar configuración
 map C &lf -remote "send $id source ~/.config/lf/lfrc"
 # Pegar archivos
@@ -280,7 +280,7 @@ case $(xdg-mime query filetype "$(readlink -f $f)") in
 	*/pdf | */epub*)
 		zathura "$f" ;;
 
-	text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop )
+	text/* | */xml | */json | inode/x-empty | */x-shellscript | */pgp-encrypted | */x-xcursor | */x-theme | */x-desktop | */yaml )
 		$EDITOR "$fx" ;;
 
 	image/*)
