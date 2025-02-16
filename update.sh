@@ -25,6 +25,24 @@ if [ "$OGHASH" != "$HASH" ]; then
 	exec "$0" "$@"
 fi
 
+# Instalar paquetes base, por si se añadió alguno a la lista
+yay -Sy --noconfirm --needed $(
+	cat \
+		"$HOME"/.dotfiles/assets/packages/appearance \
+		"$HOME"/.dotfiles/assets/packages/cli-tools \
+		"$HOME"/.dotfiles/assets/packages/compress \
+		"$HOME"/.dotfiles/assets/packages/documents \
+		"$HOME"/.dotfiles/assets/packages/fonts \
+		"$HOME"/.dotfiles/assets/packages/gui-apps \
+		"$HOME"/.dotfiles/assets/packages/misc \
+		"$HOME"/.dotfiles/assets/packages/mozilla \
+		"$HOME"/.dotfiles/assets/packages/multimedia \
+		"$HOME"/.dotfiles/assets/packages/pipewire \
+		"$HOME"/.dotfiles/assets/packages/services \
+		"$HOME"/.dotfiles/assets/packages/system \
+		"$HOME"/.dotfiles/assets/packages/x11
+)
+
 #######################################
 # Archivos de configuración y scripts #
 #######################################

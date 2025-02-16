@@ -12,3 +12,5 @@ ffmpegthumbnailer
 odt2txt
 astyle
 shfmt
+stylua
+tree-sitter-cli

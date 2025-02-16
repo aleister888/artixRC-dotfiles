@@ -9,9 +9,9 @@ glyr
 gnupg
 grub-hook
 java-environment-common
-jdk-openjdk
+jre-openjdk
 jre17-openjdk
-jdk21-openjdk
+jre21-openjdk
 kernel-modules-hook
 lib32-gnutls
 lib32-mesa

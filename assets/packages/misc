@@ -58,3 +58,6 @@ acpi
 neovim-remote
 android-tools
 unclutter
+junit
+luarocks
+lua51

@@ -13,6 +13,8 @@ bookmarks
 
 .config/nvim/spell/es.utf-8.add
 .config/nvim/spell/es.utf-8.add.spl
+.config/nvim/lazy-lock.json
+.config/nvim/.luarc.json
 
 .config/zsh/ohmyzsh
 .config/zsh/zsh-autosuggestions
