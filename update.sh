@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2046
 
 # Instalador de ajustes para Artix OpenRC
 # por aleister888 <pacoe1000@gmail.com>

@@ -6,6 +6,35 @@ return {
 	{
 		"williamboman/mason-lspconfig.nvim",
 		opts = function()
+			vim.keymap.set("n", "<leader>A", vim.lsp.buf.code_action, {})
+			-- Mostrar diagnóstico en una ventana flotante
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>d1",
+				":lua vim.diagnostic.open_float()<CR>",
+				{ noremap = true, silent = true }
+			)
+			-- Mostrar diagnósticos en forma de lista
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>d2",
+				":lua vim.diagnostic.setqflist()<CR>",
+				{ noremap = true, silent = true }
+			)
+			-- Ir al siguiente diagnóstico
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>dn",
+				":lua vim.diagnostic.goto_next()<CR>",
+				{ noremap = true, silent = true }
+			)
+			-- Ir al diagnóstico anterior
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>dp",
+				":lua vim.diagnostic.goto_prev()<CR>",
+				{ noremap = true, silent = true }
+			)
 			return {
 				ensure_installed = {
 					"jdtls",
@@ -20,11 +49,9 @@ return {
 		dependencies = {
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			"jose-elias-alvarez/null-ls.nvim",
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
-			local null_ls = require("null-ls")
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 			-- LSP servers to configure
@@ -34,13 +61,6 @@ return {
 					capabilities = capabilities,
 				})
 			end
-
-			-- Configuración de null-ls para shellcheck
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.diagnostics.shellcheck,
-				},
-			})
 		end,
 	},
 	{
@@ -75,16 +95,6 @@ return {
 					["<S-Tab>"] = cmp.mapping.confirm({ select = true }), -- Shift+Tab para confirmar selección
 					["<Down>"] = cmp.mapping.select_next_item(), -- Flecha Abajo para ir a la siguiente opción
 					["<Up>"] = cmp.mapping.select_prev_item(), -- Flecha Arriba para ir a la opción anterior
-				},
-				window = {
-					completion = {
-						-- Borde para el menú de autocompletado
-						border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
-					},
-					documentation = {
-						-- Borde para la documentación
-						border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
-					},
 				},
 				formatting = {
 					format = function(entry, vim_item)

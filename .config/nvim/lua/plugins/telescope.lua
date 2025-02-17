@@ -6,6 +6,8 @@ return {
 	},
 	config = function()
 		local telescope = require("telescope")
+
+		-- Configuración básica de telescope
 		telescope.setup({
 			extensions = {
 				["ui-select"] = {
@@ -13,6 +15,13 @@ return {
 				},
 			},
 		})
+
+		-- Cargar la extensión ui-select
 		telescope.load_extension("ui-select")
+
+		-- Búsqueda de archivos con fzf
+		vim.keymap.set("n", "<leader>T", function()
+			require("telescope.builtin").find_files()
+		end, { noremap = true, silent = true })
 	end,
 }
