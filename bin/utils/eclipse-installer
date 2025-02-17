@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script para instalar/desinstalar Eclipse IDE
 
@@ -7,8 +7,9 @@ RUN_SCRIPT="/usr/bin/eclipse"
 
 install() {
 	# Obtener el año y el mes actual
-	local year=$(date +'%Y')
-	local month=$(date +'%m')
+	local year month
+	year=$(date +'%Y')
+	month=$(date +'%m')
 
 	# Ajustar la versión de Eclipse según el mes actual
 	if [ "$month" -ge 6 ]; then
@@ -31,11 +32,11 @@ install() {
 	tar -xzf "$TAR_LOCATION" -C /tmp
 
 	# Instalarlo en $HOME
-	mv /tmp/eclipse $INSTALL_DIR
+	mv /tmp/eclipse "$INSTALL_DIR"
 
 	# Configurar el workspace por defecto
 	sed -i 's|@user.home/eclipse-workspace|@user.home/.local/share/eclipse-workspace|' \
-		$INSTALL_DIR/eclipse.ini
+		"$INSTALL_DIR/eclipse.ini"
 
 	# Crear script de inicio
 	cat <<-EOF | sudo tee $RUN_SCRIPT >/dev/null
@@ -48,9 +49,9 @@ install() {
 }
 
 uninstall() {
-	rm -rf $INSTALL_DIR
+	rm -rf "$INSTALL_DIR"
 	sudo rm $RUN_SCRIPT
 }
 
-install
-#uninstall
+#install
+uninstall

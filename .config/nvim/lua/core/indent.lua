@@ -58,3 +58,18 @@ vim.api.nvim_create_autocmd("FileType", {
 		opt.shiftwidth = 2
 	end,
 })
+
+-- XML
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "xml",
+	callback = function()
+		local opt = vim.opt_local
+		opt.smartindent = false
+		opt.cindent = false
+		opt.expandtab = true
+		opt.copyindent = true
+		opt.preserveindent = true
+		opt.tabstop = 2
+		opt.shiftwidth = 2
+	end,
+})

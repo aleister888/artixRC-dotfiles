@@ -21,6 +21,7 @@ return {
 			markdown = { "prettier" },
 			scss = { "prettier" },
 			css = { "prettier" },
+			xml = { "xmllint" },
 		},
 		default_format_opts = {
 			lsp_format = "fallback",
