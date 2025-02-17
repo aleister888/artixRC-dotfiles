@@ -16,6 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ","
 
 require("core.options")
+require("core.indent")
 require("core.keymaps")
 
 require("lazy").setup("plugins", {

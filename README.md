@@ -2,7 +2,7 @@
 
 ### Artix Linux (OpenRC) - dotfiles
 
-----
+---
 
 Auto-instalador de Artix Linux (OpenRC) con dmw, dmenu y mi configuración personal.
 
@@ -40,9 +40,11 @@ bash <(curl https://raw.githubusercontent.com/aleister888/artix-installer/main/i
 
 > [!CAUTION]
 > Si activas la encriptación, **limpia el disco antes de usar el instalador** para proteger los datos residuales:
+>
 > ```bash
 > dd if=/dev/urandom of=/dev/sdX
 > ```
+>
 > Este proceso puede tardar horas según el tamaño del disco.
 
 ##### Alternativa

@@ -16,3 +16,4 @@ stylua
 tree-sitter-cli
 yarn
 java-debug
+prettier

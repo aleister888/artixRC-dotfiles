@@ -1,4 +1,5 @@
 > [!CAUTION]
+>
 > - dmenu está configurado para compilar en x86-64-v3 (config.mk: march=x86-64-v3)
 
 ## Modificaciones

@@ -39,32 +39,10 @@ vim.opt.listchars = { tab = "| ", trail = "·", lead = "·", precedes = "<", ext
 -- Marcar la columna 80
 vim.opt.colorcolumn = "80"
 
--- Indentación y tabulación
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "*",
-	command = "setlocal nosmartindent nocindent noexpandtab",
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "*",
-	command = "setlocal copyindent preserveindent tabstop=8 shiftwidth=8",
-})
-
 -- Clipboard: permitir acceso global si no estamos en 'root'
 if os.getenv("USER") ~= "root" then
 	vim.opt.clipboard:append("unnamedplus")
 end
-
--- Configuración de autocmd para el tipo de archivo Java
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "java",
-	command = "setlocal nosmartindent nocindent expandtab",
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "java",
-	command = "setlocal copyindent preserveindent tabstop=4 shiftwidth=4",
-})
 
 -- Borrar automáticamente los espacios sobrantes al guardar
 vim.api.nvim_create_autocmd("BufWritePre", {

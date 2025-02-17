@@ -21,15 +21,16 @@ Puedes consultar los atajos de teclado leyendo el código en `config.def.h` (`st
 - Layout deck: [dwm-deck-6.2.diff](http://dwm.suckless.org/patches/deck/dwm-deck-6.2.diff)
 - Layout strairs: [dwm-stairs-fullgaps-20220430-8b48e30.diff](https://dwm.suckless.org/patches/stairs/dwm-stairs-fullgaps-20220430-8b48e30.diff)
 - Pantalla completa falsa: [dwm-selectivefakefullscreen-20201130-97099e7.diff](https://dwm.suckless.org/patches/selectivefakefullscreen/dwm-selectivefakefullscreen-20201130-97099e7.diff)
-- __Modificaciones a la barra de tareas:__
-	- Solo se muestran los espacios ocupados: [dwm-hide_vacant_tags-6.2.diff](https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff)
-	- El tamaño de la barra se puede configurar: [dwm-bar-height-spacing-6.3.diff](http://dwm.suckless.org/patches/bar_height/dwm-bar-height-spacing-6.3.diff)
-	- Hacer clic derecho abre un menú para elegir el layout: [dwm-layoutmenu-6.2.diff](http://dwm.suckless.org/patches/layoutmenu/dwm-layoutmenu-6.2.diff)
-	- Las ventanas flotantes nuevas aparecerán centradas: [dwm-alwayscenter-20200625-f04cac6.diff](http://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff)
-	- Las ventanas nuevas aparecerán al final del stack: [dwm-attachbottom-6.3.diff](http://dwm.suckless.org/patches/attachbottom/dwm-attachbottom-6.3.diff)
-	- Se pueden usar colores en la barra de estado: [dwm-status2d-6.3.diff](https://dwm.suckless.org/patches/status2d/dwm-status2d-6.3.diff)
-	- La barra de estado se puede clicar para ejecutar comandos: [dwm-statuscmd-nosignal-status2d-20210402-60bb3df.diff](https://dwm.suckless.org/patches/statuscmd/dwm-statuscmd-nosignal-status2d-20210402-60bb3df.diff)
-		- Se deben de añadir unas lineas para ignorar también los _^_
+- **Modificaciones a la barra de tareas:**
+  - Solo se muestran los espacios ocupados: [dwm-hide_vacant_tags-6.2.diff](https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff)
+  - El tamaño de la barra se puede configurar: [dwm-bar-height-spacing-6.3.diff](http://dwm.suckless.org/patches/bar_height/dwm-bar-height-spacing-6.3.diff)
+  - Hacer clic derecho abre un menú para elegir el layout: [dwm-layoutmenu-6.2.diff](http://dwm.suckless.org/patches/layoutmenu/dwm-layoutmenu-6.2.diff)
+  - Las ventanas flotantes nuevas aparecerán centradas: [dwm-alwayscenter-20200625-f04cac6.diff](http://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff)
+  - Las ventanas nuevas aparecerán al final del stack: [dwm-attachbottom-6.3.diff](http://dwm.suckless.org/patches/attachbottom/dwm-attachbottom-6.3.diff)
+  - Se pueden usar colores en la barra de estado: [dwm-status2d-6.3.diff](https://dwm.suckless.org/patches/status2d/dwm-status2d-6.3.diff)
+  - La barra de estado se puede clicar para ejecutar comandos: [dwm-statuscmd-nosignal-status2d-20210402-60bb3df.diff](https://dwm.suckless.org/patches/statuscmd/dwm-statuscmd-nosignal-status2d-20210402-60bb3df.diff)
+    - Se deben de añadir unas lineas para ignorar también los _^_
+
 ```c
 @@ buttonpress(XEvent *e)
 					if (x >= ev->x)
@@ -48,7 +49,9 @@ Puedes consultar los atajos de teclado leyendo el código en `config.def.h` (`st
 			}
 		}
 ```
+
 - Función para marcar/desmarcar una ventana como scratchpad
+
 ```c
 void
 scratchtoggle(const Arg *arg)
@@ -67,7 +70,9 @@ scratchtoggle(const Arg *arg)
 	}
 }
 ```
+
 - Actualizar el borde de las ventanas sticky inmediatamente
+
 ```c
 void
 setsticky(Client *c, int sticky)
@@ -87,6 +92,7 @@ setsticky(Client *c, int sticky)
 	}
 }
 ```
+
 ```c
 @@ -1101,10 +1101,13 @@ focus(Client *c)
 		detachstack(c);

@@ -1,3 +1,11 @@
+local servers = {
+	"jdtls",
+	"texlab",
+	"bashls",
+	"clangd",
+	"marksman",
+}
+
 return {
 	{
 		"williamboman/mason.nvim",
@@ -5,6 +13,7 @@ return {
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
+		dependencies = { "rcarriga/nvim-notify" },
 		opts = function()
 			vim.keymap.set("n", "<leader>A", vim.lsp.buf.code_action, {})
 			-- Mostrar diagnóstico en una ventana flotante
@@ -35,12 +44,28 @@ return {
 				":lua vim.diagnostic.goto_prev()<CR>",
 				{ noremap = true, silent = true }
 			)
+
+			local diagnostics_active = true
+			function ToggleDiagnostics()
+				diagnostics_active = not diagnostics_active
+				if diagnostics_active then
+					vim.diagnostic.enable()
+					vim.notify("Análisis activado")
+				else
+					vim.diagnostic.disable()
+					vim.notify("Análisis desactivado")
+				end
+			end
+
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>dt",
+				":lua ToggleDiagnostics()<CR>",
+				{ noremap = true, silent = true }
+			)
+
 			return {
-				ensure_installed = {
-					"jdtls",
-					"texlab",
-					"bashls",
-				},
+				ensure_installed = servers,
 			}
 		end,
 	},
@@ -55,7 +80,6 @@ return {
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 			-- LSP servers to configure
-			local servers = { "jdtls", "texlab", "bashls" }
 			for _, lsp in ipairs(servers) do
 				lspconfig[lsp].setup({
 					capabilities = capabilities,

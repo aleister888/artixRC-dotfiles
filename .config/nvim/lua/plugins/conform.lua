@@ -6,7 +6,7 @@ return {
 		{
 			"<leader>a",
 			function()
-				require("conform").format({ async = true })
+				require("conform").format({ async = false })
 			end,
 			mode = "",
 			desc = "Format buffer",
@@ -18,6 +18,9 @@ return {
 			java = { "astyle" },
 			sh = { "shfmt" },
 			tex = { "latexindent" },
+			markdown = { "prettier" },
+			scss = { "prettier" },
+			css = { "prettier" },
 		},
 		default_format_opts = {
 			lsp_format = "fallback",
@@ -28,7 +31,7 @@ return {
 				prepend_args = { "--style=allman", "--indent=spaces=4", "-n" },
 			},
 			latexindent = {
-				prepend_args = { "-" },
+				prepend_args = { "--curft=/tmp", "-" },
 			},
 		},
 		init = function()

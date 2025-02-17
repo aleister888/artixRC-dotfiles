@@ -51,10 +51,9 @@ deepcleanup() {
 	pacman -Qqd 2>/dev/null |
 		pacman -Rsu --print - 2>/dev/null |
 		grep - | sed 's/-[0-9].*//g' >/tmp/pacman_unneeded
-	packages=$(grep -v ca-certificates /tmp/pacman_unneeded)
-	if [ -n "$packages" ]; then
-		# shellcheck disable=SC2086
-		sudo pacman -Rcns $packages
+
+	if grep -qv ca-certificates /tmp/pacman_unneeded; then
+		grep -v ca-certificates /tmp/pacman_unneeded | xargs yay --noconfirm -Rcns
 	fi
 }
 
@@ -336,18 +335,8 @@ code_format() {
 				echo "Formateado: $archivo"
 			;;
 		text/x-tex)
-			latexindent -w "$archivo" >/dev/null 2>&1 &&
+			latexindent --cruft=/tmp -w "$archivo" >/dev/null 2>&1 &&
 				echo "Formateado: $archivo"
-
-			# Extraer el nombre base sin extensión
-			nombre_base=$(echo "$archivo" | sed 's/\.[^.]*$//')
-
-			# Mover archivos .bak generados por latexindent
-			for bak_archivo in "${nombre_base}".bak*; do
-				if [ -f "$bak_archivo" ]; then
-					mv "$bak_archivo" /tmp/
-				fi
-			done
 			;;
 		esac
 	done

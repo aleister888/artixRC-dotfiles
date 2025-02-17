@@ -1,20 +1,17 @@
 return {
 	"akinsho/bufferline.nvim",
 	config = function()
-		-- Configuración del plugin Bufferline
+		-- Configuración de Bufferline
 		require("bufferline").setup({
 			options = {
 				show_buffer_icons = true,
-				show_buffer_close_icons = true,
-				show_close_icon = true,
-				buffer_close_icon = "",
-				close_icon = "",
-				tab_size = 10,
+				show_buffer_close_icons = false,
+				show_close_icon = false,
 				diagnostics = "nvim_lsp",
 				diagnostics_indicator = function(count, level, diagnostics_dict, context)
 					local s = ""
 					for e, n in pairs(diagnostics_dict) do
-						local sym = e == "error" and " " or (e == "warning" and " " or "")
+						local sym = e == "error" and " " or (e == "warning" and " " or " ")
 						s = s .. sym
 					end
 					return s

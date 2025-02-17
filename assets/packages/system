@@ -23,7 +23,7 @@ man-db
 mesa
 mesa-utils
 net-tools
-nodejs
+nodejs-lts-jod
 npm
 ntfs-3g
 pacman-contrib
@@ -46,3 +46,4 @@ zenity
 zsh
 timeshift
 memtest86+-efi
+maven

@@ -1,6 +1,7 @@
 return {
 	"lervag/vimtex",
-	lazy = false,
+	lazy = true,
+	ft = { "tex" },
 	init = function()
 		-- Configuración de VimTeX
 		vim.g.vimtex_toc_config = { show_help = 0 }
