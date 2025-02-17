@@ -10,7 +10,7 @@ return {
 				buffer_close_icon = "",
 				close_icon = "",
 				tab_size = 10,
-				diagnostics = "coc",
+				diagnostics = "nvim_lsp",
 				diagnostics_indicator = function(count, level, diagnostics_dict, context)
 					local s = ""
 					for e, n in pairs(diagnostics_dict) do

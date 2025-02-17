@@ -15,12 +15,12 @@ vim.opt.rtp:prepend(lazypath)
 -- Definimos la tecla leader antes de iniciar lazy
 vim.g.mapleader = ","
 
+require("core.options")
+require("core.keymaps")
+
 require("lazy").setup("plugins", {
 	change_detection = {
 		enabled = true,
 		notify = false,
 	},
 })
-
-require("core.options")
-require("core.keymaps")
