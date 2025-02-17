@@ -336,9 +336,7 @@ code_format() {
 				echo "Formateado: $archivo"
 			;;
 		text/x-tex)
-			latexindent -l \
-				-y="noAdditionalIndent: {commands: [item], environments: [tabular]}" \
-				-w "$archivo" >/dev/null 2>&1 &&
+			latexindent -w "$archivo" >/dev/null 2>&1 &&
 				echo "Formateado: $archivo"
 
 			# Extraer el nombre base sin extensión

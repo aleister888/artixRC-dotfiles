@@ -12,6 +12,8 @@ bookmarks
 .config/eww/dashboard.scss
 
 .config/nvim/spell/es.utf-8.add
+.config/nvim/spell/es.utf-8.spl
+.config/nvim/spell/es.utf-8.sug
 .config/nvim/spell/es.utf-8.add.spl
 .config/nvim/lazy-lock.json
 .config/nvim/.luarc.json

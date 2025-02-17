@@ -73,6 +73,7 @@ rm "$HOME/.xsession-errors"
 rm -f "$HOME/.wget-hsts"
 rm -rf \
 	"$HOME/Escritorio" \
+	"$HOME/.yarnrc" \
 	"$XDG_CONFIG_HOME/menus" \
 	"$XDG_DATA_HOME/desktop-directories" \
 	"$XDG_DATA_HOME/applications/wine"*
