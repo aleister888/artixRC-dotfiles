@@ -20,6 +20,11 @@ return {
 			"latex",
 			"java",
 			"markdown",
+			"yuck",
+			"css",
+			"scss",
+			"zathurarc",
+			"ruby",
 		},
 	},
 	config = function(_, opts)

@@ -17,3 +17,6 @@ tree-sitter-cli
 yarn
 java-debug
 prettier
+zsh-autosuggestions
+zsh-syntax-highlighting
+zsh-history-substring-search

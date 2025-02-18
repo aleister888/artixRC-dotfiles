@@ -1,7 +1,5 @@
 vim.g.mapleader = ","
 
-local keymap = keymap
-
 vim.keymap.set("n", "<leader>wq", ":wq<CR>")
 vim.keymap.set("n", "<leader>qq", ":q!<CR>")
 vim.keymap.set("n", "<leader>ww", ":w<CR>")
@@ -10,19 +8,17 @@ vim.keymap.set("n", "<leader>v", "<C-w>v")
 vim.keymap.set("n", "<leader>V", "<C-w>s")
 
 -- Desplazarse por el texto
-vim.keymap.set("n", "<ScrollWheelUp>", "k<C-G>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-ScrollWheelUp>", "5k<C-G>", { noremap = true, silent = true })
+vim.keymap.set("n", "<ScrollWheelUp>", "k", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-ScrollWheelUp>", "5k", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<ScrollWheelDown>", "j<C-G>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-ScrollWheelDown>", "5j<C-G>", { noremap = true, silent = true })
+vim.keymap.set("n", "<ScrollWheelDown>", "j", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-ScrollWheelDown>", "5j", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<C-Up>", "5k<C-G>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-Down>", "5j<C-G>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-Up>", "5k", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-Down>", "5j", { noremap = true, silent = true })
 
-vim.keymap.set("n", "=", "$<C-G>", { noremap = true, silent = true })
+vim.keymap.set("n", "=", "$", { noremap = true, silent = true })
 vim.keymap.set("v", "=", "$h", { noremap = true, silent = true })
-vim.keymap.set("n", "G", ":$<CR><C-G>", { noremap = true, silent = true })
-vim.keymap.set("n", "gg", ":1<CR><C-G>", { noremap = true, silent = true })
 
 -- Alternar corrección ortográfica en español con F4
 vim.keymap.set("n", "<F4>", ":setlocal spell! spelllang=es_es<CR>", { silent = true })

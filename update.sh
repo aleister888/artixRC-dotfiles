@@ -167,25 +167,6 @@ if [ ! -e "$CONF_DIR/qt5ct/qt5ct.conf" ] ||
 	EOF
 fi
 
-###############
-# Plugins ZSH #
-###############
-
-plugin_manage() {
-	if [ ! -e "$CONF_DIR/zsh/$(basename "$1")" ]; then
-		git clone \
-			"https://github.com/$1" \
-			"$REPO_DIR/.config/zsh/$(basename "$1")" >/dev/null
-	else
-		sh -c "cd $CONF_DIR/zsh/$(basename "$1") && git pull" >/dev/null
-	fi
-}
-
-# Instalar/actualizar los plugins de zsh
-plugin_manage zsh-users/zsh-autosuggestions
-plugin_manage zsh-users/zsh-history-substring-search
-plugin_manage zsh-users/zsh-syntax-highlighting
-
 ############################
 # Aplicaciones por defecto #
 ############################

@@ -1,7 +1,7 @@
 # Plugins
-source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/aliasrc
 
 bindkey -e
@@ -35,8 +35,8 @@ SAVEHIST=512
 # Bindings de teclado
 bindkey  "^[[3~" delete-char
 
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
 
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word

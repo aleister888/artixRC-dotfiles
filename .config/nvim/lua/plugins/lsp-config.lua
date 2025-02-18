@@ -1,9 +1,11 @@
 local servers = {
+	"lua_ls",
 	"jdtls",
 	"texlab",
 	"bashls",
 	"clangd",
-	"marksman",
+	"markdown_oxide",
+	"cssls",
 }
 
 return {
