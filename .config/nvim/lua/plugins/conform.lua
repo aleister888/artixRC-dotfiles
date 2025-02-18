@@ -9,7 +9,6 @@ return {
 				require("conform").format({ async = false })
 			end,
 			mode = "",
-			desc = "Format buffer",
 		},
 	},
 	opts = {
@@ -32,7 +31,10 @@ return {
 				prepend_args = { "--style=allman", "--indent=spaces=4", "-n" },
 			},
 			latexindent = {
-				prepend_args = { "--curft=/tmp", "-" },
+				prepend_args = {
+					"--curft=/tmp",
+					"-",
+				},
 			},
 		},
 		init = function()

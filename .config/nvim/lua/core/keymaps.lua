@@ -36,7 +36,7 @@ vim.keymap.set("i", "<F5>", "<C-O>:setlocal spell! spelllang=en_us<CR>", { silen
 vim.keymap.set("v", '"', 's"<C-r>""', { noremap = true, silent = true })
 vim.keymap.set("v", "'", "s'<C-r>\"'", { noremap = true, silent = true })
 vim.keymap.set("v", "`", 's`<C-r>"`', { noremap = true, silent = true })
-vim.keymap.set("v", "2`", 's``<C-r>"``', { noremap = true, silent = true })
+vim.keymap.set("v", "<leader>`", 's``<C-r>"``', { noremap = true, silent = true })
 vim.keymap.set("v", "$", 's$<C-r>"$', { noremap = true, silent = true })
 vim.keymap.set("v", "_", 's_<C-r>"_', { noremap = true, silent = true })
 vim.keymap.set("v", "<leader>_", 's__<C-r>"__', { noremap = true, silent = true })
@@ -59,13 +59,3 @@ vim.keymap.set("n", "<leader>s", function()
 	local cmd = string.format('setsid -f sh -c "%s %s scratchpad"', terminal, termtitle)
 	vim.fn.execute("!" .. cmd)
 end, { silent = true })
-
--- Mapeos para Java
--- Autocomando para el tipo de archivo Java
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "java",
-	callback = function()
-		-- Mapeo para ejecutar el comando en un terminal
-		vim.keymap.set("n", "<leader>g", ":botright terminal java %<CR>:startinsert<CR>", { silent = true })
-	end,
-})
