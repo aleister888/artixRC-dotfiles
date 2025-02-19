@@ -11,7 +11,7 @@ return {
 			-- Configuración del plugin markdown-preview.nvim
 			vim.cmd([[
 				function! OpenMarkdownPreview(url)
-					silent! execute "!" . "firefox --new-window " . shellescape(a:url, 1)
+					silent! execute "!" . "setsid -f firefox --new-window " . shellescape(a:url, 1)
 				endfunction
 			]])
 			vim.g.mkdp_auto_start = false
