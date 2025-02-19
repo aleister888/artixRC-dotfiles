@@ -21,6 +21,7 @@ return {
 			"java",
 			"markdown",
 			"yuck",
+			"xml",
 			"css",
 			"scss",
 			"zathurarc",

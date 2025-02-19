@@ -191,6 +191,10 @@ disk_setup() {
 		btrfs subvolume create /mnt/@home
 		# Creamos el subvolumen swap
 		btrfs subvolume create /mnt/@swap
+		# Creamos un subvolumen para las imágenes de las máquinas
+		# virtuales, así, en caso de que el usuario instale libvirt,
+		# estas no se incluirán en las snapshots
+		btrfs subvolume create /mnt/@images
 		umount -R /mnt
 
 		mount -t btrfs \
@@ -199,10 +203,15 @@ disk_setup() {
 
 		mkdir /mnt/home
 		mkdir /mnt/swap
+		mkdir -p /mnt/var/lib/libvirt/images
 
 		mount -t btrfs \
 			-o noatime,compress=zstd:1,autodefrag,subvol=@home \
 			"/dev/$rootPart" /mnt/home
+
+		mount -t btrfs \
+			-o noatime,autodefrag,subvol=@images \
+			"/dev/$rootPart" /mnt/var/lib/libvirt/images
 
 		mount -t btrfs \
 			-o noatime,nodatacow,subvol=@swap \
@@ -271,6 +280,7 @@ basestrap_install() {
 		basestrap_packages+=" blueman"
 	fi
 
+	# shellcheck disable=SC2086
 	while true; do
 		basestrap /mnt $basestrap_packages && break
 	done

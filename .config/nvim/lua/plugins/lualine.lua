@@ -156,6 +156,21 @@ ins_left({
 	color = { fg = colors.fg, gui = "bold" },
 })
 
+-- Muestra si el spellcheck está activado y con que idioma
+ins_left({
+	function()
+		local spell_enabled = vim.opt.spell:get()
+
+		if spell_enabled then
+			local spell_lang = vim.opt.spelllang:get()[1]:sub(1, 2) -- Obtiene el idioma del spellcheck
+			return "  " .. spell_lang
+		else
+			return ""
+		end
+	end,
+	cond = conditions.hide_in_width,
+	color = { fg = colors.orange, gui = "bold" },
+})
 -- Mostrar el formato del archivo
 ins_right({
 	"fileformat",
@@ -169,7 +184,7 @@ ins_right({
 	"o:encoding",
 	fmt = string.upper,
 	cond = conditions.hide_in_width,
-	color = { fg = colors.violet, gui = "bold" },
+	color = { fg = colors.fg, gui = "bold" },
 })
 
 -- Mostrar la rama de desarrollo
@@ -189,21 +204,6 @@ ins_right({
 		removed = { fg = colors.red },
 	},
 	cond = conditions.hide_in_width,
-})
-
-ins_left({
-	function()
-		local spell_enabled = vim.opt.spell:get() -- Verifica si el spellcheck está activado
-
-		if spell_enabled then
-			local spell_lang = vim.opt.spelllang:get()[1]:sub(1, 2) -- Obtiene el idioma del spellcheck
-			return "  " .. spell_lang
-		else
-			return ""
-		end
-	end,
-	cond = conditions.hide_in_width, -- Solo mostrar si la ventana es lo suficientemente ancha
-	color = { fg = colors.orange, gui = "bold" },
 })
 
 ins_right({

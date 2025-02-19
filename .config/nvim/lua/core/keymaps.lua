@@ -31,11 +31,7 @@ vim.keymap.set("i", "<F5>", "<C-O>:setlocal spell! spelllang=en_us<CR>", { silen
 -- Encapsular texto seleccionado
 vim.keymap.set("v", '"', 's"<C-r>""', { noremap = true, silent = true })
 vim.keymap.set("v", "'", "s'<C-r>\"'", { noremap = true, silent = true })
-vim.keymap.set("v", "`", 's`<C-r>"`', { noremap = true, silent = true })
-vim.keymap.set("v", "<leader>`", 's``<C-r>"``', { noremap = true, silent = true })
 vim.keymap.set("v", "$", 's$<C-r>"$', { noremap = true, silent = true })
-vim.keymap.set("v", "_", 's_<C-r>"_', { noremap = true, silent = true })
-vim.keymap.set("v", "<leader>_", 's__<C-r>"__', { noremap = true, silent = true })
 vim.keymap.set("v", "(", 's(<C-r>")', { noremap = true, silent = true })
 vim.keymap.set("v", ")", 's(<C-r>")', { noremap = true, silent = true })
 vim.keymap.set("v", "{", 's{<C-r>"}', { noremap = true, silent = true })

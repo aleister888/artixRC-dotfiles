@@ -21,12 +21,12 @@ return {
 			vim.g.mkdp_preview_options = { disable_filename = true }
 
 			-- Mapeo para abrir la vista previa
-			vim.api.nvim_create_autocmd("FileType", {
-				pattern = "markdown",
-				callback = function()
-					vim.keymap.set("n", "<leader>h", "<cmd>MarkdownPreview<CR>", { silent = true, noremap = true })
-				end,
-			})
+			vim.keymap.set("n", "<leader>h", "<cmd>MarkdownPreview<CR>", { silent = true, noremap = true })
+			-- Mapeos para italizar o hacer negrita
+			vim.keymap.set("v", "*", 's*<C-r>"*', { noremap = true, silent = true })
+			vim.keymap.set("v", "_", 's_<C-r>"_', { noremap = true, silent = true })
+			vim.keymap.set("v", "<leader>*", 's**<C-r>"**', { noremap = true, silent = true })
+			vim.keymap.set("v", "<leader>_", 's__<C-r>"__', { noremap = true, silent = true })
 		end,
 	},
 	{
