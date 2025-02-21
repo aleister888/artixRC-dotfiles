@@ -24,8 +24,6 @@ vim.opt.scrolloff = 5
 vim.opt.wrap = true
 -- Una sola barra de estado para todas las ventanas
 vim.opt.laststatus = 3
--- No re-dibujar mientras se ejecutan macros
-vim.opt.lazyredraw = true
 -- Opciones del cursor
 vim.opt.number = true
 vim.opt.relativenumber = true

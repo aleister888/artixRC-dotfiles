@@ -11,13 +11,13 @@ if [ "$DPI" -ge 192 ]; then
 		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
 
 		# Crear un config.h con el tamaño de fuente aumentado
-		sed 's/pixelsize=[0-9]*/pixelsize=40/g' \
+		sed 's/pixelsize=[0-9]*/pixelsize=38/g' \
 			"$SUCKLESS_DIR"/config.def.h |
 			tee "$SUCKLESS_DIR"/config.h >/dev/null
 
 		# Para dwm, aumentar el tamaño de la barra
 		[ "$app" = "dwm" ] &&
-			sed 's/user_bh.*=.*[0-9]*;/user_bh=32;/g' \
+			sed 's/user_bh.*=.*[0-9]*;/user_bh=24;/g' \
 				-i "$SUCKLESS_DIR"/config.h
 
 		# Compilar

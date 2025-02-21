@@ -20,7 +20,8 @@ return {
 		jdtls.start_or_attach(config)
 
 		-- Mapeo para ejecutar la clase actual con <leader>g
-		vim.api.nvim_set_keymap("n", "<leader>g", ":lua RunJavaClass()<CR>", { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>g", ":lua RunJavaClass()<CR>", { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>G", ":botright terminal java %<CR>:startinsert<CR>", { silent = true })
 
 		-- Función para ejecutar la clase Java actual
 		function RunJavaClass()
