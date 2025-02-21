@@ -13,26 +13,6 @@ return {
 		vim.g.vimtex_quickfix_mode = 0
 		vim.g.vimtex_syntax_enabled = 0
 
-		-- Mapear la función ToggleVimtexErrors
-		vim.keymap.set("n", "<silent><leader>j", function()
-			local quickfix_exists = #vim.fn.filter(vim.fn.getwininfo(), "v:val.quickfix") > 0
-			if quickfix_exists then
-				vim.cmd("cclose")
-			else
-				vim.cmd("VimtexErrors")
-			end
-		end, { silent = true })
-
-		-- Definir autocmd para el tipo de archivo 'tex'
-		vim.keymap.set("n", "<leader>f", "<plug>(vimtex-toc-toggle)", { silent = true })
-		vim.keymap.set("n", "<leader>g", ":VimtexCompile<CR>", { silent = true })
-		vim.keymap.set("n", "<leader>G", ":!xelatex %<CR>", { silent = true })
-		vim.keymap.set("n", "<leader>h", ":VimtexView<CR>", { silent = true })
-
-		-- Poner texto entre comillas
-		vim.keymap.set("v", "`", "s`<C-r>\"'", { noremap = true, silent = true })
-		vim.keymap.set("v", "<leader>`", "s``<C-r>\"''", { noremap = true, silent = true })
-
 		-- Mostrar errores
 		vim.keymap.set("n", "<leader>j", function()
 			local quickfix_exists = #vim.fn.filter(vim.fn.getwininfo(), "v:val.quickfix") > 0
@@ -43,6 +23,16 @@ return {
 			end
 		end, { silent = true })
 		vim.keymap.set("n", "<leader>k", "<plug>(vimtex-clean)", { silent = true })
+
+		-- Definir autocmd para el tipo de archivo 'tex'
+		vim.keymap.set("n", "<leader>f", "<plug>(vimtex-toc-toggle)", { silent = true })
+		vim.keymap.set("n", "<leader>g", ":VimtexCompile<CR>", { silent = true })
+		vim.keymap.set("n", "<leader>G", ":!xelatex %<CR>", { silent = true })
+		vim.keymap.set("n", "<leader>h", ":VimtexView<CR>", { silent = true })
+
+		-- Poner texto entre comillas
+		vim.keymap.set("v", "`", "s`<C-r>\"'", { noremap = true, silent = true })
+		vim.keymap.set("v", "<leader>`", "s``<C-r>\"''", { noremap = true, silent = true })
 
 		-- Mapear las teclas para comandos de texto en modo visual
 		vim.keymap.set("v", "e", 's\\emph{<C-r>"}', { silent = true })

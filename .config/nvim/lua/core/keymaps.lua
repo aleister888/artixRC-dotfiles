@@ -44,8 +44,11 @@ vim.keymap.set("v", "?", 's¿<C-r>"?', { noremap = true, silent = true })
 -- Modo insert al final de la línea
 vim.keymap.set("n", "<C-i>", "A", { noremap = true, silent = true })
 
+-- Cambiar entre ventanas
+vim.keymap.set("n", "<leader>s", "<C-w>w", { noremap = true, silent = true })
+
 -- Spawnear scratchpad
-vim.keymap.set("n", "<leader>s", function()
+vim.keymap.set("n", "<leader>S", function()
 	local terminal = os.getenv("TERMINAL") or ""
 	local termtitle = os.getenv("TERMTITLE") or ""
 	local cmd = string.format('setsid -f sh -c "%s %s scratchpad"', terminal, termtitle)
