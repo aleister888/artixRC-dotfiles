@@ -1,5 +1,6 @@
 function SetColorscheme()
 	vim.cmd.colorscheme("gruvbox")
+	vim.api.nvim_set_hl(0, "LineNr", { bg = "#282828", fg = "#a89984" })
 	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 	--vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end

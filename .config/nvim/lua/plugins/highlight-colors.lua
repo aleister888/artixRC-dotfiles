@@ -1,7 +1,9 @@
 return {
-	"brenoprata10/nvim-highlight-colors",
-	event = { "BufReadPost", "BufWritePost" },
-	config = function()
-		require("nvim-highlight-colors").setup({})
-	end,
+	"catgoose/nvim-colorizer.lua",
+	event = "BufReadPre",
+	opts = {
+		user_default_options = {
+			names = false,
+		},
+	},
 }
