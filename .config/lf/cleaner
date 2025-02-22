@@ -1,8 +1,3 @@
 #!/bin/sh
-if [ "$TERMINAL" = "kitty" ]; then
-	exec kitten icat --clear --stdin no --transfer-mode memory </dev/null >/dev/tty
-elif [ -n "$FIFO_UEBERZUG" ]; then
-	printf '{"action": "remove", "identifier": "PREVIEW"}\n' >"$FIFO_UEBERZUG"
-else
-	ueberzugpp cmd -s "$UB_SOCKET" -a remove -i PREVIEW
-fi
+
+printf '{"action": "remove", "identifier": "PREVIEW"}\n' >"$FIFO_UEBERZUG"

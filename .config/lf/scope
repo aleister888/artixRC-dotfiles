@@ -10,32 +10,22 @@ IFS="$(printf '%b_' '\n')"
 IFS="${IFS%_}"
 
 # Función para mostrar imágenes con ueberzug
-if [ "$TERMINAL" = "kitty" ]; then
-	image() {
-		X=$4
-		Y=$5
-		MW=$(($2 - 1))
-		MH=$(($3 - 1)) # Variables de posición y geometría
-		kitten icat --stdin no --transfer-mode memory --place "${MW}x${MH}@${X}x${Y}" "$1" </dev/null >/dev/tty
-	}
-else
-	image() {
-		X=$4
-		Y=$5
-		MW=$(($2 - 1))
-		MH=$(($3 - 1)) # Variables de posición y geometría
+image() {
+	X=$4
+	Y=$5
+	MW=$(($2 - 1))
+	MH=$(($3 - 1)) # Variables de posición y geometría
 
-		if [ -f "$1" ] && [ -n "$DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
+	if [ -f "$1" ] && [ -n "$DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
 
-			if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-				printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
-					"$X" "$Y" "$MW" "$MH" "$1" >"$FIFO_UEBERZUG"
-			fi
-		else
-			mediainfo "$6"
+		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+			printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' \
+				"$X" "$Y" "$MW" "$MH" "$1" >"$FIFO_UEBERZUG"
 		fi
-	}
-fi
+	else
+		mediainfo "$6"
+	fi
+}
 
 # Notesé que la caché se genera en función de la información del archivo,
 # un mismo archivo que esta en múltiples directorios solo generará un archivo en cache.

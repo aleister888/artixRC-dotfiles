@@ -13,7 +13,7 @@ cleanupxorg() {
 	rm "$FIFO_UEBERZUG"
 }
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || [ "$TERMINAL" = "kitty" ]; then
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	/usr/bin/lf "$@"
 else
 	[ ! -d "$HOME/.cache/lf" ] && mkdir -p "$HOME/.cache/lf"

@@ -1,11 +1,11 @@
 // Consulta el archivo LICENSE para los detalles de derechos de autor y licencia.
 
-#define DLINES "16"        // Lineas para los comandos de dmenu
-#define TERM   "kitty"     // Terminal
-#define TERMT  "--title"   // Flag usada para establecer el título de la terminal
-#define TERME  "--execute" // Flag usada de ejecución de la terminal
-#define TERMC  "kitty"     // Clase de ventana de la terminal
-#define BROWSER "firefox"  // Navegador Web
+#define DLINES "16" // Lineas para los comandos de dmenu
+#define TERM   "st" // Terminal
+#define TERMT  "-t" // Flag usada para establecer el título de la terminal
+#define TERME  "" // Flag usada de ejecución de la terminal
+#define TERMC  "st-256color" // Clase de ventana de la terminal
+#define BROWSER "firefox" // Navegador Web
 
 static const char *fonts[] = {
 	"Symbols Nerd Font Mono:pixelsize=22:antialias=true:autohint=true",

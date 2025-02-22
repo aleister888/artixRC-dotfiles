@@ -49,10 +49,7 @@ return {
 		-- Inicia el servidor JDTLS
 		jdtls.start_or_attach(config)
 
-		-- Mapeo para ejecutar la clase actual con <leader>g
 		vim.keymap.set("n", "<leader>g", ":lua RunJavaClass()<CR>", { noremap = true, silent = true })
-		vim.keymap.set("n", "<leader>G", ":lua RunJavaClass()<CR>", { silent = true })
-
 		vim.keymap.set("n", "<leader>jd", ":lua DocJavaClass()<CR>", { noremap = true, silent = true })
 		vim.keymap.set("n", "<leader>jD", ":lua OpenJavaDoc()<CR>", { noremap = true, silent = true })
 

@@ -5,7 +5,7 @@
 DPI="$(grep -oP "Xft.dpi:\K[0-9]*" "$HOME"/.config/Xresources)"
 
 if [ "$DPI" -ge 192 ]; then
-	for app in dmenu dwm dwmblocks; do
+	for app in dmenu dwm dwmblocks st; do
 		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
 
 		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
@@ -35,7 +35,7 @@ if [ "$DPI" -ge 192 ]; then
 		sudo chmod +x /usr/local/bin/eclipse
 	fi
 else
-	for app in dwm dmenu dwmblocks; do
+	for app in dwm dmenu dwmblocks st; do
 		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
 
 		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
