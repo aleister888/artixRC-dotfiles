@@ -4,33 +4,7 @@ return {
 	ft = "java",
 	config = function()
 		local jdtls = require("jdtls")
-		local root_dir = vim.fs.dirname(vim.fs.find({
-			".git",
-			"pom.xml",
-			"build.gradle",
-			".project",
-		}, { upward = true })[1])
-
-		-- Depuración
-		local bundles = {
-			vim.fn.glob(
-				vim.env.HOME .. "/.local/share/nvim/mason/share/java-debug-adapter/com.microsoft.java.debug.plugin.jar"
-			),
-		}
-		vim.list_extend(
-			bundles,
-			vim.split(vim.fn.glob(vim.env.HOME .. "/.local/share/nvim/mason/share/java-test/*.jar", 1), "\n")
-		)
-		vim.list_extend(
-			bundles,
-			vim.split(
-				vim.fn.glob(
-					vim.env.HOME .. "/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/*.jar",
-					1
-				),
-				"\n"
-			)
-		)
+		local root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" })
 
 		local config = {
 			cmd = {
@@ -41,9 +15,6 @@ return {
 			},
 			root_dir = root_dir,
 			capabilities = require("cmp_nvim_lsp").default_capabilities(),
-			init_options = {
-				bundles = bundles,
-			},
 		}
 
 		-- Inicia el servidor JDTLS
@@ -56,8 +27,8 @@ return {
 		-- Ruta completa del archivo actual
 		local file = vim.fn.expand("%:p")
 		-- Ruta de los distintas carpetas del proyecto
-		local src_dir = root_dir .. "/src"
-		local bin_dir = root_dir .. "/bin"
+		local src_dir = root_dir .. "/src/main/java"
+		local bin_dir = root_dir .. "/target/classes"
 		local docs_dir = root_dir .. "/docs"
 		-- Asegurar que solo la parte después de src/ se usa como class_path
 		local relative_path = file:sub(#src_dir + 2) -- Remover src/ (y la barra extra)

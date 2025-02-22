@@ -1,5 +1,3 @@
-vim.g.mapleader = ","
-
 vim.keymap.set("n", "<leader>wq", ":wq<CR>")
 vim.keymap.set("n", "<leader>qq", ":q!<CR>")
 vim.keymap.set("n", "<leader>qa", ":qa!<CR>")

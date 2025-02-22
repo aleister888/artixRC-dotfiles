@@ -1,15 +1,16 @@
+-- stylua: ignore
 local colors = {
-	bg = "#282828",
-	fg = "#ebdbb2",
-	yellow = "#d79921",
-	cyan = "#689d6a",
+	bg =       "#282828",
+	fg =       "#ebdbb2",
+	yellow =   "#d79921",
+	cyan =     "#689d6a",
 	darkblue = "#076678",
-	green = "#98971a",
-	orange = "#fe8019",
-	violet = "#b16286",
-	magenta = "#8f3f71",
-	blue = "#458588",
-	red = "#cc241d",
+	green =    "#98971a",
+	orange =   "#fe8019",
+	violet =   "#b16286",
+	magenta =  "#8f3f71",
+	blue =     "#458588",
+	red =      "#cc241d",
 }
 
 local conditions = {
@@ -77,8 +78,8 @@ ins_left({
 	color = function()
 		-- Cambiar el color en función del modo en el que nos encontremos
 		local mode_color = {
-			n = colors.red,
-			i = colors.green,
+			n = colors.green,
+			i = colors.yellow,
 			v = colors.blue,
 			["␖"] = colors.blue,
 			V = colors.blue,

@@ -124,7 +124,7 @@ cmd compress ${{
 
 # Función para abrir un scratchpad en el directorio actual
 cmd cdterm &{{
-	cd "$(dirname $fx)"; setsid -f $TERMINAL $TERMTITLE scratchpad
+	cd "$(dirname $f)"; setsid -f $TERMINAL $TERMTITLE scratchpad
 }}
 
 # Enviar una notificación con el tamaño del ítem seleccionado

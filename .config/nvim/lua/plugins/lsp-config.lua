@@ -1,11 +1,11 @@
 local servers = {
 	"lua_ls",
-	"jdtls",
 	"texlab",
 	"bashls",
 	"clangd",
 	"markdown_oxide",
 	"cssls",
+	"jdtls",
 }
 
 return {
@@ -101,7 +101,6 @@ return {
 		},
 		config = function()
 			local cmp = require("cmp")
-			local luasnip = require("luasnip")
 
 			-- Setup de nvim-cmp
 			cmp.setup({
