@@ -9,8 +9,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		opt.expandtab = false
 		opt.copyindent = true
 		opt.preserveindent = true
-		opt.tabstop = 8
-		opt.shiftwidth = 8
+		opt.tabstop = 4
+		opt.shiftwidth = 4
 	end,
 })
 

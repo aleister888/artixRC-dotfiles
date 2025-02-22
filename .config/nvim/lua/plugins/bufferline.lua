@@ -1,7 +1,6 @@
 return {
 	"akinsho/bufferline.nvim",
 	config = function()
-		-- Configuración de Bufferline
 		require("bufferline").setup({
 			options = {
 				show_buffer_icons = true,

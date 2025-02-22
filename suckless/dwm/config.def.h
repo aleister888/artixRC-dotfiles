@@ -33,7 +33,7 @@ static const unsigned int ulinestroke  = 4;   // Grosor/Altura del subrayado
 static const int ulineall              = 0;   // 1 == Subrayado en todos los espacios
 
 
-static const char background[]     = "#181717";
+static const char background[]     = "#1D2021";
 static const char background_sel[] = "#282828";
 static const char foreground[]     = "#EBDBB2";
 static const char col_green[]      = "#B8BB26";
