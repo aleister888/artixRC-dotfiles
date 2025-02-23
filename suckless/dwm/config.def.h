@@ -3,7 +3,7 @@
 #define DLINES "16" // Lineas para los comandos de dmenu
 #define TERM   "st" // Terminal
 #define TERMT  "-t" // Flag usada para establecer el título de la terminal
-#define TERME  "" // Flag usada de ejecución de la terminal
+#define TERME  "-e" // Flag usada de ejecución de la terminal
 #define TERMC  "st-256color" // Clase de ventana de la terminal
 #define BROWSER "firefox" // Navegador Web
 
@@ -160,7 +160,7 @@ static const Layout layouts[] = {
 
 #define MODKEY Mod1Mask // Alt como modificador
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY,                       KEY, view,       {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY, toggleview, {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY, tag,        {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
@@ -227,7 +227,7 @@ static const Key keys[] = {
 
 	// Abrir aplicaciones más usadas
 	{ MODKEY,                       XK_F2,     spawn,            {.v = (const char*[]){ BROWSER, NULL } } },
-	{ MODKEY,                       XK_F3,     spawn,            SHCMD("xdg-open ~/") },
+	{ MODKEY,                       XK_F3,     spawn,            {.v = (const char*[]){ TERM, TERME, "lf", NULL } } },
 	{ MODKEY,                       XK_F4,     spawn,            SHCMD("tauon") },
 
 	// Montar/Desmontar dispositivos android

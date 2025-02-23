@@ -4,6 +4,7 @@ local servers = {
 	"bashls",
 	"markdown_oxide",
 	"cssls",
+	"jdtls",
 }
 
 return {
@@ -75,11 +76,14 @@ return {
 		config = function()
 			local lspconfig = require("lspconfig")
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			-- LSP servers to configure
+			-- Configurar servidores LSP
 			for _, lsp in ipairs(servers) do
-				lspconfig[lsp].setup({
-					capabilities = capabilities,
-				})
+				-- No se incluye jdtls, que ya esta configurado en jdtls.lua
+				if lsp ~= "jdtls" then
+					lspconfig[lsp].setup({
+						capabilities = capabilities,
+					})
+				end
 			end
 		end,
 	},

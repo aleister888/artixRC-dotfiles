@@ -2153,16 +2153,10 @@ run(void)
 void
 usage(void)
 {
-	die("usage: %s [-aiv] [-c class]"
-		" [-f font] [-g geometry]"
-		" [-n name] [-o file]\n"
-		"          [-T title] [-t title] [-w windowid]"
-		" [[-e] command [args ...]]\n"
-		"       %s [-aiv] [-c class]"
-		" [-f font] [-g geometry]"
-		" [-n name] [-o file]\n"
-		"          [-T title] [-t title] [-w windowid] -l line"
-		" [stty_args ...]\n", argv0, argv0);
+	die("usage: %s [-aiv] [-c class] [-f font] [-g geometry]\n"
+	    "          [-n name] [-o file] [-T title] [-t title]\n"
+	    "          [-w windowid] -l line [stty_args ...]\n"
+	    "          [[-e] command [args ...]]\n", argv0);
 }
 
 int
