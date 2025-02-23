@@ -1,49 +1,89 @@
 #!/bin/bash
 
+# Script para configurar el reloj de hardware y sincronizalo con la hora
+# del sistema.
+# - Invocado en /installer/stage3.sh
+
+# Se termina la ejecución de toda la tubería despúes del primer fallo
 set -o pipefail
 
+# Verificar si el script se ejecuta como root
 if [ "$(id -u)" -ne 0 ]; then
 	echo "Error: Este script debe ejecutarse como root." >&2
 	exit 1
 fi
 
-TIMEZONE="$(readlink /etc/localtime | sed 's|.*/zoneinfo/||')"
+# Obtener la zona horaria actual
+TIMEZONE="$(readlink -f /etc/localtime | sed 's|.*/zoneinfo/||')"
+if [ -z "$TIMEZONE" ]; then
+	echo "Error: No se pudo determinar la zona horaria del sistema." >&2
+	exit 1
+fi
 
-# Inicializamos un contador
+# Verificar dependencias
+if ! command -v jq &>/dev/null; then
+	echo "Error: El comando 'jq' no está instalado. Por favor, instálelo antes de ejecutar este script." >&2
+	exit 1
+fi
+
+# Inicializar variables
 COUNTER=1
+CURRENT_TIME=""
 
-# Ejecutamos curl en un bucle hasta que la variable este definida
-# porque aveces no se se recibe correctamente la fecha.
-
-while true; do
-
-	[ -z "$CURRENT_TIME" ] && CURRENT_TIME=$(
-		curl -s \
-			"http://worldtimeapi.org/api/timezone/$TIMEZONE" |
+# Función para obtener la hora desde una API
+get_current_time() {
+	local api="$1"
+	case "$api" in
+	worldtimeapi)
+		curl "http://worldtimeapi.org/api/timezone/$TIMEZONE" |
 			jq -r '.datetime' | cut -d. -f1 | sed 's/T/ /'
-	)
-
-	[ -z "$CURRENT_TIME" ] && CURRENT_TIME=$(
+		;;
+	timeapi)
 		curl -s \
 			"https://timeapi.io/api/Time/current/zone?timeZone=$TIMEZONE" |
 			grep -oP '"dateTime":"\K[^"]+' | cut -d. -f1 | sed 's/T/ /'
-	)
+		;;
+	*)
+		return 1
+		;;
+	esac
+}
 
-	# Si la variable esta establecida, salimos del bucle
-	[ -n "$CURRENT_TIME" ] && break
+# Intentar obtener la hora hasta que se defina o se alcance el límite de intentos
+while [ -z "$CURRENT_TIME" ] && [ "$COUNTER" -le 5 ]; do
+	echo "Intento $COUNTER: Obteniendo la hora..."
 
-	# Si el contador es mayor a 5, salimos del bucle
-	if [ "$COUNTER" -ge 5 ]; then
-		echo "Error: No se pudo obtener la hora después de 5 intentos." >&2
-		exit 1
+	# Primero intentar con worldtimeapi
+	CURRENT_TIME=$(get_current_time "worldtimeapi")
+	if [ -z "$CURRENT_TIME" ]; then
+		# Si falla, intentar con timeapi
+		CURRENT_TIME=$(get_current_time "timeapi")
 	fi
 
-	# Incrementamos el contador
-	COUNTER=$((COUNTER + 1))
-
-	sleep 5
-
+	# Incrementar el contador y esperar antes del siguiente intento
+	if [ -z "$CURRENT_TIME" ]; then
+		COUNTER=$((COUNTER + 1))
+		sleep 5
+	fi
 done
 
-hwclock --set --date="$CURRENT_TIME" &&
-	hwclock --hctosys
+# Comprobar si se obtuvo la hora correctamente
+if [ -z "$CURRENT_TIME" ]; then
+	echo "Error: No se pudo obtener la hora después de 5 intentos." >&2
+	exit 1
+fi
+
+echo "Hora obtenida: $CURRENT_TIME"
+
+# Configurar el reloj de hardware y sincronizar con el sistema
+if ! hwclock --set --date="$CURRENT_TIME"; then
+	echo "Error: No se pudo configurar el reloj de hardware." >&2
+	exit 1
+fi
+
+if ! hwclock --hctosys; then
+	echo "Error: No se pudo sincronizar el reloj del sistema con el reloj de hardware." >&2
+	exit 1
+fi
+
+echo "Reloj de hardware y sistema sincronizados correctamente."

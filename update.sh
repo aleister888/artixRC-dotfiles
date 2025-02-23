@@ -172,7 +172,7 @@ fi
 ############################
 
 rm -f "$CONF_DIR/mimeapps.list"
-rm -rf ~/.local/share/mime
+rm -rf ~/.local/share/mime:
 
 mkdir -p "$DATA_DIR/mime/packages"
 
@@ -188,18 +188,18 @@ update-mime-database ~/.local/share/mime
 
 cp -f "$REPO_DIR/assets/desktop/lft.desktop" \
 	"$DATA_DIR/applications/file.desktop" 2>/dev/null
-echo "Exec=$TERMINAL $TERMEXEC lf %F" | tee -a \
+echo "Exec=${TERMINAL:-st} ${TERMEXEC:-} lf %F" | tee -a \
 	"$DATA_DIR/applications/file.desktop" >/dev/null
 
 cp -f "$REPO_DIR/assets/desktop/nvimt.desktop" \
 	"$DATA_DIR/applications/text.desktop" 2>/dev/null
-echo "Exec=$TERMINAL $TERMEXEC nvim %F" | tee -a \
+echo "Exec=${TERMINAL:-st} ${TERMEXEC:-} nvim %F" | tee -a \
 	"$DATA_DIR/applications/text.desktop" >/dev/null
 
 # Visor de imágenes
 cp -f "$REPO_DIR/assets/desktop/image.desktop" \
 	"$DATA_DIR/applications/image.desktop" 2>/dev/null
-echo "Exec=setsid -f $VIEWER %F" | tee -a \
+echo "Exec=setsid -f ${VIEWER:-nsxiv} %F" | tee -a \
 	"$DATA_DIR/applications/image.desktop" >/dev/null
 
 # Función para establecer: visor de imagenes, video, audio y editor de texto

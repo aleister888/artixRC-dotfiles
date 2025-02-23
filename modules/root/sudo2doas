@@ -1,16 +1,48 @@
-#!/bin/sh
+#!/bin/bash
 
-# Módulo para remplazar sudo por OpenDoas
+# Script para sustituir sudo por OpenDoas durante la instalación del SO
+# - Invocado en /installer/stage3.sh
 
+# Verificar si el script se ejecuta como root
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Error: Este script debe ejecutarse como root." >&2
+	exit 1
+fi
+
+# Obtener el nombre de usuario con UID 1000 (generalmente el primer usuario no root)
 RUSER="$(getent passwd 1000 | cut -d: -f1)"
+if [ -z "$RUSER" ]; then
+	echo "Error: No se pudo encontrar un usuario con UID 1000." >&2
+	exit 1
+fi
 
-echo 'permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel' |
-	tee /etc/doas.conf
+# Configurar OpenDoas
+echo "Configurando OpenDoas..."
+cat <<EOF >/etc/doas.conf
+permit nopass keepenv setenv { XAUTHORITY LANG LC_ALL } :wheel
+EOF
 
-chown -c root:root /etc/doas.conf
-chmod -c 0400 /etc/doas.conf
-rm /etc/sudoers
-pacman -Rcns sudo --noconfirm
-su "$RUSER" -c "
-	yay -Sy --noconfirm --disable-download-timeout --needed doas-sudo-shim
-"
+if [ $? -ne 0 ]; then
+	echo "Error: No se pudo crear el archivo /etc/doas.conf." >&2
+	exit 1
+fi
+
+chown root:root /etc/doas.conf
+chmod 0400 /etc/doas.conf
+mv /etc/sudoers /etc/sudoers.bak
+
+# Desinstalar sudo
+echo "Desinstalando sudo..."
+if command -v sudo &>/dev/null; then
+	pacman -Rcns sudo --noconfirm
+fi
+
+# Instalar doas-sudo-shim para que las aplicaciones que dependen
+# de sudo puedan seguir funcionando
+echo "Instalando doas-sudo-shim..."
+if command -v yay &>/dev/null; then
+	su "$RUSER" -c "yay -Sy --noconfirm --disable-download-timeout --needed doas-sudo-shim"
+fi
+
+# Mensaje final
+echo "Configuración completada. Ahora se está utilizando OpenDoas en lugar de sudo."

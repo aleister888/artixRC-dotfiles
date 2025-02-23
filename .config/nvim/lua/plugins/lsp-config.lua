@@ -2,10 +2,8 @@ local servers = {
 	"lua_ls",
 	"texlab",
 	"bashls",
-	"clangd",
 	"markdown_oxide",
 	"cssls",
-	"jdtls",
 }
 
 return {
@@ -28,7 +26,7 @@ return {
 			-- Mostrar diagnósticos en forma de lista
 			vim.api.nvim_set_keymap(
 				"n",
-				"<leader>d2",
+				"<leader>dl",
 				":lua vim.diagnostic.setqflist()<CR>",
 				{ noremap = true, silent = true }
 			)
@@ -46,7 +44,6 @@ return {
 				":lua vim.diagnostic.goto_prev()<CR>",
 				{ noremap = true, silent = true }
 			)
-
 			local diagnostics_active = true
 			function ToggleDiagnostics()
 				diagnostics_active = not diagnostics_active
@@ -58,14 +55,12 @@ return {
 					vim.notify("Análisis desactivado")
 				end
 			end
-
 			vim.api.nvim_set_keymap(
 				"n",
 				"<leader>dt",
 				":lua ToggleDiagnostics()<CR>",
 				{ noremap = true, silent = true }
 			)
-
 			return {
 				ensure_installed = servers,
 			}
@@ -80,7 +75,6 @@ return {
 		config = function()
 			local lspconfig = require("lspconfig")
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-
 			-- LSP servers to configure
 			for _, lsp in ipairs(servers) do
 				lspconfig[lsp].setup({
@@ -98,15 +92,17 @@ return {
 			"hrsh7th/cmp-buffer", -- Autocompletado desde el buffer
 			"hrsh7th/cmp-path", -- Autocompletado de rutas
 			"hrsh7th/cmp-nvim-lua", -- Autocompletado para Lua
+			"onsails/lspkind.nvim",
 		},
 		config = function()
 			local cmp = require("cmp")
-
+			local lspkind = require("lspkind")
 			-- Setup de nvim-cmp
 			cmp.setup({
 				snippet = {
-					expansion = function(args)
+					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
+						vim.fn["UltiSnips#Anon"](args.body)
 					end,
 				},
 				sources = {
@@ -117,14 +113,21 @@ return {
 					{ name = "nvim_lua" },
 				},
 				mapping = {
-					["<S-Tab>"] = cmp.mapping.confirm({ select = true }), -- Shift+Tab para confirmar selección
-					["<Down>"] = cmp.mapping.select_next_item(), -- Flecha Abajo para ir a la siguiente opción
-					["<Up>"] = cmp.mapping.select_prev_item(), -- Flecha Arriba para ir a la opción anterior
+					-- Shift+Tab para confirmar selección
+					["<S-Tab>"] = cmp.mapping.confirm({ select = true }),
+					-- Flecha Abajo para ir a la siguiente opción
+					["<Down>"] = cmp.mapping.select_next_item(),
+					-- Flecha Arriba para ir a la opción anterior
+					["<Up>"] = cmp.mapping.select_prev_item(),
 				},
 				formatting = {
+					fields = { "kind", "abbr", "menu" },
 					format = function(entry, vim_item)
-						vim_item.kind = string.format("%s %s", vim_item.kind, entry.source.name) -- Mostrar el nombre de la fuente
-						return vim_item
+						local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+						local strings = vim.split(kind.kind, "%s", { trimempty = true })
+						kind.kind = " " .. (strings[1] or "") .. " "
+						kind.menu = "    (" .. (strings[2] or "") .. ")"
+						return kind
 					end,
 				},
 			})

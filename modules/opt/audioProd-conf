@@ -4,6 +4,15 @@
 # en un directorio no estándar. Con esto enlazamos los archivos
 # necesarios en /usr/share para que el sistema los reconozca.
 
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Error: Este script debe ejecutarse como root." >&2
+	exit 1
+fi
+
+if ! command -v tuxguitar-bin >/dev/null; then
+	exit 1
+fi
+
 ln -s /opt/tuxguitar/share/applications/tuxguitar.desktop \
 	/usr/share/applications/
 

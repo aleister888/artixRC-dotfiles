@@ -3,7 +3,6 @@ return {
 	lazy = true,
 	ft = "java",
 	config = function()
-		local jdtls = require("jdtls")
 		local root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" })
 
 		local config = {
@@ -14,11 +13,10 @@ return {
 				),
 			},
 			root_dir = root_dir,
-			capabilities = require("cmp_nvim_lsp").default_capabilities(),
 		}
 
 		-- Inicia el servidor JDTLS
-		jdtls.start_or_attach(config)
+		require("jdtls").start_or_attach(config)
 
 		vim.keymap.set("n", "<leader>g", ":lua RunJavaClass()<CR>", { noremap = true, silent = true })
 		vim.keymap.set("n", "<leader>jd", ":lua DocJavaClass()<CR>", { noremap = true, silent = true })

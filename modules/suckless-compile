@@ -1,46 +1,62 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script para recompilar las aplicaciones suckless
+# - Invocado por /update.sh
 
+if [ "$(id -u)" -eq 0 ]; then
+	echo "Error: Este script no debe ejecutarse como root." >&2
+	exit 1
+fi
+
+# Obtener el DPI desde Xresources
 DPI="$(grep -oP "Xft.dpi:\K[0-9]*" "$HOME"/.config/Xresources)"
 
-if [ "$DPI" -ge 192 ]; then
-	for app in dmenu dwm dwmblocks st; do
-		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
+# Directorio base para las aplicaciones suckless
+SUCKLESS_BASE="$HOME/.dotfiles/suckless"
 
-		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
+# Función para compilar una aplicación suckless
+compile_suckless_app() {
+	local APP="$1"
+	local SUCKLESS_DIR="$SUCKLESS_BASE/$APP"
 
-		# Crear un config.h con el tamaño de fuente aumentado
-		sed 's/pixelsize=[0-9]*/pixelsize=38/g' \
-			"$SUCKLESS_DIR"/config.def.h |
-			tee "$SUCKLESS_DIR"/config.h >/dev/null
+	# Limpiar directorio
+	sudo make clean --directory "$SUCKLESS_DIR" >/dev/null 2>&1 || return 1
 
-		# Para dwm, aumentar el tamaño de la barra
-		[ "$app" = "dwm" ] &&
-			sed 's/user_bh.*=.*[0-9]*;/user_bh=24;/g' \
-				-i "$SUCKLESS_DIR"/config.h
+	# Modificar config.h si el DPI es alto
+	if [ "$DPI" -ge 192 ]; then
+		sed 's/pixelsize=[0-9] /pixelsize=38/g'
+		"$SUCKLESS_DIR"/config.def.h |
+			tee "$SUCKLESS_DIR"/config.h
 
-		# Compilar
-		sudo make install --directory "$SUCKLESS_DIR" >/dev/null &&
-			echo "$app compilado con éxito"
+		if [ "$APP" = "dwm" ]; then
+			sed -i 's/user_bh.*=.*[0-9]*;/user_bh=24;/g' "$SUCKLESS_DIR/config.h"
+		fi
+	fi
 
-		# Limpiar directorio
-		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
-	done
+	# Compilar e instalar
+	sudo make install --directory "$SUCKLESS_DIR" >/dev/null 2>&1 &&
+		echo "$APP compilado con éxito" || return 1
+}
 
-	# Configurar eclipse para HDPI
-	if [ -e /usr/bin/eclipse ] && [ ! -x /usr/local/bin/eclipse ]; then
-		printf '#!/bin/sh\nGDK_DPI_SCALE=0.5 GDK_SCALE=2 /usr/bin/eclipse' |
-			sudo tee /usr/local/bin/eclipse >/dev/null
-		sudo chmod +x /usr/local/bin/eclipse
+# Recompilar aplicaciones suckless
+for app in dmenu dwm dwmblocks st; do
+	compile_suckless_app "$app" || echo "Error: Falló la compilación de $app."
+done
+
+# Configurar Eclipse para HDPI (si está instalado)
+if command -v eclipse &>/dev/null; then
+	ECLIPSE_WRAPPER="/usr/local/bin/eclipse"
+	# Si no existe ya el script wrapper o no está configurado para HDPI
+	if [ ! -f "$ECLIPSE_WRAPPER" ] || ! grep -q "GDK_DPI_SCALE=0.5 GDK_SCALE=2" "$ECLIPSE_WRAPPER" 2>/dev/null; then
+		# Crear el script y hacerlo ejecutable
+		cat <<-EOF | sudo tee "$ECLIPSE_WRAPPER"
+			#!/bin/bash
+			GDK_DPI_SCALE=0.5 GDK_SCALE=2 /usr/bin/eclipse "\$@"
+		EOF
+		chmod +x "$ECLIPSE_WRAPPER"
+
+		echo "Eclipse configurado para HDPI."
 	fi
 else
-	for app in dwm dmenu dwmblocks st; do
-		SUCKLESS_DIR="$HOME/.dotfiles/suckless/$app"
-
-		sudo make clean --directory "$SUCKLESS_DIR" >/dev/null
-
-		sudo make install --directory "$SUCKLESS_DIR" >/dev/null &&
-			echo "$app compilado con éxito"
-	done
+	echo "Eclipse no está instalado, omitiendo configuración."
 fi

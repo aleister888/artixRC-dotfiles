@@ -5,7 +5,7 @@ if [ ! -d /sys/firmware/efi ]; then
 	exit 1
 fi
 
-repoDir="/tmp/artix-installer"
+REPO_DIR="/tmp/artix-installer"
 
 # Configuramos el servidor de claves y actualizamos las claves
 grep ubuntu /etc/pacman.d/gnupg/gpg.conf ||
@@ -25,7 +25,7 @@ sudo pacman -Sy --noconfirm --needed parted libnewt xkeyboard-config bc git
 
 # Clonamos el repositorio e iniciamos el instalador
 git clone --depth 1 https://github.com/aleister888/artix-installer.git \
-	$repoDir
+	$REPO_DIR
 
-cd $repoDir/installer || exit 1
+cd $REPO_DIR/installer || exit 1
 sudo ./stage1.sh

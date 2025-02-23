@@ -1,27 +1,20 @@
 #!/bin/bash
 
-# Módulo para instalar y configurar zsh como nuestra shell por defecto
+# Script para establecer zsh como el shell de nuestro usuario e instalar los
+# archivos de configuracioń
+# - Invocado en /installer/stage3.sh
+
+if [ "$(id -u)" -eq 0 ]; then
+	echo "Error: Este script no debe ejecutarse como root." >&2
+	exit 1
+fi
 
 # Crear la carpeta ~/.config
 mkdir -p "$HOME/.config"
 
-# Plugins de zsh a clonar
-plugins=(
-	"zsh-users/zsh-history-substring-search"
-	"zsh-users/zsh-syntax-highlighting"
-	"zsh-users/zsh-autosuggestions"
-)
-
-# Ruta done para clonar los repositorios
-base_dir="$HOME/.dotfiles/.config/zsh"
-
-# Clonamos cada repositorio
-for plugin in "${plugins[@]}"; do
-	git clone "https://github.com/$plugin" \
-		"$base_dir/$(basename "$plugin")" >/dev/null
-done
-
-# Instalamos nuestros archivos de configuración
+# Instalar los archivos de configuración
 "$HOME/.dotfiles/update.sh"
+
+# Selecciona zsh como el shell del usuario
 echo "ZDOTDIR=\$HOME/.config/zsh" | sudo tee /etc/zsh/zshenv
-sudo chsh -s /bin/zsh "$USER" # Seleccionar zsh como nuestro shell
+sudo chsh -s /bin/zsh "$USER"

@@ -1,9 +1,21 @@
 #!/bin/sh
 
-# Módulo para instalar yay. Un ayudante para instalar paquetes de
-# el AUR de forma automátizada.
+# Script para construir e instalar yay
+# - Invocado en /installer/stage3.sh
 
-tmp_dir="/tmp/yay_install_temp"
-mkdir -p "$tmp_dir"
-git clone https://aur.archlinux.org/yay.git "$tmp_dir"
-sh -c "cd $tmp_dir && makepkg -si --noconfirm"
+if [ "$(id -u)" -eq 0 ]; then
+	echo "Error: Este script no debe ejecutarse como root." >&2
+	exit 1
+fi
+
+# Directorio temporal para clonar el repositorio de yay
+TMP_DIR="/tmp/yay_install_temp"
+
+# Crear el directorio temporal
+mkdir -p "$TMP_DIR"
+
+# Clonar el repositorio
+git clone --depth 1 https://aur.archlinux.org/yay.git "$TMP_DIR" >/dev/null
+
+# Construimos e instalamos yay
+sh -c "cd $TMP_DIR && makepkg -si --noconfirm"

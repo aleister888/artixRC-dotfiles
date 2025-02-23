@@ -1,7 +1,12 @@
 #!/bin/sh
 
-# Módulo para configurar la auto-suspensión en dispositivos con batería
+# Script para configurar la auto-suspensión en dispositivos con batería
 # mediante un servicio de OpenRC
+
+if [ "$(id -u)" -eq 0 ]; then
+	echo "Error: Este script no debe ejecutarse como root." >&2
+	exit 1
+fi
 
 # Instalamos los scripts y archivos del servicio de auto-suspensión
 sudo install -m 755 "$HOME/.dotfiles/assets/system/auto-suspend" \
