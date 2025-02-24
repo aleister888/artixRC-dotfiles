@@ -26,7 +26,10 @@ if [ "$OGHASH" != "$HASH" ]; then
 	exec "$0" "$@"
 fi
 
-# Instalar paquetes
+###############################
+# Instalar paquetes faltantes #
+###############################
+
 REPO_PKG="$(cat \
 	"$HOME"/.dotfiles/assets/packages/appearance \
 	"$HOME"/.dotfiles/assets/packages/cli-tools \
@@ -320,7 +323,10 @@ done >/dev/null
 	wget 'https://ftp.nluug.nl/pub/vim/runtime/spell/es.utf-8.sug' -q -O \
 		"$DATA_DIR/nvim/site/spell/es.utf-8.sug"
 
-# Actualizar iconos y colores lf
+####################################
+# Actualizar iconos y colores (lf) #
+####################################
+
 lfUrl="https://raw.githubusercontent.com/gokcehan/lf/master/etc"
 curl $lfUrl/colors.example -o ~/.config/lf/colors 2>/dev/null
 curl $lfUrl/icons.example -o ~/.config/lf/icons 2>/dev/null
