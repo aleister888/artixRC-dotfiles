@@ -1,7 +1,7 @@
 -- stylua: ignore
 local colors = {
 	bg =       "#282828",
-	fg =       "#ebdbb2",
+	fg =       "#a89984",
 	yellow =   "#d79921",
 	cyan =     "#689d6a",
 	darkblue = "#076678",

@@ -27,7 +27,5 @@ newterm(const Arg* a)
 		default:
 			exit(0);
 		}
-	default:
-		wait(NULL);
 	}
 }

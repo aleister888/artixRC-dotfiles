@@ -3,7 +3,7 @@ vim.keymap.set("n", "<leader>qq", ":q!<CR>")
 vim.keymap.set("n", "<leader>qa", ":qa!<CR>")
 vim.keymap.set("n", "<leader>ww", ":w<CR>")
 
-vim.keymap.set("n", "<leader>sc", ":noh<CR>", { silent = true })
+vim.keymap.set("n", "<leader><BS>", ":noh<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader>v", "<C-w>v")
 vim.keymap.set("n", "<leader>V", "<C-w>s")
