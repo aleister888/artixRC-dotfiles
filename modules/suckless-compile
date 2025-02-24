@@ -3,6 +3,9 @@
 # Script para recompilar las aplicaciones suckless
 # - Invocado por /update.sh
 
+# Se termina la ejecución de toda la tubería despúes del primer fallo
+set -o pipefail
+
 if [ "$(id -u)" -eq 0 ]; then
 	echo "Error: Este script no debe ejecutarse como root." >&2
 	exit 1
@@ -23,10 +26,9 @@ compile_suckless_app() {
 	sudo make clean --directory "$SUCKLESS_DIR" >/dev/null 2>&1 || return 1
 
 	# Modificar config.h si el DPI es alto
-	if [ "$DPI" -ge 192 ]; then
-		sed 's/pixelsize=[0-9] /pixelsize=38/g'
-		"$SUCKLESS_DIR"/config.def.h |
-			tee "$SUCKLESS_DIR"/config.h
+	if [ "$DPI" -ge 192 ] && [ "$APP" != "dwmblocks" ]; then
+		sed 's/pixelsize=[0-9]*/pixelsize=38/g' "$SUCKLESS_DIR"/config.def.h |
+			tee "$SUCKLESS_DIR"/config.h >/dev/null
 
 		if [ "$APP" = "dwm" ]; then
 			sed -i 's/user_bh.*=.*[0-9]*;/user_bh=24;/g' "$SUCKLESS_DIR/config.h"

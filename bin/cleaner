@@ -67,12 +67,13 @@ move_hardcoded_dir "$HOME/.codetogether" "$HOME/.config/codetogether"
 move_hardcoded_dir "$HOME/.webclipse" "$HOME/.config/webclipse"
 
 sleep 10
-rm "$HOME/.xsession-errors"
 
 # Borrar archivos
 rm -f "$HOME/.wget-hsts"
 rm -rf \
 	"$HOME/Escritorio" \
+	"$HOME/.wine" \
+	"$HOME/.xsession-errors" \
 	"$HOME/.yarnrc" \
 	"$XDG_CONFIG_HOME/menus" \
 	"$XDG_DATA_HOME/desktop-directories" \

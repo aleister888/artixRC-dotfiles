@@ -26,34 +26,40 @@ if [ "$OGHASH" != "$HASH" ]; then
 	exec "$0" "$@"
 fi
 
-# Instalar paquetes base, por si se añadió alguno a la lista
-yay -Sy --noconfirm --needed $(
-	cat \
-		"$HOME"/.dotfiles/assets/packages/appearance \
-		"$HOME"/.dotfiles/assets/packages/cli-tools \
-		"$HOME"/.dotfiles/assets/packages/compress \
-		"$HOME"/.dotfiles/assets/packages/documents \
-		"$HOME"/.dotfiles/assets/packages/fonts \
-		"$HOME"/.dotfiles/assets/packages/gui-apps \
-		"$HOME"/.dotfiles/assets/packages/misc \
-		"$HOME"/.dotfiles/assets/packages/mozilla \
-		"$HOME"/.dotfiles/assets/packages/multimedia \
-		"$HOME"/.dotfiles/assets/packages/pipewire \
-		"$HOME"/.dotfiles/assets/packages/services \
-		"$HOME"/.dotfiles/assets/packages/system \
-		"$HOME"/.dotfiles/assets/packages/x11
-)
+# Instalar paquetes
+REPO_PKG="$(cat \
+	"$HOME"/.dotfiles/assets/packages/appearance \
+	"$HOME"/.dotfiles/assets/packages/cli-tools \
+	"$HOME"/.dotfiles/assets/packages/compress \
+	"$HOME"/.dotfiles/assets/packages/documents \
+	"$HOME"/.dotfiles/assets/packages/fonts \
+	"$HOME"/.dotfiles/assets/packages/gui-apps \
+	"$HOME"/.dotfiles/assets/packages/misc \
+	"$HOME"/.dotfiles/assets/packages/mozilla \
+	"$HOME"/.dotfiles/assets/packages/multimedia \
+	"$HOME"/.dotfiles/assets/packages/pipewire \
+	"$HOME"/.dotfiles/assets/packages/services \
+	"$HOME"/.dotfiles/assets/packages/system \
+	"$HOME"/.dotfiles/assets/packages/x11 2>/dev/null)"
+
+yay -Sy --noconfirm --needed --asexplicit \
+	$(echo "$REPO_PKG" | grep -v "$(yay -Qq)" | tr '\n' ' ') >/dev/null 2>&1
 
 #######################################
 # Archivos de configuración y scripts #
 #######################################
 
 # Crear los directorios necesarios
-[ -d "$CONF_DIR" ] || mkdir -p "$CONF_DIR"
-[ -d "$HOME/.local/bin" ] || mkdir -p "$HOME/.local/bin"
-[ -d "$HOME/.cache" ] || mkdir -p "$HOME/.cache"
-[ -d "$DATA_DIR" ] || mkdir -p "$DATA_DIR"
-[ -d "$DATA_DIR/dwm" ] || mkdir -p "$DATA_DIR/dwm"
+[ -d "$CONF_DIR" ] ||
+	mkdir -p "$CONF_DIR"
+[ -d "$HOME/.local/bin" ] ||
+	mkdir -p "$HOME/.local/bin"
+[ -d "$HOME/.cache" ] ||
+	mkdir -p "$HOME/.cache"
+[ -d "$DATA_DIR" ] ||
+	mkdir -p "$DATA_DIR"
+[ -d "$DATA_DIR/dwm" ] ||
+	mkdir -p "$DATA_DIR/dwm"
 
 # Instalar archivos de configuración y scripts
 sh -c "cd $REPO_DIR && stow --target=${HOME}/.local/bin/ bin/" >/dev/null
@@ -74,7 +80,7 @@ ln -sf ~/.dotfiles/suckless/dwm/autostart.sh \
 # Compilar aplicaciones suckless #
 ##################################
 
-"$HOME"/.dotfiles/modules/suckless-compile 2>/dev/null
+"$HOME"/.dotfiles/modules/suckless-compile >/dev/null 2>&1
 
 #########################
 # Configurar apariencia #
