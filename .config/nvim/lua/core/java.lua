@@ -1,22 +1,7 @@
-return {
-	"mfussenegger/nvim-jdtls",
-	lazy = true,
-	ft = "java",
-	config = function()
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "java",
+	callback = function()
 		local root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" })
-
-		--local config = {
-		--	cmd = {
-		--		vim.fn.expand("$HOME/.local/share/nvim/mason/bin/jdtls"),
-		--		("--jvm-arg=-javaagent:%s"):format(
-		--			vim.fn.expand("$HOME/.local/share/nvim/mason/packages/jdtls/lombok.jar")
-		--		),
-		--	},
-		--	root_dir = root_dir,
-		--}
-
-		-- Inicia el servidor JDTLS
-		--require("jdtls").start_or_attach(config)
 
 		vim.keymap.set("n", "<leader>g", ":lua RunJavaClass()<CR>", { noremap = true, silent = true })
 		vim.keymap.set("n", "<leader>jd", ":lua DocJavaClass()<CR>", { noremap = true, silent = true })
@@ -64,4 +49,4 @@ return {
 			vim.fn.system(string.format("setsid -f firefox '%s/%s.html'", docs_dir, class_path))
 		end
 	end,
-}
+})

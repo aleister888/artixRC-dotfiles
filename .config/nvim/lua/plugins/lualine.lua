@@ -152,12 +152,6 @@ ins_left({
 			end
 		end
 
-		-- Comprobar si jdtls está corriendo si no hay otros clientes
-		local jdtls_running = vim.fn.system("pgrep -a java | grep jdtls")
-		if jdtls_running ~= "" then
-			return "jdtls"
-		end
-
 		return msg
 	end,
 	icon = "󰒋  LSP:",

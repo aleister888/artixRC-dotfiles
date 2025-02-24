@@ -78,12 +78,9 @@ return {
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			-- Configurar servidores LSP
 			for _, lsp in ipairs(servers) do
-				-- No se incluye jdtls, que ya esta configurado en jdtls.lua
-				if lsp ~= "jdtls" then
-					lspconfig[lsp].setup({
-						capabilities = capabilities,
-					})
-				end
+				lspconfig[lsp].setup({
+					capabilities = capabilities,
+				})
 			end
 		end,
 	},
