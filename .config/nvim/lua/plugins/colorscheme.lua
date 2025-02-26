@@ -8,6 +8,10 @@ function SetColorscheme()
 	vim.api.nvim_set_hl(0, "TabLineFill", { bg = "#282828", fg = "#a89984" })
 	vim.api.nvim_set_hl(0, "TabLine",     { bg = "#282828", fg = "#a89984" })
 	vim.api.nvim_set_hl(0, "TabLineSel",  { bg = "#282828", fg = "#a89984" })
+	-- https://github.com/hrsh7th/nvim-cmp
+	vim.api.nvim_set_hl(0, "PmenuSel",              { bg = "#282828", fg = "#a89984" })
+	vim.api.nvim_set_hl(0, "Pmenu",                 { bg = "#3c3836", fg = "#ebdbb2" })
+	vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { strikethrough = true })
 end
 
 return {
@@ -17,6 +21,7 @@ return {
 		require("gruvbox").setup({
 			transparent_mode = true,
 			inverse = true,
+			contrast = "hard",
 		})
 		SetColorscheme()
 	end,
